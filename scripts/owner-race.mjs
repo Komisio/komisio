@@ -34,6 +34,7 @@ import { raceStoreGuide } from './store-guide-race.mjs'
 import { raceHelpFeedback } from './help-feedback-race.mjs'
 import { racePayPalCredentials } from './paypal-credentials-race.mjs'
 import { raceLabelPrintRule } from './label-print-rule-race.mjs'
+import { raceWeblinkQueue } from './weblink-queue-race.mjs'
 import { raceCatalogueDeletion } from './catalogue-deletion-race.mjs'
 import { raceCatalogueEditing } from './catalogue-editing-race.mjs'
 import {
@@ -96,6 +97,7 @@ try {
     if (backfill) await verifyCategoryBackfill(setup, backfill)
   }
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
+  await raceWeblinkQueue({ setup, connectionString: parsed.toString() })
   await raceStoreWorkflow({ setup, connectionString: parsed.toString() })
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
   await raceAccountingAssistance({ setup, connectionString: parsed.toString() })

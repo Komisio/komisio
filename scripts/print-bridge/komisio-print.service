@@ -1,0 +1,29 @@
+[Unit]
+Description=Komisio Weblink pilot bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=komisio-print
+Group=komisio-print
+WorkingDirectory=/opt/komisio-print/current
+ExecStart=/opt/komisio-print/node/bin/node /opt/komisio-print/current/scripts/print-bridge/cli.mjs run /etc/komisio-print/pilot.json
+Restart=no
+TimeoutStopSec=30
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadWritePaths=/var/lib/komisio-print
+
+[Install]
+WantedBy=multi-user.target

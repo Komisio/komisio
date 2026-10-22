@@ -97,7 +97,7 @@ test('pending accounting send stays visible and exact older export can be reconc
       page.getByRole('button', { name: d.fortnox.sendVoucher, exact: true }),
     ).toHaveCount(0)
     await expect(
-      page.getByRole('button', { name: d.fortnox.sendAgain, exact: true }),
+      page.getByRole('button', { name: d.fortnox.reviewDelivery, exact: true }),
     ).toHaveCount(0)
     await page.setViewportSize({ width: 390, height: 844 })
     expect(

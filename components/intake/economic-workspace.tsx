@@ -17,6 +17,7 @@ import {
   EconomicPrepare,
 } from './economic-export'
 import { DayCloseForm } from './day-close-form'
+import { PayoutEvidence } from './payout-evidence'
 
 export async function EconomicWorkspace({
   client,
@@ -110,6 +111,11 @@ export async function EconomicWorkspace({
               lines={row.voucher}
               excluded={row.excluded}
               d={copy}
+            />
+            <PayoutEvidence
+              sources={row.payout_sources}
+              currency="DKK"
+              d={d.accounting}
             />
             <EconomicDelivery
               key={`${row.id}-${row.send?.sendId}-${row.send?.status}`}

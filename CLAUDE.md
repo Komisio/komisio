@@ -110,10 +110,25 @@ of owner-authored PRs. See CONTRIBUTING.md for the public policy.
 
 ## Build-conscious delivery
 
-Owner instruction, 2026-09-23: develop and test locally, push a coherent ready
-slice, review its preview when useful, then merge to staging. Small local commits
-are welcome; batch them into a push after the relevant local checks pass. Do not
-push every intermediate correction just to obtain another hosted build.
+Owner instruction, 2026-10-22: collect roughly 4–5 locally verified feature PRs
+on a `batch/*` integration branch before one reviewed release PR to `main`.
+Create feature branches from the current batch and target their PRs at that batch.
+Review and merge each coherent slice there after relevant local checks pass;
+this does not release it to staging. Do not merge to main until the owner asks
+to release the batch. Small local commits are welcome.
+
+Automatic Vercel Git builds are disabled for working and batch branches by
+`vercel.json`. Only `main` and explicitly requested `preview/*` branches build
+automatically. Existing branches must incorporate this configuration before
+their next push; a branch still carrying older configuration can still build.
+Do not create a preview branch for ordinary test feedback.
+
+Choose local checks by affected behavior: unit and browser tests for changed
+flows, migration/pgTAP for database changes, concurrency checks for locks and
+idempotency, and lint/typecheck/build for application changes. At the batch
+checkpoint, test the combined changes and shared regression paths. Full hosted
+CI then runs once for the release commit on main; it is not repeated per feature
+PR. Record exactly which checks ran and which remain for release.
 
 Use previews at deliberate review or integration checkpoints. After a CI failure,
 diagnose it and verify the relevant fixes locally before pushing again. Keep
@@ -123,8 +138,8 @@ do not justify skipping tests or publishing unverified changes to staging.
 Documentation-only work should normally accompany the next suitable delivery
 instead of triggering a standalone deployment. Report when changes are saved
 only locally and CI has not run. Explicit requests for immediate delivery take
-precedence. Changing Vercel triggers or adding build-ignore rules is a separate
-configuration task: preserve useful previews and production release controls.
+precedence. Preserve explicit preview checkpoints and production release controls
+when changing deployment configuration.
 
 ## Definition of done
 
@@ -133,8 +148,10 @@ configuration task: preserve useful previews and production release controls.
    unit/browser tests for changed flows, migration plus pgTAP for database
    changes, and a multi-connection test for concurrency invariants. Documentation
    changes do not require an unrelated migration.
-3. CI is green when a remote is configured. Until then, report the local checks
-   and explicitly state that GitHub CI has not run.
+3. A feature may be integrated into the batch after local verification and review;
+   explicitly report that GitHub CI has not run and it is not deployed. The batch
+   is release-complete only after CI and staging deployment checks pass for the
+   release commit. Production remains a separate protected release.
 4. `docs/open-questions.md` updated if a question was answered or raised.
 5. The final message states exactly what was verified and what is not live.
 

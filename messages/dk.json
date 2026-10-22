@@ -360,7 +360,8 @@
     "collectionNotDue": "Afhentningsfristen er ikke udløbet.",
     "overviewHelpLabel": "Om indlevering",
     "payoutBankReviewRequired": "En ejer eller administrator skal først kontrollere sælgerens kontooplysninger under Udbetalinger.",
-    "saleVatRequired": "Salget blev ikke registreret, fordi butikkens momsbehandling ikke er valgt. En ejer eller administrator skal vælge den i Butiksindstillinger og offentliggøre politikken, før du prøver igen."
+    "saleVatRequired": "Salget blev ikke registreret, fordi butikkens momsbehandling ikke er valgt. En ejer eller administrator skal vælge den i Butiksindstillinger og offentliggøre politikken, før du prøver igen.",
+    "payoutHistoryReview": "Ældre udbetalingsbilag skal afstemmes. Send ikke samme betaling igen."
   },
   "brand": "Komisio",
   "tagline": "Mere plads til ting, der får nyt liv.",
@@ -1615,6 +1616,7 @@
       "sellerCreditOre": "Indlevereres tilgodehavende (gæld til indleverere)",
       "creditReversedOre": "Indlevereres tilgodehavende tilbageført",
       "payoutsPaidOre": "Udbetalinger betalt",
+      "payoutsPaidCounterpartOre": "Udbetalinger · modpost",
       "mode:consignment_fee:grossOre": "Månedsgebyrer · Gebyr i butikkens valuta",
       "mode:consignment_fee:netOre": "Månedsgebyrer · Eksklusive moms",
       "mode:consignment_fee:vatOre": "Månedsgebyrer · Moms",
@@ -1706,6 +1708,13 @@
       "reason": "Begrundelse",
       "hint": "AI udfylder tomme rækker. Eksisterende konti bevares.",
       "changed": "Kontoplanen eller indstillingerne er ændret. Genindlæs siden."
+    },
+    "payoutEvidence": {
+      "title": "Udbetalinger i bilaget",
+      "reference": "Betalingsreference",
+      "payoutId": "Udbetalings-ID",
+      "sellerId": "Sælger-ID",
+      "paidAt": "Betalt"
     }
   },
   "communications": {
@@ -2070,7 +2079,10 @@
       "claimed": "udskriver",
       "printed": "Sendt til printeren",
       "failed": "mislykkedes",
-      "cancelled": "annulleret"
+      "cancelled": "annulleret",
+      "dispatching": "Sendeforsøg reserveret",
+      "transport_accepted": "Overførsel modtaget – udskrift ikke verificeret",
+      "outcome_unknown": "Udskriftsresultat ukendt"
     },
     "zebraPrint": "Udskriv på Zebra",
     "close": "Luk",
@@ -2103,7 +2115,30 @@
     "usbHint": "Kræver Komisio Print 1.1 eller nyere og Zebras Windows-driver.",
     "usbQueueName": "Printernavn i Windows",
     "usbQueueHint": "Angiv det præcise navn i Windows. Kør list-usb-printers.cmd i Komisio Print-mappen for at vise USB-printere.",
-    "usbQueueInvalid": "Angiv navnet på en lokal USB-printer i Windows uden omvendte skråstreger eller linjeskift."
+    "usbQueueInvalid": "Angiv navnet på en lokal USB-printer i Windows uden omvendte skråstreger eller linjeskift.",
+    "weblink": {
+      "pairHint": "Opret en kode til Weblink-tjenesten. Giv den til den, der installerer tjenesten, og opdater derefter enhedslisten. Koden skal ikke indtastes i Windows-appen.",
+      "enable": "Aktivér pilottest",
+      "pause": "Sæt Weblink på pause",
+      "refreshDevices": "Opdater enheder",
+      "pilotHint": "Aktivering tillader udskrifter i kø og nye udskrifter. Test forbindelsen og etiketterne, før printeren bruges i butikken.",
+      "pilotAcknowledged": "Jeg er klar til at overvåge pilottesten og kontrollere alle etiketter.",
+      "pauseHint": "Pause stopper nye afsendelser. Etiketter, der allerede er sendt, kan stadig blive udskrevet; opgaver og historik bevares.",
+      "register": "Forbered Weblink-printer",
+      "preparation": "Printeren registreres som inaktiv. Par tjenesten, og gennemfør en overvåget pilottest, før printeren bruges i butikken.",
+      "saved": "Ændringen er bekræftet.",
+      "unconfirmed": "Ændringen kunne ikke bekræftes. Genindlæs og kontrollér den aktuelle status, før du fortsætter.",
+      "recovery": "Kontrollér udskriftsresultat",
+      "recoveryHint": "Spær først enheden, der sendte jobbet. Stop derefter forbindelsen, og kontrollér printeren, ventende job og alle bestilte kopier. Spærring kan ikke tilbagekalde allerede sendte data.",
+      "revoke": "Spær den afsendende enhed",
+      "inspected": "Jeg har stoppet forbindelsen og kontrolleret printeren, ventende job og alle kopier.",
+      "note": "Beskriv kontrollen og resultatet",
+      "result": "Kontrolleret resultat",
+      "printed": "Alle kopier udskrevet og fysisk kontrolleret",
+      "cancelled": "Afslut jobbet uden at bekræfte udskrift",
+      "resolve": "Gem kontrollen",
+      "acceptanceHint": "Modtaget overførsel er ikke bevis på fysisk udskrift. Jobbet sendes ikke automatisk igen."
+    }
   },
   "purchases": {
     "title": "Egne indkøb",
@@ -2698,11 +2733,19 @@
       "SEND_NOT_FOUND": "Afsendelsen blev ikke fundet.",
       "SEND_NOT_PENDING": "Afsendelsen er allerede afsluttet.",
       "REQUEST_CONFLICT": "Dette forespørgsels-id blev brugt til en anden afsendelse.",
-      "INVALID_INPUT": "Forespørgslen var ikke gyldig."
+      "INVALID_INPUT": "Forespørgslen var ikke gyldig.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Ældre udbetalingsbilag skal afstemmes. Send ikke samme betaling igen.",
+      "FORTNOX_DAY_UNRESOLVED": "En tidligere afsendelse for dagen afventer kontrol.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Dagens tidligere bilag skal afstemmes før en ny afsendelse.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "Kontoplanen eller det tilsluttede firma er ændret. Afstem tidligere bilag.",
+      "FORTNOX_BASELINE_CHANGED": "Grundlaget er ændret. Gennemgå afsendelsen igen.",
+      "FORTNOX_NO_CHANGES": "Der er ingen nye beløb at sende."
     },
     "companyName": "Firmanavn i Fortnox",
     "voucherUnknown": "Resultatet af afsendelsen er usikkert:",
-    "recoveryHelp": "Hjælp til at kontrollere afsendelsen"
+    "recoveryHelp": "Hjælp til at kontrollere afsendelsen",
+    "reviewDelivery": "Gennemgå afsendelse til Fortnox",
+    "deltaHint": "Forskellen fra senest bekræftede dagsafslutning vises nedenfor."
   },
   "zettle": {
     "automaticTitle": "Automatisk hentning af kvitteringer",
@@ -4585,7 +4628,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Flere tidligere eksporter for denne dato skal afstemmes. Kontakt support, før du sender mere.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, moms- eller kassekladdeindstillinger afviger fra den tidligere eksport. Afstem ændringen, før du fortsætter.",
       "ECONOMIC_BASELINE_CHANGED": "En anden eksport for denne dato er bekræftet. Åbn dagsafslutningen igen og klargør et nyt bilag med den resterende ændring.",
-      "ECONOMIC_NO_CHANGES": "Der er ingen nye beløb at sende for denne dagsafslutning."
+      "ECONOMIC_NO_CHANGES": "Der er ingen nye beløb at sende for denne dagsafslutning.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Ældre udbetalingsbilag skal afstemmes. Send ikke samme betaling igen."
     },
     "deltaHint": "Kun ændringen siden den seneste bekræftede eksport er medtaget.",
     "baselineLink": "Vis tidligere eksport"

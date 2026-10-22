@@ -22,7 +22,11 @@ import {
   signState,
   verifyState,
 } from '../platform/credentials'
-import { accountingKeys } from './accounting'
+import {
+  accountingKeys,
+  payoutMappingComplete,
+  payoutSource,
+} from './accounting'
 import { readStoreCurrency } from './money'
 
 const PURPOSE = 'economic-connection'
@@ -47,6 +51,10 @@ export const economicMapBody = z
         (accountingKeys as readonly string[]).includes(key) &&
         !(key.startsWith('mode:consignment_fee') && 'excludeReason' in value),
     ),
+  )
+  .refine(
+    (map) => !map.payoutsPaidCounterpartOre || payoutMappingComplete(map, true),
+    'Payout postings need a complete pair or two explicit exclusions',
   )
 export type EconomicMapBody = z.infer<typeof economicMapBody>
 export const economicMap = z.object({
@@ -94,6 +102,7 @@ export const economicPreview = z.object({
   baselineExportId: z.uuid().nullable().optional(),
   baselineCloseVersion: z.number().int().nonnegative().optional(),
   blockedReason: z.string().optional(),
+  payoutSources: z.array(payoutSource).optional(),
 })
 export const economicSend = z.object({
   sendId: z.uuid(),
@@ -123,6 +132,7 @@ export const economicErrors = [
   'CREDENTIAL_UNREADABLE',
   'MAP_CHANGED',
   'ACCOUNTING_MAP_REQUIRED',
+  'ACCOUNTING_PAYOUT_HISTORY_REVIEW',
   'DAY_CLOSE_NOT_FOUND',
   'EXPORT_NOT_FOUND',
   'VOUCHER_UNBALANCED',
@@ -582,6 +592,7 @@ const exportRow = z.object({
   day_close_id: z.uuid(),
   map_id: z.uuid(),
   baseline_export_id: z.uuid().nullable().optional(),
+  payout_sources: z.array(payoutSource).optional(),
   agreement_number: integer,
   journal_number: integer,
   voucher: z.array(exportLine),

@@ -578,6 +578,49 @@ HTTP fixtures test the product/purchase loop without a real merchant account.
 
 ## USB print verification, 2026-10-13
 
+Weblink software preparation (2026-10-22, #542): the owner requests locally
+testable implementation before the ZD420/iPad test. A separate dispatch journal
+can be developed without changing queue schemas or device grants. Before hosted
+activation, deliver the reviewed queue recovery UI, prove main/raw channel binding
+and authenticated reconnects, and verify
+the actual printer's TLS chain and output. Local journal tests do not settle
+those integration and hardware questions or authorize a new core table.
+
+Authentication preparation now includes per-device secret verification, local
+main/raw session generation checks, encrypted credential storage, device token
+renewal and fresh authorization through the existing context RPC. These are
+inactive components with local fixtures, not verified printer handshakes. Secure
+provisioning and actual TLS upgrade/channel association remain open. Queue
+fencing must also prevent old consumers from reclaiming a job after uncertain
+output. The owner approved the additive transport/state contract on 2026-10-22:
+one send permit per Weblink job, no stale-claim replay, and owner/admin inspection
+after revoking the old device. The backend extends existing printer/job records
+and retains device roles. Local SQL and worker tests exercise the contract.
+Weblink preparation now registers inactive printers behind a default-off server
+flag. Read models/status UI and owner/admin recovery controls retain unknown
+outcomes, require revocation and documented inspection, and never resend a job.
+Secure provisioning, service deployment and physical acceptance remain required
+before activation; legacy public registration still supports only TCP/USB.
+
+The local service now composes encrypted device sessions, independently
+authenticated main/raw WebSockets and the queue worker. It binds to loopback
+behind an authenticated TLS proxy and requires an already-provisioned identity.
+A durable attempt store halts on uncertain outcomes across restart. Automated
+fixtures verify these boundaries. Enrollment now seals the anonymous session
+before consuming a code and reconciles an uncertain pair by reading the same
+identity. A private operator CLI, serial poller, minimal release package and
+Linux service unit have local process-level coverage. Hosted enrollment, service
+installation and physical TLS/reconnect acceptance remain to be verified. Recovery
+retains uncertain evidence and requires reviewed revocation/new enrollment.
+No new core table or device-role change is authorized here.
+
+The pilot controls now use the existing paired device and an explicit owner/admin
+test acknowledgement. Enabling is gated by the default-off setup flag; pausing
+preserves jobs and evidence and cannot recall buffered output. Unresolved
+dispatches block activation. Local end-to-end tests must include real anonymous
+Auth enrollment and queue delivery, plus lost UI responses. Hardware acceptance
+remains separate from pilot enablement; the target store is selected privately.
+
 The owner requested native ZPL output to a USB Zebra and has hardware for a
 later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the
 existing device binding and label templates. Native fake-spooler tests and
@@ -753,3 +796,19 @@ text with a privacy hint. Direct product reads are unavailable.
 The owner also approved updating the two existing mapping assertions for
 `/members` and `/account` to their new articles, while keeping generic help
 coverage on an unmapped route and preserving all other mapping cases.
+
+## Seller payout accounting (#561, 2026-10-22)
+
+The owner requests implementation of complete seller payout postings for
+Fortnox and e-conomic. The implementation adds an explicitly mapped counterpart
+to the existing paid daily amount, with complete-pair validation. It does not
+choose accounts or change payment approval, execution, timing or VAT policy.
+
+Fortnox sends now freeze differences against the confirmed daily target, with
+reviewed baselines and cross-version holds. New closes freeze payout IDs and
+payment references. Historic exports with incomplete payout evidence are blocked
+for manual reconciliation; no automatic correction or resend is inferred.
+Real-store mapping and historical reconciliation evidence remain required.
+Bank-statement matching and external POS posting ownership are not resolved by
+this implementation request. Payment confirmation alone does not create or send
+an accounting export; automatic export creation remains a separate scope.

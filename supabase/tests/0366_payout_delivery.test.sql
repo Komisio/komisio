@@ -1,0 +1,70 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values ('f0000000-0000-4000-8000-000000005621','payout-delivery@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000005621","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Payout delivery','payout-delivery',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','delivery@example.test','')::text,true);
+select adjust_seller_ledger(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,100000,'Synthetic balance');
+select set_config('test.p1',request_payout(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,12345)::text,true);
+select set_config('test.p2',request_payout(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,23456)::text,true);
+select approve_payout(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.p1')::uuid);
+select approve_payout(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.p2')::uuid);
+select set_config('test.zero',generate_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),(now() at time zone 'Europe/Stockholm')::date)::text,true);
+select is((select payout_sources from day_closes where id=current_setting('test.zero')::uuid),'[]'::jsonb,'requested and approved payouts are not accounting facts');
+select confirm_payout_payments(current_setting('test.tenant')::uuid,gen_random_uuid(),'SEK',jsonb_build_array(jsonb_build_object('payoutId',current_setting('test.p1'),'amountOre',12345,'reference','BANK-A')));
+select set_config('test.c1',generate_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),(now() at time zone 'Europe/Stockholm')::date)::text,true);
+select is((select payout_sources->0->>'payoutId' from day_closes where id=current_setting('test.c1')::uuid),current_setting('test.p1'),'close freezes paid payout identity');
+select is((select payout_sources->0->>'reference' from day_closes where id=current_setting('test.c1')::uuid),'BANK-A','close freezes payment reference');
+select publish_accounting_map(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'{"payoutsPaidOre":{"account":"1930","side":"credit"},"payoutsPaidCounterpartOre":{"account":"2890","side":"debit"}}');
+select set_config('test.e1',export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.c1')::uuid)::text,true);
+select store_fortnox_connection(current_setting('test.tenant')::uuid,'561','Synthetic','', '{"iv":"a","tag":"b","data":"c"}','bookkeeping',now()+interval '1 hour');
+select set_config('test.s1',gen_random_uuid()::text,true);
+select is(preview_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.e1')::uuid)->>'debitOre','12345','first send includes full paid amount');
+select begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,current_setting('test.e1')::uuid);
+select confirm_payout_payments(current_setting('test.tenant')::uuid,gen_random_uuid(),'SEK',jsonb_build_array(jsonb_build_object('payoutId',current_setting('test.p2'),'amountOre',23456,'reference','BANK-B')));
+select set_config('test.c2',generate_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),(now() at time zone 'Europe/Stockholm')::date)::text,true);
+select set_config('test.e2',export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.c2')::uuid)::text,true);
+select is(preview_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.e2')::uuid)->>'blockedReason','FORTNOX_DAY_UNRESOLVED','pending older version blocks later version');
+select throws_like($$select begin_fortnox_send(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.e2')::uuid)$$,'%FORTNOX_DAY_UNRESOLVED%','database enforces cross-version hold');
+select complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s1')::uuid,'sent','A',42,2026,'','');
+select set_config('test.preview',preview_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.e2')::uuid)::text,true);
+select is(current_setting('test.preview')::jsonb->>'debitOre','23456','second send includes only new payout debit');
+select is(current_setting('test.preview')::jsonb->>'creditOre','23456','second send includes only new payout credit');
+select is(jsonb_array_length(current_setting('test.preview')::jsonb->'payoutSources'),1,'only additional payout source accompanies delta');
+select is(current_setting('test.preview')::jsonb->'payoutSources'->0->>'reference','BANK-B','delta retains new payment reference');
+select is((select debit_ore from accounting_exports where id=current_setting('test.e2')::uuid),35801::bigint,'SIE remains the complete daily target');
+select throws_like($$select begin_fortnox_send(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.e2')::uuid)$$,'%FORTNOX_BASELINE_CHANGED%','unreviewed baseline refused');
+select set_config('test.s2',gen_random_uuid()::text,true);
+select is(begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s2')::uuid,current_setting('test.e2')::uuid,current_setting('test.s1')::uuid)->>'debitOre','23456','reviewed delta freezes at send');
+select is(begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s2')::uuid,current_setting('test.e2')::uuid,current_setting('test.s1')::uuid)->>'dispatchAllowed','false','same request cannot dispatch twice');
+select is(fortnox_sends_page(current_setting('test.tenant')::uuid,current_setting('test.e2')::uuid)->0->'payout_sources'->0->>'reference','BANK-B','reopened delivery shows only its frozen additional payment reference');
+select throws_ok($$select fortnox_sends_page(gen_random_uuid(),current_setting('test.e2')::uuid)$$,'42501',null,'delivery evidence read cannot cross tenants');
+select is((select jsonb_array_length(payout_sources) from day_closes where id=current_setting('test.c1')::uuid),1,'later payment never changes earlier evidence');
+select throws_ok($$select preview_fortnox_send(gen_random_uuid(),current_setting('test.e1')::uuid)$$,'42501',null,'preview cannot cross tenants');
+reset role;
+select throws_ok($$update fortnox_voucher_sends set delta_voucher='[]' where id=current_setting('test.s2')::uuid$$,'55000',null,'frozen delivery cannot change');
+select ok(not has_function_privilege('authenticated','komisio_private.fortnox_delta_preview(public.accounting_exports)','execute'),'private preview is not exposed');
+-- Legacy exported files may already have been imported manually. A regenerated
+-- close does not establish that their payments are safe to export again.
+insert into day_closes(id,tenant_id,close_date,version,payouts_paid_ore,generated_by)
+ values('f0000000-0000-4000-8000-000000005629',current_setting('test.tenant')::uuid,'2026-09-01',1,12345,'f0000000-0000-4000-8000-000000005621');
+insert into accounting_exports(id,tenant_id,day_close_id,map_id,voucher,debit_ore,credit_ore,created_by)
+ select gen_random_uuid(),tenant_id,'f0000000-0000-4000-8000-000000005629',map_id,voucher,debit_ore,credit_ore,created_by from accounting_exports where id=current_setting('test.e1')::uuid;
+insert into day_closes(id,tenant_id,close_date,version,payouts_paid_ore,generated_by,payout_sources)
+ select 'f0000000-0000-4000-8000-000000005628',tenant_id,'2026-09-01',2,payouts_paid_ore,generated_by,payout_sources from day_closes where id=current_setting('test.c1')::uuid;
+set local role authenticated;
+select throws_like($$select export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),'f0000000-0000-4000-8000-000000005628')$$,'%ACCOUNTING_PAYOUT_HISTORY_REVIEW%','new evidence cannot silently repair already exported legacy payouts');
+select throws_like($$select export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),'f0000000-0000-4000-8000-000000005629')$$,'%ACCOUNTING_PAYOUT_HISTORY_REVIEW%','legacy source snapshot remains unavailable for new exports');
+select complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.s2')::uuid,'sent','A',43,2026,'','');
+select is(preview_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.e2')::uuid)->>'blockedReason','FORTNOX_NO_CHANGES','confirmed target has no additional postings');
+select publish_accounting_map(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_accounting_map(current_setting('test.tenant')::uuid)->>'id')::uuid,current_accounting_map(current_setting('test.tenant')::uuid)->'map');
+select export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.c2')::uuid);
+select is((select count(*) from jsonb_array_elements(fortnox_automatic_exports(current_setting('test.tenant')::uuid)) x
+ join accounting_exports e on e.id=(x->>'exportId')::uuid join day_closes c on c.id=e.day_close_id where c.id=current_setting('test.c2')::uuid),0::bigint,'already covered targets do not fill the bounded automatic queue');
+select disconnect_fortnox(current_setting('test.tenant')::uuid);
+select store_fortnox_connection(current_setting('test.tenant')::uuid,'changed-company','Synthetic','', '{"iv":"a","tag":"b","data":"c"}','bookkeeping',now()+interval '1 hour');
+select is(preview_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.e2')::uuid)->>'blockedReason','FORTNOX_DAY_CONTEXT_CHANGED','company change cannot reuse an old daily baseline');
+select * from finish();
+rollback;

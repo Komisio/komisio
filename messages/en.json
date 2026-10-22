@@ -360,7 +360,8 @@
     "collectionNotDue": "The collection deadline has not passed.",
     "overviewHelpLabel": "About receiving",
     "payoutBankReviewRequired": "An owner or administrator must review the seller’s bank details under Payouts first.",
-    "saleVatRequired": "The sale was not recorded because the store’s VAT treatment has not been selected. An owner or administrator must choose it in Store settings and publish the policy before you try again."
+    "saleVatRequired": "The sale was not recorded because the store’s VAT treatment has not been selected. An owner or administrator must choose it in Store settings and publish the policy before you try again.",
+    "payoutHistoryReview": "Historical payout evidence needs reconciliation. Do not send the same payment again."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -1615,6 +1616,7 @@
       "sellerCreditOre": "Seller credit (liability to sellers)",
       "creditReversedOre": "Seller credit reversed",
       "payoutsPaidOre": "Payouts paid",
+      "payoutsPaidCounterpartOre": "Payouts paid · counterpart",
       "mode:consignment_fee:grossOre": "Monthly fees · Fee in store currency",
       "mode:consignment_fee:netOre": "Monthly fees · Excluding VAT",
       "mode:consignment_fee:vatOre": "Monthly fees · VAT",
@@ -1706,6 +1708,13 @@
       "reason": "Reason",
       "hint": "AI fills empty rows. Existing accounts are kept.",
       "changed": "The account map or settings changed. Reload the page."
+    },
+    "payoutEvidence": {
+      "title": "Payouts in this document",
+      "reference": "Payment reference",
+      "payoutId": "Payout ID",
+      "sellerId": "Seller ID",
+      "paidAt": "Paid"
     }
   },
   "communications": {
@@ -2070,7 +2079,10 @@
       "claimed": "printing",
       "printed": "Sent to printer",
       "failed": "failed",
-      "cancelled": "cancelled"
+      "cancelled": "cancelled",
+      "dispatching": "Send attempt reserved",
+      "transport_accepted": "Transport accepted – output unverified",
+      "outcome_unknown": "Print outcome unknown"
     },
     "zebraPrint": "Print on Zebra",
     "close": "Close",
@@ -2103,7 +2115,30 @@
     "usbHint": "Requires Komisio Print 1.1 or later and the Zebra Windows driver.",
     "usbQueueName": "Windows printer name",
     "usbQueueHint": "Enter the exact name in Windows. Run list-usb-printers.cmd in the Komisio Print folder to list USB printers.",
-    "usbQueueInvalid": "Enter a local Windows USB printer name without backslashes or line breaks."
+    "usbQueueInvalid": "Enter a local Windows USB printer name without backslashes or line breaks.",
+    "weblink": {
+      "pairHint": "Create a code for the Weblink service. Give it to the service installer, then refresh the device list. Do not enter it in the Windows app.",
+      "enable": "Enable pilot test",
+      "pause": "Pause Weblink",
+      "refreshDevices": "Refresh devices",
+      "pilotHint": "Enabling permits queued and new print jobs. Test the connection and labels before using the printer in the store.",
+      "pilotAcknowledged": "I am ready to supervise the pilot and inspect every label.",
+      "pauseHint": "Pausing stops new sends. Labels already sent may still print; jobs and history are retained.",
+      "register": "Prepare Weblink printer",
+      "preparation": "The printer is registered as inactive. Pair the service and complete a supervised pilot test before using it in the store.",
+      "saved": "The change is confirmed.",
+      "unconfirmed": "The change could not be confirmed. Reload and check the current status before taking further action.",
+      "recovery": "Inspect print outcome",
+      "recoveryHint": "First revoke the device that sent the job. Then stop its connection and inspect the printer, buffered jobs and all requested copies. Revocation cannot recall data already sent.",
+      "revoke": "Revoke the sending device",
+      "inspected": "I have stopped the connection and inspected the printer, buffered jobs and all copies.",
+      "note": "Describe the inspection and result",
+      "result": "Inspected result",
+      "printed": "All copies printed and physically verified",
+      "cancelled": "Close job without confirming output",
+      "resolve": "Save inspection",
+      "acceptanceHint": "Transport acceptance is not proof of physical output. This job is not sent again automatically."
+    }
   },
   "purchases": {
     "title": "Own purchases",
@@ -2698,11 +2733,19 @@
       "SEND_NOT_FOUND": "The send was not found.",
       "SEND_NOT_PENDING": "The send is already closed.",
       "REQUEST_CONFLICT": "This request id was used for another send.",
-      "INVALID_INPUT": "The request was not valid."
+      "INVALID_INPUT": "The request was not valid.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Historical payout evidence needs reconciliation. Do not send the same payment again.",
+      "FORTNOX_DAY_UNRESOLVED": "An earlier delivery for this day is awaiting verification.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Earlier vouchers for this day need reconciliation before another delivery.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "The account mapping or connected company has changed. Reconcile earlier vouchers.",
+      "FORTNOX_BASELINE_CHANGED": "The baseline has changed. Review the delivery again.",
+      "FORTNOX_NO_CHANGES": "There are no new amounts to send."
     },
     "companyName": "Company name in Fortnox",
     "voucherUnknown": "The send outcome is uncertain:",
-    "recoveryHelp": "Help checking the send"
+    "recoveryHelp": "Help checking the send",
+    "reviewDelivery": "Review Fortnox delivery",
+    "deltaHint": "The difference from the last confirmed day close is shown below."
   },
   "zettle": {
     "automaticTitle": "Automatic receipt retrieval",
@@ -4585,7 +4628,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Multiple earlier exports for this date need reconciliation. Contact support before sending more.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Account, VAT or journal settings differ from the previous export. Reconcile the change before continuing.",
       "ECONOMIC_BASELINE_CHANGED": "Another export for this date has been confirmed. Reopen the day close and prepare a new export for the remaining change.",
-      "ECONOMIC_NO_CHANGES": "There are no new amounts to send for this day close."
+      "ECONOMIC_NO_CHANGES": "There are no new amounts to send for this day close.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Historical payout evidence needs reconciliation. Do not send the same payment again."
     },
     "deltaHint": "Only the change since the previous confirmed export is included.",
     "baselineLink": "View previous export"

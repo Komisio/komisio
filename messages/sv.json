@@ -360,7 +360,8 @@
     "collectionNotDue": "Hämtningsfristen har inte gått ut.",
     "overviewHelpLabel": "Om inlämning",
     "payoutBankReviewRequired": "En ägare eller administratör behöver granska säljarens kontouppgifter under Utbetalningar först.",
-    "saleVatRequired": "Försäljningen registrerades inte eftersom butikens momshantering inte har valts. En ägare eller administratör behöver välja momshantering i Butiksinställningar och publicera policyn innan du försöker igen."
+    "saleVatRequired": "Försäljningen registrerades inte eftersom butikens momshantering inte har valts. En ägare eller administratör behöver välja momshantering i Butiksinställningar och publicera policyn innan du försöker igen.",
+    "payoutHistoryReview": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -1615,6 +1616,7 @@
       "sellerCreditOre": "Säljartillgodo (skuld till säljare)",
       "creditReversedOre": "Återfört säljartillgodo",
       "payoutsPaidOre": "Utbetalt",
+      "payoutsPaidCounterpartOre": "Utbetalningar · motpost",
       "mode:consignment_fee:grossOre": "Månadsavgifter · Avgift i butikens valuta",
       "mode:consignment_fee:netOre": "Månadsavgifter · Exklusive moms",
       "mode:consignment_fee:vatOre": "Månadsavgifter · Moms",
@@ -1706,6 +1708,13 @@
       "reason": "Motivering",
       "hint": "AI fyller tomma rader. Befintliga konton behålls.",
       "changed": "Kontoplanen eller inställningarna har ändrats. Ladda om sidan."
+    },
+    "payoutEvidence": {
+      "title": "Utbetalningar i underlaget",
+      "reference": "Betalningsreferens",
+      "payoutId": "Utbetalnings-ID",
+      "sellerId": "Säljar-ID",
+      "paidAt": "Betald"
     }
   },
   "communications": {
@@ -2070,7 +2079,10 @@
       "claimed": "skrivs ut",
       "printed": "Skickad till skrivaren",
       "failed": "misslyckad",
-      "cancelled": "avbruten"
+      "cancelled": "avbruten",
+      "dispatching": "Sändningsförsök reserverat",
+      "transport_accepted": "Sändningen mottagen – utskrift ej verifierad",
+      "outcome_unknown": "Utskriftsresultat okänt"
     },
     "zebraPrint": "Skriv ut på Zebra",
     "close": "Stäng",
@@ -2103,7 +2115,30 @@
     "usbHint": "Kräver Komisio Print 1.1 eller senare och Zebras Windows-drivrutin.",
     "usbQueueName": "Skrivarnamn i Windows",
     "usbQueueHint": "Ange exakt namnet i Windows. Kör list-usb-printers.cmd i Komisio Print-mappen för att visa USB-skrivarna.",
-    "usbQueueInvalid": "Ange namnet på en lokal USB-skrivare i Windows, utan omvänt snedstreck eller radbrytningar."
+    "usbQueueInvalid": "Ange namnet på en lokal USB-skrivare i Windows, utan omvänt snedstreck eller radbrytningar.",
+    "weblink": {
+      "pairHint": "Skapa en kod för Weblink-tjänsten. Ge den till den som installerar tjänsten och uppdatera sedan enhetslistan. Koden ska inte anges i Windows-appen.",
+      "enable": "Aktivera pilottest",
+      "pause": "Pausa Weblink",
+      "refreshDevices": "Uppdatera enheter",
+      "pilotHint": "Aktiveringen tillåter köade och nya utskrifter. Testa anslutning och etiketter innan skrivaren används i butiken.",
+      "pilotAcknowledged": "Jag är redo att övervaka pilottestet och kontrollera alla etiketter.",
+      "pauseHint": "Paus stoppar nya sändningar. Etiketter som redan skickats kan fortfarande skrivas ut; jobb och historik behålls.",
+      "register": "Förbered Weblink-skrivare",
+      "preparation": "Skrivaren registreras som inaktiv. Parkoppla tjänsten och genomför ett övervakat pilottest innan skrivaren används i butiken.",
+      "saved": "Ändringen är bekräftad.",
+      "unconfirmed": "Ändringen kunde inte bekräftas. Ladda om och kontrollera aktuell status innan du gör något mer.",
+      "recovery": "Kontrollera utskriftsresultat",
+      "recoveryHint": "Spärra först enheten som skickade jobbet. Stoppa sedan dess anslutning och kontrollera skrivaren, buffrade jobb och alla beställda kopior. Spärrning kan inte återkalla data som redan skickats.",
+      "revoke": "Spärra den sändande enheten",
+      "inspected": "Jag har stoppat anslutningen och kontrollerat skrivaren, buffrade jobb och alla kopior.",
+      "note": "Beskriv kontrollen och resultatet",
+      "result": "Kontrollerat resultat",
+      "printed": "Alla kopior utskrivna och fysiskt kontrollerade",
+      "cancelled": "Avsluta jobbet utan att bekräfta utskrift",
+      "resolve": "Spara kontrollen",
+      "acceptanceHint": "Mottagen sändning är inte bevis på fysisk utskrift. Jobbet skickas inte automatiskt igen."
+    }
   },
   "purchases": {
     "title": "Egna inköp",
@@ -2698,11 +2733,19 @@
       "SEND_NOT_FOUND": "Sändningen hittades inte.",
       "SEND_NOT_PENDING": "Sändningen är redan avslutad.",
       "REQUEST_CONFLICT": "Det här förfrågnings-id:t har använts för en annan sändning.",
-      "INVALID_INPUT": "Förfrågan var inte giltig."
+      "INVALID_INPUT": "Förfrågan var inte giltig.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen.",
+      "FORTNOX_DAY_UNRESOLVED": "En tidigare skickning för dagen väntar på kontroll.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Dagens tidigare verifikat behöver stämmas av innan du skickar igen.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "Kontoplanen eller det anslutna företaget har ändrats. Stäm av tidigare verifikat.",
+      "FORTNOX_BASELINE_CHANGED": "Underlaget har ändrats. Granska skickningen igen.",
+      "FORTNOX_NO_CHANGES": "Det finns inga nya belopp att skicka."
     },
     "companyName": "Företagsnamn i Fortnox",
     "voucherUnknown": "Sändningens resultat är osäkert:",
-    "recoveryHelp": "Hjälp att kontrollera sändningen"
+    "recoveryHelp": "Hjälp att kontrollera sändningen",
+    "reviewDelivery": "Granska Fortnox-skickning",
+    "deltaHint": "Skillnaden mot senast bekräftade dagsavslut visas nedan."
   },
   "zettle": {
     "automaticTitle": "Automatisk kvittohämtning",
@@ -4585,7 +4628,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Flera tidigare exporter för samma datum behöver stämmas av. Kontakta supporten innan du skickar mer.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, moms- eller kassaboksinställningarna skiljer sig från föregående export. Stäm av ändringen innan du fortsätter.",
       "ECONOMIC_BASELINE_CHANGED": "En annan export för samma datum har bekräftats. Öppna dagsavslutet igen och förbered ett nytt underlag med återstående förändring.",
-      "ECONOMIC_NO_CHANGES": "Inga nya belopp återstår att skicka för detta dagsavslut."
+      "ECONOMIC_NO_CHANGES": "Inga nya belopp återstår att skicka för detta dagsavslut.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen."
     },
     "deltaHint": "Endast förändringen sedan föregående bekräftade export ingår.",
     "baselineLink": "Visa föregående export"

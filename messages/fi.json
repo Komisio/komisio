@@ -360,7 +360,8 @@
     "collectionNotDue": "Noutoaika ei ole vielä päättynyt.",
     "overviewHelpLabel": "Tietoa vastaanotosta",
     "payoutBankReviewRequired": "Omistajan tai ylläpitäjän on ensin tarkistettava myyjän tilitiedot Maksut-osiossa.",
-    "saleVatRequired": "Myyntiä ei kirjattu, koska myymälän ALV-käsittelyä ei ole valittu. Omistajan tai ylläpitäjän on valittava se myymälän asetuksissa ja julkaistava käytäntö ennen uutta yritystä."
+    "saleVatRequired": "Myyntiä ei kirjattu, koska myymälän ALV-käsittelyä ei ole valittu. Omistajan tai ylläpitäjän on valittava se myymälän asetuksissa ja julkaistava käytäntö ennen uutta yritystä.",
+    "payoutHistoryReview": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -1615,6 +1616,7 @@
       "sellerCreditOre": "Tuojan hyvitys (velka tuojille)",
       "creditReversedOre": "Tuojan hyvitys peruttu",
       "payoutsPaidOre": "Maksetut tilitykset",
+      "payoutsPaidCounterpartOre": "Maksetut tilitykset · vastakirjaus",
       "mode:consignment_fee:grossOre": "Kuukausimaksut · Maksu liikkeen valuutassa",
       "mode:consignment_fee:netOre": "Kuukausimaksut · Ilman ALV:tä",
       "mode:consignment_fee:vatOre": "Kuukausimaksut · ALV",
@@ -1706,6 +1708,13 @@
       "reason": "Perustelu",
       "hint": "Tekoäly täyttää tyhjät rivit. Nykyiset tilit säilyvät.",
       "changed": "Tilikartta tai asetukset ovat muuttuneet. Lataa sivu uudelleen."
+    },
+    "payoutEvidence": {
+      "title": "Tämän tositteen tilitykset",
+      "reference": "Maksuviite",
+      "payoutId": "Tilityksen tunnus",
+      "sellerId": "Myyjän tunnus",
+      "paidAt": "Maksettu"
     }
   },
   "communications": {
@@ -2070,7 +2079,10 @@
       "claimed": "tulostetaan",
       "printed": "Lähetetty tulostimelle",
       "failed": "epäonnistui",
-      "cancelled": "peruutettu"
+      "cancelled": "peruutettu",
+      "dispatching": "Lähetysyritys varattu",
+      "transport_accepted": "Siirto vastaanotettu – tulostusta ei vahvistettu",
+      "outcome_unknown": "Tulostuksen tulos tuntematon"
     },
     "zebraPrint": "Tulosta Zebralla",
     "close": "Sulje",
@@ -2103,7 +2115,30 @@
     "usbHint": "Vaatii Komisio Print 1.1:n tai uudemman ja Zebran Windows-ajurin.",
     "usbQueueName": "Tulostimen nimi Windowsissa",
     "usbQueueHint": "Anna tarkka nimi Windowsissa. Suorita list-usb-printers.cmd Komisio Print -kansiossa nähdäksesi USB-tulostimet.",
-    "usbQueueInvalid": "Anna paikallisen USB-tulostimen Windows-nimi ilman kenoviivoja tai rivinvaihtoja."
+    "usbQueueInvalid": "Anna paikallisen USB-tulostimen Windows-nimi ilman kenoviivoja tai rivinvaihtoja.",
+    "weblink": {
+      "pairHint": "Luo koodi Weblink-palvelulle. Anna se palvelun asentajalle ja päivitä sitten laiteluettelo. Älä syötä koodia Windows-sovellukseen.",
+      "enable": "Ota pilottitesti käyttöön",
+      "pause": "Keskeytä Weblink",
+      "refreshDevices": "Päivitä laitteet",
+      "pilotHint": "Käyttöönotto sallii jonossa olevat ja uudet tulostustyöt. Testaa yhteys ja tarrat ennen tulostimen käyttöä myymälässä.",
+      "pilotAcknowledged": "Olen valmis valvomaan pilottitestiä ja tarkistamaan jokaisen tarran.",
+      "pauseHint": "Keskeytys estää uudet lähetykset. Jo lähetetyt tarrat voivat edelleen tulostua; työt ja historia säilytetään.",
+      "register": "Valmistele Weblink-tulostin",
+      "preparation": "Tulostin rekisteröidään passiivisena. Yhdistä palvelu ja suorita valvottu pilottitesti ennen tulostimen käyttöä myymälässä.",
+      "saved": "Muutos on vahvistettu.",
+      "unconfirmed": "Muutosta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista nykyinen tila ennen jatkamista.",
+      "recovery": "Tarkista tulostuksen tulos",
+      "recoveryHint": "Estä ensin työn lähettänyt laite. Katkaise sitten yhteys ja tarkista tulostin, puskuroidut työt ja kaikki tilatut kopiot. Esto ei peru jo lähetettyjä tietoja.",
+      "revoke": "Estä lähettänyt laite",
+      "inspected": "Olen katkaissut yhteyden ja tarkistanut tulostimen, puskuroidut työt ja kaikki kopiot.",
+      "note": "Kuvaile tarkistus ja tulos",
+      "result": "Tarkistettu tulos",
+      "printed": "Kaikki kopiot tulostettu ja tarkistettu fyysisesti",
+      "cancelled": "Sulje työ vahvistamatta tulostusta",
+      "resolve": "Tallenna tarkistus",
+      "acceptanceHint": "Siirron vastaanotto ei todista fyysistä tulostusta. Työtä ei lähetetä automaattisesti uudelleen."
+    }
   },
   "purchases": {
     "title": "Omat ostot",
@@ -2698,11 +2733,19 @@
       "SEND_NOT_FOUND": "Lähetystä ei löytynyt.",
       "SEND_NOT_PENDING": "Lähetys on jo suljettu.",
       "REQUEST_CONFLICT": "Tämä pyyntötunnus on käytetty toiseen lähetykseen.",
-      "INVALID_INPUT": "Pyyntö ei ollut kelvollinen."
+      "INVALID_INPUT": "Pyyntö ei ollut kelvollinen.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen.",
+      "FORTNOX_DAY_UNRESOLVED": "Päivän aiempi lähetys odottaa tarkistusta.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Päivän aiemmat tositteet on täsmäytettävä ennen uutta lähetystä.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "Tilikartta tai yhdistetty yritys on muuttunut. Täsmäytä aiemmat tositteet.",
+      "FORTNOX_BASELINE_CHANGED": "Vertailutiedot ovat muuttuneet. Tarkista lähetys uudelleen.",
+      "FORTNOX_NO_CHANGES": "Uusia lähetettäviä summia ei ole."
     },
     "companyName": "Yrityksen nimi Fortnoxissa",
     "voucherUnknown": "Lähetyksen tulos on epävarma:",
-    "recoveryHelp": "Ohje lähetyksen tarkistamiseen"
+    "recoveryHelp": "Ohje lähetyksen tarkistamiseen",
+    "reviewDelivery": "Tarkista Fortnox-lähetys",
+    "deltaHint": "Alla näkyy ero viimeksi vahvistettuun päivän päätökseen."
   },
   "zettle": {
     "automaticTitle": "Automaattinen kuittien nouto",
@@ -4591,7 +4634,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Useita aikaisempia vientejä tälle päivälle on täsmäytettävä. Ota yhteyttä tukeen ennen uusia lähetyksiä.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Tili-, alv- tai päiväkirja-asetukset eroavat edellisestä viennistä. Selvitä muutos ennen jatkamista.",
       "ECONOMIC_BASELINE_CHANGED": "Toinen vienti tälle päivälle on vahvistettu. Avaa päivän päätös uudelleen ja valmistele uusi vienti jäljellä olevasta muutoksesta.",
-      "ECONOMIC_NO_CHANGES": "Tälle päivän päätökselle ei ole uusia lähetettäviä summia."
+      "ECONOMIC_NO_CHANGES": "Tälle päivän päätökselle ei ole uusia lähetettäviä summia.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen."
     },
     "deltaHint": "Mukana on vain muutos edellisen vahvistetun viennin jälkeen.",
     "baselineLink": "Näytä edellinen vienti"

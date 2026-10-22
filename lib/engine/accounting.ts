@@ -2,6 +2,15 @@ import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { voucherLine } from '../accounting/sie'
 
+export const payoutSource = z.object({
+  payoutId: z.uuid(),
+  sellerId: z.uuid(),
+  amountOre: z.number().int().positive(),
+  reference: z.string(),
+  paidAt: z.string(),
+})
+export type PayoutSource = z.infer<typeof payoutSource>
+
 // Accounting export (P2 S17): the tenant's account map and the exports made
 // under it. SQL validates the map, builds voucher lines and refuses an
 // unbalanced voucher; this module validates the boundary and reads.
@@ -19,6 +28,7 @@ export const accountingKeys = [
   'sellerCreditOre',
   'creditReversedOre',
   'payoutsPaidOre',
+  'payoutsPaidCounterpartOre',
   'mode:consignment_margin:netOre',
   'mode:consignment_margin:vatOre',
   'mode:consignment_full:netOre',
@@ -31,6 +41,31 @@ export const accountingKeys = [
   'mode:store_full:vatOre',
 ] as const
 export type AccountingKey = (typeof accountingKeys)[number]
+type PayoutMapping = {
+  account?: string
+  side?: string
+  excludeReason?: string
+}
+
+/** Both explicitly selected accounts represent the same paid payout amount. */
+export function payoutMappingComplete(
+  map: Record<string, PayoutMapping>,
+  allowExclusion = false,
+) {
+  const payment = map.payoutsPaidOre
+  const counterpart = map.payoutsPaidCounterpartOre
+  if (!payment || !counterpart) return false
+  if (allowExclusion && payment.excludeReason && counterpart.excludeReason)
+    return true
+  return Boolean(
+    payment.account &&
+    counterpart.account &&
+    payment.account !== counterpart.account &&
+    ['debit', 'credit'].includes(payment.side ?? '') &&
+    ['debit', 'credit'].includes(counterpart.side ?? '') &&
+    payment.side !== counterpart.side,
+  )
+}
 export const accountMapping = z.strictObject({
   account: z.string().regex(/^[1-9]\d{3}$/),
   side: z.enum(['debit', 'credit']),
@@ -43,6 +78,10 @@ export const accountingMapBody = z
         (accountingKeys as readonly string[]).includes(k),
       ),
     'Unknown amount key',
+  )
+  .refine(
+    (m) => !m.payoutsPaidCounterpartOre || payoutMappingComplete(m),
+    'Payout postings need different accounts and opposite sides',
   )
 export type AccountingMapBody = z.infer<typeof accountingMapBody>
 
@@ -157,7 +196,7 @@ export async function readAccountingExport(
   const parsed = exportRow.parse(row.data)
   const close = await client
     .from('day_closes')
-    .select('close_date,version')
+    .select('close_date,version,payout_sources')
     .eq('tenant_id', tenantId)
     .eq('id', parsed.day_close_id)
     .maybeSingle()
@@ -166,5 +205,10 @@ export async function readAccountingExport(
     ...parsed,
     closeDate: z.string().parse(close.data.close_date),
     closeVersion: z.number().int().parse(close.data.version),
+    payoutSources: z
+      .array(payoutSource)
+      .nullable()
+      .optional()
+      .parse(close.data.payout_sources),
   }
 }

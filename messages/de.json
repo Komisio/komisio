@@ -360,7 +360,8 @@
     "collectionNotDue": "Die Abholfrist ist noch nicht abgelaufen.",
     "overviewHelpLabel": "Über die Annahme",
     "payoutBankReviewRequired": "Ein Inhaber oder Administrator muss zuerst die Bankdaten des Verkäufers unter Auszahlungen prüfen.",
-    "saleVatRequired": "Der Verkauf wurde nicht erfasst, da die Umsatzsteuerbehandlung des Geschäfts noch nicht ausgewählt wurde. Ein Inhaber oder Administrator muss sie in den Geschäftseinstellungen auswählen und die Richtlinie veröffentlichen, bevor du es erneut versuchst."
+    "saleVatRequired": "Der Verkauf wurde nicht erfasst, da die Umsatzsteuerbehandlung des Geschäfts noch nicht ausgewählt wurde. Ein Inhaber oder Administrator muss sie in den Geschäftseinstellungen auswählen und die Richtlinie veröffentlichen, bevor du es erneut versuchst.",
+    "payoutHistoryReview": "Ältere Auszahlungsbelege müssen abgestimmt werden. Senden Sie dieselbe Zahlung nicht erneut."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -1615,6 +1616,7 @@
       "sellerCreditOre": "Einlieferer-Gutschrift (Verbindlichkeit gegenüber Einlieferern)",
       "creditReversedOre": "Einlieferer-Gutschrift storniert",
       "payoutsPaidOre": "Auszahlungen bezahlt",
+      "payoutsPaidCounterpartOre": "Auszahlungen · Gegenbuchung",
       "mode:consignment_fee:grossOre": "Monatsgebühren · Gebühr in Geschäftswährung",
       "mode:consignment_fee:netOre": "Monatsgebühren · Ohne Umsatzsteuer",
       "mode:consignment_fee:vatOre": "Monatsgebühren · Umsatzsteuer",
@@ -1706,6 +1708,13 @@
       "reason": "Begründung",
       "hint": "KI füllt leere Zeilen. Bestehende Konten bleiben erhalten.",
       "changed": "Kontenzuordnung oder Einstellungen geändert. Seite neu laden."
+    },
+    "payoutEvidence": {
+      "title": "Auszahlungen in diesem Beleg",
+      "reference": "Zahlungsreferenz",
+      "payoutId": "Auszahlungs-ID",
+      "sellerId": "Verkäufer-ID",
+      "paidAt": "Bezahlt"
     }
   },
   "communications": {
@@ -2070,7 +2079,10 @@
       "claimed": "wird gedruckt",
       "printed": "An Drucker gesendet",
       "failed": "fehlgeschlagen",
-      "cancelled": "abgebrochen"
+      "cancelled": "abgebrochen",
+      "dispatching": "Sendeversuch reserviert",
+      "transport_accepted": "Übertragung angenommen – Ausdruck ungeprüft",
+      "outcome_unknown": "Druckergebnis unbekannt"
     },
     "zebraPrint": "Auf Zebra drucken",
     "close": "Schließen",
@@ -2103,7 +2115,30 @@
     "usbHint": "Erfordert Komisio Print 1.1 oder neuer und den Zebra-Windows-Treiber.",
     "usbQueueName": "Druckername in Windows",
     "usbQueueHint": "Geben Sie den genauen Namen in Windows ein. Starten Sie list-usb-printers.cmd im Komisio-Print-Ordner, um USB-Drucker anzuzeigen.",
-    "usbQueueInvalid": "Geben Sie einen lokalen Windows-USB-Druckernamen ohne umgekehrte Schrägstriche oder Zeilenumbrüche ein."
+    "usbQueueInvalid": "Geben Sie einen lokalen Windows-USB-Druckernamen ohne umgekehrte Schrägstriche oder Zeilenumbrüche ein.",
+    "weblink": {
+      "pairHint": "Erstellen Sie einen Code für den Weblink-Dienst. Geben Sie ihn der Person, die den Dienst einrichtet, und aktualisieren Sie danach die Geräteliste. Geben Sie ihn nicht in der Windows-App ein.",
+      "enable": "Pilottest aktivieren",
+      "pause": "Weblink pausieren",
+      "refreshDevices": "Geräte aktualisieren",
+      "pilotHint": "Die Aktivierung erlaubt wartende und neue Druckaufträge. Testen Sie Verbindung und Etiketten vor dem Einsatz im Geschäft.",
+      "pilotAcknowledged": "Ich bin bereit, den Pilottest zu beaufsichtigen und jedes Etikett zu prüfen.",
+      "pauseHint": "Pausieren stoppt neue Übertragungen. Bereits gesendete Etiketten können noch gedruckt werden; Aufträge und Verlauf bleiben erhalten.",
+      "register": "Weblink-Drucker vorbereiten",
+      "preparation": "Der Drucker wird als inaktiv registriert. Koppeln Sie den Dienst und führen Sie vor dem Einsatz im Geschäft einen beaufsichtigten Pilottest durch.",
+      "saved": "Die Änderung ist bestätigt.",
+      "unconfirmed": "Die Änderung konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie den aktuellen Status, bevor Sie fortfahren.",
+      "recovery": "Druckergebnis prüfen",
+      "recoveryHint": "Sperren Sie zuerst das sendende Gerät. Stoppen Sie dann die Verbindung und prüfen Sie Drucker, gepufferte Aufträge und alle bestellten Kopien. Die Sperrung kann bereits gesendete Daten nicht zurückrufen.",
+      "revoke": "Sendendes Gerät sperren",
+      "inspected": "Ich habe die Verbindung gestoppt und Drucker, gepufferte Aufträge und alle Kopien geprüft.",
+      "note": "Prüfung und Ergebnis beschreiben",
+      "result": "Geprüftes Ergebnis",
+      "printed": "Alle Kopien gedruckt und physisch geprüft",
+      "cancelled": "Auftrag ohne Druckbestätigung schließen",
+      "resolve": "Prüfung speichern",
+      "acceptanceHint": "Eine bestätigte Übertragung beweist keinen physischen Ausdruck. Der Auftrag wird nicht automatisch erneut gesendet."
+    }
   },
   "purchases": {
     "title": "Eigene Einkäufe",
@@ -2698,11 +2733,19 @@
       "SEND_NOT_FOUND": "Der Versand wurde nicht gefunden.",
       "SEND_NOT_PENDING": "Der Versand ist bereits abgeschlossen.",
       "REQUEST_CONFLICT": "Diese Anfrage-ID wurde für einen anderen Versand verwendet.",
-      "INVALID_INPUT": "Die Anfrage war ungültig."
+      "INVALID_INPUT": "Die Anfrage war ungültig.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Ältere Auszahlungsbelege müssen abgestimmt werden. Senden Sie dieselbe Zahlung nicht erneut.",
+      "FORTNOX_DAY_UNRESOLVED": "Eine frühere Übertragung für diesen Tag wartet auf Prüfung.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Frühere Belege dieses Tages müssen vor einer weiteren Übertragung abgestimmt werden.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "Kontenzuordnung oder verbundenes Unternehmen wurden geändert. Stimmen Sie frühere Belege ab.",
+      "FORTNOX_BASELINE_CHANGED": "Die Vergleichsbasis hat sich geändert. Prüfen Sie die Übertragung erneut.",
+      "FORTNOX_NO_CHANGES": "Es gibt keine neuen Beträge zu übertragen."
     },
     "companyName": "Firmenname in Fortnox",
     "voucherUnknown": "Das Ergebnis der Sendung ist ungewiss:",
-    "recoveryHelp": "Hilfe zur Prüfung der Sendung"
+    "recoveryHelp": "Hilfe zur Prüfung der Sendung",
+    "reviewDelivery": "Fortnox-Übertragung prüfen",
+    "deltaHint": "Unten wird die Differenz zum zuletzt bestätigten Tagesabschluss angezeigt."
   },
   "zettle": {
     "automaticTitle": "Automatischer Belegabruf",
@@ -4591,7 +4634,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Mehrere frühere Exporte für dieses Datum müssen abgeglichen werden. Kontaktieren Sie vor weiteren Übertragungen den Support.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, Steuer- oder Journaleinstellungen weichen vom vorherigen Export ab. Klären Sie die Änderung, bevor Sie fortfahren.",
       "ECONOMIC_BASELINE_CHANGED": "Ein anderer Export für dieses Datum wurde bestätigt. Öffnen Sie den Tagesabschluss erneut und erstellen Sie einen neuen Export für die verbleibende Änderung.",
-      "ECONOMIC_NO_CHANGES": "Für diesen Tagesabschluss sind keine neuen Beträge zu übertragen."
+      "ECONOMIC_NO_CHANGES": "Für diesen Tagesabschluss sind keine neuen Beträge zu übertragen.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Ältere Auszahlungsbelege müssen abgestimmt werden. Senden Sie dieselbe Zahlung nicht erneut."
     },
     "deltaHint": "Enthalten ist nur die Änderung seit dem letzten bestätigten Export.",
     "baselineLink": "Vorherigen Export anzeigen"

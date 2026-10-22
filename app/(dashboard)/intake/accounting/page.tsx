@@ -393,6 +393,7 @@ export default async function Accounting({
                       connected={fortnox.connected}
                       canSend={canEditMap}
                       d={all.fortnox}
+                      accounting={d}
                     />
                   </div>
                 )}

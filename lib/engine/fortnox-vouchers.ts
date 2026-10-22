@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { readCompanyInformation } from '../../extensions/fortnox/auth'
 import { createVoucher } from '../../extensions/fortnox/vouchers'
 import { fortnoxAccessToken } from './fortnox-connection'
+import { payoutSource } from './accounting'
 
 // Sending one recorded export to Fortnox as one voucher. The database opens
 // the send (one live send per export), the application talks to Fortnox,
@@ -14,6 +15,29 @@ const voucherLine = z.object({
   side: z.enum(['debit', 'credit']),
   amountOre: z.number().int().nonnegative(),
 })
+export const fortnoxPreview = z.object({
+  baselineSendId: z.uuid().nullable(),
+  baselineCloseVersion: z.number().int().nonnegative(),
+  blockedReason: z.string(),
+  lines: z.array(voucherLine),
+  debitOre: z.number().int(),
+  creditOre: z.number().int(),
+  payoutSources: z.array(payoutSource),
+})
+export type FortnoxPreview = z.infer<typeof fortnoxPreview>
+
+export async function previewFortnoxSend(
+  client: SupabaseClient,
+  tenant: string,
+  exportId: string,
+) {
+  const result = await client.rpc('preview_fortnox_send', {
+    p_tenant: z.uuid().parse(tenant),
+    p_export: z.uuid().parse(exportId),
+  })
+  if (result.error) throw new Error(result.error.message)
+  return fortnoxPreview.parse(result.data)
+}
 export const sendState = z.object({
   dispatchAllowed: z.boolean().default(false),
   sendId: z.uuid(),
@@ -72,6 +96,9 @@ const sendRow = z.object({
   detail: z.string(),
   created_at: z.string(),
   completed_at: z.string().nullable(),
+  delta_voucher: z.array(voucherLine).nullable().optional(),
+  baseline_send_id: z.uuid().nullable().optional(),
+  payout_sources: z.array(payoutSource).optional(),
 })
 export type FortnoxSendRow = z.infer<typeof sendRow>
 
@@ -81,20 +108,12 @@ export async function readFortnoxSends(
   tenantInput: string,
   exportInput?: string,
 ) {
-  let query = client
-    .from('fortnox_voucher_sends')
-    .select(
-      'id,export_id,database_number,status,voucher_series,voucher_number,financial_year,error_code,detail,created_at,completed_at',
-    )
-    .eq('tenant_id', z.uuid().parse(tenantInput))
-  // Filter before limiting, so an older unresolved export is still reachable.
-  if (exportInput) query = query.eq('export_id', z.uuid().parse(exportInput))
-  const r = await query
-    .order('created_at', { ascending: false })
-    .limit(exportInput ? 1 : 200)
-  // Table not migrated yet (deploy gap): no sends to show.
-  if (r.error?.code === 'PGRST205' || r.error?.code === '42P01')
-    return new Map<string, FortnoxSendRow>()
+  // The scoped read derives delivery sources from immutable baseline/target
+  // closes and filters the exact export before applying the limit.
+  const r = await client.rpc('fortnox_sends_page', {
+    p_tenant: z.uuid().parse(tenantInput),
+    p_export: exportInput ? z.uuid().parse(exportInput) : null,
+  })
   if (r.error) throw new Error('Unable to read Fortnox sends')
   const latest = new Map<string, FortnoxSendRow>()
   for (const row of z.array(sendRow).parse(r.data))
@@ -136,12 +155,14 @@ export async function sendExportToFortnox(
   requestInput: string,
   source: Record<string, string | undefined>,
   http?: typeof fetch,
+  expectedBaseline: string | null = null,
 ): Promise<FortnoxSendState> {
   const tenantId = z.uuid().parse(tenantInput)
   const begin = await client.rpc('begin_fortnox_send', {
     p_tenant: tenantId,
     p_id: z.uuid().parse(requestInput),
     p_export: z.uuid().parse(exportInput),
+    p_expected_baseline: z.uuid().nullable().parse(expectedBaseline),
   })
   if (begin.error) throw new Error(begin.error.message)
   const opened = sendState.parse(begin.data)

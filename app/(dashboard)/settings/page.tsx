@@ -1,3 +1,8 @@
+import {
+  WeblinkSetup,
+  WeblinkRecovery,
+  WeblinkPilot,
+} from '@/components/intake/weblink-forms'
 import { helpArticle } from '@/lib/help/content'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { LegalLinks } from '@/components/platform/legal-links'
@@ -195,7 +200,26 @@ export default async function Settings({
       reference={references.get(`${job.reference_kind}:${job.reference_id}`)}
       locale={ctx.locale}
       d={pr}
-    />
+    >
+      {manages &&
+        job.dispatch_device_id &&
+        ['dispatching', 'transport_accepted', 'outcome_unknown'].includes(
+          job.status,
+        ) && (
+          <WeblinkRecovery
+            tenantId={active.id}
+            jobId={job.id}
+            deviceId={job.dispatch_device_id}
+            revoked={
+              !!devices?.find((device) => device.id === job.dispatch_device_id)
+                ?.revokedAt
+            }
+            d={pr}
+            reload={d.intake.reload}
+            leaveUnsaved={d.leaveUnsaved}
+          />
+        )}
+    </PrintJobDetails>
   )
   return (
     <div className="settings-page">
@@ -317,31 +341,67 @@ export default async function Settings({
                       <details key={p.id}>
                         <summary>
                           {p.name} ·{' '}
-                          {p.transport === 'tcp' ? p.address : pr.usb} ·{' '}
-                          {p.active ? pr.activeLabel : pr.inactiveLabel}
+                          {p.transport === 'weblink'
+                            ? 'Weblink'
+                            : p.transport === 'tcp'
+                              ? p.address
+                              : pr.usb}{' '}
+                          · {p.active ? pr.activeLabel : pr.inactiveLabel}
                         </summary>
-                        {manages && (
+                        {p.transport === 'weblink' && (
+                          <p>
+                            {p.active
+                              ? pr.weblink.acceptanceHint
+                              : pr.weblink.preparation}
+                          </p>
+                        )}
+                        {manages && p.transport !== 'weblink' && (
                           <PrinterForm
                             tenantId={active.id}
-                            existing={p}
+                            existing={{ ...p, transport: p.transport }}
                             d={pr}
                             intake={d.intake}
                             leaveUnsaved={d.leaveUnsaved}
                           />
                         )}
-                        {p.transport === 'tcp' && devices && (
-                          <PrintDevices
-                            key={`devices-${p.id}`}
+                        {p.transport === 'weblink' && manages && devices && (
+                          <WeblinkPilot
+                            key={`pilot-${p.id}-${p.active}-${devices.map((x) => `${x.id}:${x.revokedAt}`).join(',')}`}
                             tenantId={active.id}
                             printerId={p.id}
+                            active={p.active}
                             devices={devices.filter(
                               (x) => x.printerId === p.id,
                             )}
-                            canManage={manages}
-                            locale={ctx.locale}
+                            enabled={
+                              process.env.KOMISIO_WEBLINK_SETUP_ENABLED ===
+                              'true'
+                            }
                             d={pr}
+                            reload={d.intake.reload}
                           />
                         )}
+                        {(p.transport === 'tcp' || p.transport === 'weblink') &&
+                          devices && (
+                            <PrintDevices
+                              key={`devices-${p.id}-${devices
+                                .filter((x) => x.printerId === p.id)
+                                .map(
+                                  (x) =>
+                                    `${x.id}:${x.revokedAt}:${x.lastSeenAt}`,
+                                )
+                                .join(',')}`}
+                              tenantId={active.id}
+                              printerId={p.id}
+                              devices={devices.filter(
+                                (x) => x.printerId === p.id,
+                              )}
+                              canManage={manages}
+                              locale={ctx.locale}
+                              d={pr}
+                              transport={p.transport}
+                            />
+                          )}
                       </details>
                     ))}
                     {manages && (
@@ -359,6 +419,18 @@ export default async function Settings({
                         />
                       </details>
                     )}
+                    {manages &&
+                      process.env.KOMISIO_WEBLINK_SETUP_ENABLED === 'true' && (
+                        <details className="weblink-register-fold">
+                          <summary>{pr.weblink.register}</summary>
+                          <WeblinkSetup
+                            tenantId={active.id}
+                            d={pr}
+                            reload={d.intake.reload}
+                            leaveUnsaved={d.leaveUnsaved}
+                          />
+                        </details>
+                      )}
                   </div>
                 ),
               },

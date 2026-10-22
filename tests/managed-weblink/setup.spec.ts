@@ -22,11 +22,9 @@ for (const lost of [false, true])
       await f.commit()
       await page.setViewportSize({ width: 375, height: 812 })
       await page.goto('/settings?tab=printing')
-      const fold = page
-        .locator('.printing-printers > details')
-        .filter({
-          has: page.locator('summary').filter({ hasText: 'Managed Zebra' }),
-        })
+      const fold = page.locator('.printing-printers > details').filter({
+        has: page.locator('summary').filter({ hasText: 'Managed Zebra' }),
+      })
       await fold.locator('summary').first().click()
       const setup = fold.getByRole('region', { name: m.title })
       await expect(setup).toBeVisible()

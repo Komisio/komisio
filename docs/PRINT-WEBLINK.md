@@ -81,7 +81,8 @@ password**. Transfer it only through the trusted local printer configuration
 path and remove exported/downloaded copies afterward. The encrypted checkpoint
 retains the provisioning password; runtime credentials retain only its digest.
 
-The generated SGD commands set the host credential and HTTPS Weblink location.
+Load and verify the trusted CA chain before applying the setup file. The generated
+SGD commands set the host credential and HTTPS Weblink location, then enable Weblink.
 They do not restart the printer, disable certificate verification or install a
 CA certificate. Verify/load the appropriate trusted chain and reboot only after
 checking pending local output. See Zebra's [Weblink SDK certificate guidance](https://techdocs.zebra.com/link-os/latest/webservices/)

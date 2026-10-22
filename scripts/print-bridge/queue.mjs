@@ -13,7 +13,7 @@ const states = [
  * One bounded pass, never a polling/retry loop. The caller supplies and retains
  * an attempt ID before making the call; recovery must reuse it. The database
  * permits transmission only in the first response, independently of the journal.
- * This module is not wired to a listener or application startup.
+ * The bridge runtime invokes this explicitly; there are no startup/polling effects.
  */
 export function createWeblinkQueueWorker({
   scope: input,

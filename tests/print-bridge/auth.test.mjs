@@ -176,7 +176,7 @@ test('concurrent raw handshakes admit only one channel', async () => {
 test('device authorizer uses the bounded device RPC and never follows credential-bearing redirects', async (t) => {
   const requests = []
   let status = 200
-  let context = { ...scope, active: true }
+  let context = { ...scope, transport: 'weblink', active: true }
   const server = createServer(async (req, res) => {
     let body = ''
     for await (const chunk of req) body += chunk
@@ -212,16 +212,20 @@ test('device authorizer uses the bounded device RPC and never follows credential
     },
   })
   assert.equal(await authorize(scope), true)
-  context = { ...scope, active: false }
+  context = { ...scope, transport: 'weblink', active: false }
   assert.equal(await authorize(scope), false)
-  context = { ...other, active: true }
+  context = { ...other, transport: 'weblink', active: true }
   assert.equal(await authorize(scope), false)
-  context = { ...scope, active: true }
+  for (const transport of ['tcp', 'usb', undefined]) {
+    context = { ...scope, transport, active: true }
+    assert.equal(await authorize(scope), false)
+  }
+  context = { ...scope, transport: 'weblink', active: true }
   status = 401
   assert.equal(await authorize(scope), false)
   status = 302
   assert.equal(await authorize(scope), false)
-  assert.equal(requests.length, 5)
+  assert.equal(requests.length, 8)
   for (const request of requests)
     assert.deepEqual(request, {
       url: '/rest/v1/rpc/print_device_context',
@@ -256,7 +260,12 @@ test('authorizer rejects insecure remote endpoints, token failures and untrusted
     async () => new Response('not json'),
     async () => Response.json(null),
     async () =>
-      Response.json({ ...scope, active: true, oversized: 'x'.repeat(17000) }),
+      Response.json({
+        ...scope,
+        transport: 'weblink',
+        active: true,
+        oversized: 'x'.repeat(17000),
+      }),
   ]) {
     const authorize = createDeviceAuthorizer({
       url: 'https://example.com',

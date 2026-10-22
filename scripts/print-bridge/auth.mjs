@@ -81,9 +81,10 @@ export function createPrinterSessions({ lookupCredential, authorizeDevice }) {
     return session && current.get(session.scope.deviceId) === session
   }
 
-  async function openMain(header) {
+  async function openMain(header, signal) {
     const supplied = parseBasic(header)
     const scope = await validate(supplied.deviceId, supplied.secretDigest)
+    if (signal?.aborted) throw denied()
     const session = { scope, secretDigest: supplied.secretDigest, raw: null }
     const handle = Object.freeze({})
     mainHandles.set(handle, session)
@@ -91,7 +92,7 @@ export function createPrinterSessions({ lookupCredential, authorizeDevice }) {
     return handle
   }
 
-  async function openRaw(mainHandle, header) {
+  async function openRaw(mainHandle, header, signal) {
     const session = mainHandles.get(mainHandle)
     const supplied = parseBasic(header)
     if (
@@ -104,6 +105,7 @@ export function createPrinterSessions({ lookupCredential, authorizeDevice }) {
     if (
       !isCurrent(session) ||
       session.raw ||
+      signal?.aborted ||
       supplied.secretDigest !== session.secretDigest
     )
       throw denied()
@@ -176,7 +178,11 @@ export function createDeviceAuthorizer({
         return false
       }
       const context = await boundedJson(response)
-      return context?.active === true && sameScope(deviceScope(context), scope)
+      return (
+        context?.active === true &&
+        context.transport === 'weblink' &&
+        sameScope(deviceScope(context), scope)
+      )
     } catch {
       return false
     }

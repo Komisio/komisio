@@ -2,6 +2,15 @@ import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { voucherLine } from '../accounting/sie'
 
+export const payoutSource = z.object({
+  payoutId: z.uuid(),
+  sellerId: z.uuid(),
+  amountOre: z.number().int().positive(),
+  reference: z.string(),
+  paidAt: z.string(),
+})
+export type PayoutSource = z.infer<typeof payoutSource>
+
 // Accounting export (P2 S17): the tenant's account map and the exports made
 // under it. SQL validates the map, builds voucher lines and refuses an
 // unbalanced voucher; this module validates the boundary and reads.
@@ -187,7 +196,7 @@ export async function readAccountingExport(
   const parsed = exportRow.parse(row.data)
   const close = await client
     .from('day_closes')
-    .select('close_date,version')
+    .select('close_date,version,payout_sources')
     .eq('tenant_id', tenantId)
     .eq('id', parsed.day_close_id)
     .maybeSingle()
@@ -196,5 +205,10 @@ export async function readAccountingExport(
     ...parsed,
     closeDate: z.string().parse(close.data.close_date),
     closeVersion: z.number().int().parse(close.data.version),
+    payoutSources: z
+      .array(payoutSource)
+      .nullable()
+      .optional()
+      .parse(close.data.payout_sources),
   }
 }

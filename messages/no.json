@@ -360,7 +360,8 @@
     "collectionNotDue": "Hentefristen har ikke gått ut.",
     "overviewHelpLabel": "Om innlevering",
     "payoutBankReviewRequired": "En eier eller administrator må først kontrollere selgerens kontoopplysninger under Utbetalinger.",
-    "saleVatRequired": "Salget ble ikke registrert fordi butikkens momsbehandling ikke er valgt. En eier eller administrator må velge den i Butikkinnstillinger og publisere policyen før du prøver igjen."
+    "saleVatRequired": "Salget ble ikke registrert fordi butikkens momsbehandling ikke er valgt. En eier eller administrator må velge den i Butikkinnstillinger og publisere policyen før du prøver igjen.",
+    "payoutHistoryReview": "Eldre utbetalingsbilag må avstemmes. Ikke send samme betaling på nytt."
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",
@@ -1707,6 +1708,13 @@
       "reason": "Begrunnelse",
       "hint": "AI fyller tomme rader. Eksisterende kontoer beholdes.",
       "changed": "Kontoplanen eller innstillingene er endret. Last siden på nytt."
+    },
+    "payoutEvidence": {
+      "title": "Utbetalinger i bilaget",
+      "reference": "Betalingsreferanse",
+      "payoutId": "Utbetalings-ID",
+      "sellerId": "Selger-ID",
+      "paidAt": "Betalt"
     }
   },
   "communications": {
@@ -2699,11 +2707,19 @@
       "SEND_NOT_FOUND": "Sendingen ble ikke funnet.",
       "SEND_NOT_PENDING": "Sendingen er allerede avsluttet.",
       "REQUEST_CONFLICT": "Denne forespørsels-ID-en ble brukt til en annen sending.",
-      "INVALID_INPUT": "Forespørselen var ikke gyldig."
+      "INVALID_INPUT": "Forespørselen var ikke gyldig.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Eldre utbetalingsbilag må avstemmes. Ikke send samme betaling på nytt.",
+      "FORTNOX_DAY_UNRESOLVED": "En tidligere sending for dagen venter på kontroll.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Dagens tidligere bilag må avstemmes før en ny sending.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "Kontoplanen eller det tilkoblede selskapet er endret. Avstem tidligere bilag.",
+      "FORTNOX_BASELINE_CHANGED": "Grunnlaget er endret. Kontroller sendingen på nytt.",
+      "FORTNOX_NO_CHANGES": "Det er ingen nye beløp å sende."
     },
     "companyName": "Firmanavn i Fortnox",
     "voucherUnknown": "Resultatet av sendingen er usikkert:",
-    "recoveryHelp": "Hjelp med å kontrollere sendingen"
+    "recoveryHelp": "Hjelp med å kontrollere sendingen",
+    "reviewDelivery": "Kontroller sending til Fortnox",
+    "deltaHint": "Forskjellen fra sist bekreftede dagsoppgjør vises nedenfor."
   },
   "zettle": {
     "automaticTitle": "Automatisk henting av kvitteringer",
@@ -4586,7 +4602,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Flere tidligere eksporter for denne datoen må avstemmes. Kontakt kundestøtte før du sender mer.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, mva- eller journalinnstillingene avviker fra forrige eksport. Avstem endringen før du fortsetter.",
       "ECONOMIC_BASELINE_CHANGED": "En annen eksport for denne datoen er bekreftet. Åpne dagsoppgjøret igjen og klargjør et nytt bilag med den gjenstående endringen.",
-      "ECONOMIC_NO_CHANGES": "Ingen nye beløp gjenstår å sende for dette dagsoppgjøret."
+      "ECONOMIC_NO_CHANGES": "Ingen nye beløp gjenstår å sende for dette dagsoppgjøret.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Eldre utbetalingsbilag må avstemmes. Ikke send samme betaling på nytt."
     },
     "deltaHint": "Bare endringen siden forrige bekreftede eksport er inkludert.",
     "baselineLink": "Vis forrige eksport"

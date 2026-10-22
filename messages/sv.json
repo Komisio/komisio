@@ -360,7 +360,8 @@
     "collectionNotDue": "Hämtningsfristen har inte gått ut.",
     "overviewHelpLabel": "Om inlämning",
     "payoutBankReviewRequired": "En ägare eller administratör behöver granska säljarens kontouppgifter under Utbetalningar först.",
-    "saleVatRequired": "Försäljningen registrerades inte eftersom butikens momshantering inte har valts. En ägare eller administratör behöver välja momshantering i Butiksinställningar och publicera policyn innan du försöker igen."
+    "saleVatRequired": "Försäljningen registrerades inte eftersom butikens momshantering inte har valts. En ägare eller administratör behöver välja momshantering i Butiksinställningar och publicera policyn innan du försöker igen.",
+    "payoutHistoryReview": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -1707,6 +1708,13 @@
       "reason": "Motivering",
       "hint": "AI fyller tomma rader. Befintliga konton behålls.",
       "changed": "Kontoplanen eller inställningarna har ändrats. Ladda om sidan."
+    },
+    "payoutEvidence": {
+      "title": "Utbetalningar i underlaget",
+      "reference": "Betalningsreferens",
+      "payoutId": "Utbetalnings-ID",
+      "sellerId": "Säljar-ID",
+      "paidAt": "Betald"
     }
   },
   "communications": {
@@ -2699,11 +2707,19 @@
       "SEND_NOT_FOUND": "Sändningen hittades inte.",
       "SEND_NOT_PENDING": "Sändningen är redan avslutad.",
       "REQUEST_CONFLICT": "Det här förfrågnings-id:t har använts för en annan sändning.",
-      "INVALID_INPUT": "Förfrågan var inte giltig."
+      "INVALID_INPUT": "Förfrågan var inte giltig.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen.",
+      "FORTNOX_DAY_UNRESOLVED": "En tidigare skickning för dagen väntar på kontroll.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Dagens tidigare verifikat behöver stämmas av innan du skickar igen.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "Kontoplanen eller det anslutna företaget har ändrats. Stäm av tidigare verifikat.",
+      "FORTNOX_BASELINE_CHANGED": "Underlaget har ändrats. Granska skickningen igen.",
+      "FORTNOX_NO_CHANGES": "Det finns inga nya belopp att skicka."
     },
     "companyName": "Företagsnamn i Fortnox",
     "voucherUnknown": "Sändningens resultat är osäkert:",
-    "recoveryHelp": "Hjälp att kontrollera sändningen"
+    "recoveryHelp": "Hjälp att kontrollera sändningen",
+    "reviewDelivery": "Granska Fortnox-skickning",
+    "deltaHint": "Skillnaden mot senast bekräftade dagsavslut visas nedan."
   },
   "zettle": {
     "automaticTitle": "Automatisk kvittohämtning",
@@ -4586,7 +4602,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Flera tidigare exporter för samma datum behöver stämmas av. Kontakta supporten innan du skickar mer.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, moms- eller kassaboksinställningarna skiljer sig från föregående export. Stäm av ändringen innan du fortsätter.",
       "ECONOMIC_BASELINE_CHANGED": "En annan export för samma datum har bekräftats. Öppna dagsavslutet igen och förbered ett nytt underlag med återstående förändring.",
-      "ECONOMIC_NO_CHANGES": "Inga nya belopp återstår att skicka för detta dagsavslut."
+      "ECONOMIC_NO_CHANGES": "Inga nya belopp återstår att skicka för detta dagsavslut.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen."
     },
     "deltaHint": "Endast förändringen sedan föregående bekräftade export ingår.",
     "baselineLink": "Visa föregående export"

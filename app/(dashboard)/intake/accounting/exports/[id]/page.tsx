@@ -10,6 +10,7 @@ import { readFortnoxStatus } from '@/lib/engine/fortnox-connection'
 import { readStoreCurrency, formatMoney } from '@/lib/engine/money'
 import { FortnoxVoucherSend } from '@/components/intake/fortnox-voucher-send'
 import { FortnoxReconcile } from '@/components/intake/fortnox-reconcile'
+import { PayoutEvidence } from '@/components/intake/payout-evidence'
 
 export const generateMetadata = () =>
   platformPageMetadata((d) => d.accounting.exportsHeading)
@@ -68,6 +69,7 @@ export default async function ExportDetails({
               connected={connection.connected}
               canSend={['owner', 'admin'].includes(active.role)}
               d={all.fortnox}
+              accounting={d}
             />
             {active.role === 'owner' &&
               send &&
@@ -82,6 +84,11 @@ export default async function ExportDetails({
               )}
           </div>
         )}
+        <PayoutEvidence
+          sources={item.payoutSources}
+          currency={currency}
+          d={d}
+        />
         <details className="accounting-breakdown">
           <summary>{d.details}</summary>
           <p>

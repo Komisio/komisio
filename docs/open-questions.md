@@ -757,13 +757,15 @@ coverage on an unmapped route and preserving all other mapping cases.
 ## Seller payout accounting (#561, 2026-10-22)
 
 The owner requests implementation of complete seller payout postings for
-Fortnox and e-conomic. The first slice adds an explicitly mapped counterpart
+Fortnox and e-conomic. The implementation adds an explicitly mapped counterpart
 to the existing paid daily amount, with complete-pair validation. It does not
 choose accounts or change payment approval, execution, timing or VAT policy.
 
-Before release, complete the Fortnox duplicate-send safeguards across revised
-day closes, historical export/cutover handling and payout-reference traceability.
-An existing one-sided or already externally booked payout must not be silently
-repaired or exported again. Real-store mapping and reconciliation evidence remain
-required. Bank-statement matching and external POS posting ownership are not
-resolved by this implementation request.
+Fortnox sends now freeze differences against the confirmed daily target, with
+reviewed baselines and cross-version holds. New closes freeze payout IDs and
+payment references. Historic exports with incomplete payout evidence are blocked
+for manual reconciliation; no automatic correction or resend is inferred.
+Real-store mapping and historical reconciliation evidence remain required.
+Bank-statement matching and external POS posting ownership are not resolved by
+this implementation request. Payment confirmation alone does not create or send
+an accounting export; automatic export creation remains a separate scope.

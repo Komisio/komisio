@@ -22,7 +22,11 @@ import {
   signState,
   verifyState,
 } from '../platform/credentials'
-import { accountingKeys, payoutMappingComplete } from './accounting'
+import {
+  accountingKeys,
+  payoutMappingComplete,
+  payoutSource,
+} from './accounting'
 import { readStoreCurrency } from './money'
 
 const PURPOSE = 'economic-connection'
@@ -98,6 +102,7 @@ export const economicPreview = z.object({
   baselineExportId: z.uuid().nullable().optional(),
   baselineCloseVersion: z.number().int().nonnegative().optional(),
   blockedReason: z.string().optional(),
+  payoutSources: z.array(payoutSource).optional(),
 })
 export const economicSend = z.object({
   sendId: z.uuid(),
@@ -127,6 +132,7 @@ export const economicErrors = [
   'CREDENTIAL_UNREADABLE',
   'MAP_CHANGED',
   'ACCOUNTING_MAP_REQUIRED',
+  'ACCOUNTING_PAYOUT_HISTORY_REVIEW',
   'DAY_CLOSE_NOT_FOUND',
   'EXPORT_NOT_FOUND',
   'VOUCHER_UNBALANCED',
@@ -586,6 +592,7 @@ const exportRow = z.object({
   day_close_id: z.uuid(),
   map_id: z.uuid(),
   baseline_export_id: z.uuid().nullable().optional(),
+  payout_sources: z.array(payoutSource).optional(),
   agreement_number: integer,
   journal_number: integer,
   voucher: z.array(exportLine),

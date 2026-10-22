@@ -2,7 +2,7 @@ import { randomUUID, timingSafeEqual } from 'node:crypto'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { z } from 'zod'
 import { automationIdentity, acceptAutomationGrants } from './automation'
-import { sendExportToFortnox } from './fortnox-vouchers'
+import { previewFortnoxSend, sendExportToFortnox } from './fortnox-vouchers'
 
 const runStatus = z.object({
   at: z.string(),
@@ -56,12 +56,21 @@ export async function runAutomaticFortnoxSend(
         outcome = 'partial'
         break
       }
+      const preview = await previewFortnoxSend(client, tenantId, entry.exportId)
+      if (
+        preview.blockedReason === 'FORTNOX_NO_CHANGES' ||
+        preview.blockedReason === 'FORTNOX_BASELINE_CHANGED'
+      )
+        continue
+      if (preview.blockedReason) throw new Error(preview.blockedReason)
       const result = await send(
         client,
         tenantId,
         entry.exportId,
         randomUUID(),
         env,
+        undefined,
+        preview.baselineSendId,
       )
       if (result.status !== 'sent') throw new Error('FORTNOX_AUTOMATION_FAILED')
       sent++

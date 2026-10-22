@@ -57,6 +57,13 @@ select throws_ok($$update fortnox_voucher_sends set reconciliation_evidence='cha
 set local role authenticated;
 select publish_accounting_map(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_accounting_map(current_setting('test.tenant')::uuid)->>'id')::uuid,current_accounting_map(current_setting('test.tenant')::uuid)->'map');
 select set_config('test.export2',export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.close')::uuid)::text,true);
+select throws_like($$select begin_fortnox_send(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.export2')::uuid)$$,'%FORTNOX_NO_CHANGES%','republishing the same mapping cannot duplicate the confirmed day');
+-- Independent synthetic days keep the reconciliation state-machine cases distinct.
+reset role;
+insert into day_closes(id,tenant_id,close_date,version,gross_ore,commission_ore,seller_credit_ore,generated_by)
+ select gen_random_uuid(),tenant_id,close_date+1,1,gross_ore,commission_ore,seller_credit_ore,generated_by from day_closes where id=current_setting('test.close')::uuid returning set_config('test.close2',id::text,true);
+set local role authenticated;
+select set_config('test.export2',export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.close2')::uuid)::text,true);
 select set_config('test.send2',gen_random_uuid()::text,true);
 select begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.send2')::uuid,current_setting('test.export2')::uuid);
 select is(reconcile_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.send2')::uuid,'confirmed_sent','A',43,2026,'Checked pending receipt')->>'status','sent','pending can be confirmed without another POST');
@@ -64,6 +71,11 @@ select is((select actor=reconciled_by and database_number='1751085' from fortnox
 select throws_ok($$select reconcile_fortnox_send(gen_random_uuid(),current_setting('test.send2')::uuid,'confirmed_sent','A',43,2026,'Checked pending receipt')$$,'42501',null,'other tenant refused');
 select publish_accounting_map(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_accounting_map(current_setting('test.tenant')::uuid)->>'id')::uuid,current_accounting_map(current_setting('test.tenant')::uuid)->'map');
 select set_config('test.export3',export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.close')::uuid)::text,true);
+reset role;
+insert into day_closes(id,tenant_id,close_date,version,gross_ore,commission_ore,seller_credit_ore,generated_by)
+ select gen_random_uuid(),tenant_id,close_date+2,1,gross_ore,commission_ore,seller_credit_ore,generated_by from day_closes where id=current_setting('test.close')::uuid returning set_config('test.close3',id::text,true);
+set local role authenticated;
+select set_config('test.export3',export_day_close(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.close3')::uuid)::text,true);
 select set_config('test.send3',gen_random_uuid()::text,true);
 select begin_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.send3')::uuid,current_setting('test.export3')::uuid);
 select complete_fortnox_send(current_setting('test.tenant')::uuid,current_setting('test.send3')::uuid,'sent','A',44,2026,'','');

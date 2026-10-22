@@ -215,13 +215,19 @@ test('a lost send response offers reconciliation help without another send', asy
       exact: true,
     })
     await exports
+      .getByRole('button', { name: d.fortnox.reviewDelivery, exact: true })
+      .click()
+    await exports
       .getByRole('button', { name: d.fortnox.sendVoucher, exact: true })
       .click()
     await expect(exports.getByRole('alert')).toContainText(
       d.fortnox.voucherUnknown,
     )
     await expect(
-      exports.getByRole('button', { name: d.fortnox.sendAgain, exact: true }),
+      exports.getByRole('button', {
+        name: d.fortnox.reviewDelivery,
+        exact: true,
+      }),
     ).toHaveCount(0)
     await exports.getByRole('link', { name: d.fortnox.recoveryHelp }).click()
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
@@ -233,7 +239,10 @@ test('a lost send response offers reconciliation help without another send', asy
       d.fortnox.errors.FORTNOX_PREFLIGHT_FAILED,
     )
     await expect(
-      exports.getByRole('button', { name: d.fortnox.sendAgain, exact: true }),
+      exports.getByRole('button', {
+        name: d.fortnox.reviewDelivery,
+        exact: true,
+      }),
     ).toBeVisible()
     expect(sends).toBe(1)
   } finally {

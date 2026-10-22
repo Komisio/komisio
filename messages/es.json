@@ -360,7 +360,8 @@
     "collectionNotDue": "El plazo de recogida aún no ha vencido.",
     "overviewHelpLabel": "Sobre la recepción",
     "payoutBankReviewRequired": "Un propietario o administrador debe revisar primero los datos bancarios del vendedor en Pagos.",
-    "saleVatRequired": "La venta no se registró porque no se ha elegido el tratamiento del IVA de la tienda. Un propietario o administrador debe elegirlo en los ajustes de la tienda y publicar la política antes de volver a intentarlo."
+    "saleVatRequired": "La venta no se registró porque no se ha elegido el tratamiento del IVA de la tienda. Un propietario o administrador debe elegirlo en los ajustes de la tienda y publicar la política antes de volver a intentarlo.",
+    "payoutHistoryReview": "Los justificantes de pagos anteriores requieren conciliación. No vuelva a enviar el mismo pago."
   },
   "brand": "Komisio",
   "tagline": "Más espacio para que las cosas vuelvan a vivir.",
@@ -1615,6 +1616,7 @@
       "sellerCreditOre": "Crédito del depositante (pasivo con los depositantes)",
       "creditReversedOre": "Crédito del depositante anulado",
       "payoutsPaidOre": "Pagos pagados",
+      "payoutsPaidCounterpartOre": "Pagos realizados · contrapartida",
       "mode:consignment_fee:grossOre": "Cuotas mensuales · Cuota en la moneda de la tienda",
       "mode:consignment_fee:netOre": "Cuotas mensuales · Sin IVA",
       "mode:consignment_fee:vatOre": "Cuotas mensuales · IVA",
@@ -1706,6 +1708,13 @@
       "reason": "Motivo",
       "hint": "La IA completa filas vacías. Se conservan las cuentas existentes.",
       "changed": "Han cambiado las cuentas o la configuración. Recarga la página."
+    },
+    "payoutEvidence": {
+      "title": "Pagos en este documento",
+      "reference": "Referencia de pago",
+      "payoutId": "ID del pago",
+      "sellerId": "ID del vendedor",
+      "paidAt": "Pagado"
     }
   },
   "communications": {
@@ -2698,11 +2707,19 @@
       "SEND_NOT_FOUND": "No se encontró el envío.",
       "SEND_NOT_PENDING": "El envío ya está cerrado.",
       "REQUEST_CONFLICT": "Este id de solicitud se usó para otro envío.",
-      "INVALID_INPUT": "La solicitud no era válida."
+      "INVALID_INPUT": "La solicitud no era válida.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Los justificantes de pagos anteriores requieren conciliación. No vuelva a enviar el mismo pago.",
+      "FORTNOX_DAY_UNRESOLVED": "Un envío anterior de este día está pendiente de verificación.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Los asientos anteriores de este día deben conciliarse antes de otro envío.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "La asignación de cuentas o la empresa conectada ha cambiado. Concilie los asientos anteriores.",
+      "FORTNOX_BASELINE_CHANGED": "La base de comparación ha cambiado. Revise el envío de nuevo.",
+      "FORTNOX_NO_CHANGES": "No hay importes nuevos para enviar."
     },
     "companyName": "Nombre de la empresa en Fortnox",
     "voucherUnknown": "El resultado del envío es incierto:",
-    "recoveryHelp": "Ayuda para comprobar el envío"
+    "recoveryHelp": "Ayuda para comprobar el envío",
+    "reviewDelivery": "Revisar envío a Fortnox",
+    "deltaHint": "A continuación se muestra la diferencia respecto al último cierre diario confirmado."
   },
   "zettle": {
     "automaticTitle": "Obtención automática de recibos",
@@ -4591,7 +4608,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Varias exportaciones anteriores de esta fecha necesitan conciliación. Contacta con soporte antes de enviar más.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "La configuración de cuentas, IVA o diario difiere de la exportación anterior. Revisa el cambio antes de continuar.",
       "ECONOMIC_BASELINE_CHANGED": "Se ha confirmado otra exportación de esta fecha. Abre de nuevo el cierre diario y prepara una nueva exportación con el cambio restante.",
-      "ECONOMIC_NO_CHANGES": "No hay nuevos importes que enviar para este cierre diario."
+      "ECONOMIC_NO_CHANGES": "No hay nuevos importes que enviar para este cierre diario.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Los justificantes de pagos anteriores requieren conciliación. No vuelva a enviar el mismo pago."
     },
     "deltaHint": "Solo se incluye el cambio desde la exportación confirmada anterior.",
     "baselineLink": "Ver exportación anterior"

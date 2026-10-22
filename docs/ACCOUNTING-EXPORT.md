@@ -40,7 +40,7 @@ file with a single voucher in series A, dated on the close date and described
 as `Dagsavslut <date> v<version>`, debit positive and credit negative, text
 reduced to ASCII under `#FORMAT PC8`. The file can be downloaded again at any
 time; it is rendered from the recorded lines, never recomputed. A connected
-store can also send the recorded lines to Fortnox as one voucher (see
+store can also send a reviewed daily difference to Fortnox as one voucher (see
 [FORTNOX-CONNECTION.md](FORTNOX-CONNECTION.md)); the file imports into
 Fortnox and other Swedish bookkeeping software as it is.
 
@@ -69,6 +69,51 @@ still uses the explicit owner/admin `publishAccountingMap` command. A stale
 map or policy prevents applying a draft; lost responses reuse the same attempt
 and decision IDs. Unknown outcomes cannot trigger a second generation silently.
 The existing export balance check and absolute-amount/fixed-side arithmetic remain.
+
+## Paid-payout counterpart
+
+`payoutsPaidCounterpartOre` exposes the same paid amount as `payoutsPaidOre`.
+The store explicitly maps both keys to distinct accounts on opposite sides;
+neither account is inferred. A nonzero paid payout requires the complete pair,
+even when the mapped sales subset would otherwise balance. Days without paid
+payouts retain their existing mapping behavior. Requested or approved payouts
+do not enter the paid total; the existing payment confirmation date is unchanged.
+
+Legacy single-key maps remain readable and immutable but need a new reviewed
+map before exporting a day with paid payouts. Frozen exports remain unchanged.
+The e-conomic map may explicitly exclude both payout keys when the complete
+payment is posted elsewhere; excluding just one leg is refused. Existing
+zero-rate VAT-code validation still applies to every posted e-conomic line.
+
+New day closes freeze the paid payout IDs, seller IDs, amounts, payment references
+and payment timestamps. Export details show these sources. A revised provider
+delivery shows only the additional payout sources; the SIE file remains the full
+daily snapshot. For example, after a confirmed 123.45 payout, an additional
+234.56 payout produces a 234.56 debit and credit in the next provider delivery.
+
+Fortnox differences are frozen on the send row, against the last confirmed
+daily target. Review the delivery before sending. A changed baseline requires
+another review; pending or uncertain deliveries hold later versions. Changes
+to the mapping or connected company also require reconciliation. Existing
+automatic-send grants use the same checks and skip targets already covered.
+e-conomic retains its frozen incremental-export and confirmation rules.
+
+For a store adopting payout accounting:
+
+1. Review both payout accounts and their sides with the store's accountant.
+2. Confirm the actual external payment and its reference in Komisio, then
+   generate the day close and prepare the export.
+3. Review the provider lines and payment references, then send and check the
+   recorded voucher number in the accounting system.
+4. If historic payout evidence is incomplete, stop and reconcile the old
+   exports/verifications manually. Regenerating a close does not establish that
+   an old payment may be posted again. Existing financial evidence is not
+   rewritten, and this release provides no automatic historic repair.
+
+Payment confirmation alone does not create or send an accounting export. No
+bank transfer, bank-statement match or new automatic export/send permission is
+introduced. Real-store account mappings and posting responsibility still need
+review; synthetic connector tests do not establish accountant approval.
 
 Reference: [BAS 2026, version 1.1](https://www.bas.se/wp-content/uploads/2026/04/BAS_kontoplan_2026_v2.pdf),
 account identities checked 2026-10-14. AI suggestions are not accountant approval.

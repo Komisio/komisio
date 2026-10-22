@@ -11,6 +11,7 @@ import {
   confirmedFortnoxVoucher,
   confirmFortnoxVoucher,
   sendExportToFortnox,
+  previewFortnoxSend,
 } from '@/lib/engine/fortnox-vouchers'
 import { FortnoxRejected } from '@/extensions/fortnox/vouchers'
 
@@ -46,9 +47,15 @@ export async function POST(request: Request) {
         }),
         z.strictObject({
           tenantId: z.uuid(),
+          action: z.literal('previewVoucher'),
+          exportId: z.uuid(),
+        }),
+        z.strictObject({
+          tenantId: z.uuid(),
           action: z.literal('sendVoucher'),
           exportId: z.uuid(),
           requestId: z.uuid(),
+          expectedBaselineSendId: z.uuid().nullable().default(null),
         }),
       ])
       .safeParse(input)
@@ -68,6 +75,14 @@ export async function POST(request: Request) {
         }),
       )
     }
+    if (parsed.data.action === 'previewVoucher')
+      return reply(
+        await previewFortnoxSend(
+          ctx.client,
+          ctx.active.id,
+          parsed.data.exportId,
+        ),
+      )
     if (parsed.data.action === 'sendVoucher')
       return reply(
         await sendExportToFortnox(
@@ -76,6 +91,8 @@ export async function POST(request: Request) {
           parsed.data.exportId,
           parsed.data.requestId,
           process.env,
+          undefined,
+          parsed.data.expectedBaselineSendId,
         ),
       )
     if (parsed.data.action === 'disconnect')

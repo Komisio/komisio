@@ -360,7 +360,8 @@
     "collectionNotDue": "Noutoaika ei ole vielä päättynyt.",
     "overviewHelpLabel": "Tietoa vastaanotosta",
     "payoutBankReviewRequired": "Omistajan tai ylläpitäjän on ensin tarkistettava myyjän tilitiedot Maksut-osiossa.",
-    "saleVatRequired": "Myyntiä ei kirjattu, koska myymälän ALV-käsittelyä ei ole valittu. Omistajan tai ylläpitäjän on valittava se myymälän asetuksissa ja julkaistava käytäntö ennen uutta yritystä."
+    "saleVatRequired": "Myyntiä ei kirjattu, koska myymälän ALV-käsittelyä ei ole valittu. Omistajan tai ylläpitäjän on valittava se myymälän asetuksissa ja julkaistava käytäntö ennen uutta yritystä.",
+    "payoutHistoryReview": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -1615,6 +1616,7 @@
       "sellerCreditOre": "Tuojan hyvitys (velka tuojille)",
       "creditReversedOre": "Tuojan hyvitys peruttu",
       "payoutsPaidOre": "Maksetut tilitykset",
+      "payoutsPaidCounterpartOre": "Maksetut tilitykset · vastakirjaus",
       "mode:consignment_fee:grossOre": "Kuukausimaksut · Maksu liikkeen valuutassa",
       "mode:consignment_fee:netOre": "Kuukausimaksut · Ilman ALV:tä",
       "mode:consignment_fee:vatOre": "Kuukausimaksut · ALV",
@@ -1706,6 +1708,13 @@
       "reason": "Perustelu",
       "hint": "Tekoäly täyttää tyhjät rivit. Nykyiset tilit säilyvät.",
       "changed": "Tilikartta tai asetukset ovat muuttuneet. Lataa sivu uudelleen."
+    },
+    "payoutEvidence": {
+      "title": "Tämän tositteen tilitykset",
+      "reference": "Maksuviite",
+      "payoutId": "Tilityksen tunnus",
+      "sellerId": "Myyjän tunnus",
+      "paidAt": "Maksettu"
     }
   },
   "communications": {
@@ -2698,11 +2707,19 @@
       "SEND_NOT_FOUND": "Lähetystä ei löytynyt.",
       "SEND_NOT_PENDING": "Lähetys on jo suljettu.",
       "REQUEST_CONFLICT": "Tämä pyyntötunnus on käytetty toiseen lähetykseen.",
-      "INVALID_INPUT": "Pyyntö ei ollut kelvollinen."
+      "INVALID_INPUT": "Pyyntö ei ollut kelvollinen.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen.",
+      "FORTNOX_DAY_UNRESOLVED": "Päivän aiempi lähetys odottaa tarkistusta.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "Päivän aiemmat tositteet on täsmäytettävä ennen uutta lähetystä.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "Tilikartta tai yhdistetty yritys on muuttunut. Täsmäytä aiemmat tositteet.",
+      "FORTNOX_BASELINE_CHANGED": "Vertailutiedot ovat muuttuneet. Tarkista lähetys uudelleen.",
+      "FORTNOX_NO_CHANGES": "Uusia lähetettäviä summia ei ole."
     },
     "companyName": "Yrityksen nimi Fortnoxissa",
     "voucherUnknown": "Lähetyksen tulos on epävarma:",
-    "recoveryHelp": "Ohje lähetyksen tarkistamiseen"
+    "recoveryHelp": "Ohje lähetyksen tarkistamiseen",
+    "reviewDelivery": "Tarkista Fortnox-lähetys",
+    "deltaHint": "Alla näkyy ero viimeksi vahvistettuun päivän päätökseen."
   },
   "zettle": {
     "automaticTitle": "Automaattinen kuittien nouto",
@@ -4591,7 +4608,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Useita aikaisempia vientejä tälle päivälle on täsmäytettävä. Ota yhteyttä tukeen ennen uusia lähetyksiä.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Tili-, alv- tai päiväkirja-asetukset eroavat edellisestä viennistä. Selvitä muutos ennen jatkamista.",
       "ECONOMIC_BASELINE_CHANGED": "Toinen vienti tälle päivälle on vahvistettu. Avaa päivän päätös uudelleen ja valmistele uusi vienti jäljellä olevasta muutoksesta.",
-      "ECONOMIC_NO_CHANGES": "Tälle päivän päätökselle ei ole uusia lähetettäviä summia."
+      "ECONOMIC_NO_CHANGES": "Tälle päivän päätökselle ei ole uusia lähetettäviä summia.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen."
     },
     "deltaHint": "Mukana on vain muutos edellisen vahvistetun viennin jälkeen.",
     "baselineLink": "Näytä edellinen vienti"

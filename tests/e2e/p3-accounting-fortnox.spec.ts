@@ -107,6 +107,9 @@ test('accounting page shows the Fortnox connection state and records a refused s
 
     // The send opens in the engine, fails on the missing configuration, and is recorded.
     await exports
+      .getByRole('button', { name: d.fortnox.reviewDelivery, exact: true })
+      .click()
+    await exports
       .getByRole('button', { name: d.fortnox.sendVoucher, exact: true })
       .click()
     await expect(exports.getByRole('alert')).toContainText(
@@ -127,7 +130,10 @@ test('accounting page shows the Fortnox connection state and records a refused s
       d.fortnox.errors.FORTNOX_PREFLIGHT_FAILED,
     )
     await expect(
-      exports.getByRole('button', { name: d.fortnox.sendAgain, exact: true }),
+      exports.getByRole('button', {
+        name: d.fortnox.reviewDelivery,
+        exact: true,
+      }),
     ).toBeVisible()
     const exportId = (
       await f.db.query('select id from accounting_exports where tenant_id=$1', [
@@ -213,7 +219,10 @@ test('accounting page shows the Fortnox connection state and records a refused s
     await page.reload()
     await openAccountingSettings(page)
     await expect(
-      exports.getByRole('button', { name: d.fortnox.sendAgain, exact: true }),
+      exports.getByRole('button', {
+        name: d.fortnox.reviewDelivery,
+        exact: true,
+      }),
     ).toHaveCount(0)
     await expect(exports.getByRole('alert')).toContainText(
       d.fortnox.voucherUnknown,

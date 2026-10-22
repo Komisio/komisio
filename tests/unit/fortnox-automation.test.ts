@@ -38,6 +38,75 @@ function fixture() {
   return { client, rpc, signInWithPassword, signOut, makeClient, run }
 }
 describe('Fortnox automatic sending', () => {
+  it('pins the confirmed baseline when sending a scheduled difference', async () => {
+    const baseline = '30000000-0000-4000-8000-000000000003'
+    const rpc = vi.fn(async (name: string) => ({
+      error: null,
+      data:
+        name === 'begin_fortnox_automatic_run'
+          ? true
+          : name === 'fortnox_automatic_exports'
+            ? [{ exportId }]
+            : name === 'preview_fortnox_send'
+              ? {
+                  baselineSendId: baseline,
+                  baselineCloseVersion: 1,
+                  blockedReason: '',
+                  lines: [],
+                  debitOre: 12345,
+                  creditOre: 12345,
+                  payoutSources: [],
+                }
+              : null,
+    }))
+    const client = { rpc } as unknown as SupabaseClient
+    const send = vi.fn().mockResolvedValue({ status: 'sent' })
+    await runAutomaticFortnoxSend(client, tenantId, env, send)
+    expect(send).toHaveBeenCalledWith(
+      client,
+      tenantId,
+      exportId,
+      expect.any(String),
+      env,
+      undefined,
+      baseline,
+    )
+  })
+  it('stops scheduled delivery when historical payout evidence needs review', async () => {
+    const rpc = vi.fn(async (name: string) => ({
+      error: null,
+      data:
+        name === 'begin_fortnox_automatic_run'
+          ? true
+          : name === 'fortnox_automatic_exports'
+            ? [{ exportId }]
+            : name === 'preview_fortnox_send'
+              ? {
+                  baselineSendId: null,
+                  baselineCloseVersion: 0,
+                  blockedReason: 'ACCOUNTING_PAYOUT_HISTORY_REVIEW',
+                  lines: [],
+                  debitOre: 0,
+                  creditOre: 0,
+                  payoutSources: [],
+                }
+              : null,
+    }))
+    const send = vi.fn()
+    await expect(
+      runAutomaticFortnoxSend(
+        { rpc } as unknown as SupabaseClient,
+        tenantId,
+        env,
+        send,
+      ),
+    ).rejects.toThrow('FORTNOX_AUTOMATION_FAILED')
+    expect(send).not.toHaveBeenCalled()
+    expect(rpc).toHaveBeenLastCalledWith(
+      'finish_fortnox_automatic_run',
+      expect.objectContaining({ p_outcome: 'failed', p_sent: 0 }),
+    )
+  })
   it('does not read exports or send when another tick already claimed the day', async () => {
     const rpc = vi.fn().mockResolvedValue({ data: false, error: null })
     const send = vi.fn()
@@ -160,6 +229,15 @@ describe('Fortnox automatic sending', () => {
     expect(setup.signOut).toHaveBeenCalledTimes(1)
   })
   it('stops the store at the first failed send and records only its completed count', async () => {
+    const preview = {
+      baselineSendId: null,
+      baselineCloseVersion: 0,
+      blockedReason: '',
+      lines: [],
+      debitOre: 12345,
+      creditOre: 12345,
+      payoutSources: [],
+    }
     const rpc = vi
       .fn()
       .mockResolvedValue({ data: null, error: null })
@@ -168,6 +246,8 @@ describe('Fortnox automatic sending', () => {
         data: [{ exportId }, { exportId: tenantId }, { exportId }],
         error: null,
       })
+      .mockResolvedValueOnce({ data: preview, error: null })
+      .mockResolvedValueOnce({ data: preview, error: null })
     const send = vi
       .fn()
       .mockResolvedValueOnce({ status: 'sent' })

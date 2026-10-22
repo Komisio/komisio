@@ -231,22 +231,29 @@ new sending while application instances roll over; an old application instance
 does not understand the new dispatch flag. No real voucher was sent as a test.
 
 One recorded export (see [ACCOUNTING-EXPORT.md](ACCOUNTING-EXPORT.md)) becomes
-at most one voucher in the connected company. Owner or admin presses "Send to
-Fortnox" on an export row; the request carries a request id.
+at most one voucher in the connected company. An owner or admin first reviews
+the delivery, then sends it; the request pins the displayed baseline send ID.
+The first delivery includes the daily target. Later versions send only the
+difference from the last confirmed target, while the downloadable SIE file
+remains the full snapshot. The send row freezes the actual delivered lines.
 
 1. `begin_fortnox_send` opens a send row bound to the connection's database
    number. It refuses without a connection, for a store whose currency is not
    SEK (`FORTNOX_CURRENCY_UNSUPPORTED`; Fortnox vouchers are in the company
    currency), for an export already sent (`FORTNOX_ALREADY_SENT`) and while
-   another send is pending (`FORTNOX_SEND_IN_PROGRESS`, ten minutes, after
-   which the stale row is closed as failed). Replay by request id returns the
-   recorded state.
+   another send is pending (`FORTNOX_SEND_IN_PROGRESS`). A pending or uncertain
+   send on another version of the same date also blocks delivery. Replays return
+   the recorded state without another dispatch grant. Changed maps/companies,
+   incomplete historical payout evidence and broken daily chains require review;
+   a changed baseline requires a fresh preview.
 2. The server reads the company with the stored token and refuses when the
    database number differs from the one the send is bound to.
 3. `POST /3/vouchers` with series A, the close date as transaction date,
    description `Dagsavslut <date> v<version>` and the recorded lines: the
    tenant's four-digit accounts, amounts as kronor with two decimals. Komisio
-   invents no accounts and no postings; the lines are exactly the export.
+   invents no accounts and no postings; the lines are exactly the frozen daily
+   difference reviewed for this send. Payment references are retained in Komisio
+   alongside the delivery, including when the send is held or reopened later.
 4. `complete_fortnox_send` closes the row as `sent` (series, number, year) or
    `failed` (allowlisted reason code). Only proven preflight failures may be
    retried as a new row; unknown outcomes remain held. Members see the send log;

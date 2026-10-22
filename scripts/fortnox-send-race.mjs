@@ -269,6 +269,71 @@ export async function raceFortnoxSend({
     console.log(
       'PASS: one dispatch, unknown outcomes held, one concurrent reconciliation, confirmed vouchers cannot resend.',
     )
+    if (!automation) {
+      const revisions = []
+      for (let version = 2; version <= 3; version++) {
+        const purchaseId = (
+          await sessions[0].query(
+            "select register_purchase($1,$2,'Synthetic',1000,'Race receipt',false) id",
+            [tenant, randomUUID()],
+          )
+        ).rows[0].id
+        const itemId = randomUUID()
+        await sessions[0].query(
+          "select accept_item($1,$2,'purchase',$3,null,2500)",
+          [tenant, itemId, purchaseId],
+        )
+        await sessions[0].query(
+          "select record_sale($1,$2,'manual',$3,'2026-09-10T12:00:00Z','SEK',$4,'{}')",
+          [
+            tenant,
+            randomUUID(),
+            `revision-${version}`,
+            JSON.stringify([{ itemId, priceOre: 2500 }]),
+          ],
+        )
+        const closeId = (
+          await sessions[0].query(
+            "select generate_day_close($1,$2,'2026-09-10') id",
+            [tenant, randomUUID()],
+          )
+        ).rows[0].id
+        revisions.push(
+          (
+            await sessions[0].query('select export_day_close($1,$2,$3) id', [
+              tenant,
+              randomUUID(),
+              closeId,
+            ])
+          ).rows[0].id,
+        )
+      }
+      const attempts = await Promise.allSettled(
+        sessions.map((session, index) =>
+          session.query('select begin_fortnox_send($1,$2,$3,$4) result', [
+            tenant,
+            randomUUID(),
+            revisions[index],
+            request,
+          ]),
+        ),
+      )
+      assert.equal(attempts.filter((r) => r.status === 'fulfilled').length, 1)
+      assert.match(
+        attempts.find((r) => r.status === 'rejected').reason.message,
+        /FORTNOX_DAY_UNRESOLVED/,
+      )
+      const winner = attempts.find((r) => r.status === 'fulfilled').value
+        .rows[0].result
+      assert.equal(
+        winner.debitOre,
+        winner.exportId === revisions[0] ? 2500 : 5000,
+      )
+      assert.equal(winner.creditOre, winner.debitOre)
+      console.log(
+        'PASS: concurrent revised-day deliveries freeze one exact difference and hold the other version.',
+      )
+    }
   } finally {
     await Promise.allSettled(sessions.map((session) => session.end()))
   }

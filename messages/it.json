@@ -360,7 +360,8 @@
     "collectionNotDue": "Il termine per il ritiro non è ancora scaduto.",
     "overviewHelpLabel": "Sulla ricezione",
     "payoutBankReviewRequired": "Un proprietario o amministratore deve prima verificare i dati bancari del venditore in Pagamenti.",
-    "saleVatRequired": "La vendita non è stata registrata perché non è stato scelto il trattamento IVA del negozio. Un proprietario o amministratore deve sceglierlo nelle impostazioni del negozio e pubblicare la politica prima di riprovare."
+    "saleVatRequired": "La vendita non è stata registrata perché non è stato scelto il trattamento IVA del negozio. Un proprietario o amministratore deve sceglierlo nelle impostazioni del negozio e pubblicare la politica prima di riprovare.",
+    "payoutHistoryReview": "I documenti dei pagamenti precedenti richiedono una riconciliazione. Non inviare di nuovo lo stesso pagamento."
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",
@@ -1615,6 +1616,7 @@
       "sellerCreditOre": "Accredito ai conferenti (debito verso i conferenti)",
       "creditReversedOre": "Accredito ai conferenti stornato",
       "payoutsPaidOre": "Pagamenti effettuati",
+      "payoutsPaidCounterpartOre": "Pagamenti effettuati · contropartita",
       "mode:consignment_fee:grossOre": "Quote mensili · Quota nella valuta del negozio",
       "mode:consignment_fee:netOre": "Quote mensili · IVA esclusa",
       "mode:consignment_fee:vatOre": "Quote mensili · IVA",
@@ -1706,6 +1708,13 @@
       "reason": "Motivazione",
       "hint": "L’IA compila le righe vuote. I conti esistenti restano invariati.",
       "changed": "I conti o le impostazioni sono cambiati. Ricarica la pagina."
+    },
+    "payoutEvidence": {
+      "title": "Pagamenti in questo documento",
+      "reference": "Riferimento del pagamento",
+      "payoutId": "ID pagamento",
+      "sellerId": "ID venditore",
+      "paidAt": "Pagato"
     }
   },
   "communications": {
@@ -2698,11 +2707,19 @@
       "SEND_NOT_FOUND": "L'invio non è stato trovato.",
       "SEND_NOT_PENDING": "L'invio è già chiuso.",
       "REQUEST_CONFLICT": "Questo id di richiesta è stato usato per un altro invio.",
-      "INVALID_INPUT": "La richiesta non era valida."
+      "INVALID_INPUT": "La richiesta non era valida.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "I documenti dei pagamenti precedenti richiedono una riconciliazione. Non inviare di nuovo lo stesso pagamento.",
+      "FORTNOX_DAY_UNRESOLVED": "Un invio precedente per questo giorno è in attesa di verifica.",
+      "FORTNOX_DAY_HISTORY_REVIEW": "I documenti precedenti di questo giorno devono essere riconciliati prima di un nuovo invio.",
+      "FORTNOX_DAY_CONTEXT_CHANGED": "La mappatura dei conti o l’azienda collegata è cambiata. Riconcilia i documenti precedenti.",
+      "FORTNOX_BASELINE_CHANGED": "La base di confronto è cambiata. Verifica di nuovo l’invio.",
+      "FORTNOX_NO_CHANGES": "Non ci sono nuovi importi da inviare."
     },
     "companyName": "Nome azienda in Fortnox",
     "voucherUnknown": "L’esito dell’invio è incerto:",
-    "recoveryHelp": "Aiuto per controllare l’invio"
+    "recoveryHelp": "Aiuto per controllare l’invio",
+    "reviewDelivery": "Verifica invio a Fortnox",
+    "deltaHint": "Di seguito è riportata la differenza rispetto all’ultima chiusura giornaliera confermata."
   },
   "zettle": {
     "automaticTitle": "Recupero automatico degli scontrini",
@@ -4585,7 +4602,8 @@
       "ECONOMIC_DAY_HISTORY_REVIEW": "Più esportazioni precedenti per questa data richiedono una riconciliazione. Contatta il supporto prima di inviare altro.",
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Le impostazioni di conti, IVA o giornale differiscono dalla precedente esportazione. Verifica la modifica prima di continuare.",
       "ECONOMIC_BASELINE_CHANGED": "È stata confermata un’altra esportazione per questa data. Riapri la chiusura giornaliera e prepara una nuova esportazione con la variazione restante.",
-      "ECONOMIC_NO_CHANGES": "Non ci sono nuovi importi da inviare per questa chiusura giornaliera."
+      "ECONOMIC_NO_CHANGES": "Non ci sono nuovi importi da inviare per questa chiusura giornaliera.",
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "I documenti dei pagamenti precedenti richiedono una riconciliazione. Non inviare di nuovo lo stesso pagamento."
     },
     "deltaHint": "È inclusa solo la variazione rispetto alla precedente esportazione confermata.",
     "baselineLink": "Visualizza esportazione precedente"

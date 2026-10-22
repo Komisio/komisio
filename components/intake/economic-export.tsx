@@ -11,6 +11,7 @@ import { NavigationLink as Link } from '@/components/platform/navigation-warning
 import { Button } from '@/components/ui/button'
 import { useEconomicAction } from './use-economic-action'
 import { economicAmountLabel } from './economic-map-form'
+import { PayoutEvidence } from './payout-evidence'
 
 export function EconomicLines({
   lines,
@@ -111,6 +112,11 @@ export function EconomicPrepare({
         </p>
       )}
       <EconomicLines lines={preview.lines} excluded={preview.excluded} d={d} />
+      <PayoutEvidence
+        sources={preview.payoutSources}
+        currency="DKK"
+        d={d.accounting}
+      />
       {preview.unmapped.length > 0 && (
         <p role="status">
           {d.economic.errors.ECONOMIC_MAP_INCOMPLETE}{' '}

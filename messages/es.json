@@ -2079,7 +2079,10 @@
       "claimed": "imprimiendo",
       "printed": "Enviado a la impresora",
       "failed": "fallido",
-      "cancelled": "cancelado"
+      "cancelled": "cancelado",
+      "dispatching": "Intento de envío reservado",
+      "transport_accepted": "Transferencia recibida – impresión sin verificar",
+      "outcome_unknown": "Resultado de impresión desconocido"
     },
     "zebraPrint": "Imprimir en Zebra",
     "close": "Cerrar",
@@ -2112,7 +2115,23 @@
     "usbHint": "Requiere Komisio Print 1.1 o posterior y el controlador Zebra para Windows.",
     "usbQueueName": "Nombre de la impresora en Windows",
     "usbQueueHint": "Introduce el nombre exacto en Windows. Ejecuta list-usb-printers.cmd en la carpeta de Komisio Print para ver las impresoras USB.",
-    "usbQueueInvalid": "Introduce el nombre de una impresora USB local de Windows, sin barras inversas ni saltos de línea."
+    "usbQueueInvalid": "Introduce el nombre de una impresora USB local de Windows, sin barras inversas ni saltos de línea.",
+    "weblink": {
+      "register": "Preparar impresora Weblink",
+      "preparation": "La impresora se registra como inactiva. Se requieren una conexión segura y una prueba antes de activar la impresión.",
+      "saved": "El cambio está confirmado.",
+      "unconfirmed": "No se pudo confirmar el cambio. Recarga y revisa el estado actual antes de continuar.",
+      "recovery": "Comprobar resultado de impresión",
+      "recoveryHint": "Primero bloquea el dispositivo que envió el trabajo. Después detén su conexión y revisa la impresora, los trabajos almacenados y todas las copias solicitadas. El bloqueo no puede retirar datos ya enviados.",
+      "revoke": "Bloquear dispositivo emisor",
+      "inspected": "He detenido la conexión y comprobado la impresora, los trabajos almacenados y todas las copias.",
+      "note": "Describe la comprobación y el resultado",
+      "result": "Resultado comprobado",
+      "printed": "Todas las copias impresas y verificadas físicamente",
+      "cancelled": "Cerrar sin confirmar la impresión",
+      "resolve": "Guardar comprobación",
+      "acceptanceHint": "La recepción de datos no demuestra una impresión física. El trabajo no se reenvía automáticamente."
+    }
   },
   "purchases": {
     "title": "Compras propias",

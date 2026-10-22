@@ -2079,7 +2079,10 @@
       "claimed": "tulostetaan",
       "printed": "Lähetetty tulostimelle",
       "failed": "epäonnistui",
-      "cancelled": "peruutettu"
+      "cancelled": "peruutettu",
+      "dispatching": "Lähetysyritys varattu",
+      "transport_accepted": "Siirto vastaanotettu – tulostusta ei vahvistettu",
+      "outcome_unknown": "Tulostuksen tulos tuntematon"
     },
     "zebraPrint": "Tulosta Zebralla",
     "close": "Sulje",
@@ -2112,7 +2115,23 @@
     "usbHint": "Vaatii Komisio Print 1.1:n tai uudemman ja Zebran Windows-ajurin.",
     "usbQueueName": "Tulostimen nimi Windowsissa",
     "usbQueueHint": "Anna tarkka nimi Windowsissa. Suorita list-usb-printers.cmd Komisio Print -kansiossa nähdäksesi USB-tulostimet.",
-    "usbQueueInvalid": "Anna paikallisen USB-tulostimen Windows-nimi ilman kenoviivoja tai rivinvaihtoja."
+    "usbQueueInvalid": "Anna paikallisen USB-tulostimen Windows-nimi ilman kenoviivoja tai rivinvaihtoja.",
+    "weblink": {
+      "register": "Valmistele Weblink-tulostin",
+      "preparation": "Tulostin rekisteröidään passiivisena. Suojattu yhteys ja tulostintesti vaaditaan ennen tulostuksen käyttöönottoa.",
+      "saved": "Muutos on vahvistettu.",
+      "unconfirmed": "Muutosta ei voitu vahvistaa. Lataa sivu uudelleen ja tarkista nykyinen tila ennen jatkamista.",
+      "recovery": "Tarkista tulostuksen tulos",
+      "recoveryHint": "Estä ensin työn lähettänyt laite. Katkaise sitten yhteys ja tarkista tulostin, puskuroidut työt ja kaikki tilatut kopiot. Esto ei peru jo lähetettyjä tietoja.",
+      "revoke": "Estä lähettänyt laite",
+      "inspected": "Olen katkaissut yhteyden ja tarkistanut tulostimen, puskuroidut työt ja kaikki kopiot.",
+      "note": "Kuvaile tarkistus ja tulos",
+      "result": "Tarkistettu tulos",
+      "printed": "Kaikki kopiot tulostettu ja tarkistettu fyysisesti",
+      "cancelled": "Sulje työ vahvistamatta tulostusta",
+      "resolve": "Tallenna tarkistus",
+      "acceptanceHint": "Siirron vastaanotto ei todista fyysistä tulostusta. Työtä ei lähetetä automaattisesti uudelleen."
+    }
   },
   "purchases": {
     "title": "Omat ostot",

@@ -45,6 +45,65 @@ export async function raceWeblinkQueue({ setup, connectionString }) {
         randomUUID(),
       ])
     ).rows[0].id
+    // Registration uses the same tenant lock: identical races replay, changed
+    // registrations cannot overwrite the winner or activate either printer.
+    const setupPeer = await session(owner)
+    for (const names of [
+      ['Prepared', 'Prepared'],
+      ['First', 'Different'],
+    ]) {
+      const prepared = randomUUID()
+      await setup.query('begin')
+      await setup.query('select id from tenants where id=$1 for update', [
+        tenant,
+      ])
+      const writes = Promise.allSettled(
+        [admin, setupPeer].map((client, index) =>
+          client.query(
+            "select register_weblink_printer($1,$2,$3,'ZD420',203) id",
+            [tenant, prepared, names[index]],
+          ),
+        ),
+      )
+      let waiting = 0
+      for (let i = 0; i < 100; i++) {
+        waiting = (
+          await setup.query(
+            "select count(*)::int n from pg_stat_activity where application_name like 'weblink_queue_race_%' and wait_event_type='Lock'",
+          )
+        ).rows[0].n
+        if (waiting === 2) break
+        await pause(20)
+      }
+      await setup.query('commit')
+      const results = await writes
+      assert.equal(waiting, 2)
+      assert.equal(
+        results.filter((r) => r.status === 'fulfilled').length,
+        names[0] === names[1] ? 2 : 1,
+      )
+      for (const r of results)
+        if (r.status === 'rejected')
+          assert.equal(r.reason.message, 'REQUEST_CONFLICT')
+      const rows = (
+        await setup.query('select active,transport from printers where id=$1', [
+          prepared,
+        ])
+      ).rows
+      assert.deepEqual(rows, [{ active: false, transport: 'weblink' }])
+      assert.equal(
+        (
+          await setup.query(
+            "select count(*)::int n from access_events where target_id=$1 and action='printer.registered'",
+            [prepared],
+          )
+        ).rows[0].n,
+        1,
+      )
+    }
+    console.log(
+      'PASS: concurrent Weblink setup replays exact registration, refuses changed input and remains inactive.',
+    )
     const seller = (
       await admin.query(
         "select register_seller($1,$2,'Synthetic','seller@weblink.test','') id",

@@ -2079,7 +2079,10 @@
       "claimed": "udskriver",
       "printed": "Sendt til printeren",
       "failed": "mislykkedes",
-      "cancelled": "annulleret"
+      "cancelled": "annulleret",
+      "dispatching": "Sendeforsøg reserveret",
+      "transport_accepted": "Overførsel modtaget – udskrift ikke verificeret",
+      "outcome_unknown": "Udskriftsresultat ukendt"
     },
     "zebraPrint": "Udskriv på Zebra",
     "close": "Luk",
@@ -2112,7 +2115,23 @@
     "usbHint": "Kræver Komisio Print 1.1 eller nyere og Zebras Windows-driver.",
     "usbQueueName": "Printernavn i Windows",
     "usbQueueHint": "Angiv det præcise navn i Windows. Kør list-usb-printers.cmd i Komisio Print-mappen for at vise USB-printere.",
-    "usbQueueInvalid": "Angiv navnet på en lokal USB-printer i Windows uden omvendte skråstreger eller linjeskift."
+    "usbQueueInvalid": "Angiv navnet på en lokal USB-printer i Windows uden omvendte skråstreger eller linjeskift.",
+    "weblink": {
+      "register": "Forbered Weblink-printer",
+      "preparation": "Printeren registreres som inaktiv. Sikker forbindelse og en printertest kræves, før udskrivning kan aktiveres.",
+      "saved": "Ændringen er bekræftet.",
+      "unconfirmed": "Ændringen kunne ikke bekræftes. Genindlæs og kontrollér den aktuelle status, før du fortsætter.",
+      "recovery": "Kontrollér udskriftsresultat",
+      "recoveryHint": "Spær først enheden, der sendte jobbet. Stop derefter forbindelsen, og kontrollér printeren, ventende job og alle bestilte kopier. Spærring kan ikke tilbagekalde allerede sendte data.",
+      "revoke": "Spær den afsendende enhed",
+      "inspected": "Jeg har stoppet forbindelsen og kontrolleret printeren, ventende job og alle kopier.",
+      "note": "Beskriv kontrollen og resultatet",
+      "result": "Kontrolleret resultat",
+      "printed": "Alle kopier udskrevet og fysisk kontrolleret",
+      "cancelled": "Afslut jobbet uden at bekræfte udskrift",
+      "resolve": "Gem kontrollen",
+      "acceptanceHint": "Modtaget overførsel er ikke bevis på fysisk udskrift. Jobbet sendes ikke automatisk igen."
+    }
   },
   "purchases": {
     "title": "Egne indkøb",

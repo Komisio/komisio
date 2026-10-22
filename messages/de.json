@@ -2079,7 +2079,10 @@
       "claimed": "wird gedruckt",
       "printed": "An Drucker gesendet",
       "failed": "fehlgeschlagen",
-      "cancelled": "abgebrochen"
+      "cancelled": "abgebrochen",
+      "dispatching": "Sendeversuch reserviert",
+      "transport_accepted": "Übertragung angenommen – Ausdruck ungeprüft",
+      "outcome_unknown": "Druckergebnis unbekannt"
     },
     "zebraPrint": "Auf Zebra drucken",
     "close": "Schließen",
@@ -2112,7 +2115,23 @@
     "usbHint": "Erfordert Komisio Print 1.1 oder neuer und den Zebra-Windows-Treiber.",
     "usbQueueName": "Druckername in Windows",
     "usbQueueHint": "Geben Sie den genauen Namen in Windows ein. Starten Sie list-usb-printers.cmd im Komisio-Print-Ordner, um USB-Drucker anzuzeigen.",
-    "usbQueueInvalid": "Geben Sie einen lokalen Windows-USB-Druckernamen ohne umgekehrte Schrägstriche oder Zeilenumbrüche ein."
+    "usbQueueInvalid": "Geben Sie einen lokalen Windows-USB-Druckernamen ohne umgekehrte Schrägstriche oder Zeilenumbrüche ein.",
+    "weblink": {
+      "register": "Weblink-Drucker vorbereiten",
+      "preparation": "Der Drucker wird als inaktiv registriert. Eine sichere Verbindung und ein Druckertest sind vor der Aktivierung erforderlich.",
+      "saved": "Die Änderung ist bestätigt.",
+      "unconfirmed": "Die Änderung konnte nicht bestätigt werden. Laden Sie die Seite neu und prüfen Sie den aktuellen Status, bevor Sie fortfahren.",
+      "recovery": "Druckergebnis prüfen",
+      "recoveryHint": "Sperren Sie zuerst das sendende Gerät. Stoppen Sie dann die Verbindung und prüfen Sie Drucker, gepufferte Aufträge und alle bestellten Kopien. Die Sperrung kann bereits gesendete Daten nicht zurückrufen.",
+      "revoke": "Sendendes Gerät sperren",
+      "inspected": "Ich habe die Verbindung gestoppt und Drucker, gepufferte Aufträge und alle Kopien geprüft.",
+      "note": "Prüfung und Ergebnis beschreiben",
+      "result": "Geprüftes Ergebnis",
+      "printed": "Alle Kopien gedruckt und physisch geprüft",
+      "cancelled": "Auftrag ohne Druckbestätigung schließen",
+      "resolve": "Prüfung speichern",
+      "acceptanceHint": "Eine bestätigte Übertragung beweist keinen physischen Ausdruck. Der Auftrag wird nicht automatisch erneut gesendet."
+    }
   },
   "purchases": {
     "title": "Eigene Einkäufe",

@@ -2079,7 +2079,10 @@
       "claimed": "skrivs ut",
       "printed": "Skickad till skrivaren",
       "failed": "misslyckad",
-      "cancelled": "avbruten"
+      "cancelled": "avbruten",
+      "dispatching": "Sändningsförsök reserverat",
+      "transport_accepted": "Sändningen mottagen – utskrift ej verifierad",
+      "outcome_unknown": "Utskriftsresultat okänt"
     },
     "zebraPrint": "Skriv ut på Zebra",
     "close": "Stäng",
@@ -2112,7 +2115,23 @@
     "usbHint": "Kräver Komisio Print 1.1 eller senare och Zebras Windows-drivrutin.",
     "usbQueueName": "Skrivarnamn i Windows",
     "usbQueueHint": "Ange exakt namnet i Windows. Kör list-usb-printers.cmd i Komisio Print-mappen för att visa USB-skrivarna.",
-    "usbQueueInvalid": "Ange namnet på en lokal USB-skrivare i Windows, utan omvänt snedstreck eller radbrytningar."
+    "usbQueueInvalid": "Ange namnet på en lokal USB-skrivare i Windows, utan omvänt snedstreck eller radbrytningar.",
+    "weblink": {
+      "register": "Förbered Weblink-skrivare",
+      "preparation": "Skrivaren registreras som inaktiv. Säker anslutning och skrivartest krävs innan utskrifter kan aktiveras.",
+      "saved": "Ändringen är bekräftad.",
+      "unconfirmed": "Ändringen kunde inte bekräftas. Ladda om och kontrollera aktuell status innan du gör något mer.",
+      "recovery": "Kontrollera utskriftsresultat",
+      "recoveryHint": "Spärra först enheten som skickade jobbet. Stoppa sedan dess anslutning och kontrollera skrivaren, buffrade jobb och alla beställda kopior. Spärrning kan inte återkalla data som redan skickats.",
+      "revoke": "Spärra den sändande enheten",
+      "inspected": "Jag har stoppat anslutningen och kontrollerat skrivaren, buffrade jobb och alla kopior.",
+      "note": "Beskriv kontrollen och resultatet",
+      "result": "Kontrollerat resultat",
+      "printed": "Alla kopior utskrivna och fysiskt kontrollerade",
+      "cancelled": "Avsluta jobbet utan att bekräfta utskrift",
+      "resolve": "Spara kontrollen",
+      "acceptanceHint": "Mottagen sändning är inte bevis på fysisk utskrift. Jobbet skickas inte automatiskt igen."
+    }
   },
   "purchases": {
     "title": "Egna inköp",

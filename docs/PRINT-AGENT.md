@@ -25,8 +25,8 @@ supported. Linux syncs the file and directory before transport. Windows runs
 development tests only; it does not establish Linux filesystem durability.
 
 Do not delete, prune or restore journal files to retry work. Missing restored
-evidence could allow duplicate output. Hosted activation still requires reviewed
-recovery controls, authenticated printer main/raw channels and reconnects,
+evidence could allow duplicate output. Hosted activation still requires
+authenticated printer main/raw channels and reconnects,
 service integration, and physical TLS/copy/revocation tests. The database now
 fences Weblink separately; legacy TCP/USB stale claims and Windows printing are
 unchanged.
@@ -80,7 +80,7 @@ Zebra documents server credentials in `weblink.ip.conn[1|2].authentication.add`
 in its [Programming Guide](https://cpws.zebra.com/cpws/docs/zpl/zpl-zbi2-pm-en.pdf).
 Actual ZD420 firmware challenge handling on both channels remains unverified.
 The TLS upgrade handler, rate limits, discovery/channel association, secure
-provisioning, queue service wiring and uncertain-output recovery controls remain required
+provisioning and queue service wiring remain required
 before hosted activation. These components and local fixtures do not establish
 printer compatibility or a complete Weblink service.
 
@@ -88,11 +88,10 @@ printer compatibility or a complete Weblink service.
 
 The owner approved the one-attempt model on 2026-10-22. Migration
 `20261022150000` extends the existing printer/job records; it creates no new core
-tables or roles and converts no existing printers. The public registration
-flow still accepts only TCP/USB. Do not manually insert or convert printers to
-activate Weblink: its onboarding, read models/status display and recovery UI
-must be delivered before activation. Local tests seed synthetic Weblink printers
-only in isolated databases.
+tables or roles and converts no existing printers. Legacy registration accepts
+only TCP/USB. Separate Weblink preparation creates inactive printers; it does
+not activate transport. Do not manually insert or convert printers to activate
+Weblink. Local tests seed active synthetic Weblink printers only in test databases.
 
 `claim_weblink_print_job` requires a paired, active device bound to that printer.
 The first response reserves the job permanently and returns `canSend: true`, the
@@ -131,6 +130,28 @@ The concurrency harness creates an isolated database, verifies competing claims
 and completions, and runs the real worker against a committed claim with a lost
 response and fresh local journal. These tests do not establish hosted deployment,
 physical output or recovery after losing/restoring the authoritative database.
+
+## Weblink preparation and manual inspection
+
+After migration `20261022160000`, the server-only flag
+`KOMISIO_WEBLINK_SETUP_ENABLED=true` exposes preparation in Settings → Printing
+to owners/admins. It defaults off. Registration stores name, model and DPI with
+`active=false`; it neither provisions a secret nor starts printing. Exact repeated
+registrations return the same printer; changed input for that ID is refused.
+There is no Weblink activation or Windows pairing control in this form.
+
+Existing Weblink jobs remain visible when preparation is disabled. Print history
+distinguishes a reserved attempt, transport acceptance and an unknown outcome.
+An exact `?tab=printing&job=<uuid>` link also reaches jobs outside recent history.
+Owners/admins first revoke the original sending device, stop its connection and
+inspect the printer, buffered jobs and every requested copy. They then explicitly
+choose physically verified output or closure without confirming output and record
+an inspection note. The database enforces revocation and retains the human actor.
+No recovery action creates or resends a job. Unconfirmed HTTP responses lock the
+form and require reloading the current state before another action.
+
+Software checks use synthetic printers; actual secure provisioning, service wiring,
+the printer's main/raw handshake, TLS and physical output remain activation gates.
 
 ## Existing Windows agent
 

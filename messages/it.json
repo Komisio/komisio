@@ -2079,7 +2079,10 @@
       "claimed": "in stampa",
       "printed": "Inviato alla stampante",
       "failed": "fallito",
-      "cancelled": "annullato"
+      "cancelled": "annullato",
+      "dispatching": "Tentativo di invio riservato",
+      "transport_accepted": "Trasferimento ricevuto – stampa non verificata",
+      "outcome_unknown": "Risultato di stampa sconosciuto"
     },
     "zebraPrint": "Stampa su Zebra",
     "close": "Chiudi",
@@ -2112,7 +2115,23 @@
     "usbHint": "Richiede Komisio Print 1.1 o successivo e il driver Zebra per Windows.",
     "usbQueueName": "Nome della stampante in Windows",
     "usbQueueHint": "Inserisci il nome esatto in Windows. Esegui list-usb-printers.cmd nella cartella Komisio Print per elencare le stampanti USB.",
-    "usbQueueInvalid": "Inserisci il nome di una stampante USB locale di Windows, senza barre inverse o interruzioni di riga."
+    "usbQueueInvalid": "Inserisci il nome di una stampante USB locale di Windows, senza barre inverse o interruzioni di riga.",
+    "weblink": {
+      "register": "Prepara stampante Weblink",
+      "preparation": "La stampante viene registrata come inattiva. Prima di attivare la stampa sono necessari una connessione sicura e un test.",
+      "saved": "La modifica è confermata.",
+      "unconfirmed": "Impossibile confermare la modifica. Ricarica e controlla lo stato attuale prima di continuare.",
+      "recovery": "Verifica risultato di stampa",
+      "recoveryHint": "Blocca prima il dispositivo che ha inviato il lavoro. Poi interrompi la connessione e controlla la stampante, i lavori memorizzati e tutte le copie richieste. Il blocco non può richiamare dati già inviati.",
+      "revoke": "Blocca il dispositivo mittente",
+      "inspected": "Ho interrotto la connessione e controllato la stampante, i lavori memorizzati e tutte le copie.",
+      "note": "Descrivi la verifica e il risultato",
+      "result": "Risultato verificato",
+      "printed": "Tutte le copie stampate e verificate fisicamente",
+      "cancelled": "Chiudi senza confermare la stampa",
+      "resolve": "Salva verifica",
+      "acceptanceHint": "La ricezione dei dati non prova la stampa fisica. Il lavoro non viene reinviato automaticamente."
+    }
   },
   "purchases": {
     "title": "Acquisti propri",

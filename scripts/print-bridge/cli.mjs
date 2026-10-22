@@ -94,7 +94,8 @@ export function printerSetup(host, credentials) {
   // verification. Loading the CA chain and restarting are separate operator steps.
   return (
     `! U1 setvar "weblink.ip.conn1.authentication.add" "${host} ${scope.deviceId} ${credentials.password}"\r\n` +
-    `! U1 setvar "weblink.ip.conn1.location" "https://${host}/weblink/${scope.deviceId}"\r\n`
+    `! U1 setvar "weblink.ip.conn1.location" "https://${host}/weblink/${scope.deviceId}"\r\n` +
+    '! U1 setvar "weblink.enable" "on"\r\n'
   )
 }
 async function readPairingCode() {

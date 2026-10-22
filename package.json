@@ -16,7 +16,7 @@
     "format:check": "prettier --check app components lib extensions mcp messages tests scripts *.ts *.mjs *.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:print-bridge": "node --test tests/print-bridge/dispatch.test.mjs tests/print-bridge/auth.test.mjs tests/print-bridge/credentials.test.mjs tests/print-bridge/queue.test.mjs tests/print-bridge/attempts.test.mjs tests/print-bridge/service.test.mjs tests/print-bridge/runtime.test.mjs",
+    "test:print-bridge": "node --test tests/print-bridge/dispatch.test.mjs tests/print-bridge/auth.test.mjs tests/print-bridge/credentials.test.mjs tests/print-bridge/queue.test.mjs tests/print-bridge/attempts.test.mjs tests/print-bridge/service.test.mjs tests/print-bridge/runtime.test.mjs tests/print-bridge/enrollment.test.mjs tests/print-bridge/poller.test.mjs tests/print-bridge/cli.test.mjs",
     "pricing:evaluate": "node --import tsx scripts/evaluate-pricing.ts",
     "test:e2e": "playwright test",
     "test:assistance": "node scripts/test-assistance.mjs",

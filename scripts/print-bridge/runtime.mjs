@@ -5,6 +5,7 @@ import {
   createDeviceAuthorizer,
   createDeviceTokenProvider,
   createWeblinkRpc,
+  createDeviceReporter,
 } from './auth.mjs'
 import { createCredentialStore } from './credentials.mjs'
 import { createAttemptStore } from './attempts.mjs'
@@ -71,7 +72,7 @@ export async function createProvisionedWeblinkService({
       fetchImpl,
     })
     const journal = await createDispatchJournal(join(directory, 'dispatch'))
-    return await createWeblinkService({
+    const service = await createWeblinkService({
       scope,
       sessions,
       rpc,
@@ -80,6 +81,18 @@ export async function createProvisionedWeblinkService({
       proxyHost,
       proxySecret,
       port,
+    })
+    const report = createDeviceReporter({
+      url,
+      publishableKey,
+      scope,
+      getAccessToken,
+      fetchImpl,
+    })
+    return Object.freeze({
+      ...service,
+      reportStatus: (held) =>
+        report({ connected: service.status().connected, held }),
     })
   } catch {
     await attempts.close()

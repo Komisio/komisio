@@ -1,5 +1,8 @@
 # Komisio Print (the local print agent)
 
+For the separate Linux Weblink pilot, see [Weblink operations](PRINT-WEBLINK.md).
+It is under hardware verification and is not generally available.
+
 ## Weblink dispatch journal (development only)
 
 The owner requested software implementation before the physical printer test
@@ -17,7 +20,7 @@ reservation and before each copy. A successful transport callback records
 evidence and is not a tenant-facing authorization boundary. Neither method
 claims jobs, updates Supabase, exposes an endpoint or grants permissions.
 
-Run `npm run test:print-bridge` for the dependency-free process/crash tests.
+Run `npm run test:print-bridge` for the native process/crash and WebSocket tests.
 The Linux service requires a private directory owned by its service user on a
 local persistent filesystem. Its parent must already exist. All bridge workers
 must share that directory; NFS, ephemeral storage and separate replicas are not
@@ -39,9 +42,10 @@ for the future bridge. They open no listener, pair no devices and consume no job
 They use the existing paired device identity and `print_device_context` RPC;
 there are no schema, membership or Windows-agent changes.
 
-Each printer receives a random 256-bit password once through a future trusted
-provisioning flow. Its username is the paired device ID, not the printer serial.
-Only the password digest is retained. Both main and raw HTTP upgrade requests
+Each printer receives a random 256-bit password through the operator enrollment
+flow. Its username is the paired device ID, not the printer serial.
+Runtime credentials retain its digest; the separate encrypted enrollment checkpoint
+retains the password for private provisioning output. Both main and raw HTTP upgrade requests
 must authenticate, over TLS, against the same device binding. The service owns
 opaque session handles: they must never be taken from printer-supplied channel
 IDs. A new authenticated main connection invalidates the previous generation.

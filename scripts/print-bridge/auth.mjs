@@ -189,7 +189,7 @@ export function createDeviceAuthorizer({
   }
 }
 
-function authEndpoint(url, publishableKey) {
+export function authEndpoint(url, publishableKey) {
   const endpoint = new URL(url)
   if (
     endpoint.username ||
@@ -209,7 +209,7 @@ function authEndpoint(url, publishableKey) {
   return endpoint
 }
 
-function validToken(value, maximum) {
+export function validToken(value, maximum) {
   return (
     typeof value === 'string' &&
     value.length > 0 &&
@@ -359,7 +359,58 @@ export function createWeblinkRpc({
   }
 }
 
-async function boundedJson(response, maximum = 16384) {
+/** Fixed, bounded heartbeat; never accepts arbitrary RPC names or status text. */
+export function createDeviceReporter({
+  url,
+  publishableKey,
+  scope: input,
+  getAccessToken,
+  fetchImpl = fetch,
+}) {
+  const endpoint = authEndpoint(url, publishableKey)
+  const scope = deviceScope(input)
+  return async ({ connected, held }) => {
+    try {
+      if (typeof connected !== 'boolean' || typeof held !== 'boolean')
+        throw denied()
+      const token = await getAccessToken(scope)
+      if (!validToken(token, 16384)) throw denied()
+      const response = await fetchImpl(
+        new URL('/rest/v1/rpc/report_print_device', endpoint),
+        {
+          method: 'POST',
+          headers: {
+            apikey: publishableKey,
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            p_status: {
+              version: 'weblink-0.1',
+              printerReachable: connected,
+              error: held
+                ? 'PRINT_OUTCOME_HELD'
+                : connected
+                  ? ''
+                  : 'PRINT_CHANNEL_UNAVAILABLE',
+            },
+          }),
+          redirect: 'error',
+          signal: AbortSignal.timeout(5000),
+        },
+      )
+      if (!response.ok) {
+        await response.body?.cancel().catch(() => {})
+        throw denied()
+      }
+      await response.body?.cancel().catch(() => {})
+    } catch {
+      throw new Error('PRINT_STATUS_UNAVAILABLE')
+    }
+  }
+}
+
+export async function boundedJson(response, maximum = 16384) {
   if (!response.body) throw denied()
   const reader = response.body.getReader()
   const chunks = []

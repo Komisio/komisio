@@ -71,6 +71,53 @@ test('missing, malformed, duplicated, guessed and serial-only credentials are de
   await assert.rejects(sessions.openRaw({}, header), refusal)
 })
 
+test('pending greetings cannot authorize, bind twice or revive an obsolete main', async () => {
+  const { sessions, header } = setup()
+  const pendingMain = await sessions.openPending(header)
+  assert.equal(await sessions.authorize(pendingMain, scope), false)
+  const main = sessions.bindMain(pendingMain)
+  assert.throws(() => sessions.bindMain(pendingMain), refusal)
+  const pendingRaw = await sessions.openPending(header)
+  assert.equal(await sessions.authorize(pendingRaw, scope), false)
+  const raw = sessions.bindRaw(pendingRaw, main)
+  assert.equal(await sessions.authorize(raw, scope), true)
+  const duplicate = await sessions.openPending(header)
+  assert.throws(() => sessions.bindRaw(duplicate, main), refusal)
+  const stale = await sessions.openPending(header)
+  const current = await sessions.openMain(header)
+  assert.throws(() => sessions.bindRaw(stale, main), refusal)
+  assert.throws(() => sessions.bindRaw(stale, current), refusal)
+  const aborted = new AbortController()
+  const late = await sessions.openPending(header, aborted.signal)
+  aborted.abort()
+  assert.throws(() => sessions.bindMain(late), refusal)
+})
+
+test('pending raw credentials cannot bind across a scope change or rotation', async () => {
+  for (const change of [
+    (state) => {
+      state.record.printerId = other.deviceId
+    },
+    (state) => {
+      state.record.tenantId = other.deviceId
+    },
+  ]) {
+    const { sessions, header, state } = setup()
+    const main = await sessions.openMain(header)
+    change(state)
+    const pending = await sessions.openPending(header)
+    assert.throws(() => sessions.bindRaw(pending, main), refusal)
+  }
+  const { sessions, header, state } = setup()
+  const main = await sessions.openMain(header)
+  const next = issuePrinterCredential()
+  state.record.secretDigest = next.secretDigest
+  const rotated = await sessions.openPending(
+    basic(scope.deviceId, next.password),
+  )
+  assert.throws(() => sessions.bindRaw(rotated, main), refusal)
+})
+
 test('reconnection retires the old generation and closing old handles cannot close the new one', async () => {
   const { sessions, header } = setup()
   const oldMain = await sessions.openMain(header)

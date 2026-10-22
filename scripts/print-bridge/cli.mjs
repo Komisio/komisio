@@ -91,11 +91,11 @@ export function printerSetup(host, credentials) {
     throw fail()
   const scope = deviceScope(credentials)
   // HTTPS is Zebra's documented location scheme. Do not disable certificate
-  // verification. Loading the CA chain and restarting are separate operator steps.
+  // verification. weblink.enable is read-only status derived from location.
+  // Loading the CA chain and restarting are separate operator steps.
   return (
     `! U1 setvar "weblink.ip.conn1.authentication.add" "${host} ${scope.deviceId} ${credentials.password}"\r\n` +
-    `! U1 setvar "weblink.ip.conn1.location" "https://${host}/weblink/${scope.deviceId}"\r\n` +
-    '! U1 setvar "weblink.enable" "on"\r\n'
+    `! U1 setvar "weblink.ip.conn1.location" "https://${host}/weblink/${scope.deviceId}"\r\n`
   )
 }
 async function readPairingCode() {

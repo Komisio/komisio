@@ -54,6 +54,35 @@ maintainer. External approval is the owner's review/merge policy, not a separate
 GitHub rule that distinguishes internal from external authors. Revisit required
 reviews and CODEOWNERS before granting additional write permissions.
 
+## Local development batches
+
+Owner-directed feature work is collected in a `batch/*` integration branch,
+normally 4–5 PRs per staging release. Start each feature from the current batch,
+target its PR at that branch, and review it with the relevant local checks before
+merging. Report the commands and outcomes in each PR. Database and concurrency
+changes still need their corresponding regression tests; local test data must
+not target hosted databases or live providers. See the checks in
+[`docs/SELF-HOSTING.md`](docs/SELF-HOSTING.md#checks).
+
+For a focused feedback loop, run the relevant unit files with
+`npm test -- tests/unit/<name>.test.ts` and browser journeys with
+`npm run test:e2e -- tests/e2e/<name>.spec.ts`. Use the appropriate fixture config
+for provider journeys. Run lint, typecheck and build for application changes;
+run database and concurrency suites when their invariants change. Validate the
+combined batch and shared regression paths before preparing its release PR.
+
+Automatic Vercel Git builds are enabled only for `main` and deliberate
+`preview/*` branches. Working branches must contain the current `vercel.json`
+before pushing to inherit this behavior; existing previews are not deleted.
+Do not create preview branches just to run tests.
+
+When the owner requests staging, open or complete one reviewed batch-to-main PR.
+Reconcile any intervening main changes and rerun affected checks before merging.
+The complete platform CI and staging migration checks run for the resulting main
+commit. Until those pass, the previous staging release remains published.
+Production uses the existing separate protected release process. A locally
+verified feature or merged batch PR is not evidence of a deployed release.
+
 ## Decisions
 
 `DECISIONS.md` is append-only: one line, `- YYYY-MM-DD: <decision>: <why>`, at

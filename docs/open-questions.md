@@ -606,9 +606,13 @@ The local service now composes encrypted device sessions, independently
 authenticated main/raw WebSockets and the queue worker. It binds to loopback
 behind an authenticated TLS proxy and requires an already-provisioned identity.
 A durable attempt store halts on uncertain outcomes across restart. Automated
-fixtures verify these boundaries; secure enrollment, deployment/polling, reviewed
-recovery of a halted service and physical TLS/reconnect acceptance remain open.
-No new core table, device-role change or hosted activation is authorized here.
+fixtures verify these boundaries. Enrollment now seals the anonymous session
+before consuming a code and reconciles an uncertain pair by reading the same
+identity. A private operator CLI, serial poller, minimal release package and
+Linux service unit have local process-level coverage. Hosted enrollment, service
+installation and physical TLS/reconnect acceptance remain to be verified. Recovery
+retains uncertain evidence and requires reviewed revocation/new enrollment.
+No new core table or device-role change is authorized here.
 
 The owner requested native ZPL output to a USB Zebra and has hardware for a
 later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the

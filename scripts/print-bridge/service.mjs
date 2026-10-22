@@ -52,7 +52,18 @@ export async function createWeblinkService({
   let activeRun = null
   const sockets = new Set()
   const authentication = new Set()
-  const server = createServer((_req, res) => {
+  const status = () =>
+    Object.freeze({ connected: !closing && Boolean(main?.raw?.ready), closing })
+  const server = createServer((req, res) => {
+    if (req.method === 'GET' && req.url === '/healthz') {
+      res
+        .writeHead(200, {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store',
+        })
+        .end(JSON.stringify(status()))
+      return
+    }
     res
       .writeHead(404, { 'Content-Length': '0', 'Cache-Control': 'no-store' })
       .end()
@@ -346,6 +357,7 @@ export async function createWeblinkService({
   }
   return Object.freeze({
     address: Object.freeze(server.address()),
+    status,
     runOnce,
     close,
   })

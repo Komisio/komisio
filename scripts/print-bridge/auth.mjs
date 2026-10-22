@@ -305,7 +305,55 @@ function isPublicKey(key) {
   }
 }
 
-async function boundedJson(response) {
+/** Restricted device RPC transport for the queue worker; no administrator key. */
+export function createWeblinkRpc({
+  url,
+  publishableKey,
+  scope: input,
+  getAccessToken,
+  fetchImpl = fetch,
+}) {
+  const endpoint = authEndpoint(url, publishableKey)
+  const scope = deviceScope(input)
+  return async (name, args) => {
+    try {
+      if (
+        !['claim_weblink_print_job', 'finish_weblink_print_job'].includes(
+          name,
+        ) ||
+        args?.p_tenant !== scope.tenantId ||
+        (name === 'claim_weblink_print_job' &&
+          args.p_printer !== scope.printerId)
+      )
+        throw denied()
+      const token = await getAccessToken(scope)
+      if (!validToken(token, 16384)) throw denied()
+      const response = await fetchImpl(
+        new URL(`/rest/v1/rpc/${name}`, endpoint),
+        {
+          method: 'POST',
+          headers: {
+            apikey: publishableKey,
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(args),
+          redirect: 'error',
+          signal: AbortSignal.timeout(5000),
+        },
+      )
+      if (!response.ok) {
+        await response.body?.cancel().catch(() => {})
+        throw denied()
+      }
+      return await boundedJson(response, 160000)
+    } catch {
+      throw new Error('PRINT_QUEUE_RESULT_UNKNOWN')
+    }
+  }
+}
+
+async function boundedJson(response, maximum = 16384) {
   if (!response.body) throw denied()
   const reader = response.body.getReader()
   const chunks = []
@@ -315,7 +363,7 @@ async function boundedJson(response) {
       const { done, value } = await reader.read()
       if (done) break
       length += value.length
-      if (length > 16384) throw denied()
+      if (length > maximum) throw denied()
       chunks.push(value)
     }
     return JSON.parse(Buffer.concat(chunks).toString('utf8'))

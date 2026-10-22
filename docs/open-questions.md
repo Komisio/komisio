@@ -628,8 +628,12 @@ required accepting its bounded discovery suffix and classifying the raw greeting
 even when the connection negotiates the main subprotocol. A controlled service
 restart reconnected automatically with an unchanged dispatch journal and an
 empty queue; it did not dispatch the job again. The owner confirmed exactly one
-physical label with readable text and code. Barcode scanning and live
-revocation/recovery acceptance remain open. The standalone pilot runtime
+physical label with readable text and code. Live revocation stopped queue work
+and the old device's scoped authorization was denied. After stopping the old
+connection and inspecting the empty printer buffer, the owner's physical result
+was recorded through the recovery UI. Fresh enrollment of the same printer
+reconnected with zero new dispatches and unchanged original dispatch evidence.
+Barcode scanning is deferred at the owner's request. The standalone pilot runtime
 includes locally tested fixes in the hardware batch;
 those fixes have not released the application or reached production.
 

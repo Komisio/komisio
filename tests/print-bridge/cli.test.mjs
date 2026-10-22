@@ -83,7 +83,10 @@ test('printer setup uses only the host/device credential and cannot inject SGD c
     ),
   )
   assert.ok(zpl.includes(`https://print.example.com/weblink/${scope.deviceId}`))
-  assert.ok(zpl.endsWith('! U1 setvar "weblink.enable" "on"\r\n'))
+  assert.ok(!zpl.includes('setvar "weblink.enable"'))
+  assert.ok(
+    zpl.endsWith(`https://print.example.com/weblink/${scope.deviceId}"\r\n`),
+  )
   assert.ok(!zpl.includes('reset'))
   for (const host of [
     'print.example.com"',

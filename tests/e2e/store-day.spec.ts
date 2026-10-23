@@ -89,7 +89,8 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
             exact: true,
           })
           .click()
-        await expect(page.locator('.quick-item h2')).toBeFocused()
+        // #615: the next item resumes typing in the existing description field.
+        await expect(description).toBeFocused()
         await expect(description).toHaveValue('')
         await expect(price).toHaveValue('')
       }

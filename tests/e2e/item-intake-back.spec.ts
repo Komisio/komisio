@@ -86,6 +86,11 @@ for (const mode of ['bag', 'quick'] as const) {
           new URL(`${listing}#inventory-item-${itemId}`, page.url()).href,
         )
         await expect(page.locator('.inventory-row')).toBeInViewport()
+        await expect(page.locator('#quick-description')).not.toBeFocused()
+        await page.reload()
+        // Reload must not re-arm an unrelated editor either. The explicit
+        // return link's scroll position is checked above before reloading.
+        await expect(page.locator('#quick-description')).not.toBeFocused()
         // The stepwise registration page for a bag item also returns to its bag.
         await page.goto(`/intake/reception/${session}`)
         await expect(back).toHaveAttribute('href', intake)

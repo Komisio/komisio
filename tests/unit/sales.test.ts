@@ -46,3 +46,14 @@ it('bounds optional staff notes and preserves legacy input', () => {
     false,
   )
 })
+
+it('accepts explicit tenders without inventing legacy payment evidence', () => {
+  expect(recordSaleCommand.parse(base).paymentMethod).toBe('unspecified')
+  for (const paymentMethod of ['card', 'cash', 'mobilepay', 'swish', 'other'])
+    expect(
+      recordSaleCommand.parse({ ...base, paymentMethod }).paymentMethod,
+    ).toBe(paymentMethod)
+  expect(
+    recordSaleCommand.safeParse({ ...base, paymentMethod: 'unknown' }).success,
+  ).toBe(false)
+})

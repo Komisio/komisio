@@ -1318,7 +1318,17 @@
     "markSold": "Als verkauft markieren",
     "itemUnavailable": "Dieser Artikel kann derzeit nicht verkauft werden. Er ist möglicherweise bereits verkauft oder der Verkaufszeitraum ist beendet.",
     "note": "Notiz / Zahlungsreferenz (optional)",
-    "noteHint": "Nur für das Geschäft. Zum Beispiel Instagram oder eine MobilePay-Referenz. Höchstens 500 Zeichen."
+    "noteHint": "Nur für das Geschäft. Zum Beispiel Instagram oder eine MobilePay-Referenz. Höchstens 500 Zeichen.",
+    "paymentMethod": "Zahlungsart",
+    "paymentMethods": {
+      "unspecified": "Nicht angegeben",
+      "card": "Karte",
+      "cash": "Bar",
+      "mobilepay": "MobilePay",
+      "swish": "Swish",
+      "other": "Andere"
+    },
+    "paymentHint": "Erfassen Sie, wie die Zahlung bereits eingegangen ist. Komisio zieht keine Zahlung ein."
   },
   "ledger": {
     "title": "Guthaben und Konto",
@@ -1626,7 +1636,17 @@
       "mode:consignment_fee:vatOre": "Monatsgebühren · Umsatzsteuer",
       "mode:consignment_fee_reversal:grossOre": "Gebühr stornieren · Gebühr in Geschäftswährung",
       "mode:consignment_fee_reversal:netOre": "Gebühr stornieren · Ohne Umsatzsteuer",
-      "mode:consignment_fee_reversal:vatOre": "Gebühr stornieren · Umsatzsteuer"
+      "mode:consignment_fee_reversal:vatOre": "Gebühr stornieren · Umsatzsteuer",
+      "payment:card:grossOre": "Karte · Bruttoverkäufe (erhaltene Zahlungen)",
+      "payment:card:refundsOre": "Karte · Erstattungen",
+      "payment:cash:grossOre": "Bar · Bruttoverkäufe (erhaltene Zahlungen)",
+      "payment:cash:refundsOre": "Bar · Erstattungen",
+      "payment:mobilepay:grossOre": "MobilePay · Bruttoverkäufe (erhaltene Zahlungen)",
+      "payment:mobilepay:refundsOre": "MobilePay · Erstattungen",
+      "payment:swish:grossOre": "Swish · Bruttoverkäufe (erhaltene Zahlungen)",
+      "payment:swish:refundsOre": "Swish · Erstattungen",
+      "payment:other:grossOre": "Andere · Bruttoverkäufe (erhaltene Zahlungen)",
+      "payment:other:refundsOre": "Andere · Erstattungen"
     },
     "netOf": "netto",
     "vatOf": "MwSt.",
@@ -1719,7 +1739,11 @@
       "payoutId": "Auszahlungs-ID",
       "sellerId": "Verkäufer-ID",
       "paidAt": "Bezahlt"
-    }
+    },
+    "paymentHeading": "Zahlungsarten in der Buchhaltung",
+    "paymentExclusionHint": "Mit einer Begründung werden alle Verkäufe und Rückgaben dieser Zahlungsart ausgeschlossen: Das Geschäft bucht auch Provision, Umsatzsteuer und Verbindlichkeiten gegenüber Einlieferern extern. Einlieferungsgebühren und Auszahlungen bleiben enthalten.",
+    "paymentExclusionReason": "Extern gebucht – Begründung",
+    "paymentExcluded": "Vom Export ausgeschlossen"
   },
   "communications": {
     "welcomeTitle": "Aktivierungs-E-Mail",

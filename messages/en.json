@@ -1318,7 +1318,17 @@
     "markSold": "Mark as sold",
     "itemUnavailable": "This item cannot be sold now. It may already be sold or its sale period may have ended.",
     "note": "Note / payment reference (optional)",
-    "noteHint": "For store staff only. For example Instagram or a MobilePay reference. Up to 500 characters."
+    "noteHint": "For store staff only. For example Instagram or a MobilePay reference. Up to 500 characters.",
+    "paymentMethod": "Payment method",
+    "paymentMethods": {
+      "unspecified": "Unspecified",
+      "card": "Card",
+      "cash": "Cash",
+      "mobilepay": "MobilePay",
+      "swish": "Swish",
+      "other": "Other"
+    },
+    "paymentHint": "Record how payment was already received. Komisio does not collect payment."
   },
   "ledger": {
     "title": "Balance and ledger",
@@ -1626,7 +1636,17 @@
       "mode:consignment_fee:vatOre": "Monthly fees · VAT",
       "mode:consignment_fee_reversal:grossOre": "Reverse fee · Fee in store currency",
       "mode:consignment_fee_reversal:netOre": "Reverse fee · Excluding VAT",
-      "mode:consignment_fee_reversal:vatOre": "Reverse fee · VAT"
+      "mode:consignment_fee_reversal:vatOre": "Reverse fee · VAT",
+      "payment:card:grossOre": "Card · Gross sales (payments received)",
+      "payment:card:refundsOre": "Card · Refunds",
+      "payment:cash:grossOre": "Cash · Gross sales (payments received)",
+      "payment:cash:refundsOre": "Cash · Refunds",
+      "payment:mobilepay:grossOre": "MobilePay · Gross sales (payments received)",
+      "payment:mobilepay:refundsOre": "MobilePay · Refunds",
+      "payment:swish:grossOre": "Swish · Gross sales (payments received)",
+      "payment:swish:refundsOre": "Swish · Refunds",
+      "payment:other:grossOre": "Other · Gross sales (payments received)",
+      "payment:other:refundsOre": "Other · Refunds"
     },
     "netOf": "net",
     "vatOf": "VAT",
@@ -1719,7 +1739,11 @@
       "payoutId": "Payout ID",
       "sellerId": "Seller ID",
       "paidAt": "Paid"
-    }
+    },
+    "paymentHeading": "Payment methods in accounting",
+    "paymentExclusionHint": "Enter a reason to exclude all sales and returns for this method: the store also books commission, VAT and seller liability externally. Consignment fees and payouts remain included.",
+    "paymentExclusionReason": "Booked externally – reason",
+    "paymentExcluded": "Excluded from export"
   },
   "communications": {
     "welcomeTitle": "Activation email",
@@ -3319,13 +3343,7 @@
     "eyebrow": "How we work",
     "intro": "Follow a drop-off from handover to sale and payout. Select a step to see what happens and open the work area.",
     "guide": "This map explains the work. It does not show live progress or start any operations.",
-    "groups": [
-      "Receive",
-      "Register",
-      "Sell",
-      "Handle unsold items",
-      "Pay out"
-    ],
+    "groups": ["Receive", "Register", "Sell", "Handle unsold items", "Pay out"],
     "details": "Step details",
     "happens": "What happens",
     "inKomisio": "In Komisio",

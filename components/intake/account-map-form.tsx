@@ -69,6 +69,14 @@ export function AccountMapForm({
     if (!form) return
     const appliedRows: AccountSuggestion['rows'] = []
     for (const row of value.rows) {
+      const method = row.key.startsWith('payment:')
+        ? row.key.split(':')[1]
+        : null
+      const exclusion = method
+        ? form.elements.namedItem(`exclude:${method}`)
+        : null
+      if (exclusion instanceof HTMLInputElement && exclusion.value.trim())
+        continue
       const account = form.elements.namedItem('account:' + row.key)
       const side = form.elements.namedItem('side:' + row.key)
       if (
@@ -118,7 +126,10 @@ export function AccountMapForm({
           return
         }
         const f = new FormData(e.currentTarget)
-        const map: Record<string, { account: string; side: string }> = {}
+        const map: Record<
+          string,
+          { account?: string; side?: string; excludeReason?: string }
+        > = {}
         for (const key of accountingKeys) {
           const account = String(f.get(`account:${key}`) ?? '').trim()
           if (account)
@@ -126,6 +137,13 @@ export function AccountMapForm({
               account,
               side: String(f.get(`side:${key}`) ?? 'debit'),
             }
+        }
+        for (const method of ['card', 'cash', 'mobilepay', 'swish', 'other']) {
+          const reason = String(f.get(`exclude:${method}`) ?? '').trim()
+          if (reason) {
+            map[`payment:${method}:grossOre`] = { excludeReason: reason }
+            map[`payment:${method}:refundsOre`] = { excludeReason: reason }
+          }
         }
         const candidate = accountingMapBody.safeParse(map)
         setInvalid(!candidate.success)
@@ -188,6 +206,22 @@ export function AccountMapForm({
           action.needsReload
         }
       >
+        <details>
+          <summary>{d.paymentHeading}</summary>
+          <p>{d.paymentExclusionHint}</p>
+          {['card', 'cash', 'mobilepay', 'swish', 'other'].map((method) => (
+            <label key={method}>
+              {label(`payment:${method}:grossOre`)} · {d.paymentExclusionReason}
+              <input
+                name={`exclude:${method}`}
+                maxLength={500}
+                defaultValue={
+                  base.map[`payment:${method}:grossOre`]?.excludeReason ?? ''
+                }
+              />
+            </label>
+          ))}
+        </details>
         {(['basic', 'vat', 'fees'] as const).map((group) => {
           const keys = accountingKeys.filter((key) =>
             group === 'basic'

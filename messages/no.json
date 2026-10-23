@@ -1318,7 +1318,17 @@
     "markSold": "Merk som solgt",
     "itemUnavailable": "Varen kan ikke selges nå. Den kan allerede være solgt, eller salgsperioden kan være avsluttet.",
     "note": "Notat / betalingsreferanse (valgfritt)",
-    "noteHint": "Kun for butikken. For eksempel Instagram eller en MobilePay-referanse. Maksimalt 500 tegn."
+    "noteHint": "Kun for butikken. For eksempel Instagram eller en MobilePay-referanse. Maksimalt 500 tegn.",
+    "paymentMethod": "Betalingsmåte",
+    "paymentMethods": {
+      "unspecified": "Ikke angitt",
+      "card": "Kort",
+      "cash": "Kontant",
+      "mobilepay": "MobilePay",
+      "swish": "Swish",
+      "other": "Annet"
+    },
+    "paymentHint": "Registrer hvordan betalingen allerede ble mottatt. Komisio tar ikke imot betaling."
   },
   "ledger": {
     "title": "Saldo og reskontro",
@@ -1626,7 +1636,17 @@
       "mode:consignment_fee:vatOre": "Månedsavgifter · Mva",
       "mode:consignment_fee_reversal:grossOre": "Tilbakefør avgift · Avgift i butikkens valuta",
       "mode:consignment_fee_reversal:netOre": "Tilbakefør avgift · Eksklusive mva",
-      "mode:consignment_fee_reversal:vatOre": "Tilbakefør avgift · Mva"
+      "mode:consignment_fee_reversal:vatOre": "Tilbakefør avgift · Mva",
+      "payment:card:grossOre": "Kort · Bruttosalg (mottatte betalinger)",
+      "payment:card:refundsOre": "Kort · Refusjoner",
+      "payment:cash:grossOre": "Kontant · Bruttosalg (mottatte betalinger)",
+      "payment:cash:refundsOre": "Kontant · Refusjoner",
+      "payment:mobilepay:grossOre": "MobilePay · Bruttosalg (mottatte betalinger)",
+      "payment:mobilepay:refundsOre": "MobilePay · Refusjoner",
+      "payment:swish:grossOre": "Swish · Bruttosalg (mottatte betalinger)",
+      "payment:swish:refundsOre": "Swish · Refusjoner",
+      "payment:other:grossOre": "Annet · Bruttosalg (mottatte betalinger)",
+      "payment:other:refundsOre": "Annet · Refusjoner"
     },
     "netOf": "netto",
     "vatOf": "mva",
@@ -1719,7 +1739,11 @@
       "payoutId": "Utbetalings-ID",
       "sellerId": "Selger-ID",
       "paidAt": "Betalt"
-    }
+    },
+    "paymentHeading": "Betalingsmåter i regnskapet",
+    "paymentExclusionHint": "Oppgi en grunn for å utelate alle salg og returer med denne metoden: butikken bokfører også provisjon, merverdiavgift og selgergjeld eksternt. Innleveringsgebyrer og utbetalinger inkluderes fortsatt.",
+    "paymentExclusionReason": "Bokføres eksternt – grunn",
+    "paymentExcluded": "Utelatt fra eksport"
   },
   "communications": {
     "welcomeTitle": "Aktiveringsmelding",
@@ -3319,13 +3343,7 @@
     "eyebrow": "Slik jobber vi",
     "intro": "Følg en innlevering fra innlevering til salg og utbetaling. Velg et trinn for å åpne arbeidsvisningen.",
     "guide": "Kartet forklarer arbeidet. Det viser ikke sanntidsstatus og starter ingen aktiviteter.",
-    "groups": [
-      "Ta imot",
-      "Registrer",
-      "Selg",
-      "Håndter usolgt",
-      "Betal ut"
-    ],
+    "groups": ["Ta imot", "Registrer", "Selg", "Håndter usolgt", "Betal ut"],
     "details": "Om aktiviteten",
     "happens": "Hva som skjer",
     "inKomisio": "I Komisio",

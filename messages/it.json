@@ -1318,7 +1318,17 @@
     "markSold": "Segna come venduto",
     "itemUnavailable": "Questo articolo non può essere venduto ora. Potrebbe essere già venduto o il periodo di vendita potrebbe essere terminato.",
     "note": "Nota / riferimento di pagamento (facoltativo)",
-    "noteHint": "Solo per il negozio. Ad esempio Instagram o un riferimento MobilePay. Massimo 500 caratteri."
+    "noteHint": "Solo per il negozio. Ad esempio Instagram o un riferimento MobilePay. Massimo 500 caratteri.",
+    "paymentMethod": "Metodo di pagamento",
+    "paymentMethods": {
+      "unspecified": "Non specificato",
+      "card": "Carta",
+      "cash": "Contanti",
+      "mobilepay": "MobilePay",
+      "swish": "Swish",
+      "other": "Altro"
+    },
+    "paymentHint": "Registra come è stato ricevuto il pagamento. Komisio non riscuote pagamenti."
   },
   "ledger": {
     "title": "Saldo e registro",
@@ -1626,7 +1636,17 @@
       "mode:consignment_fee:vatOre": "Quote mensili · IVA",
       "mode:consignment_fee_reversal:grossOre": "Storna quota · Quota nella valuta del negozio",
       "mode:consignment_fee_reversal:netOre": "Storna quota · IVA esclusa",
-      "mode:consignment_fee_reversal:vatOre": "Storna quota · IVA"
+      "mode:consignment_fee_reversal:vatOre": "Storna quota · IVA",
+      "payment:card:grossOre": "Carta · Vendite lorde (incassi ricevuti)",
+      "payment:card:refundsOre": "Carta · Rimborsi",
+      "payment:cash:grossOre": "Contanti · Vendite lorde (incassi ricevuti)",
+      "payment:cash:refundsOre": "Contanti · Rimborsi",
+      "payment:mobilepay:grossOre": "MobilePay · Vendite lorde (incassi ricevuti)",
+      "payment:mobilepay:refundsOre": "MobilePay · Rimborsi",
+      "payment:swish:grossOre": "Swish · Vendite lorde (incassi ricevuti)",
+      "payment:swish:refundsOre": "Swish · Rimborsi",
+      "payment:other:grossOre": "Altro · Vendite lorde (incassi ricevuti)",
+      "payment:other:refundsOre": "Altro · Rimborsi"
     },
     "netOf": "netto",
     "vatOf": "IVA",
@@ -1719,7 +1739,11 @@
       "payoutId": "ID pagamento",
       "sellerId": "ID venditore",
       "paidAt": "Pagato"
-    }
+    },
+    "paymentHeading": "Metodi di pagamento in contabilità",
+    "paymentExclusionHint": "Inserisci un motivo per escludere tutte le vendite e i resi con questo metodo: il negozio contabilizza esternamente anche commissioni, IVA e debiti verso i conferenti. Tariffe di conferimento e pagamenti ai conferenti rimangono inclusi.",
+    "paymentExclusionReason": "Contabilizzato esternamente – motivo",
+    "paymentExcluded": "Escluso dall’esportazione"
   },
   "communications": {
     "welcomeTitle": "Email di attivazione",
@@ -3319,13 +3343,7 @@
     "eyebrow": "Come lavoriamo",
     "intro": "Segui una consegna dalla ricezione alla vendita e al pagamento. Seleziona un passaggio per aprire l’area di lavoro.",
     "guide": "La mappa spiega il lavoro. Non mostra lo stato in tempo reale e non avvia operazioni.",
-    "groups": [
-      "Ricevi",
-      "Registra",
-      "Vendi",
-      "Gestisci invenduti",
-      "Paga"
-    ],
+    "groups": ["Ricevi", "Registra", "Vendi", "Gestisci invenduti", "Paga"],
     "details": "Dettagli del passaggio",
     "happens": "Cosa succede",
     "inKomisio": "In Komisio",

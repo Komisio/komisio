@@ -30,6 +30,9 @@ const dayCloseRow = z.object({
   refunds_ore: ore,
   credit_reversed_ore: ore,
   payouts_paid_ore: ore,
+  payment_totals: z
+    .record(z.string(), z.object({ grossOre: ore, refundsOre: ore }))
+    .default({}),
   per_mode: z.record(z.string(), modeTotals),
   generated_at: z.iso.datetime({ offset: true }),
 })

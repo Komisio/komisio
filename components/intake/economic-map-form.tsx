@@ -66,6 +66,13 @@ export function EconomicMapForm({
       const next = { ...previous }
       if (value) next[key] = value
       else delete next[key]
+      if (key.startsWith('payment:')) {
+        const parts = key.split(':')
+        const partner = `payment:${parts[1]}:${parts[2] === 'grossOre' ? 'refundsOre' : 'grossOre'}`
+        if (value && 'excludeReason' in value) next[partner] = value
+        else if (next[partner] && 'excludeReason' in next[partner])
+          delete next[partner]
+      }
       return next
     })
     setDirty(true)
@@ -96,6 +103,7 @@ export function EconomicMapForm({
     >
       <p>{t.mapHint}</p>
       <p>{t.feeHint}</p>
+      <p>{a.paymentExclusionHint}</p>
       <p>
         {a.mapVersion} {current.version} · {t.agreement}{' '}
         {current.agreementNumber ?? '—'}

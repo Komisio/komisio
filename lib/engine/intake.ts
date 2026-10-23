@@ -267,7 +267,10 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
       })
     case 'recordSale':
       return client.rpc('record_sale', {
-        p_reference: c.note ? { manualNote: c.note } : {},
+        p_reference: {
+          ...(c.note ? { manualNote: c.note } : {}),
+          paymentMethod: c.paymentMethod,
+        },
         p_tenant: c.tenantId,
         p_id: c.requestId,
         p_provider: c.provider,

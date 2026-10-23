@@ -1176,3 +1176,6 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-23: #569 starts an existing manual sale from an eligible item's page with its current price. The shared sale search and record_sale enforce eligibility and permissions; the store still confirms the sale. A stale link never selects another item.
 
 - 2026-10-23: #570 stores an optional 500-character manual-sale note as immutable staff-only sale evidence. Exact retries include the note; changed notes conflict. Store receipt reads expose it, while seller reads and financial calculations remain unchanged.
+
+- 2026-10-23: #571 freezes payment method on sales and per-method totals in new day closes. Legacy/imported sales without verified tender evidence stay unspecified. Explicit methods need mapped receipt/refund accounts; existing frozen sales, closes and exports are not rewritten.
+- 2026-10-23: #571 explicit per-method exclusion omits the entire sale's export contributions, including commission, VAT and seller liability, plus its return contributions. The store books these externally. Seller ledger, payouts and independently mapped consignment fees remain unchanged.

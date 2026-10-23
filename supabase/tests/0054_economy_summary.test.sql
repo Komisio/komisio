@@ -57,7 +57,9 @@ select is((current_setting('test.all')::jsonb->'totals'->>'creditReversedOre')::
 -- The same day, the same sums as the day close.
 reset role;
 select is(current_setting('test.sep')::jsonb->'totals'->'perMode',komisio_private.day_close_totals(current_setting('test.tenant')::uuid,'2026-09-10')->'perMode','per-mode totals agree with the day close');
-select is((economy_summary(current_setting('test.tenant')::uuid,'2026-09-10','2026-09-10')->'totals')-'linesCount'-'netOre'-'payoutsPaidCount',komisio_private.day_close_totals(current_setting('test.tenant')::uuid,'2026-09-10'),'one-day summary equals the day close totals');
+-- The payment breakdown is additional close evidence (#571), not another total.
+-- Its contents and freezing are covered by 0368_sale_payments.test.sql.
+select is((economy_summary(current_setting('test.tenant')::uuid,'2026-09-10','2026-09-10')->'totals')-'linesCount'-'netOre'-'payoutsPaidCount',komisio_private.day_close_totals(current_setting('test.tenant')::uuid,'2026-09-10')-'paymentTotals','one-day summary equals the day close totals');
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000321","role":"authenticated"}';
 -- Liability and open payouts are current, not per period.

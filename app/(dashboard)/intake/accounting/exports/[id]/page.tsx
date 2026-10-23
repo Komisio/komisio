@@ -84,6 +84,19 @@ export default async function ExportDetails({
               )}
           </div>
         )}
+        {Object.keys(item.excluded).length > 0 && (
+          <section aria-label={d.paymentExcluded}>
+            <h2>{d.paymentExcluded}</h2>
+            <ul>
+              {Object.entries(item.excluded).map(([key, entry]) => (
+                <li key={key}>
+                  {d.amountKeys[key as keyof typeof d.amountKeys] ?? key}:{' '}
+                  {formatMoney(entry.amountOre, currency)} · {entry.reason}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         <PayoutEvidence
           sources={item.payoutSources}
           currency={currency}

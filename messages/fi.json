@@ -4976,5 +4976,6 @@
       "tenant": "Myymälä",
       "zettle": "PayPal POS"
     }
-  }
+  },
+  "scanFocus": "Skannaa / kirjoita"
 }

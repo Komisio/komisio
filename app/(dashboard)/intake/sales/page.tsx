@@ -177,6 +177,7 @@ export default async function Sales({
                         currency={currency}
                         d={d}
                         intake={all.intake}
+                        scanFocusLabel={all.scanFocus}
                         leaveUnsaved={all.leaveUnsaved}
                         canConfigureVat={['owner', 'admin'].includes(
                           active.role,

@@ -106,6 +106,7 @@ export async function BagReception({
       />
       {!readonly && processing.state === 'open' && (
         <QuickReception
+          scanFocusLabel={d.scanFocus}
           key={bagId}
           tenantId={tenantId}
           bagId={bagId}

@@ -60,6 +60,7 @@ export default async function QuickIntake() {
         </p>
       ) : (
         <QuickReception
+          scanFocusLabel={all.scanFocus}
           key={a.id}
           tenantId={a.id}
           sellersTotal={sellers?.total ?? 0}

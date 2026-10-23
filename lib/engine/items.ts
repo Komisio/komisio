@@ -68,17 +68,28 @@ const itemRow = z.object({
   accepted_at: z.iso.datetime({ offset: true }),
 })
 export type ItemRow = z.infer<typeof itemRow>
+export const itemPriceReason = z.enum(['accepted', 'markdown', 'manual'])
+export const itemEventKind = z.enum([
+  'accepted',
+  'price_set',
+  'provenance',
+  'sold',
+  'returned',
+  'markdown_applied',
+  'period_extended',
+  'period_ended',
+])
 const priceRow = z.object({
   actor: itemActor.optional(),
   id: z.guid(),
   price_ore: z.union([z.number().int(), z.string()]),
-  reason: z.string(),
+  reason: itemPriceReason,
   set_at: z.iso.datetime({ offset: true }),
 })
 const eventRow = z.object({
   actor: itemActor.optional(),
   id: z.guid(),
-  kind: z.string(),
+  kind: itemEventKind,
   detail: z.record(z.string(), z.unknown()),
   occurred_at: z.iso.datetime({ offset: true }),
 })

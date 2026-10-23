@@ -1224,12 +1224,18 @@
     },
     "priceReasons": {
       "accepted": "accepterat pris",
-      "manual": "Manuell prisändring"
+      "manual": "Manuell prisändring",
+      "markdown": "Prissänkning"
     },
     "eventKinds": {
       "accepted": "Accepterad",
       "price_set": "Pris satt",
-      "provenance": "Ursprung dokumenterat"
+      "provenance": "Ursprung dokumenterat",
+      "sold": "Såld",
+      "returned": "Returnerad",
+      "markdown_applied": "Prissänkning genomförd",
+      "period_extended": "Säljperiod förlängd",
+      "period_ended": "Säljperiod avslutad"
     },
     "clearFilters": "Rensa filter",
     "showingRange": "Visar {from}–{to} av {total} varor",

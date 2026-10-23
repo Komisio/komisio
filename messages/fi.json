@@ -1224,12 +1224,18 @@
     },
     "priceReasons": {
       "accepted": "hyväksytty hinta",
-      "manual": "Manuaalinen hinnanmuutos"
+      "manual": "Manuaalinen hinnanmuutos",
+      "markdown": "Hinnanalennus"
     },
     "eventKinds": {
       "accepted": "Hyväksytty",
       "price_set": "Hinta asetettu",
-      "provenance": "Alkuperä kirjattu"
+      "provenance": "Alkuperä kirjattu",
+      "sold": "Myyty",
+      "returned": "Palautettu",
+      "markdown_applied": "Hinnanalennus tehty",
+      "period_extended": "Myyntiaikaa pidennetty",
+      "period_ended": "Myyntiaika päättynyt"
     },
     "clearFilters": "Tyhjennä suodattimet",
     "showingRange": "Näytetään {from}–{to} / {total} tuotetta",

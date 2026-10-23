@@ -1224,12 +1224,18 @@
     },
     "priceReasons": {
       "accepted": "accepted price",
-      "manual": "Manual price change"
+      "manual": "Manual price change",
+      "markdown": "Markdown"
     },
     "eventKinds": {
       "accepted": "Accepted",
       "price_set": "Price set",
-      "provenance": "Provenance recorded"
+      "provenance": "Provenance recorded",
+      "sold": "Sold",
+      "returned": "Returned",
+      "markdown_applied": "Markdown applied",
+      "period_extended": "Sale period extended",
+      "period_ended": "Sale period ended"
     },
     "clearFilters": "Clear filters",
     "showingRange": "Showing {from}–{to} of {total} items",

@@ -1224,12 +1224,18 @@
     },
     "priceReasons": {
       "accepted": "precio aceptado",
-      "manual": "Cambio de precio manual"
+      "manual": "Cambio de precio manual",
+      "markdown": "Rebaja"
     },
     "eventKinds": {
       "accepted": "Aceptado",
       "price_set": "Precio fijado",
-      "provenance": "Procedencia registrada"
+      "provenance": "Procedencia registrada",
+      "sold": "Vendido",
+      "returned": "Devuelto",
+      "markdown_applied": "Rebaja aplicada",
+      "period_extended": "Periodo de venta ampliado",
+      "period_ended": "Periodo de venta finalizado"
     },
     "clearFilters": "Borrar filtros",
     "showingRange": "Mostrando {from}–{to} de {total} artículos",

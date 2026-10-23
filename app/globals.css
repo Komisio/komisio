@@ -6307,7 +6307,7 @@ button.text-link:hover:not(:disabled) {
   gap: 12px;
   flex-wrap: wrap;
 }
-.intake-find-seller .row input {
+.intake-find-seller .row > .scan-focus-field {
   flex: 1 1 20rem;
   width: 100%;
   min-width: 0;

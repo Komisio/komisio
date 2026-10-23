@@ -106,28 +106,31 @@ for (const locale of [
           expect((await search.boundingBox())!.height).toBeGreaterThanOrEqual(
             44,
           )
-          const placeholderFits = await search.evaluate((element) => {
+          const placeholder = await search.evaluate((element) => {
             const input = element as HTMLInputElement
             const style = getComputedStyle(input)
             const canvas = document.createElement('canvas')
             const context = canvas.getContext('2d')!
             context.font = style.font
-            return (
-              context.measureText(input.placeholder).width <=
-              input.clientWidth -
+            return {
+              textWidth: context.measureText(input.placeholder).width,
+              availableWidth:
+                input.clientWidth -
                 parseFloat(style.paddingLeft) -
                 parseFloat(style.paddingRight) -
-                20
-            )
+                20,
+            }
           })
-          expect(placeholderFits).toBe(true)
+          expect(placeholder.textWidth).toBeLessThanOrEqual(
+            placeholder.availableWidth,
+          )
           await expect(page.locator('#seller-search-hint')).toHaveText(
             d.sellersList.searchHint,
           )
           const searchButton = page
             .locator('form')
             .filter({ has: search })
-            .getByRole('button')
+            .getByRole('button', { name: d.intake.searchButton, exact: true })
           expect(
             (await searchButton.boundingBox())!.height,
           ).toBeGreaterThanOrEqual(44)

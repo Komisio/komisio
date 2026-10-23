@@ -1314,7 +1314,9 @@
     "receiptsTab": "Kvitteringer",
     "manualTab": "Registrer manuelt",
     "helpLabel": "Om salg",
-    "configureVat": "Åbn momsindstillinger"
+    "configureVat": "Åbn momsindstillinger",
+    "markSold": "Markér som solgt",
+    "itemUnavailable": "Varen kan ikke sælges nu. Den kan allerede være solgt, eller salgsperioden kan være afsluttet."
   },
   "ledger": {
     "title": "Saldo og konto",
@@ -3315,7 +3317,13 @@
     "eyebrow": "Sådan arbejder vi",
     "intro": "Følg en indlevering fra indlevering til salg og udbetaling. Vælg et trin for at åbne arbejdsvisningen.",
     "guide": "Kortet forklarer arbejdet. Det viser ikke aktuel status og starter ingen aktiviteter.",
-    "groups": ["Modtag", "Registrer", "Sælg", "Håndter usolgt", "Udbetal"],
+    "groups": [
+      "Modtag",
+      "Registrer",
+      "Sælg",
+      "Håndter usolgt",
+      "Udbetal"
+    ],
     "details": "Om aktiviteten",
     "happens": "Hvad der sker",
     "inKomisio": "I Komisio",

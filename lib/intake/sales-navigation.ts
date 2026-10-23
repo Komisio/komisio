@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { saleProvider } from '../engine/sales'
 
 export const receiptSearch = z.object({
+  item: z.guid().optional(),
   reference: z.string().trim().max(200).default(''),
   provider: saleProvider.or(z.literal('')).default(''),
 })

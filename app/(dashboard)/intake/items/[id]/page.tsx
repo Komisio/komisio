@@ -1,3 +1,4 @@
+import { searchSaleItems } from '@/lib/engine/sale-search'
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
 import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
 import { ArrowLeft } from 'lucide-react'
@@ -124,6 +125,14 @@ export default async function Item({
     <>
       {backLink}
       <ItemDetailWorkspace
+        markSoldHref={
+          active.role !== 'readonly' &&
+          (await searchSaleItems(ctx.client, active.id, item.id)).some(
+            (row) => row.id === item.id,
+          )
+            ? `/intake/sales?item=${item.id}#sales-manual`
+            : undefined
+        }
         item={snapshot}
         tenantId={active.id}
         write={['owner', 'admin', 'staff'].includes(active.role)}

@@ -1314,7 +1314,9 @@
     "receiptsTab": "Recibos",
     "manualTab": "Registrar manualmente",
     "helpLabel": "Sobre las ventas",
-    "configureVat": "Abrir ajustes del IVA"
+    "configureVat": "Abrir ajustes del IVA",
+    "markSold": "Marcar como vendido",
+    "itemUnavailable": "Este artículo no se puede vender ahora. Puede estar vendido o haber terminado su periodo de venta."
   },
   "ledger": {
     "title": "Saldo y libro",

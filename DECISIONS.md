@@ -1172,3 +1172,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-22: #542 classifies independently authenticated Weblink connections by their first binary greeting; firmware may reuse the main subprotocol for raw. Pending handles cannot dispatch; raw must bind to the requested current main, and stale or duplicate channels fail closed.
 - 2026-10-22: Owner selects Weblink setup from Komisio. Owner/admin provision scoped devices through an environment-bound gateway using existing pairing RPCs; per-device journals and explicit activation remain. No printer is enrolled by deployment and no tenant role or core table changes.
 - 2026-10-23: #565 remembers sidebar width per browser. Keyboard focus stays below the sticky header; Escape dismisses rail labels, and scrolling/resizing dismisses the store flyout. Navigation destinations, draft guards and mobile navigation remain unchanged.
+
+- 2026-10-23: #569 starts an existing manual sale from an eligible item's page with its current price. The shared sale search and record_sale enforce eligibility and permissions; the store still confirms the sale. A stale link never selects another item.

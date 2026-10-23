@@ -8,7 +8,7 @@ export type NavGroup = { label: string; links: NavLink[] }
 
 export function buildNavigation(
   d: Dictionary,
-  options: { intakeEnabled: boolean; host: boolean },
+  options: { intakeEnabled: boolean; host: boolean; audit?: boolean },
 ): NavGroup[] {
   const n = d.nav
   const groups: NavGroup[] = [
@@ -95,6 +95,15 @@ export function buildNavigation(
         ? [{ path: '/intake/flow', label: d.storeFlow.title, icon: 'Workflow' }]
         : []),
       { path: '/settings', label: d.tenant, icon: 'Settings2' },
+      ...(options.audit
+        ? [
+            {
+              path: '/settings/activity',
+              label: d.activity.title,
+              icon: 'Clock',
+            },
+          ]
+        : []),
       { path: '/members', label: d.members, icon: 'Users' },
       ...(options.host
         ? [{ path: '/host', label: d.hostLink, icon: 'Building2' }]
@@ -128,6 +137,8 @@ export function mobileNavigation(
 
 export function isActivePath(pathname: string, path: string) {
   if (path === '/') return pathname === '/'
+  if (path === '/settings' && pathname.startsWith('/settings/activity'))
+    return false
   if (path === '/intake/import') return pathname === path
   if (
     path === '/intake/operations' &&

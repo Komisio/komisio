@@ -1873,6 +1873,38 @@ button.text-link:hover:not(:disabled) {
   border-bottom: 1px solid var(--line);
   font-size: 12px;
 }
+.activity-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.activity-filters .field {
+  min-width: 0;
+  margin: 0;
+}
+.activity-filters .actions {
+  grid-column: 1 / -1;
+}
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.activity-list li {
+  display: grid;
+  gap: 6px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.activity-list time,
+.activity-list summary {
+  font-size: 0.875rem;
+}
+.activity-list dd {
+  margin-left: 0;
+}
 .audit-row:last-child {
   border: 0;
 }

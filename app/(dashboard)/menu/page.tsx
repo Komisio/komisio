@@ -5,6 +5,7 @@ import styles from './menu.module.css'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { buildNavigation } from '@/lib/platform/navigation'
+import { can } from '@/lib/platform/permissions'
 import { isPlatformHost } from '@/lib/engine/plans'
 import { NavIcon } from '@/components/platform/nav-icon'
 
@@ -13,6 +14,7 @@ export default async function MenuPage() {
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
   const groups = buildNavigation(d, {
+    audit: can(ctx.active?.role ?? null, 'audit.read'),
     intakeEnabled: process.env.KOMISIO_INTAKE_ENABLED === 'true',
     host: await isPlatformHost(ctx.client),
   })

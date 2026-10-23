@@ -146,7 +146,11 @@ export function Sidebar({
   const storePanelRef = useRef<HTMLDivElement>(null)
   const storeAnchor = useRef<{ top: number; left: number } | null>(null)
   const storePanelId = useId()
-  const groups = buildNavigation(d, { intakeEnabled, host })
+  const groups = buildNavigation(d, {
+    intakeEnabled,
+    host,
+    audit: active.role === 'owner' || active.role === 'admin',
+  })
   const accountName = name || email.split('@')[0] || email
   const toggleLabel = collapsed ? d.nav.expandMenu : d.nav.collapseMenu
   const storeLabel = `${d.activeTenant}: ${active.name}`

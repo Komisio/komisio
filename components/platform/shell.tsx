@@ -1,5 +1,6 @@
 'use client'
 import { useBusyState } from './work-activity'
+import { can } from '@/lib/platform/permissions'
 import { usePathname } from 'next/navigation'
 import { useRouter } from '@/components/platform/use-working-router'
 import {
@@ -55,7 +56,11 @@ export function Shell({
   const action = useCommand(d)
   const [signingOut, setSigningOut] = useBusyState(false)
   const confirmNavigation = useConfirmNavigation()
-  const groups = buildNavigation(d, { intakeEnabled, host })
+  const groups = buildNavigation(d, {
+    intakeEnabled,
+    host,
+    audit: can(active.role, 'audit.read'),
+  })
   const mobile = mobileNavigation(d, intakeEnabled)
   const mobileActive = mobileCurrentPath(pathname, mobile)
   const current = currentLink(groups, pathname)

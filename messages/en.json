@@ -3547,13 +3547,7 @@
     "eyebrow": "How we work",
     "intro": "Follow a drop-off from handover to sale and payout. Select a step to see what happens and open the work area.",
     "guide": "This map explains the work. It does not show live progress or start any operations.",
-    "groups": [
-      "Receive",
-      "Register",
-      "Sell",
-      "Handle unsold items",
-      "Pay out"
-    ],
+    "groups": ["Receive", "Register", "Sell", "Handle unsold items", "Pay out"],
     "details": "Step details",
     "happens": "What happens",
     "inKomisio": "In Komisio",

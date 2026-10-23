@@ -3547,13 +3547,7 @@
     "eyebrow": "Slik jobber vi",
     "intro": "Følg en innlevering fra innlevering til salg og utbetaling. Velg et trinn for å åpne arbeidsvisningen.",
     "guide": "Kartet forklarer arbeidet. Det viser ikke sanntidsstatus og starter ingen aktiviteter.",
-    "groups": [
-      "Ta imot",
-      "Registrer",
-      "Selg",
-      "Håndter usolgt",
-      "Betal ut"
-    ],
+    "groups": ["Ta imot", "Registrer", "Selg", "Håndter usolgt", "Betal ut"],
     "details": "Om aktiviteten",
     "happens": "Hva som skjer",
     "inKomisio": "I Komisio",

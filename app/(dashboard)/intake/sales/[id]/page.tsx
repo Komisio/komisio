@@ -59,7 +59,7 @@ export default async function Sale({
         </h1>
         <p>
           {when(sale.occurred_at)} · {d.providers[sale.provider]} ·{' '}
-          {d.statuses[sale.status]}
+          {d.statuses[sale.status]} · {d.paymentMethods[sale.payment_method]}
         </p>
         {sale.staff_note && (
           <p>

@@ -837,3 +837,15 @@ Real-store mapping and historical reconciliation evidence remain required.
 Bank-statement matching and external POS posting ownership are not resolved by
 this implementation request. Payment confirmation alone does not create or send
 an accounting export; automatic export creation remains a separate scope.
+
+## Manual-sale payments (#569–#571, 2026-10-23)
+
+The owner authorizes implementation and database changes for item-page sales,
+internal notes and explicit payment methods. A method may be mapped or explicitly
+excluded from each accounting target. Whole-method exclusion removes that sale's
+existing export contributions (receipts, commission, VAT and seller liability)
+and its return contributions together; the store assumes their external posting.
+It does not change the seller ledger, paid payouts or independent consignment
+fees. No complementary posting profile, bank execution or automatic MobilePay
+collection is introduced. Imported tenders remain unspecified when the adapter
+does not supply verified payment evidence. Existing frozen exports remain intact.

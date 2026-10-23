@@ -36,6 +36,7 @@ export function SaleForm({
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
+  const [payment, setPayment] = useState('unspecified')
   const [note, setNote] = useState('')
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [externalId, setExternalId] = useState(() => crypto.randomUUID())
@@ -56,7 +57,9 @@ export function SaleForm({
     searchInput = useRef<HTMLInputElement>(null)
   const locked = action.busy || action.locked || action.needsReload
   useUnsavedChanges(
-    cart.length > 0 || note.trim() || action.locked ? leaveUnsaved : null,
+    cart.length > 0 || note.trim() || payment !== 'unspecified' || action.locked
+      ? leaveUnsaved
+      : null,
   )
   let total: bigint | null = 0n
   try {
@@ -121,6 +124,7 @@ export function SaleForm({
       requestId,
       provider: 'manual',
       note,
+      paymentMethod: payment,
       externalId,
       occurredAt: new Date().toISOString(),
       currency,
@@ -130,6 +134,7 @@ export function SaleForm({
       setSaved(id)
       setCart([])
       setNote('')
+      setPayment('unspecified')
       setResults([])
       setSearched(false)
       setQuery('')
@@ -265,6 +270,20 @@ export function SaleForm({
                   {total === null ? '—' : decimal(total)} {currency}
                 </strong>
               </p>
+              <label htmlFor="sale-payment">{d.paymentMethod}</label>
+              <select
+                id="sale-payment"
+                value={payment}
+                onChange={(event) => setPayment(event.target.value)}
+                aria-describedby="sale-payment-hint"
+              >
+                {Object.entries(d.paymentMethods).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <small id="sale-payment-hint">{d.paymentHint}</small>
               <label htmlFor="sale-note">{d.note}</label>
               <textarea
                 id="sale-note"

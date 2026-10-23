@@ -24,6 +24,7 @@ import {
 } from '../platform/credentials'
 import {
   accountingKeys,
+  paymentExclusionsComplete,
   payoutMappingComplete,
   payoutSource,
 } from './accounting'
@@ -55,6 +56,10 @@ export const economicMapBody = z
   .refine(
     (map) => !map.payoutsPaidCounterpartOre || payoutMappingComplete(map, true),
     'Payout postings need a complete pair or two explicit exclusions',
+  )
+  .refine(
+    paymentExclusionsComplete,
+    'Exclude both receipts and refunds with the same reason',
   )
 export type EconomicMapBody = z.infer<typeof economicMapBody>
 export const economicMap = z.object({

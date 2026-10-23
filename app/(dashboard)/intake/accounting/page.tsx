@@ -300,6 +300,17 @@ export default async function Accounting({
                       {money(c.credit_reversed_ore)} · {d.payoutsPaid}{' '}
                       {money(c.payouts_paid_ore)}
                     </p>
+                    {Object.entries(c.payment_totals).map(
+                      ([method, totals]) => (
+                        <p key={method}>
+                          {all.sales.paymentMethods[
+                            method as keyof typeof all.sales.paymentMethods
+                          ] ?? method}
+                          : {money(totals.grossOre)} · {d.refunds}{' '}
+                          {money(totals.refundsOre)}
+                        </p>
+                      ),
+                    )}
                     {Object.entries(c.per_mode).map(([mode, t]) => (
                       <small key={mode}>
                         {vatModes[mode] ?? mode}: {t.lines} · {d.net}{' '}

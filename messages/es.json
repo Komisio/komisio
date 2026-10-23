@@ -1318,7 +1318,17 @@
     "markSold": "Marcar como vendido",
     "itemUnavailable": "Este artículo no se puede vender ahora. Puede estar vendido o haber terminado su periodo de venta.",
     "note": "Nota / referencia de pago (opcional)",
-    "noteHint": "Solo para la tienda. Por ejemplo, Instagram o una referencia de MobilePay. Máximo 500 caracteres."
+    "noteHint": "Solo para la tienda. Por ejemplo, Instagram o una referencia de MobilePay. Máximo 500 caracteres.",
+    "paymentMethod": "Método de pago",
+    "paymentMethods": {
+      "unspecified": "Sin especificar",
+      "card": "Tarjeta",
+      "cash": "Efectivo",
+      "mobilepay": "MobilePay",
+      "swish": "Swish",
+      "other": "Otro"
+    },
+    "paymentHint": "Indique cómo se recibió el pago. Komisio no cobra el pago."
   },
   "ledger": {
     "title": "Saldo y libro",
@@ -1626,7 +1636,17 @@
       "mode:consignment_fee:vatOre": "Cuotas mensuales · IVA",
       "mode:consignment_fee_reversal:grossOre": "Anular cuota · Cuota en la moneda de la tienda",
       "mode:consignment_fee_reversal:netOre": "Anular cuota · Sin IVA",
-      "mode:consignment_fee_reversal:vatOre": "Anular cuota · IVA"
+      "mode:consignment_fee_reversal:vatOre": "Anular cuota · IVA",
+      "payment:card:grossOre": "Tarjeta · Ventas brutas (cobros recibidos)",
+      "payment:card:refundsOre": "Tarjeta · Reembolsos",
+      "payment:cash:grossOre": "Efectivo · Ventas brutas (cobros recibidos)",
+      "payment:cash:refundsOre": "Efectivo · Reembolsos",
+      "payment:mobilepay:grossOre": "MobilePay · Ventas brutas (cobros recibidos)",
+      "payment:mobilepay:refundsOre": "MobilePay · Reembolsos",
+      "payment:swish:grossOre": "Swish · Ventas brutas (cobros recibidos)",
+      "payment:swish:refundsOre": "Swish · Reembolsos",
+      "payment:other:grossOre": "Otro · Ventas brutas (cobros recibidos)",
+      "payment:other:refundsOre": "Otro · Reembolsos"
     },
     "netOf": "neto",
     "vatOf": "IVA",
@@ -1719,7 +1739,11 @@
       "payoutId": "ID del pago",
       "sellerId": "ID del vendedor",
       "paidAt": "Pagado"
-    }
+    },
+    "paymentHeading": "Métodos de pago en contabilidad",
+    "paymentExclusionHint": "Indique un motivo para excluir todas las ventas y devoluciones de este método: la tienda también contabiliza externamente la comisión, el IVA y la deuda con depositantes. Las tarifas de consignación y los pagos a depositantes siguen incluidos.",
+    "paymentExclusionReason": "Contabilizado externamente – motivo",
+    "paymentExcluded": "Excluido de la exportación"
   },
   "communications": {
     "welcomeTitle": "Correo de activación",

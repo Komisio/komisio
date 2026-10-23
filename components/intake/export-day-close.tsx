@@ -63,6 +63,19 @@ export function ExportDayClose({
           </ul>
         )}
       </details>
+      {Object.keys(preview.excluded).length > 0 && (
+        <div className="accounting-breakdown">
+          <p>{d.paymentExcluded}</p>
+          <p>{d.paymentExclusionHint}</p>
+          <ul>
+            {Object.entries(preview.excluded).map(([key, entry]) => (
+              <li key={key}>
+                {accountLabel(key)}: {money(entry.amountOre)} · {entry.reason}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {preview.unmapped.length > 0 && (
         <details className="accounting-breakdown">
           <summary>

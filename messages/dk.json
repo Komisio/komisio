@@ -1318,7 +1318,17 @@
     "markSold": "Markér som solgt",
     "itemUnavailable": "Varen kan ikke sælges nu. Den kan allerede være solgt, eller salgsperioden kan være afsluttet.",
     "note": "Note / betalingsreference (valgfrit)",
-    "noteHint": "Kun for butikken. For eksempel Instagram eller en MobilePay-reference. Højst 500 tegn."
+    "noteHint": "Kun for butikken. For eksempel Instagram eller en MobilePay-reference. Højst 500 tegn.",
+    "paymentMethod": "Betalingsmetode",
+    "paymentMethods": {
+      "unspecified": "Ikke angivet",
+      "card": "Kort",
+      "cash": "Kontant",
+      "mobilepay": "MobilePay",
+      "swish": "Swish",
+      "other": "Andet"
+    },
+    "paymentHint": "Registrér, hvordan betalingen allerede blev modtaget. Komisio opkræver ingen betaling."
   },
   "ledger": {
     "title": "Saldo og konto",
@@ -1626,7 +1636,17 @@
       "mode:consignment_fee:vatOre": "Månedsgebyrer · Moms",
       "mode:consignment_fee_reversal:grossOre": "Tilbagefør gebyr · Gebyr i butikkens valuta",
       "mode:consignment_fee_reversal:netOre": "Tilbagefør gebyr · Eksklusive moms",
-      "mode:consignment_fee_reversal:vatOre": "Tilbagefør gebyr · Moms"
+      "mode:consignment_fee_reversal:vatOre": "Tilbagefør gebyr · Moms",
+      "payment:card:grossOre": "Kort · Bruttosalg (modtagne betalinger)",
+      "payment:card:refundsOre": "Kort · Refusioner",
+      "payment:cash:grossOre": "Kontant · Bruttosalg (modtagne betalinger)",
+      "payment:cash:refundsOre": "Kontant · Refusioner",
+      "payment:mobilepay:grossOre": "MobilePay · Bruttosalg (modtagne betalinger)",
+      "payment:mobilepay:refundsOre": "MobilePay · Refusioner",
+      "payment:swish:grossOre": "Swish · Bruttosalg (modtagne betalinger)",
+      "payment:swish:refundsOre": "Swish · Refusioner",
+      "payment:other:grossOre": "Andet · Bruttosalg (modtagne betalinger)",
+      "payment:other:refundsOre": "Andet · Refusioner"
     },
     "netOf": "netto",
     "vatOf": "moms",
@@ -1719,7 +1739,11 @@
       "payoutId": "Udbetalings-ID",
       "sellerId": "Sælger-ID",
       "paidAt": "Betalt"
-    }
+    },
+    "paymentHeading": "Betalingsmetoder i bogføringen",
+    "paymentExclusionHint": "Angiv en årsag for at udelade alle salg og returneringer med denne metode: butikken bogfører også provision, moms og gæld til sælgere eksternt. Indleveringsgebyrer og udbetalinger medtages fortsat.",
+    "paymentExclusionReason": "Bogføres eksternt – årsag",
+    "paymentExcluded": "Udeladt fra eksport"
   },
   "communications": {
     "welcomeTitle": "Aktiveringsmail",
@@ -3319,13 +3343,7 @@
     "eyebrow": "Sådan arbejder vi",
     "intro": "Følg en indlevering fra indlevering til salg og udbetaling. Vælg et trin for at åbne arbejdsvisningen.",
     "guide": "Kortet forklarer arbejdet. Det viser ikke aktuel status og starter ingen aktiviteter.",
-    "groups": [
-      "Modtag",
-      "Registrer",
-      "Sælg",
-      "Håndter usolgt",
-      "Udbetal"
-    ],
+    "groups": ["Modtag", "Registrer", "Sælg", "Håndter usolgt", "Udbetal"],
     "details": "Om aktiviteten",
     "happens": "Hvad der sker",
     "inKomisio": "I Komisio",

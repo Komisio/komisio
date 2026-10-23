@@ -14,6 +14,17 @@ separate from activation; installing this package cannot activate a printer.
 
 ## Managed setup from Komisio
 
+Store owners choose the Weblink track under Settings → Printers and labels and
+follow Installation. The checklist remembers manual observations in this browser,
+scoped to the signed-in user, store and printer; installation-file and test steps
+also follow the paired device. It stores no setup files or credentials. Automatic
+steps reflect saved printers, device reports and activation, not manual ticks.
+The iPad guide uses original, explicitly labeled illustrations until current
+screenshots are available; its menu names refer to the official iOS guide below.
+These illustrations are not vendor screenshots or evidence of a hardware test.
+Without a configured managed gateway, setup shows an unavailable notice rather
+than asking the store to perform operator enrollment.
+
 Run one gateway per environment with a distinct Unix user, state directory,
 host, encryption key, proxy secret and management secret. Never share device
 state between staging and production. Multiple printers in a store have separate

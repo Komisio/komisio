@@ -1,4 +1,9 @@
 import {
+  PrintingSetupProvider,
+  PrintingTrack,
+  PrinterChecklist,
+} from '@/components/intake/printing-setup'
+import {
   WeblinkSetup,
   WeblinkRecovery,
   WeblinkPilot,
@@ -309,251 +314,259 @@ export default async function Settings({
           className="card intake-form printing-workspace"
           aria-label={pr.title}
         >
-          <div className="printing-heading">
-            <h2>{pr.title}</h2>
-            <Button asChild variant="secondary">
-              <a href={printAgentDownload()}>{pr.download}</a>
-            </Button>
-          </div>
-          <WorkspaceTabs
-            id="printing"
-            label={pr.title}
-            scrollAnchors
-            initial={requestedJob !== null ? 'history' : 'printers'}
-            tabs={[
-              {
-                id: 'printers',
-                label: pr.tabs.printers,
-                content: (
-                  <div className="printing-printers">
-                    <p className="printing-hint">{pr.networkSupport}</p>
-                    {printers.length === 0 && <p>{pr.none}</p>}
-                    {printers.map((p) => (
-                      <details key={p.id}>
-                        <summary>
-                          {p.name} ·{' '}
-                          {p.transport === 'weblink'
-                            ? 'Weblink'
-                            : p.transport === 'tcp'
-                              ? p.address
-                              : pr.usb}{' '}
-                          · {p.active ? pr.activeLabel : pr.inactiveLabel}
-                        </summary>
-                        {p.transport === 'weblink' && (
-                          <p>
-                            {p.active
-                              ? pr.weblink.acceptanceHint
-                              : pr.weblink.preparation}
-                          </p>
+          <PrintingSetupProvider
+            tenantId={active.id}
+            actorId={ctx.user.id}
+            manages={manages}
+            weblink={
+              process.env.KOMISIO_WEBLINK_SETUP_ENABLED === 'true' ||
+              printers.some((p) => p.transport === 'weblink')
+            }
+            d={pr}
+          >
+            <div className="printing-heading">
+              <h2>{pr.title}</h2>
+            </div>
+            <WorkspaceTabs
+              id="printing"
+              label={pr.title}
+              scrollAnchors
+              initial={requestedJob !== null ? 'history' : 'printers'}
+              tabs={[
+                {
+                  id: 'printers',
+                  label: pr.tabs.printers,
+                  content: (
+                    <div className="printing-printers">
+                      <PrintingTrack track="windows">
+                        <p className="printing-hint">{pr.networkSupport}</p>
+                        {manages && (
+                          <Button asChild variant="secondary">
+                            <a href={printAgentDownload()}>{pr.download}</a>
+                          </Button>
                         )}
-                        {manages && p.transport !== 'weblink' && (
-                          <PrinterForm
-                            tenantId={active.id}
-                            existing={{ ...p, transport: p.transport }}
-                            d={pr}
-                            intake={d.intake}
-                            leaveUnsaved={d.leaveUnsaved}
-                          />
-                        )}
-                        {p.transport === 'weblink' && manages && devices && (
-                          <WeblinkPilot
-                            key={`pilot-${p.id}-${p.active}-${devices.map((x) => `${x.id}:${x.revokedAt}`).join(',')}`}
-                            tenantId={active.id}
-                            printerId={p.id}
-                            active={p.active}
-                            devices={devices.filter(
-                              (x) => x.printerId === p.id,
-                            )}
-                            enabled={
-                              process.env.KOMISIO_WEBLINK_SETUP_ENABLED ===
-                              'true'
-                            }
-                            d={pr}
-                            reload={d.intake.reload}
-                          />
-                        )}
-                        {(p.transport === 'tcp' || p.transport === 'weblink') &&
-                          devices && (
-                            <PrintDevices
-                              key={`devices-${p.id}-${devices
-                                .filter((x) => x.printerId === p.id)
-                                .map(
-                                  (x) =>
-                                    `${x.id}:${x.revokedAt}:${x.lastSeenAt}`,
-                                )
-                                .join(',')}`}
-                              tenantId={active.id}
-                              printerId={p.id}
-                              devices={devices.filter(
-                                (x) => x.printerId === p.id,
-                              )}
-                              canManage={manages}
-                              locale={ctx.locale}
-                              d={pr}
-                              transport={p.transport}
-                              managed={
-                                process.env.KOMISIO_WEBLINK_SETUP_ENABLED ===
-                                  'true' && managedWeblinkConfigured()
-                              }
-                            />
+                      </PrintingTrack>
+                      {printers.length === 0 && <p>{pr.none}</p>}
+                      {printers.map((p) => (
+                        <details key={p.id}>
+                          <summary>
+                            {p.name} ·{' '}
+                            {p.transport === 'weblink'
+                              ? 'Weblink'
+                              : p.transport === 'tcp'
+                                ? p.address
+                                : pr.usb}{' '}
+                            · {p.active ? pr.activeLabel : pr.inactiveLabel}
+                          </summary>
+                          {manages && p.transport !== 'weblink' && (
+                            <PrintingTrack track="windows">
+                              <PrinterForm
+                                tenantId={active.id}
+                                existing={{ ...p, transport: p.transport }}
+                                d={pr}
+                                intake={d.intake}
+                                leaveUnsaved={d.leaveUnsaved}
+                              />
+                            </PrintingTrack>
                           )}
-                      </details>
-                    ))}
-                    {manages && (
-                      <details
-                        className="printer-register-fold"
-                        open={printers.length === 0}
-                      >
-                        <summary>{pr.registerHeading}</summary>
-                        <PrinterForm
-                          key={`new-${printers.length}`}
+                          {p.transport === 'weblink' && manages && devices && (
+                            <PrintingTrack track="weblink">
+                              <WeblinkPilot
+                                key={`pilot-${p.id}-${p.active}-${devices.map((x) => `${x.id}:${x.revokedAt}`).join(',')}`}
+                                tenantId={active.id}
+                                printerId={p.id}
+                                active={p.active}
+                                devices={devices.filter(
+                                  (x) => x.printerId === p.id,
+                                )}
+                                enabled={
+                                  process.env.KOMISIO_WEBLINK_SETUP_ENABLED ===
+                                  'true'
+                                }
+                                d={pr}
+                                reload={d.intake.reload}
+                              />
+                            </PrintingTrack>
+                          )}
+                          {devices && (
+                            <PrintingTrack
+                              track={
+                                p.transport === 'weblink'
+                                  ? 'weblink'
+                                  : 'windows'
+                              }
+                            >
+                              <PrintDevices
+                                key={`devices-${p.id}-${devices
+                                  .filter((x) => x.printerId === p.id)
+                                  .map(
+                                    (x) =>
+                                      `${x.id}:${x.revokedAt}:${x.lastSeenAt}`,
+                                  )
+                                  .join(',')}`}
+                                tenantId={active.id}
+                                printerId={p.id}
+                                devices={devices.filter(
+                                  (x) => x.printerId === p.id,
+                                )}
+                                canManage={manages}
+                                locale={ctx.locale}
+                                d={pr}
+                                transport={p.transport}
+                                managed={
+                                  process.env.KOMISIO_WEBLINK_SETUP_ENABLED ===
+                                    'true' && managedWeblinkConfigured()
+                                }
+                              />
+                            </PrintingTrack>
+                          )}
+                        </details>
+                      ))}
+                      {manages && (
+                        <PrintingTrack track="windows">
+                          <details
+                            className="printer-register-fold"
+                            open={printers.length === 0}
+                          >
+                            <summary>{pr.registerHeading}</summary>
+                            <PrinterForm
+                              key={`new-${printers.length}`}
+                              tenantId={active.id}
+                              d={pr}
+                              intake={d.intake}
+                              leaveUnsaved={d.leaveUnsaved}
+                            />
+                          </details>
+                        </PrintingTrack>
+                      )}
+                      {manages &&
+                        process.env.KOMISIO_WEBLINK_SETUP_ENABLED ===
+                          'true' && (
+                          <PrintingTrack track="weblink">
+                            <details className="weblink-register-fold">
+                              <summary>{pr.weblink.register}</summary>
+                              <WeblinkSetup
+                                tenantId={active.id}
+                                d={pr}
+                                reload={d.intake.reload}
+                                leaveUnsaved={d.leaveUnsaved}
+                              />
+                            </details>
+                          </PrintingTrack>
+                        )}
+                    </div>
+                  ),
+                },
+                {
+                  id: 'install',
+                  label: pr.tabs.install,
+                  content: (
+                    <PrinterChecklist
+                      printers={printers}
+                      devices={devices ?? []}
+                      download={printAgentDownload()}
+                      d={pr}
+                    />
+                  ),
+                },
+                {
+                  id: 'labels',
+                  label: pr.tabs.labels,
+                  content: (
+                    <>
+                      <p className="printing-hint">
+                        {pr.paperHint}{' '}
+                        <Link className="text-link" href="/help/labels">
+                          {helpArticle(ctx.locale, 'labels')!.title}
+                        </Link>
+                      </p>
+                      {formats && (
+                        <LabelFormatsForm
+                          key={`formats-${active.id}`}
                           tenantId={active.id}
+                          formats={formats}
+                          canEdit={manages}
                           d={pr}
                           intake={d.intake}
                           leaveUnsaved={d.leaveUnsaved}
                         />
-                      </details>
-                    )}
-                    {manages &&
-                      process.env.KOMISIO_WEBLINK_SETUP_ENABLED === 'true' && (
-                        <details className="weblink-register-fold">
-                          <summary>{pr.weblink.register}</summary>
-                          <WeblinkSetup
-                            tenantId={active.id}
-                            d={pr}
-                            reload={d.intake.reload}
-                            leaveUnsaved={d.leaveUnsaved}
-                          />
-                        </details>
                       )}
-                  </div>
-                ),
-              },
-              {
-                id: 'install',
-                label: pr.tabs.install,
-                content: (
-                  <div className="printing-install">
-                    <h3>Komisio Print</h3>
-                    <p>{pr.installIntro}</p>
-                    <ol>
-                      <li>
-                        <strong>{pr.installDownload}</strong>
-                        <p>{pr.installDownloadHint}</p>
-                      </li>
-                      <li>
-                        <strong>{pr.installPair}</strong>
-                        <p>{pr.installPairHint}</p>
-                        <a className="text-link" href="#printing-printers">
-                          {pr.tabs.printers}
-                        </a>
-                      </li>
-                      <li>
-                        <strong>{pr.installRun}</strong>
-                        <p>{pr.installRunHint}</p>
-                      </li>
-                    </ol>
-                    <p className="printing-hint">{pr.installRunning}</p>
-                  </div>
-                ),
-              },
-              {
-                id: 'labels',
-                label: pr.tabs.labels,
-                content: (
-                  <>
-                    <p className="printing-hint">
-                      {pr.paperHint}{' '}
-                      <Link className="text-link" href="/help/labels">
-                        {helpArticle(ctx.locale, 'labels')!.title}
-                      </Link>
-                    </p>
-                    {formats && (
-                      <LabelFormatsForm
-                        key={`formats-${active.id}`}
-                        tenantId={active.id}
-                        formats={formats}
-                        canEdit={manages}
-                        d={pr}
-                        intake={d.intake}
-                        leaveUnsaved={d.leaveUnsaved}
-                      />
-                    )}
-                    {formats && templates && (
-                      <LabelTemplatesForm
-                        key={`templates-${active.id}`}
-                        tenantId={active.id}
-                        templates={templates}
-                        builtins={{
-                          bag: builtinTemplate('bag', {
-                            widthMm: formats.bag.widthMm,
-                            heightMm: formats.bag.heightMm,
-                            dpi: previewDpi,
-                          }),
-                          garment: builtinTemplate('garment', {
-                            widthMm: formats.garment.widthMm,
-                            heightMm: formats.garment.heightMm,
-                            dpi: previewDpi,
-                          }),
-                          item: builtinTemplate('item', {
-                            widthMm: formats.item.widthMm,
-                            heightMm: formats.item.heightMm,
-                            dpi: previewDpi,
-                          }),
-                          markdown: builtinTemplate('markdown', {
-                            widthMm: formats.markdown.widthMm,
-                            heightMm: formats.markdown.heightMm,
-                            dpi: previewDpi,
-                          }),
-                          onboarding: builtinTemplate('onboarding', {
-                            widthMm: formats.onboarding.widthMm,
-                            heightMm: formats.onboarding.heightMm,
-                            dpi: previewDpi,
-                          }),
-                        }}
-                        canEdit={manages}
-                        dpi={previewDpi}
-                        d={pr}
-                        intake={d.intake}
-                        leaveUnsaved={d.leaveUnsaved}
-                      />
-                    )}
-                  </>
-                ),
-              },
-              {
-                id: 'history',
-                label: pr.tabs.history,
-                anchors: ['print-jobs', 'selected-print-job'],
-                content: (
-                  <>
-                    {requestedJob !== null && (
-                      <section aria-labelledby="selected-print-job">
-                        <h3 id="selected-print-job" tabIndex={-1}>
-                          {pr.selectedJob}
+                      {formats && templates && (
+                        <LabelTemplatesForm
+                          key={`templates-${active.id}`}
+                          tenantId={active.id}
+                          templates={templates}
+                          builtins={{
+                            bag: builtinTemplate('bag', {
+                              widthMm: formats.bag.widthMm,
+                              heightMm: formats.bag.heightMm,
+                              dpi: previewDpi,
+                            }),
+                            garment: builtinTemplate('garment', {
+                              widthMm: formats.garment.widthMm,
+                              heightMm: formats.garment.heightMm,
+                              dpi: previewDpi,
+                            }),
+                            item: builtinTemplate('item', {
+                              widthMm: formats.item.widthMm,
+                              heightMm: formats.item.heightMm,
+                              dpi: previewDpi,
+                            }),
+                            markdown: builtinTemplate('markdown', {
+                              widthMm: formats.markdown.widthMm,
+                              heightMm: formats.markdown.heightMm,
+                              dpi: previewDpi,
+                            }),
+                            onboarding: builtinTemplate('onboarding', {
+                              widthMm: formats.onboarding.widthMm,
+                              heightMm: formats.onboarding.heightMm,
+                              dpi: previewDpi,
+                            }),
+                          }}
+                          canEdit={manages}
+                          dpi={previewDpi}
+                          d={pr}
+                          intake={d.intake}
+                          leaveUnsaved={d.leaveUnsaved}
+                        />
+                      )}
+                    </>
+                  ),
+                },
+                {
+                  id: 'history',
+                  label: pr.tabs.history,
+                  anchors: ['print-jobs', 'selected-print-job'],
+                  content: (
+                    <>
+                      {requestedJob !== null && (
+                        <section aria-labelledby="selected-print-job">
+                          <h3 id="selected-print-job" tabIndex={-1}>
+                            {pr.selectedJob}
+                          </h3>
+                          {selectedJob ? (
+                            jobDetails(selectedJob)
+                          ) : (
+                            <p role="status">{pr.jobUnavailable}</p>
+                          )}
+                        </section>
+                      )}
+                      <section
+                        className="printing-jobs"
+                        aria-labelledby="print-jobs"
+                      >
+                        <h3 id="print-jobs" tabIndex={-1}>
+                          {pr.jobs}
                         </h3>
-                        {selectedJob ? (
-                          jobDetails(selectedJob)
-                        ) : (
-                          <p role="status">{pr.jobUnavailable}</p>
-                        )}
+                        {jobs.length === 0 && <p>{pr.noJobs}</p>}
+                        {recentJobs.map(jobDetails)}
                       </section>
-                    )}
-                    <section
-                      className="printing-jobs"
-                      aria-labelledby="print-jobs"
-                    >
-                      <h3 id="print-jobs" tabIndex={-1}>
-                        {pr.jobs}
-                      </h3>
-                      {jobs.length === 0 && <p>{pr.noJobs}</p>}
-                      {recentJobs.map(jobDetails)}
-                    </section>
-                  </>
-                ),
-              },
-            ]}
-          />
+                    </>
+                  ),
+                },
+              ]}
+            />
+          </PrintingSetupProvider>
         </section>
       )}
       {tab === 'store' && (

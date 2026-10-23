@@ -62,12 +62,17 @@ for (const kind of [
                   ? '#quick-description'
                   : '#garment-description',
             )
-      await expect(field).toBeVisible()
+      if (kind === 'printer') await expect(field).toBeHidden()
+      else await expect(field).toBeVisible()
       await expect(field).toBeDisabled()
       await field.focus()
       await expect(field).not.toBeFocused()
       const original = await field.inputValue()
       release()
+      if (kind === 'printer')
+        await page
+          .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+          .check()
       await expect(field).toBeEnabled()
       await field.fill('Synthetic first editable draft')
       let warnings = 0

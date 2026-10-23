@@ -1,3 +1,4 @@
+import d from '../../messages/sv.json' with { type: 'json' }
 import { test, expect } from '@playwright/test'
 import { randomBytes, randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -29,9 +30,12 @@ test('manual labels use the shared renderer and replay one immutable queue job',
     await fixture.commit()
     // Exercise both stored (custom) and default format metadata in the real tab.
     await page.goto('/settings?tab=printing')
+    await page
+      .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+      .check()
     await page.getByText('Synthetic printer ·', { exact: false }).click()
     await expect(
-      page.locator('a[href$="/KomisioPrint-staging-win-x64.zip"]'),
+      page.getByRole('link', { name: d.printing.download, exact: true }),
     ).toBeVisible()
     const origin = new URL(page.url()).origin
     const input = {

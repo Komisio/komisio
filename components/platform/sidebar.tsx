@@ -6,6 +6,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type FocusEvent,
   type ReactNode,
 } from 'react'
 import { createPortal } from 'react-dom'
@@ -49,11 +50,16 @@ function RailTooltip({
   useEffect(() => {
     if (!box) return
     const dismiss = () => setBox(null)
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') dismiss()
+    }
     window.addEventListener('scroll', dismiss, true)
     window.addEventListener('resize', dismiss)
+    window.addEventListener('keydown', onKeyDown)
     return () => {
       window.removeEventListener('scroll', dismiss, true)
       window.removeEventListener('resize', dismiss)
+      window.removeEventListener('keydown', onKeyDown)
     }
   }, [box])
   return (
@@ -133,14 +139,47 @@ export function Sidebar({
   const [collapsed, setCollapsed] = useState(initialCollapsed)
   const [storeOpen, setStoreOpen] = useState(false)
   const sidebarRef = useRef<HTMLElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const focusFrame = useRef<number | null>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
   const storeButtonRef = useRef<HTMLButtonElement>(null)
   const storePanelRef = useRef<HTMLDivElement>(null)
+  const storeAnchor = useRef<{ top: number; left: number } | null>(null)
   const storePanelId = useId()
   const groups = buildNavigation(d, { intakeEnabled, host })
   const accountName = name || email.split('@')[0] || email
   const toggleLabel = collapsed ? d.nav.expandMenu : d.nav.collapseMenu
   const storeLabel = `${d.activeTenant}: ${active.name}`
+
+  // Native backward tab scrolling can place a link underneath the sticky header.
+  // Correct only this scroller, after the browser has finished moving focus.
+  function revealFocusedControl(event: FocusEvent<HTMLElement>) {
+    const target = event.target
+    if (
+      headerRef.current?.contains(target) ||
+      target.closest('.sidebar-flyout')
+    )
+      return
+    if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current)
+    focusFrame.current = requestAnimationFrame(() => {
+      focusFrame.current = null
+      const sidebar = sidebarRef.current
+      const header = headerRef.current
+      if (!sidebar || !header || document.activeElement !== target) return
+      const overlap =
+        header.getBoundingClientRect().bottom +
+        8 -
+        target.getBoundingClientRect().top
+      if (overlap > 0) sidebar.scrollTop -= overlap
+    })
+  }
+
+  useEffect(
+    () => () => {
+      if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current)
+    },
+    [],
+  )
 
   const applyToggle = useCallback(() => {
     const focused = document.activeElement
@@ -182,6 +221,24 @@ export function Sidebar({
 
   useEffect(() => {
     if (!storeOpen) return
+    const dismiss = () => setStoreOpen(false)
+    function onScroll(event: Event) {
+      // Scrolling within the popup does not move its anchor.
+      if (
+        event.target instanceof Node &&
+        storePanelRef.current?.contains(event.target)
+      )
+        return
+      const rect = storeButtonRef.current?.getBoundingClientRect()
+      const anchor = storeAnchor.current
+      if (
+        !rect ||
+        !anchor ||
+        rect.top !== anchor.top ||
+        rect.left !== anchor.left
+      )
+        dismiss()
+    }
     function onPointerDown(event: PointerEvent) {
       const target = event.target
       if (!(target instanceof Node)) return
@@ -197,9 +254,13 @@ export function Sidebar({
     }
     document.addEventListener('pointerdown', onPointerDown)
     document.addEventListener('keydown', onKeyDown)
+    window.addEventListener('scroll', onScroll, true)
+    window.addEventListener('resize', dismiss)
     return () => {
       document.removeEventListener('pointerdown', onPointerDown)
       document.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('scroll', onScroll, true)
+      window.removeEventListener('resize', dismiss)
     }
   }, [storeOpen])
 
@@ -213,8 +274,10 @@ export function Sidebar({
     }
     if (!panel.matches(':popover-open')) panel.showPopover()
     placeFlyout(button, panel)
+    const { top, left } = button.getBoundingClientRect()
+    storeAnchor.current = { top, left }
     const select = panel.querySelector('select')
-    if (select instanceof HTMLElement) select.focus()
+    if (select instanceof HTMLElement) select.focus({ preventScroll: true })
     return () => {
       if (panel.isConnected && panel.matches(':popover-open'))
         panel.hidePopover()
@@ -252,8 +315,9 @@ export function Sidebar({
       id={SIDEBAR_ID}
       className={collapsed ? 'sidebar sidebar-collapsed' : 'sidebar'}
       ref={sidebarRef}
+      onFocusCapture={revealFocusedControl}
     >
-      <div className="sidebar-header">
+      <div className="sidebar-header" ref={headerRef}>
         <Brand compact={collapsed} />
         <RailTooltip
           enabled={collapsed}

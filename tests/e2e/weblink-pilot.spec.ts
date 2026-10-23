@@ -38,20 +38,30 @@ for (const lost of [false, true])
       await f.commit()
       await page.setViewportSize({ width: 375, height: 812 })
       await page.goto('/settings?tab=printing')
+      await page
+        .getByRole('radio', { name: d.printing.setup.weblink, exact: false })
+        .check()
       const fold = page.locator('.printing-printers > details').filter({
         has: page.locator('summary').filter({ hasText: 'Synthetic pilot' }),
       })
       await fold.locator('summary').first().click()
-      await expect(fold.getByText(w.pairHint)).toBeVisible()
+      await expect(fold.getByText(w.managed.unavailable)).toBeVisible()
       await expect(
         fold.getByRole('button', { name: w.enable, exact: true }),
       ).toHaveCount(0)
-      await fold
-        .getByRole('button', { name: d.printing.newCode, exact: true })
-        .click()
-      const pairingCode = await fold
-        .locator('.print-devices [role="status"] strong')
-        .innerText()
+      await expect(
+        fold.getByRole('button', { name: d.printing.newCode, exact: true }),
+      ).toHaveCount(0)
+      const pairingCode = await f.asActor(
+        f.actor,
+        async () =>
+          (
+            await f.db.query('select create_print_pairing_code($1,$2) value', [
+              f.tenant,
+              printer,
+            ])
+          ).rows[0].value.code,
+      )
       const encryptionKey = randomBytes(32)
       const localConfig = parseEnv(
         await readFile(new URL('../../.env.local', import.meta.url), 'utf8'),

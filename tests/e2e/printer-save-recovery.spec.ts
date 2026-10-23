@@ -23,6 +23,9 @@ for (const reply of [
       await f.commit()
       await page.setViewportSize({ width: 320, height: 720 })
       await page.goto('/settings?tab=printing')
+      await page
+        .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+        .check()
       const form = page
         .locator('form')
         .filter({ has: page.locator('input[name="name"]') })
@@ -150,6 +153,9 @@ test('a printer address rejected before saving remains correctable', async ({
   try {
     await f.commit()
     await page.goto('/settings?tab=printing')
+    await page
+      .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+      .check()
     const form = page
       .locator('form')
       .filter({ has: page.locator('input[name="name"]') })
@@ -235,6 +241,9 @@ test('an uncertain printer update clears its previous confirmation', async ({
     ])
     await f.commit()
     await page.goto('/settings?tab=printing')
+    await page
+      .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+      .check()
     await page
       .locator('summary')
       .filter({ hasText: 'Initial synthetic printer' })

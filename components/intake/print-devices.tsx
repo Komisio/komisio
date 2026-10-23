@@ -24,7 +24,7 @@ export function PrintDevices({
   canManage: boolean
   locale: string
   d: Dictionary['printing']
-  transport?: 'tcp' | 'weblink'
+  transport?: 'tcp' | 'usb' | 'weblink'
   managed?: boolean
 }) {
   const router = useRouter()
@@ -76,17 +76,17 @@ export function PrintDevices({
           paired={list.some((device) => !device.revokedAt)}
           d={d.weblink.managed}
         />
-      ) : transport === 'weblink' ? (
-        <p>{d.weblink.pairHint}</p>
-      ) : (
+      ) : transport === 'weblink' && canManage ? (
+        <p>{d.weblink.managed.unavailable}</p>
+      ) : canManage ? (
         <p>
           {d.pairHint}{' '}
           <a className="text-link" href="#printing-install">
             {d.tabs.install}
           </a>
         </p>
-      )}
-      {canManage && !(transport === 'weblink' && managed) && (
+      ) : null}
+      {canManage && transport !== 'weblink' && (
         <div className="row">
           <Button
             variant="secondary"

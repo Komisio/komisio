@@ -13,6 +13,9 @@ test('USB registration validates the Windows queue and keeps its name across tab
   try {
     await f.commit()
     await page.goto('/settings?tab=printing')
+    await page
+      .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+      .check()
     const form = page.locator('.printer-register-fold form')
     await form
       .getByLabel(d.printing.name, { exact: true })
@@ -76,6 +79,12 @@ test('USB registration validates the Windows queue and keeps its name across tab
     await expect(
       printer.getByLabel(d.printing.usbQueueName, { exact: true }),
     ).toHaveValue(queue)
+    await printer
+      .getByRole('button', { name: d.printing.newCode, exact: true })
+      .click()
+    await expect(
+      printer.locator('.print-devices [role="status"] strong'),
+    ).toHaveText(/^[0-9A-F]{5}-[0-9A-F]{5}$/)
     expect(
       (
         await f.db.query(
@@ -107,6 +116,9 @@ test('printer setup offers installation before registration and preserves drafts
     await f.commit()
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/settings?tab=printing')
+    await page
+      .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+      .check()
     const download = page.getByRole('link', {
       name: d.printing.download,
       exact: true,
@@ -177,6 +189,7 @@ test('printer setup offers installation before registration and preserves drafts
     await page
       .getByRole('tabpanel', { name: d.printing.tabs.install, exact: true })
       .getByRole('link', { name: d.printing.tabs.printers, exact: true })
+      .first()
       .click()
     await expect(form.getByLabel(d.printing.name, { exact: true })).toHaveValue(
       'Synthetic network printer',

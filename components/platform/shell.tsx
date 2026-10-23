@@ -72,6 +72,9 @@ export function Shell({
         'a,button,input,select,textarea,summary,[tabindex="0"]',
       ) ||
       target.closest('dialog') ||
+      // Safari can focus the enclosing panel while a pointer is still down.
+      // Scrolling that container moves the pressed control before click fires.
+      target.matches('[role="tabpanel"]') ||
       (target instanceof HTMLAnchorElement && !target.matches(':focus-visible'))
     )
       return

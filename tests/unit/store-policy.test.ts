@@ -150,3 +150,28 @@ it('validates the unsold notification day without relating it to automatic dispo
     storePolicyBody.parse(defaultStorePolicy()).unsoldNotifyAfterDays,
   ).toBe(60)
 })
+
+it('validates an optional message language independently of item language', () => {
+  for (const communicationLanguage of [
+    'sv',
+    'en',
+    'no',
+    'dk',
+    'fi',
+    'de',
+    'es',
+    'it',
+  ])
+    expect(
+      storePolicyBody.parse({
+        ...policy(),
+        itemLanguage: 'it',
+        communicationLanguage,
+      }).communicationLanguage,
+    ).toBe(communicationLanguage)
+  for (const communicationLanguage of ['', 'xx', null, 3, true])
+    expect(
+      storePolicyBody.safeParse({ ...policy(), communicationLanguage }).success,
+    ).toBe(false)
+  expect(storePolicyBody.parse(policy()).communicationLanguage).toBeUndefined()
+})

@@ -1260,7 +1260,9 @@
       "reviewHelp": "Antes de finalizar el precio y las condiciones del artículo en la recepción.",
       "acceptanceHelp": "Antes de registrar el artículo en el inventario para su venta.",
       "more": "Más sobre estos ajustes"
-    }
+    },
+    "communicationLanguage": "Idioma predeterminado de los mensajes",
+    "communicationLanguageHint": "Se usa en los correos a vendedores y como idioma predeterminado de las invitaciones al personal cuando el perfil de la tienda no tiene idioma. Tiene prioridad el idioma del vendedor y después el del perfil de la tienda. El idioma de tu menú no afecta a los correos."
   },
   "sellerTerms": {
     "title": "Condiciones del depositante",

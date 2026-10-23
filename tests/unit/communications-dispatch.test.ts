@@ -10,10 +10,15 @@ import {
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { dictionary, type Locale } from '../../lib/i18n'
 import { emptyStoreProfile } from '../../lib/engine/store-profile'
+import { defaultStorePolicy } from '../../lib/engine/store-policy'
 
 const item = '11111111-1111-4111-8111-111111111111'
 
-function messageClient(sellerLanguage: unknown, storeLanguage?: Locale) {
+function messageClient(
+  sellerLanguage: unknown,
+  storeLanguage?: Locale,
+  defaultLanguage?: Locale,
+) {
   let queued: Record<string, unknown> = {}
   const rpc = vi.fn(async (name: string, args: Record<string, unknown>) => {
     if (name === 'current_store_profile')
@@ -27,6 +32,18 @@ function messageClient(sellerLanguage: unknown, storeLanguage?: Locale) {
         error: null,
       }
     if (name === 'store_currency') return { data: 'DKK', error: null }
+    if (name === 'current_store_policy')
+      return {
+        data: {
+          id: null,
+          version: 0,
+          policy: {
+            ...defaultStorePolicy(),
+            communicationLanguage: defaultLanguage,
+          },
+        },
+        error: null,
+      }
     if (name === 'queue_seller_communication') queued = args
     return { data: item, error: null }
   })
@@ -79,7 +96,6 @@ it.each([
         await sendSellerCommunication(f.client, {
           tenantId: item,
           storeName: 'Synthetic Store',
-          locale: 'it',
           requestId: item,
           sellerId: item,
           kind,
@@ -114,7 +130,6 @@ it('records English when an entire requested template falls back', async () => {
     await sendSellerCommunication(f.client, {
       tenantId: item,
       storeName: 'Synthetic Store',
-      locale: 'sv',
       requestId: item,
       sellerId: item,
       kind: 'payout_paid',
@@ -192,7 +207,7 @@ it('sends nothing unless the store opted in, and never throws', async () => {
   } as unknown as SupabaseClient
   const outcomes = await notifyAfterFacts(
     client,
-    { tenantId: item, storeName: 'Store', locale: 'sv', policy: {} },
+    { tenantId: item, storeName: 'Store', policy: {} },
     [{ kind: 'item_accepted', referenceId: item }],
   )
   expect(outcomes).toEqual([
@@ -213,7 +228,6 @@ it('sends nothing unless the store opted in, and never throws', async () => {
     {
       tenantId: item,
       storeName: 'Store',
-      locale: 'sv',
       policy: { automaticSellerNotifications: true },
     },
     [{ kind: 'item_accepted', referenceId: item }],
@@ -249,7 +263,6 @@ it('honours seller opt-out and fails closed on a preference read error', async (
       {
         tenantId: item,
         storeName: 'Store',
-        locale: 'sv',
         policy: { automaticSellerNotifications: true },
       },
       [{ kind: 'item_accepted', referenceId: item }],

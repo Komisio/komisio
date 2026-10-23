@@ -10,7 +10,6 @@ const input = {
   tenantId: id,
   sellerId: id,
   requestId: id,
-  locale: 'en' as const,
   storeName: 'Synthetic store',
   kind: 'message' as const,
   referenceId: null,

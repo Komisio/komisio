@@ -34,7 +34,6 @@ export async function POST(request: Request) {
     const sent = await sendSellerCommunication(ctx.client, {
       tenantId: c.tenantId,
       storeName: ctx.active.name,
-      locale: ctx.locale,
       requestId: c.requestId,
       sellerId: c.sellerId,
       kind: c.kind,

@@ -1260,7 +1260,9 @@
       "reviewHelp": "Før varens pris og vilkår ferdigstilles i mottaket.",
       "acceptanceHelp": "Før varen registreres på lager for salg.",
       "more": "Mer om innstillingene"
-    }
+    },
+    "communicationLanguage": "Standardspråk for meldinger",
+    "communicationLanguageHint": "Brukes for e-post til selgere og som standard for personalinvitasjoner når butikkprofilen mangler språk. Selgerens eget språk har prioritet, deretter butikkprofilens språk. Språket i din egen meny påvirker ikke e-postene."
   },
   "sellerTerms": {
     "title": "Innleverervilkår",

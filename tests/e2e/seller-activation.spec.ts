@@ -397,6 +397,19 @@ test('an existing account gets the current store copy and seller language across
         )
       ).rows[0].raw_user_meta_data
       await page.goto(`/intake/sellers/${f.seller}#seller-communication`)
+      // This fixture sends several activation emails to the same existing
+      // account. Respect the local Auth configuration's one-second cooldown.
+      await expect
+        .poll(async () => {
+          const ready = await f.db.query(
+            `select coalesce(greatest(confirmation_sent_at,recovery_sent_at)
+              <= now() - interval '1 second',true) as ready
+             from auth.users where email=$1`,
+            [owner],
+          )
+          return ready.rows[0]?.ready
+        })
+        .toBe(true)
       const result = page.waitForResponse(
         (r) =>
           r.url().endsWith('/api/communications') &&

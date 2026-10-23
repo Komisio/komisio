@@ -1,5 +1,4 @@
 import { renderSubmissionReply } from './submission-reply'
-import { readStoreProfile } from '../engine/store-profile'
 import { renderSellerWelcome } from './welcome'
 import { createHash } from 'node:crypto'
 import { z } from 'zod'
@@ -11,7 +10,7 @@ import { referenceKindFor } from '../engine/communications'
 import { sendSellerEmailWithId } from '../platform/seller-email'
 import { sendSellerActivation } from '../platform/seller-activation'
 import { emailDecimalAmount } from './amount'
-import { emailLocale } from './locale'
+import { resolveSellerEmailLocale } from './locale'
 import { readStoreCurrency } from '../engine/money'
 import { isLocale } from '../i18n'
 
@@ -40,7 +39,6 @@ export type CommunicationError =
 export interface SendInput {
   tenantId: string
   storeName: string
-  locale: Locale
   requestId: string
   sellerId: string
   kind: CommunicationKind
@@ -65,13 +63,16 @@ export async function sendSellerCommunication(
     .maybeSingle()
   if (seller.error || !seller.data)
     return { ok: false, error: 'SELLER_NOT_FOUND' }
-  const preferred = seller.data.profile?.language
-  const locale = emailLocale(
-    preferred,
-    isLocale(preferred)
-      ? undefined
-      : (await readStoreProfile(client, c.tenantId)).profile?.language,
-  )
+  let locale: Locale
+  try {
+    locale = await resolveSellerEmailLocale(
+      client,
+      c.tenantId,
+      seller.data.profile,
+    )
+  } catch {
+    return { ok: false, error: 'REQUEST_FAILED' }
+  }
   // Facts for the template come from authenticated reads of the referenced row.
   const facts: Record<string, unknown> = {
     storeName: c.storeName,
@@ -159,26 +160,20 @@ export async function sendSellerCommunication(
       return { ok: false, error: 'REFERENCE_NOT_FOUND' }
   }
   let rendered = c.submissionReviewId
-    ? {
+    ? renderSubmissionReply(
         locale,
-        ...renderSubmissionReply(
+        c.storeName,
+        c.sellerId,
+        process.env.NEXT_PUBLIC_APP_URL ?? '',
+      )
+    : c.welcome
+      ? renderSellerWelcome(
           locale,
           c.storeName,
-          c.sellerId,
+          seller.data.name,
           process.env.NEXT_PUBLIC_APP_URL ?? '',
-        ),
-      }
-    : c.welcome
-      ? {
-          locale,
-          ...renderSellerWelcome(
-            locale,
-            c.storeName,
-            seller.data.name,
-            process.env.NEXT_PUBLIC_APP_URL ?? '',
-            process.env.KOMISIO_AUTH_EMAIL_HOOK_ENABLED === 'true',
-          ),
-        }
+          process.env.KOMISIO_AUTH_EMAIL_HOOK_ENABLED === 'true',
+        )
       : renderSellerMessage(c.kind, locale, facts)
   if (c.welcome || c.submissionReviewId) {
     if (c.kind !== 'message' || c.referenceId !== null || c.freeText !== '')
@@ -446,7 +441,6 @@ export async function notifyAfterFacts(
   store: {
     tenantId: string
     storeName: string
-    locale: Locale
     policy: { automaticSellerNotifications?: boolean }
   },
   facts: FactNotification[],
@@ -477,7 +471,6 @@ export async function notifyAfterFacts(
       const sent = await sendSellerCommunication(client, {
         tenantId: store.tenantId,
         storeName: store.storeName,
-        locale: store.locale,
         requestId: factCommunicationId(n.kind, n.referenceId),
         sellerId,
         kind: n.kind,

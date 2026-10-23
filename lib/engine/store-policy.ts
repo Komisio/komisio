@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { vatPolicyShape } from './vat'
 import { currencyCode } from './money'
 import { itemLanguage } from './item-language'
+import { locales } from '../i18n'
 
 // Boundary validation only. SQL owns numeric persistence and calculations.
 const decimal = z
@@ -64,6 +65,8 @@ export const storePolicyBody = z.strictObject({
     .optional(),
   // Automatic seller notifications (P2 S18): absent means off; every message is logged.
   automaticSellerNotifications: z.boolean().optional(),
+  // Mail default when the seller and saved public store profile have no language.
+  communicationLanguage: z.enum(locales).optional(),
   // Automatic markdowns (P3): absent means off; due steps are applied by the daily run as the policy's publisher.
   automaticMarkdowns: z.boolean().optional(),
   // One currency per store (decided 2026-09-13); absent means SEK; frozen after the first money fact.

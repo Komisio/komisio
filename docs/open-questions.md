@@ -779,7 +779,7 @@ Staff Active filter (resolved 2026-10-18, owner #510): a small additive item-dir
 
 Stock lifecycle overview (resolved 2026-10-18, owner #511): an additional read RPC may return stock stage counts and ownership values. The item-directory filter may also express the same upcoming seven-day stock window, including pending markdowns and excluding sold, ended and expired periods. No lifecycle action or stock-membership rule changes.
 
-Invitation language (resolved 2026-10-20, owner #522): staff explicitly select the invitation language, defaulting to the store profile language then English. Do not infer it through recipient-profile lookups or the staff session. No membership or access-control rules change.
+Seller and invitation language (updated 2026-10-23, #611): seller mail uses the seller's language, saved store profile language, the optional store-policy communicationLanguage, then English. Invitations keep an explicit language choice with the same store default. A stored unpublished profile does not exist; unsaved browser drafts are never read. The policy setting requires no public profile. Staff UI and AI item language are unrelated. Incomplete/invalid templates also fall back wholly to English; historical messages, recipient lookup and membership rules are unchanged.
 
 Service legal links (#527): localized navigation is implemented without acceptance statements or tracking. Any acceptance wording, checkbox or terms-version storage still requires company-approved text and an explicit decision; website document translations and pricing discrepancies remain outside this repository.
 

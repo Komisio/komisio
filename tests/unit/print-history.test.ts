@@ -71,6 +71,25 @@ it('separates a missing job from a failed or malformed read', async () => {
   expect(invalid.fetch).not.toHaveBeenCalled()
 })
 
+it.each(['dispatching', 'transport_accepted', 'outcome_unknown'] as const)(
+  'reads %s with device-bound recovery evidence but no payload',
+  async (status) => {
+    const data = {
+      ...job,
+      status,
+      dispatch_attempt: randomUUID(),
+      dispatch_device_id: randomUUID(),
+      dispatch_resolution_note: null,
+      dispatch_resolved_at: null,
+    }
+    const f = fixture(() => Response.json([data]))
+    expect(await readPrintJob(f.client, tenant, job.id)).toEqual(data)
+    const columns = f.requests[0].searchParams.get('select')!
+    expect(columns).toContain('dispatch_device_id')
+    expect(columns).not.toContain('payload')
+  },
+)
+
 it('batches custody references per kind and tenant while retaining exact source links', async () => {
   // The same UUID across source tables must not make one kind replace another.
   const f = fixture((url) =>

@@ -45,6 +45,7 @@ export default defineConfig({
         KOMISIO_ZETTLE_FIXTURES: 'true',
         KOMISIO_SELLER_SUBMISSIONS_ENABLED: 'true',
         KOMISIO_CONNECTORS_ENABLED: 'true',
+        KOMISIO_WEBLINK_SETUP_ENABLED: 'true',
         KOMISIO_MARKETING_CONSENT_ENABLED: 'true',
         KOMISIO_LEGAL_BASE_URL: 'https://documents.example.test/legal',
         KOMISIO_CREDENTIAL_KEY: 'ab'.repeat(32),

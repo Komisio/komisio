@@ -1,5 +1,8 @@
 # Komisio Print (the local print agent)
 
+For the separate Linux Weblink pilot, see [Weblink operations](PRINT-WEBLINK.md).
+It is under hardware verification and is not generally available.
+
 ## Weblink dispatch journal (development only)
 
 The owner requested software implementation before the physical printer test
@@ -17,7 +20,7 @@ reservation and before each copy. A successful transport callback records
 evidence and is not a tenant-facing authorization boundary. Neither method
 claims jobs, updates Supabase, exposes an endpoint or grants permissions.
 
-Run `npm run test:print-bridge` for the dependency-free process/crash tests.
+Run `npm run test:print-bridge` for the native process/crash and WebSocket tests.
 The Linux service requires a private directory owned by its service user on a
 local persistent filesystem. Its parent must already exist. All bridge workers
 must share that directory; NFS, ephemeral storage and separate replicas are not
@@ -25,11 +28,134 @@ supported. Linux syncs the file and directory before transport. Windows runs
 development tests only; it does not establish Linux filesystem durability.
 
 Do not delete, prune or restore journal files to retry work. Missing restored
-evidence could allow duplicate output. Hosted activation still requires reviewed
-queue fencing/recovery, authenticated printer main/raw channels and reconnects,
-device-scoped queue integration, and physical TLS/copy/revocation tests. The
-database's existing stale-claim handling and the Windows agent are unchanged.
+evidence could allow duplicate output. Hosted activation still requires
+authenticated printer main/raw channels and reconnects,
+service integration, and physical TLS/copy/revocation tests. The database now
+fences Weblink separately; legacy TCP/USB stale claims and Windows printing are
+unchanged.
 This component alone does not make Weblink printing available in Komisio.
+
+## Weblink authentication components (development only)
+
+`scripts/print-bridge/auth.mjs` and `credentials.mjs` provide inactive components
+for the future bridge. They open no listener, pair no devices and consume no jobs.
+They use the existing paired device identity and `print_device_context` RPC;
+there are no schema, membership or Windows-agent changes.
+
+Each printer receives a random 256-bit password through the operator enrollment
+flow. Its username is the paired device ID, not the printer serial.
+Runtime credentials retain its digest; the separate encrypted enrollment checkpoint
+retains the password for private provisioning output. Both main and raw HTTP upgrade requests
+must authenticate, over TLS, against the same device binding. The service owns
+opaque session handles: they must never be taken from printer-supplied channel
+IDs. A new authenticated main connection invalidates the previous generation.
+Raw authorization rechecks the credential and active device context before each
+dispatch copy. Closing a stale connection cannot invalidate a newer connection.
+Already buffered output cannot be recalled by revocation or disconnect.
+
+The token provider is fixed to one device and reuses short-lived access tokens
+only while its saved credential revision matches. Refresh calls are coalesced
+within that provider. Replacement refresh tokens must be durably saved before
+their access tokens are returned. The authorizer checks current device context
+on every call, even while the access token is cached. HTTP requests have a
+five-second timeout, bounded responses and no redirects. Configuration accepts
+public Supabase keys; service-role/secret keys are rejected. Remote endpoints
+require HTTPS; HTTP is allowed only for numeric loopback test endpoints.
+
+The credential store uses AES-256-GCM with random nonces and authenticates the
+device ID, format version and record revision. Its 32-byte encryption key must
+be provisioned separately from the credential directory and its backups; the
+module does not generate, persist or log that key. Linux requires a private,
+service-owned directory on a local persistent filesystem with a trusted parent.
+Files are written at mode 0600, synced, atomically replaced and directory-synced.
+Exclusive writer locks and expected revisions reject concurrent/stale updates
+across processes. Existing device identities cannot be rebound to another store
+or printer through this store. Wrong keys and damaged records fail closed.
+
+One service process and token provider must own a device's connections and token
+renewal. Cross-process credential locks do not provide distributed connection
+ownership or serialize remote refresh calls. After a crashed writer, stop all
+writers and review any remaining lock before removing it. Never overwrite a
+damaged credential or restore an old backup as an automatic recovery. Lost keys
+or unrecoverable refresh sessions require a reviewed re-pairing procedure.
+Windows tests establish development behavior, not production file protection.
+
+Zebra documents server credentials in `weblink.ip.conn[1|2].authentication.add`
+in its [Programming Guide](https://cpws.zebra.com/cpws/docs/zpl/zpl-zbi2-pm-en.pdf).
+Actual ZD420 firmware challenge handling on both channels remains unverified.
+The TLS upgrade handler, rate limits, discovery/channel association, secure
+provisioning and queue service wiring remain required
+before hosted activation. These components and local fixtures do not establish
+printer compatibility or a complete Weblink service.
+
+## Weblink queue backend (inactive)
+
+The owner approved the one-attempt model on 2026-10-22. Migration
+`20261022150000` extends the existing printer/job records; it creates no new core
+tables or roles and converts no existing printers. Legacy registration accepts
+only TCP/USB. Separate Weblink preparation creates inactive printers; it does
+not activate transport. Do not manually insert or convert printers to activate
+Weblink. Local tests seed active synthetic Weblink printers only in test databases.
+
+`claim_weblink_print_job` requires a paired, active device bound to that printer.
+The first response reserves the job permanently and returns `canSend: true`, the
+exact ZPL and copy count. The caller supplies an attempt UUID and must retain it
+before requesting a claim. Repeating that attempt returns status with
+`canSend: false` and no payload. A new attempt does not release the old job, even
+after ten minutes, a process restart or loss of the local journal. Legacy claim
+and completion RPCs refuse Weblink printers. A printer cannot switch between
+Weblink and the legacy transports, so outstanding jobs cannot cross that fence.
+
+The initial state is `dispatching`, which remains held if the worker disappears.
+The original device can record `transport_accepted` or `outcome_unknown` through
+`finish_weblink_print_job`; it cannot assert physical output. The same outcome
+can be acknowledged repeatedly, but a conflicting outcome cannot replace it.
+Revoked devices and replacement devices cannot complete the old attempt.
+
+`resolve_weblink_print_job` is owner/admin-only and requires the original device
+to have been revoked, an inspection note, and either `printed` (physically
+observed) or `cancelled` (abandoned). Stop the old bridge connection and inspect
+the printer's buffered work first: revocation cannot recall already buffered
+output. Resolution retains the attempt/device/claim provenance and appends an
+audit event. It never resets the job to queued or creates a new print. Any
+deliberate replacement is a separately requested job after that inspection.
+
+`scripts/print-bridge/queue.mjs` connects these RPCs to the authenticated dispatch
+journal for one bounded pass. It has no polling loop or automatic retry. A lost
+claim response returns `claim_unknown`; recover using the same attempt UUID.
+A lost completion response remains uncertain even if the local transport write
+succeeded. `createWeblinkRpc` uses the existing device token provider, permits
+only claim/finish calls, pins store/printer scope and bounds HTTP responses.
+Service startup, durable scheduling of attempt IDs, the actual WebSocket write
+adapter and hardware acceptance are not implemented by this module.
+
+Run `npm run test:print-bridge`, the pgTAP suite and `npm run test:concurrency`.
+The concurrency harness creates an isolated database, verifies competing claims
+and completions, and runs the real worker against a committed claim with a lost
+response and fresh local journal. These tests do not establish hosted deployment,
+physical output or recovery after losing/restoring the authoritative database.
+
+## Weblink preparation and manual inspection
+
+After migration `20261022160000`, the server-only flag
+`KOMISIO_WEBLINK_SETUP_ENABLED=true` exposes preparation in Settings → Printing
+to owners/admins. It defaults off. Registration stores name, model and DPI with
+`active=false`; it neither provisions a secret nor starts printing. Exact repeated
+registrations return the same printer; changed input for that ID is refused.
+There is no Weblink activation or Windows pairing control in this form.
+
+Existing Weblink jobs remain visible when preparation is disabled. Print history
+distinguishes a reserved attempt, transport acceptance and an unknown outcome.
+An exact `?tab=printing&job=<uuid>` link also reaches jobs outside recent history.
+Owners/admins first revoke the original sending device, stop its connection and
+inspect the printer, buffered jobs and every requested copy. They then explicitly
+choose physically verified output or closure without confirming output and record
+an inspection note. The database enforces revocation and retains the human actor.
+No recovery action creates or resends a job. Unconfirmed HTTP responses lock the
+form and require reloading the current state before another action.
+
+Software checks use synthetic printers; actual secure provisioning, service wiring,
+the printer's main/raw handshake, TLS and physical output remain activation gates.
 
 ## Existing Windows agent
 

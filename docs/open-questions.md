@@ -578,13 +578,73 @@ HTTP fixtures test the product/purchase loop without a real merchant account.
 
 ## USB print verification, 2026-10-13
 
+Managed Weblink setup (2026-10-22): the owner selected preparation and private
+installation-file download from Komisio, with no per-printer server installation.
+Each environment has its own gateway/keys and each printer keeps a separate
+identity and queue. Existing owner/admin/MFA checks, explicit activation and
+uncertain-output recovery remain. Platform deployment must not enroll a
+production store or physical printer. Shared gateway rollout and the new file
+installation path remain to be verified; the existing staging hardware pilot
+does not by itself verify this new flow.
+
 Weblink software preparation (2026-10-22, #542): the owner requests locally
 testable implementation before the ZD420/iPad test. A separate dispatch journal
 can be developed without changing queue schemas or device grants. Before hosted
-activation, decide and review queue fencing and explicit uncertain-output
-recovery, prove main/raw channel binding and authenticated reconnects, and verify
+activation, deliver the reviewed queue recovery UI, prove main/raw channel binding
+and authenticated reconnects, and verify
 the actual printer's TLS chain and output. Local journal tests do not settle
 those integration and hardware questions or authorize a new core table.
+
+Authentication preparation now includes per-device secret verification, local
+main/raw session generation checks, encrypted credential storage, device token
+renewal and fresh authorization through the existing context RPC. These are
+inactive components with local fixtures, not verified printer handshakes. Secure
+provisioning and actual TLS upgrade/channel association remain open. Queue
+fencing must also prevent old consumers from reclaiming a job after uncertain
+output. The owner approved the additive transport/state contract on 2026-10-22:
+one send permit per Weblink job, no stale-claim replay, and owner/admin inspection
+after revoking the old device. The backend extends existing printer/job records
+and retains device roles. Local SQL and worker tests exercise the contract.
+Weblink preparation now registers inactive printers behind a default-off server
+flag. Read models/status UI and owner/admin recovery controls retain unknown
+outcomes, require revocation and documented inspection, and never resend a job.
+Secure provisioning, service deployment and physical acceptance remain required
+before activation; legacy public registration still supports only TCP/USB.
+
+The local service now composes encrypted device sessions, independently
+authenticated main/raw WebSockets and the queue worker. It binds to loopback
+behind an authenticated TLS proxy and requires an already-provisioned identity.
+A durable attempt store halts on uncertain outcomes across restart. Automated
+fixtures verify these boundaries. Enrollment now seals the anonymous session
+before consuming a code and reconciles an uncertain pair by reading the same
+identity. A private operator CLI, serial poller, minimal release package and
+Linux service unit have local process-level coverage. Hosted enrollment, service
+installation and physical TLS/reconnect acceptance remain to be verified. Recovery
+retains uncertain evidence and requires reviewed revocation/new enrollment.
+No new core table or device-role change is authorized here.
+
+The pilot controls now use the existing paired device and an explicit owner/admin
+test acknowledgement. Enabling is gated by the default-off setup flag; pausing
+preserves jobs and evidence and cannot recall buffered output. Unresolved
+dispatches block activation. Local end-to-end tests must include real anonymous
+Auth enrollment and queue delivery, plus lost UI responses. Hardware acceptance
+remains separate from pilot enablement; the target store is selected privately.
+
+Supervised ZD420 Weblink verification (2026-10-22): hosted enrollment, TLS 1.2
+with certificate verification, independently authenticated channels, and one
+single-copy staging job reaching `transport_accepted` are verified. Link-OS 6.2
+required accepting its bounded discovery suffix and classifying the raw greeting
+even when the connection negotiates the main subprotocol. A controlled service
+restart reconnected automatically with an unchanged dispatch journal and an
+empty queue; it did not dispatch the job again. The owner confirmed exactly one
+physical label with readable text and code. Live revocation stopped queue work
+and the old device's scoped authorization was denied. After stopping the old
+connection and inspecting the empty printer buffer, the owner's physical result
+was recorded through the recovery UI. Fresh enrollment of the same printer
+reconnected with zero new dispatches and unchanged original dispatch evidence.
+Barcode scanning is deferred at the owner's request. The standalone pilot runtime
+includes locally tested fixes in the hardware batch;
+those fixes have not released the application or reached production.
 
 The owner requested native ZPL output to a USB Zebra and has hardware for a
 later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the

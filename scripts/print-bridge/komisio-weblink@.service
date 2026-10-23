@@ -1,0 +1,29 @@
+[Unit]
+Description=Komisio managed Weblink gateway (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=komisio-weblink-%i
+Group=komisio-weblink-%i
+WorkingDirectory=/opt/komisio-weblink/%i/current
+ExecStart=/opt/komisio-print/node/bin/node /opt/komisio-weblink/%i/current/scripts/print-bridge/managed-cli.mjs /etc/komisio-weblink/%i/config.json
+Restart=no
+TimeoutStopSec=60
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadWritePaths=/var/lib/komisio-weblink/%i
+
+[Install]
+WantedBy=multi-user.target

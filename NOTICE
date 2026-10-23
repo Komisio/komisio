@@ -45,6 +45,7 @@ retain the packages' own notices when distributing builds. This is the direct
 | ESLint, eslint-config-next, Prettier | MIT | Development |
 | @types/node, @types/react, @types/react-dom | MIT | Development |
 | Vitest, pg | MIT | Tests |
+| ws | MIT | Weblink bridge WebSocket transport (manifest verified 2026-10-22) |
 | @playwright/test | Apache-2.0 | Browser tests |
 | pgTAP | PostgreSQL | Database tests |
 

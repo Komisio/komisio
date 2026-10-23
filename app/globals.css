@@ -8419,6 +8419,23 @@ button.text-link:hover:not(:disabled) {
 .print-devices .row {
   margin: 16px 0;
 }
+.managed-weblink .row {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.managed-weblink button {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+}
+.managed-weblink ol {
+  list-style: decimal;
+  padding-left: 24px;
+  margin: 16px 0;
+}
+.managed-weblink li + li {
+  margin-top: 12px;
+}
 .printing-install {
   max-width: 70ch;
 }

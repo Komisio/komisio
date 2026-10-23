@@ -200,7 +200,7 @@ export const queuePrintJobInput = z
 const printerRow = z.object({
   id: z.uuid(),
   name: z.string(),
-  transport: z.enum(['tcp', 'usb']),
+  transport: z.enum(['tcp', 'usb', 'weblink']),
   address: z.string(),
   model: z.string(),
   dpi: z.number().int(),
@@ -214,10 +214,23 @@ const jobRow = z.object({
   reference_kind: referenceKind,
   reference_id: z.uuid(),
   copies: z.number().int(),
-  status: z.enum(['queued', 'claimed', 'printed', 'failed', 'cancelled']),
+  status: z.enum([
+    'queued',
+    'claimed',
+    'printed',
+    'failed',
+    'cancelled',
+    'dispatching',
+    'transport_accepted',
+    'outcome_unknown',
+  ]),
   error: z.string(),
   created_at: z.iso.datetime({ offset: true }),
   completed_at: z.iso.datetime({ offset: true }).nullable(),
+  dispatch_attempt: z.uuid().nullable().optional(),
+  dispatch_device_id: z.uuid().nullable().optional(),
+  dispatch_resolution_note: z.string().nullable().optional(),
+  dispatch_resolved_at: z.iso.datetime({ offset: true }).nullable().optional(),
 })
 export type PrintJob = z.infer<typeof jobRow>
 
@@ -377,7 +390,7 @@ export async function readPrinters(
 }
 
 const jobColumns =
-  'id,printer_id,label_kind,reference_kind,reference_id,copies,status,error,created_at,completed_at'
+  'id,printer_id,label_kind,reference_kind,reference_id,copies,status,error,created_at,completed_at,dispatch_attempt,dispatch_device_id,dispatch_resolution_note,dispatch_resolved_at'
 
 /** Newest 50 jobs. RLS scopes the read. */
 export async function readPrintJobs(

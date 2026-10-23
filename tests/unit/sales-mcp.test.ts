@@ -20,6 +20,7 @@ const sale = {
   id,
   provider: 'zettle' as const,
   external_id: 'abc-1',
+  staff_note: '',
   currency: 'SEK' as const,
   occurred_at: '2026-09-14T10:00:00+00:00',
   total_ore: 20000,

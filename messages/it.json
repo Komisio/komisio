@@ -1316,7 +1316,9 @@
     "helpLabel": "Sulle vendite",
     "configureVat": "Apri impostazioni IVA",
     "markSold": "Segna come venduto",
-    "itemUnavailable": "Questo articolo non può essere venduto ora. Potrebbe essere già venduto o il periodo di vendita potrebbe essere terminato."
+    "itemUnavailable": "Questo articolo non può essere venduto ora. Potrebbe essere già venduto o il periodo di vendita potrebbe essere terminato.",
+    "note": "Nota / riferimento di pagamento (facoltativo)",
+    "noteHint": "Solo per il negozio. Ad esempio Instagram o un riferimento MobilePay. Massimo 500 caratteri."
   },
   "ledger": {
     "title": "Saldo e registro",

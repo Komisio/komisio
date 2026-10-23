@@ -1316,7 +1316,9 @@
     "helpLabel": "Om salg",
     "configureVat": "Åpne momsinnstillinger",
     "markSold": "Merk som solgt",
-    "itemUnavailable": "Varen kan ikke selges nå. Den kan allerede være solgt, eller salgsperioden kan være avsluttet."
+    "itemUnavailable": "Varen kan ikke selges nå. Den kan allerede være solgt, eller salgsperioden kan være avsluttet.",
+    "note": "Notat / betalingsreferanse (valgfritt)",
+    "noteHint": "Kun for butikken. For eksempel Instagram eller en MobilePay-referanse. Maksimalt 500 tegn."
   },
   "ledger": {
     "title": "Saldo og reskontro",

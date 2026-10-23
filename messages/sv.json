@@ -1316,7 +1316,9 @@
     "helpLabel": "Om försäljning",
     "configureVat": "Öppna momshantering",
     "markSold": "Markera som såld",
-    "itemUnavailable": "Varan kan inte säljas nu. Den kan redan vara såld eller försäljningsperioden avslutad."
+    "itemUnavailable": "Varan kan inte säljas nu. Den kan redan vara såld eller försäljningsperioden avslutad.",
+    "note": "Anteckning / betalningsreferens (valfritt)",
+    "noteHint": "Endast för butiken. Exempel: Instagram eller en MobilePay-referens. Högst 500 tecken."
   },
   "ledger": {
     "title": "Saldo",

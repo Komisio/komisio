@@ -1316,7 +1316,9 @@
     "helpLabel": "About sales",
     "configureVat": "Open VAT settings",
     "markSold": "Mark as sold",
-    "itemUnavailable": "This item cannot be sold now. It may already be sold or its sale period may have ended."
+    "itemUnavailable": "This item cannot be sold now. It may already be sold or its sale period may have ended.",
+    "note": "Note / payment reference (optional)",
+    "noteHint": "For store staff only. For example Instagram or a MobilePay reference. Up to 500 characters."
   },
   "ledger": {
     "title": "Balance and ledger",

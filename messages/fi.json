@@ -1316,7 +1316,9 @@
     "helpLabel": "Tietoa myynnistä",
     "configureVat": "Avaa ALV-asetukset",
     "markSold": "Merkitse myydyksi",
-    "itemUnavailable": "Tuotetta ei voi myydä nyt. Se voi olla jo myyty tai sen myyntiaika on päättynyt."
+    "itemUnavailable": "Tuotetta ei voi myydä nyt. Se voi olla jo myyty tai sen myyntiaika on päättynyt.",
+    "note": "Muistiinpano / maksuviite (valinnainen)",
+    "noteHint": "Vain myymälän henkilökunnalle. Esimerkiksi Instagram tai MobilePay-viite. Enintään 500 merkkiä."
   },
   "ledger": {
     "title": "Saldo ja tilikirja",

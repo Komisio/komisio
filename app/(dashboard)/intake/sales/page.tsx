@@ -138,6 +138,7 @@ export default async function Sales({
                             {formatOre(s.total_ore)} {currency}
                           </strong>
                           <span>{d.providers[s.provider]}</span>
+                          {s.staff_note && <span>{s.staff_note}</span>}
                         </span>
                         <time dateTime={s.occurred_at}>
                           {when(s.occurred_at)}

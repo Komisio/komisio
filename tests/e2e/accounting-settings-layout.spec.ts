@@ -41,7 +41,9 @@ test('accounting setup reveals details on demand and preserves deep links', asyn
     await expect(page.locator('#fortnox-connection')).toBeVisible()
     await expect(page.locator('.fortnox-guide')).not.toHaveAttribute('open', '')
     await page.goto('/intake/accounting?view=settings#account-map')
-    await expect(page.locator('#account-map input').first()).toBeVisible()
+    await expect(
+      page.locator('#account-map input[name="account:grossOre"]'),
+    ).toBeVisible()
     await page
       .getByRole('button', { name: d.accounting.setup.mapHelp, exact: true })
       .click()

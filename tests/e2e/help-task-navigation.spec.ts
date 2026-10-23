@@ -140,7 +140,7 @@ test('help task links reveal the current section while cancelled navigation keep
       .getByRole('button', { name: d.helpCenter.close, exact: true })
       .click()
     await page.goto('/intake/accounting?view=accounts')
-    const account = page.locator('#account-map input').first()
+    const account = page.locator('#account-map input[name="account:grossOre"]')
     await account.fill('1930')
     await open.click()
     page.once('dialog', async (prompt) => {

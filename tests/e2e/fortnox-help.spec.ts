@@ -24,7 +24,7 @@ test('context help preserves edits, traps focus on mobile and has a protected ar
       guide.getByText(d.helpCenter.guide.states.unknown, { exact: true }),
     ).toHaveCount(0)
     await page.goto('/intake/accounting?view=accounts')
-    const account = page.locator('#account-map input').first()
+    const account = page.locator('#account-map input[name="account:grossOre"]')
     await account.fill('1930')
     const open = page.getByRole('button', {
       name: d.helpCenter.title,

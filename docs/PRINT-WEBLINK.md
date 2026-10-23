@@ -12,6 +12,35 @@ No service-role key or extra store membership is needed. The Weblink schema and
 owner/admin setup must be available in the target environment. Keep deployment
 separate from activation; installing this package cannot activate a printer.
 
+## Verified scope and remaining acceptance
+
+As of 2026-10-23, managed preparation, installation-file download, scoped queue
+delivery and the Windows/Weblink setup tracks are deployed to staging and
+production. Release evidence, including the successful main CI and protected
+production workflow, is linked from [release #600](https://github.com/Komisio/komisio/pull/600).
+Deployment still enrolls no store or printer automatically.
+
+The supervised Zebra ZD420, 203 dpi, Link-OS 6.2 / V84.20.21Z test established:
+
+- TLS 1.2 with certificate verification and independently authenticated main/raw
+  channels. This firmware uses a bounded discovery suffix and may negotiate the
+  main subprotocol for its raw channel; the authenticated greeting binds it.
+- Exactly one readable physical label for a single-copy staging job. A controlled
+  service restart reconnected with an empty queue and unchanged dispatch evidence.
+- Revocation denied the old identity and stopped new queue work. Supervised
+  inspection and fresh enrollment retained the original job evidence without a resend.
+- The managed installation file was subsequently installed through Zebra Printer
+  Setup Utility. After the gateway's Basic-challenge correction in
+  [#590](https://github.com/Komisio/komisio/pull/590), the owner confirmed exactly
+  one readable physical label from the production queue.
+
+Physical barcode scanning was deferred by the owner. Actual certificate renewal
+or a changed CA chain, interrupted power/network during output, multiple-copy
+hardware behavior and other models/firmware remain unverified. Software tests
+cover crossed credentials, queue fencing, reconnect races and crash/unknown
+outcomes; they do not substitute for those physical checks. Issue
+[#542](https://github.com/Komisio/komisio/issues/542) retains the remaining acceptance.
+
 ## Managed setup from Komisio
 
 Store owners choose the Weblink track under Settings → Printers and labels and

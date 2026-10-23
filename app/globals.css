@@ -9121,6 +9121,119 @@ button.text-link:hover:not(:disabled) {
 .stock-empty {
   margin-bottom: 1.5rem;
 }
+.stock-overview .stock-report-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  align-items: end;
+}
+.stock-report-filters .field {
+  min-width: 0;
+  margin: 0;
+}
+.stock-report-filters input,
+.stock-report-filters select,
+.stock-report-filters button {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  min-height: 44px;
+}
+.stock-report-filters > p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.stock-sales-panel {
+  container: stock-sales / inline-size;
+  min-width: 0;
+}
+.stock-sales-panel .stock-metrics {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+.stock-sales-panel .stock-metrics dd {
+  font-size: clamp(1rem, 4cqi, 1.75rem);
+  white-space: nowrap;
+  overflow-wrap: normal;
+  font-variant-numeric: tabular-nums;
+}
+.stock-sales-panel .stock-details > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  list-style: none;
+}
+.stock-sales-panel .stock-details > summary::-webkit-details-marker {
+  display: none;
+}
+.stock-sales-panel .stock-details > summary svg {
+  flex: 0 0 auto;
+}
+.stock-sales-panel .stock-details[open] > summary svg {
+  transform: rotate(180deg);
+}
+.stock-sales-table td {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+.stock-sales-table tbody th {
+  overflow-wrap: anywhere;
+}
+@container stock-sales (max-width: 64rem) {
+  .stock-sales-panel .stock-table-wrap {
+    overflow: visible;
+  }
+  .stock-sales-table,
+  .stock-sales-table tbody {
+    display: block;
+  }
+  .stock-sales-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .stock-sales-table tr {
+    display: block;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .stock-overview .stock-sales-panel .stock-sales-table td {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: 0.75rem;
+    border: 0;
+    padding: 0.3rem 0;
+    overflow-wrap: normal;
+  }
+  .stock-overview .stock-sales-panel .stock-sales-table td::before {
+    content: attr(data-label);
+    float: none;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .stock-sales-table tbody th {
+    display: block;
+    padding: 0 0 0.5rem;
+    border: 0;
+  }
+}
+@container stock-sales (max-width: 24rem) {
+  .stock-overview .stock-sales-panel .stock-sales-table td {
+    display: block;
+    text-align: left;
+    padding: 0.5rem 0;
+  }
+  .stock-overview .stock-sales-panel .stock-sales-table td::before {
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+}
 @media (max-width: 600px) {
   .stock-stage-grid {
     display: flex;

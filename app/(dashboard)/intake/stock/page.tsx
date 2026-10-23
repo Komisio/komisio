@@ -14,6 +14,8 @@ import {
   readStockLifecycle,
 } from '@/lib/engine/stock-report'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
+import { economyFormat } from '@/lib/intake/economy-format'
+import { ChevronDown } from 'lucide-react'
 
 /** Margin, sell-through and stock age per category; the read model is SQL. */
 export default async function Stock({
@@ -71,7 +73,9 @@ export default async function Stock({
         : all.lifecycle.stages[stage]
   const money = (ore: number) =>
     `${formatSignedOre(ore)} ${report?.currency ?? ''}`
-  const pct = (value: number | null) => (value === null ? '—' : `${value} %`)
+  const format = economyFormat(ctx.locale)
+  const pct = (value: number | null) =>
+    value === null ? '—' : format.percent(value)
   const days = (value: number | null) => (value === null ? '—' : String(value))
   return (
     <div className="stock-overview">
@@ -115,7 +119,7 @@ export default async function Stock({
           <WorkingForm
             action={`/intake/stock#stock-${initialTab}`}
             data-workspace-filter
-            className="stock-ownership-filter"
+            className="stock-ownership-filter stock-period stock-report-filters"
           >
             <div className="field">
               <label htmlFor="stock-ownership">{all.items.ownership}</label>
@@ -131,9 +135,35 @@ export default async function Stock({
                 <option value="store">{all.items.ownershipKinds.store}</option>
               </select>
             </div>
-            <input type="hidden" name="from" value={period.from} />
-            <input type="hidden" name="to" value={period.to} />
-            <button className="btn btn-secondary">{e.show}</button>
+            <div className="field">
+              <label htmlFor="stock-from">{e.from}</label>
+              <input
+                id="stock-from"
+                name="from"
+                type="date"
+                defaultValue={period.from}
+                required
+                aria-describedby="stock-period-hint"
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="stock-to">{e.to}</label>
+              <input
+                id="stock-to"
+                name="to"
+                type="date"
+                defaultValue={period.to}
+                required
+                aria-describedby="stock-period-hint"
+              />
+            </div>
+            <button className="btn btn-primary">{e.show}</button>
+            <p id="stock-period-hint" className="muted">
+              {d.salesHint}
+            </p>
+            {!requested.success && (params.from || params.to) && (
+              <p role="alert">{e.periodInvalid}</p>
+            )}
           </WorkingForm>
         }
         initial={initialTab}
@@ -358,7 +388,10 @@ export default async function Stock({
             id: 'sales',
             label: d.tabs.sales,
             content: (
-              <section className="card stock-panel" aria-label={d.salesPeriod}>
+              <section
+                className="card stock-panel stock-sales-panel"
+                aria-label={d.salesPeriod}
+              >
                 <FormHelpHeading
                   title={d.salesPeriod}
                   help={{
@@ -366,57 +399,40 @@ export default async function Stock({
                     steps: [d.salesHint, d.notice],
                   }}
                 />
-                <WorkingForm
-                  action="/intake/stock#stock-sales"
-                  className="stock-period"
-                >
-                  <input type="hidden" name="ownership" value={ownership} />
-                  {!requested.success && (params.from || params.to) && (
-                    <p role="alert">{e.periodInvalid}</p>
-                  )}
-                  <div className="field">
-                    <label htmlFor="stock-from">{e.from}</label>
-                    <input
-                      id="stock-from"
-                      name="from"
-                      type="date"
-                      defaultValue={period.from}
-                      required
-                    />
-                  </div>
-                  <div className="field">
-                    <label htmlFor="stock-to">{e.to}</label>
-                    <input
-                      id="stock-to"
-                      name="to"
-                      type="date"
-                      defaultValue={period.to}
-                      required
-                    />
-                  </div>
-                  <button className="btn btn-primary">{e.show}</button>
-                </WorkingForm>
                 {report && (
                   <>
                     <p className="muted">
-                      {e.showing} {report.from} – {report.to}
+                      {e.showing} {format.dateRange(report.from, report.to)}
                     </p>
                     <dl className="stock-metrics stock-sales-metrics">
                       <div>
                         <dt>{d.sold}</dt>
-                        <dd>{report.total.soldCount}</dd>
+                        <dd>{format.number(report.total.soldCount)}</dd>
                       </div>
                       <div>
                         <dt>{d.soldGross}</dt>
-                        <dd>{money(report.total.soldGrossOre)}</dd>
+                        <dd>
+                          {format.money(
+                            report.total.soldGrossOre,
+                            report.currency,
+                          )}
+                        </dd>
                       </div>
                       <div>
                         <dt>{d.margin}</dt>
-                        <dd>{money(report.total.marginOre)}</dd>
+                        <dd>
+                          {format.money(
+                            report.total.marginOre,
+                            report.currency,
+                          )}
+                        </dd>
                       </div>
                     </dl>
                     <details className="stock-details">
-                      <summary>{d.more}</summary>
+                      <summary>
+                        <ChevronDown aria-hidden="true" size={20} />
+                        {d.more}
+                      </summary>
                       <FormHelpHeading
                         title={d.metricsHeading}
                         help={{
@@ -435,12 +451,16 @@ export default async function Stock({
                         </div>
                       </dl>
                       <div className="stock-table-wrap">
-                        <table className="stock-table">
+                        <table
+                          className="stock-table stock-sales-table"
+                          role="table"
+                        >
                           <thead>
                             <tr>
                               <th>{d.category}</th>
                               <th>{d.sold}</th>
                               <th>{d.margin}</th>
+                              <th>{d.marginPercent}</th>
                               <th>{d.sellThrough}</th>
                               <th>{d.daysToSale}</th>
                               <th>{d.oldest}</th>
@@ -452,18 +472,27 @@ export default async function Stock({
                                 <th scope="row">
                                   {c.category || d.uncategorised}
                                 </th>
-                                <td data-label={d.sold}>{c.soldCount}</td>
+                                <td data-label={d.sold}>
+                                  {format.number(c.soldCount)}
+                                </td>
                                 <td data-label={d.margin}>
-                                  {money(c.marginOre)} · {pct(c.marginPercent)}
+                                  {format.money(c.marginOre, report.currency)}
+                                </td>
+                                <td data-label={d.marginPercent}>
+                                  {pct(c.marginPercent)}
                                 </td>
                                 <td data-label={d.sellThrough}>
                                   {pct(c.sellThroughPercent)}
                                 </td>
                                 <td data-label={d.daysToSale}>
-                                  {days(c.averageDaysToSale)}
+                                  {c.averageDaysToSale === null
+                                    ? '—'
+                                    : format.number(c.averageDaysToSale)}
                                 </td>
                                 <td data-label={d.oldest}>
-                                  {days(c.oldestAgeDays)}
+                                  {c.oldestAgeDays === null
+                                    ? '—'
+                                    : format.number(c.oldestAgeDays)}
                                 </td>
                               </tr>
                             ))}

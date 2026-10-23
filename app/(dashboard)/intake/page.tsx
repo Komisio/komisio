@@ -1,4 +1,5 @@
 import { WorkingForm } from '@/components/platform/working-form'
+import { ChevronRight } from 'lucide-react'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -159,7 +160,10 @@ export default async function Intake({
                   className="card intake-form intake-find-seller"
                   open={!selected.data}
                 >
-                  <summary>{d.find}</summary>
+                  <summary>
+                    <ChevronRight size={20} aria-hidden="true" />
+                    {d.find}
+                  </summary>
                   <WorkingForm action="/intake#seller-search" className="field">
                     <label htmlFor="seller-search">
                       {all.sellersList.search}
@@ -169,7 +173,8 @@ export default async function Intake({
                         key={q}
                         id="seller-search"
                         type="search"
-                        placeholder={all.sellersList.searchHint}
+                        placeholder={d.find}
+                        aria-describedby="seller-search-hint"
                         name="q"
                         defaultValue={q}
                         maxLength={120}
@@ -178,12 +183,27 @@ export default async function Intake({
                         {d.searchButton}
                       </button>
                     </div>
+                    <small id="seller-search-hint">
+                      {all.sellersList.searchHint}
+                    </small>
                   </WorkingForm>
-                  <p>
-                    <NewSellerLink className="text-link">
-                      {d.newSeller}
-                    </NewSellerLink>
-                  </p>
+                  {selected.data ? (
+                    <p>
+                      <NewSellerLink className="text-link">
+                        {d.newSeller}
+                      </NewSellerLink>
+                    </p>
+                  ) : (
+                    <div id="new-seller">
+                      {active.role !== 'readonly' ? (
+                        <NewSellerDisclosure title={d.newSeller}>
+                          {receivingPanel}
+                        </NewSellerDisclosure>
+                      ) : (
+                        <p>{d.readOnly}</p>
+                      )}
+                    </div>
+                  )}
                   {q && (
                     <p>
                       <Link className="text-link" href="/intake#seller-search">
@@ -214,8 +234,10 @@ export default async function Intake({
                             selected.data?.id === s.id ? 'true' : undefined
                           }
                         >
-                          <strong>{s.name}</strong>
-                          <small>{s.email || s.phone}</small>
+                          <strong title={s.name}>{s.name}</strong>
+                          <small title={s.email || s.phone || undefined}>
+                            {s.email || s.phone}
+                          </small>
                           <span>{d.choose}</span>
                         </Link>
                       </li>
@@ -246,92 +268,88 @@ export default async function Intake({
                     </nav>
                   )}
                 </details>
-                <div id="new-seller">
-                  {selected.data && agreement && (
-                    <details
-                      className="card intake-form agreement-at-intake"
-                      open={Boolean(
-                        !evidence &&
-                        (agreement.required_before_receipt ||
-                          policy.policy.agreementRequiredFor.includes(
-                            'bag_receipt',
-                          )),
-                      )}
-                    >
-                      <summary>{a.evidenceHeading}</summary>
-                      <p>
-                        <strong>
-                          {agreement.title} · {a.version} {agreement.version}
-                        </strong>
-                        <br />
-                        {a.language}:{' '}
-                        {
-                          localeNames[
-                            resolveLocale(undefined, agreement.language)
-                          ]
-                        }
-                      </p>
-                      <p>
-                        {agreement.required_before_receipt
-                          ? a.required
-                          : a.optional}
-                      </p>
-                      <details>
-                        <summary>{a.view}</summary>
-                        <div
-                          className="agreement-text"
-                          lang={intlLocale(agreement.language)}
-                        >
-                          {agreement.body}
-                        </div>
-                      </details>
-                      <p>{evidence ? a.available : a.missing}</p>
-                      {evidence ? (
+                {selected.data && (
+                  <div id="new-seller">
+                    {agreement && (
+                      <details
+                        className="card intake-form agreement-at-intake"
+                        open={Boolean(
+                          !evidence &&
+                          (agreement.required_before_receipt ||
+                            policy.policy.agreementRequiredFor.includes(
+                              'bag_receipt',
+                            )),
+                        )}
+                      >
+                        <summary>{a.evidenceHeading}</summary>
                         <p>
-                          {evidence.source === 'seller_portal'
-                            ? all.sellerAgreement.accepted
-                            : a.staffRecorded}
-                          :{' '}
-                          {new Date(evidence.recorded_at).toLocaleString(
-                            intlLocale(ctx.locale),
-                            { timeZone: 'Europe/Stockholm' },
-                          )}
+                          <strong>
+                            {agreement.title} · {a.version} {agreement.version}
+                          </strong>
                           <br />
-                          {evidence.reference} ·{' '}
+                          {a.language}:{' '}
                           {
                             localeNames[
-                              agreement.translations?.find(
-                                (t) => t.id === evidence.translation_id,
-                              )?.language ?? agreement.language
+                              resolveLocale(undefined, agreement.language)
                             ]
                           }
                         </p>
-                      ) : (
-                        active.role !== 'readonly' && (
-                          <EvidenceRecorder
-                            key={`${active.id}:${selected.data.id}:${agreement.id}`}
-                            tenantId={active.id}
-                            sellerId={selected.data.id}
-                            agreementId={agreement.id}
-                            agreement={agreement}
-                            d={all}
-                          />
-                        )
-                      )}
-                    </details>
-                  )}
-                  {active.role !== 'readonly' ? (
-                    selected.data ? (
+                        <p>
+                          {agreement.required_before_receipt
+                            ? a.required
+                            : a.optional}
+                        </p>
+                        <details>
+                          <summary>{a.view}</summary>
+                          <div
+                            className="agreement-text"
+                            lang={intlLocale(agreement.language)}
+                          >
+                            {agreement.body}
+                          </div>
+                        </details>
+                        <p>{evidence ? a.available : a.missing}</p>
+                        {evidence ? (
+                          <p>
+                            {evidence.source === 'seller_portal'
+                              ? all.sellerAgreement.accepted
+                              : a.staffRecorded}
+                            :{' '}
+                            {new Date(evidence.recorded_at).toLocaleString(
+                              intlLocale(ctx.locale),
+                              { timeZone: 'Europe/Stockholm' },
+                            )}
+                            <br />
+                            {evidence.reference} ·{' '}
+                            {
+                              localeNames[
+                                agreement.translations?.find(
+                                  (t) => t.id === evidence.translation_id,
+                                )?.language ?? agreement.language
+                              ]
+                            }
+                          </p>
+                        ) : (
+                          active.role !== 'readonly' && (
+                            <EvidenceRecorder
+                              key={`${active.id}:${selected.data.id}:${agreement.id}`}
+                              tenantId={active.id}
+                              sellerId={selected.data.id}
+                              agreementId={agreement.id}
+                              agreement={agreement}
+                              d={all}
+                            />
+                          )
+                        )}
+                      </details>
+                    )}
+                    {active.role !== 'readonly' ? (
                       receivingPanel
                     ) : (
-                      <NewSellerDisclosure title={d.newSeller}>
-                        {receivingPanel}
-                      </NewSellerDisclosure>
-                    )
-                  ) : (
-                    <p>{d.readOnly}</p>
-                  )}
-                </div>
+                      <p>{d.readOnly}</p>
+                    )}
+                  </div>
+                )}
               </div>
             ),
           },

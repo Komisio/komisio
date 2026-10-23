@@ -47,9 +47,7 @@ test('the counter is warned about an existing seller before a second record', as
       fullPage: true,
     })
     await page.setViewportSize({ width: 1280, height: 900 })
-    await page
-      .getByRole('link', { name: d.intake.newSeller, exact: true })
-      .click()
+    await page.locator('.intake-registration > summary').click()
     const form = page
       .getByRole('heading', { name: d.intake.newSeller })
       .locator('..')

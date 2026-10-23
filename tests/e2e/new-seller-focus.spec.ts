@@ -16,11 +16,9 @@ test('new seller navigation focuses the name without resetting typed fields', as
     await page.goto('/intake')
     const name = page.getByRole('textbox', { name: d.intake.name, exact: true })
     await expect(name).not.toBeVisible()
-    const link = page.getByRole('link', {
-      name: d.intake.newSeller,
-      exact: true,
-    })
-    await link.click()
+    const disclosure = page.locator('.intake-registration > summary')
+    await expect(disclosure).toHaveText(d.intake.newSeller)
+    await disclosure.click()
     await expect(name).toBeFocused()
     await expect(name).toBeInViewport()
     await page.keyboard.type('Synthetic new seller')
@@ -28,7 +26,9 @@ test('new seller navigation focuses the name without resetting typed fields', as
       .getByLabel(d.intake.email, { exact: true })
       .fill('new@example.test')
     await expect(name).not.toBeFocused()
-    await link.focus()
+    await disclosure.click()
+    await expect(name).not.toBeVisible()
+    await disclosure.focus()
     await page.keyboard.press('Enter')
     await expect(name).toBeFocused()
     await expect(name).toHaveValue('Synthetic new seller')
@@ -41,6 +41,14 @@ test('new seller navigation focuses the name without resetting typed fields', as
     await page.goto('/intake/quick')
     await page.goto('/intake#new-seller')
     await expect(name).toBeFocused()
+    await page.goto(`/intake?seller=${f.seller}`)
+    await page.locator('.intake-find-seller > summary').click()
+    await page
+      .getByRole('link', { name: d.intake.newSeller, exact: true })
+      .click()
+    await expect(page).toHaveURL('/intake#new-seller')
+    await expect(name).toBeFocused()
+    await expect(disclosure).toHaveCount(1)
   } finally {
     await f.close()
   }

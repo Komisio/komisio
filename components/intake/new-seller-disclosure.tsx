@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, type ReactNode } from 'react'
+import { ChevronRight } from 'lucide-react'
 
 /** Preserve existing registration deep links while keeping search first. */
 export function NewSellerDisclosure({
@@ -24,8 +25,20 @@ export function NewSellerDisclosure({
     return () => window.removeEventListener('hashchange', reveal)
   }, [])
   return (
-    <details ref={disclosure} className="intake-registration">
-      <summary>{title}</summary>
+    <details
+      ref={disclosure}
+      className="intake-registration"
+      onToggle={(event) => {
+        if (event.currentTarget.open)
+          event.currentTarget
+            .querySelector<HTMLInputElement>('#seller-name')
+            ?.focus()
+      }}
+    >
+      <summary>
+        <ChevronRight size={20} aria-hidden="true" />
+        {title}
+      </summary>
       {children}
     </details>
   )

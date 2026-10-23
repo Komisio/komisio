@@ -3013,7 +3013,10 @@
     "integrations": "Integraciones",
     "store": "Tienda",
     "more": "Más",
-    "sellersList": "Depositantes"
+    "sellersList": "Depositantes",
+    "collapseMenu": "Contraer el menú",
+    "expandMenu": "Expandir el menú",
+    "menuShortcut": "Ctrl+B o Cmd+B"
   },
   "planNotices": {
     "trial_week": {

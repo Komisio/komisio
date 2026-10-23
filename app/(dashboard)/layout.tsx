@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers'
 import { HelpSupportProvider } from '@/components/help/contact-support'
 import { HelpContentProvider } from '@/components/help/content-provider'
 import { helpCatalog } from '@/lib/help/content'
@@ -14,6 +15,10 @@ import { SignOut } from '@/components/platform/sign-out'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { PlanBanner } from '@/components/platform/plan-banner'
 import { isPlatformHost, readPlanStatus } from '@/lib/engine/plans'
+import {
+  SIDEBAR_COOKIE,
+  readSidebarCollapsed,
+} from '@/lib/platform/sidebar-preference'
 export default async function DashboardLayout({
   children,
 }: {
@@ -80,6 +85,9 @@ export default async function DashboardLayout({
               active={ctx.active!}
               email={ctx.user.email ?? ''}
               name={ctx.profile?.display_name ?? ''}
+              sidebarCollapsed={readSidebarCollapsed(
+                (await cookies()).get(SIDEBAR_COOKIE)?.value,
+              )}
             >
               <PlanBanner
                 status={plan}

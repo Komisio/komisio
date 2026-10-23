@@ -3013,7 +3013,10 @@
     "integrations": "Integrasjoner",
     "store": "Butikk",
     "more": "Mer",
-    "sellersList": "Innleverere"
+    "sellersList": "Innleverere",
+    "collapseMenu": "Skjul menyen",
+    "expandMenu": "Vis menyen",
+    "menuShortcut": "Ctrl+B eller Cmd+B"
   },
   "planNotices": {
     "trial_week": {

@@ -3013,7 +3013,10 @@
     "integrations": "Integrations",
     "store": "Store",
     "more": "More",
-    "sellersList": "Sellers"
+    "sellersList": "Sellers",
+    "collapseMenu": "Collapse menu",
+    "expandMenu": "Expand menu",
+    "menuShortcut": "Ctrl+B or Cmd+B"
   },
   "planNotices": {
     "trial_week": {

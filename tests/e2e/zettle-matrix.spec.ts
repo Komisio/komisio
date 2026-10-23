@@ -178,7 +178,17 @@ test('NOK export, decimal VAT entry, foreign receipt hold and all eight workspac
       await row.getByRole('link').click()
       await expect(
         page.getByRole('status').filter({ hasText: d.zettle.blocked }),
-      ).toHaveText(`${d.zettle.blocked}: currency. ${d.zettle.unsupported}`)
+      ).toHaveText(`${d.zettle.blocked}: ${d.zettle.blockedReasons.currency}`)
+      await expect(
+        page.getByText(d.zettle.unsupported, { exact: true }),
+      ).toBeVisible()
+      await expect(
+        page.locator('code').filter({ hasText: /^currency$/ }),
+      ).toBeHidden()
+      await page.getByText(d.zettle.diagnosticReason, { exact: true }).click()
+      await expect(
+        page.locator('code').filter({ hasText: /^currency$/ }),
+      ).toBeVisible()
       await expect(
         page.getByText(`${d.zettle.total}: 200.00 EUR`, { exact: true }),
       ).toBeVisible()

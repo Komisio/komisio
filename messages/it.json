@@ -2837,7 +2837,7 @@
     "matchHint": "Cerca l’articolo o scansiona l’etichetta. Scegli l’articolo corretto e salva l’abbinamento per ogni riga della ricevuta.",
     "open": "Apri scontrino",
     "done": "Salvato",
-    "unsupported": "Sconti, rimborsi, commissioni e quantità non unitarie richiedono una fase di integrazione successiva.",
+    "unsupported": "Controlla la ricevuta originale in PayPal POS prima di riprovare. I resi completati di articoli interi possono essere importati se corrispondono esattamente alla vendita originale. I resi parziali o ambigui richiedono una verifica.",
     "older": "Scontrini meno recenti",
     "newest": "Scontrini più recenti",
     "errors": {
@@ -3009,6 +3009,17 @@
       "unavailable": "Komisio non ha ancora attivato il collegamento a PayPal POS.",
       "appAuthFailed": "PayPal POS ha rifiutato la connessione dell’app Komisio. Contatta Komisio; non è necessario modificare l’account del negozio.",
       "authorizationFailed": "La connessione a PayPal POS non è stata completata. Riprova. Se il problema persiste, contatta Komisio."
+    },
+    "diagnosticReason": "Motivo tecnico",
+    "blockedReasons": {
+      "source": "La ricevuta non proviene da una vendita in cassa supportata.",
+      "refund": "Il reso non è stato riconosciuto come un reso completato di un articolo intero. Controlla la vendita originale e l’importo rimborsato.",
+      "currency": "La valuta della ricevuta è diversa da quella del negozio. Non è stata registrata alcuna conversione di valuta né vendita. Controlla valuta e negozio in PayPal POS.",
+      "discount": "La ricevuta contiene uno sconto che non può essere ripartito con certezza tra gli articoli.",
+      "service_charge": "La ricevuta contiene un costo di servizio non supportato.",
+      "quantity": "La ricevuta deve contenere una unità per riga di articolo.",
+      "product_type": "La ricevuta contiene un tipo di prodotto non supportato.",
+      "amount": "Il totale della ricevuta e le righe degli articoli non corrispondono. Controlla gli importi sulla ricevuta originale."
     }
   },
   "priceEvidence": {

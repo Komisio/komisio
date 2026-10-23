@@ -2837,7 +2837,7 @@
     "matchHint": "Busca el artículo o escanea su etiqueta. Elige el artículo correcto y guarda la vinculación para cada línea del recibo.",
     "open": "Abrir recibo",
     "done": "Guardado",
-    "unsupported": "Los descuentos, reembolsos, comisiones y cantidades no unitarias necesitan una parte posterior de la integración.",
+    "unsupported": "Comprueba el recibo original en PayPal POS antes de reintentar. Las devoluciones completadas de artículos enteros pueden importarse si coinciden exactamente con la venta original. Las devoluciones parciales o ambiguas requieren revisión.",
     "older": "Recibos más antiguos",
     "newest": "Recibos más recientes",
     "errors": {
@@ -3009,6 +3009,17 @@
       "unavailable": "Komisio aún no ha activado la conexión con PayPal POS.",
       "appAuthFailed": "PayPal POS rechazó la conexión de la aplicación Komisio. Contacta con Komisio; no necesitas cambiar la cuenta de la tienda.",
       "authorizationFailed": "No se completó la conexión con PayPal POS. Inténtalo de nuevo. Si el problema persiste, contacta con Komisio."
+    },
+    "diagnosticReason": "Motivo técnico",
+    "blockedReasons": {
+      "source": "El recibo no procede de una venta en caja compatible.",
+      "refund": "La devolución no pudo identificarse como una devolución completada de un artículo entero. Comprueba la venta original y el importe devuelto.",
+      "currency": "La moneda del recibo difiere de la de la tienda. No se ha registrado ninguna conversión de moneda ni venta. Comprueba la moneda y la tienda en PayPal POS.",
+      "discount": "El recibo incluye un descuento que no se puede distribuir con seguridad entre los artículos.",
+      "service_charge": "El recibo incluye un cargo por servicio no compatible.",
+      "quantity": "El recibo debe incluir una unidad por línea de artículo.",
+      "product_type": "El recibo incluye un tipo de producto no compatible.",
+      "amount": "El total del recibo y las líneas de artículos no coinciden. Comprueba los importes del recibo original."
     }
   },
   "priceEvidence": {

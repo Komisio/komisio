@@ -2837,7 +2837,7 @@
     "matchHint": "Etsi tuote tai skannaa sen etiketti. Valitse oikea tuote ja tallenna kohdistus jokaiselle kuittiriville.",
     "open": "Avaa kuitti",
     "done": "Tallennettu",
-    "unsupported": "Alennukset, hyvitykset, maksut ja muut kuin kappalemäärät vaativat myöhemmän integraatiovaiheen.",
+    "unsupported": "Tarkista alkuperäinen kuitti PayPal POSissa ennen uutta yritystä. Toteutuneet kokonaisten tuotteiden palautukset voidaan tuoda, kun ne vastaavat täsmälleen alkuperäistä myyntiä. Osittaiset tai epäselvät palautukset on selvitettävä.",
     "older": "Vanhemmat kuitit",
     "newest": "Uusimmat kuitit",
     "errors": {
@@ -3009,6 +3009,17 @@
       "unavailable": "Komisio ei ole vielä ottanut PayPal POS -yhteyttä käyttöön.",
       "appAuthFailed": "PayPal POS hylkäsi Komision sovellusyhteyden. Ota yhteyttä Komisioon; kaupan tiliä ei tarvitse muuttaa.",
       "authorizationFailed": "PayPal POS -yhteyden muodostaminen ei valmistunut. Yritä uudelleen. Jos ongelma jatkuu, ota yhteyttä Komisioon."
+    },
+    "diagnosticReason": "Tekninen syy",
+    "blockedReasons": {
+      "source": "Kuitti ei ole peräisin tuetusta kassamyynnistä.",
+      "refund": "Palautusta ei voitu yhdistää toteutuneeseen kokonaisen tuotteen palautukseen. Tarkista alkuperäinen myynti ja palautussumma.",
+      "currency": "Kuitin valuutta eroaa myymälän valuutasta. Valuuttamuunnosta tai myyntiä ei kirjattu. Tarkista valuutta ja myymälä PayPal POSissa.",
+      "discount": "Kuitti sisältää alennuksen, jota ei voida kohdistaa tuotteille luotettavasti.",
+      "service_charge": "Kuitti sisältää palvelumaksun, jota ei tueta.",
+      "quantity": "Kuitilla on oltava yksi kappale kullakin tuoterivillä.",
+      "product_type": "Kuitti sisältää tuotetyypin, jota ei tueta.",
+      "amount": "Kuitin loppusummaa ja tuoterivejä ei voida täsmäyttää. Tarkista alkuperäisen kuitin summat."
     }
   },
   "priceEvidence": {

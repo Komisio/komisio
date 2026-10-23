@@ -39,24 +39,23 @@ export const importLine = z.strictObject({
   description: z.string().max(120),
   priceOre: money,
 })
+export const blockedPurchaseReason = z.enum([
+  'source',
+  'refund',
+  'currency',
+  'discount',
+  'service_charge',
+  'quantity',
+  'product_type',
+  'amount',
+])
 export const importPurchase = z.strictObject({
   externalId: z.uuid(),
   refundOf: z.uuid().optional(),
   occurredAt: z.iso.datetime(),
   amountOre: money,
   currency: z.string().max(10),
-  blockedReason: z
-    .enum([
-      'source',
-      'refund',
-      'currency',
-      'discount',
-      'service_charge',
-      'quantity',
-      'product_type',
-      'amount',
-    ])
-    .nullable(),
+  blockedReason: blockedPurchaseReason.nullable(),
   lines: z.array(importLine).min(1).max(50),
 })
 export type ImportedPurchase = z.infer<typeof importPurchase>
@@ -88,7 +87,9 @@ export function mapZettlePurchase(
       lineNo: i + 1,
       reference: refs.length === 1 ? refs[0] : null,
       labelConflict: refs.length > 1,
-      description: (row.name ?? '').slice(0, 120),
+      description: Array.from(row.name ?? '')
+        .slice(0, 120)
+        .join(''),
       priceOre: row.unitPrice,
     }
   })

@@ -36,6 +36,7 @@ export function SaleForm({
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
+  const [note, setNote] = useState('')
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [externalId, setExternalId] = useState(() => crypto.randomUUID())
   const [query, setQuery] = useState(''),
@@ -54,7 +55,9 @@ export function SaleForm({
   const searchVersion = useRef(0),
     searchInput = useRef<HTMLInputElement>(null)
   const locked = action.busy || action.locked || action.needsReload
-  useUnsavedChanges(cart.length > 0 || action.locked ? leaveUnsaved : null)
+  useUnsavedChanges(
+    cart.length > 0 || note.trim() || action.locked ? leaveUnsaved : null,
+  )
   let total: bigint | null = 0n
   try {
     for (const item of cart)
@@ -117,6 +120,7 @@ export function SaleForm({
       tenantId,
       requestId,
       provider: 'manual',
+      note,
       externalId,
       occurredAt: new Date().toISOString(),
       currency,
@@ -125,6 +129,7 @@ export function SaleForm({
     if (id) {
       setSaved(id)
       setCart([])
+      setNote('')
       setResults([])
       setSearched(false)
       setQuery('')
@@ -260,6 +265,15 @@ export function SaleForm({
                   {total === null ? '—' : decimal(total)} {currency}
                 </strong>
               </p>
+              <label htmlFor="sale-note">{d.note}</label>
+              <textarea
+                id="sale-note"
+                value={note}
+                maxLength={500}
+                aria-describedby="sale-note-hint"
+                onChange={(event) => setNote(event.target.value)}
+              />
+              <small id="sale-note-hint">{d.noteHint}</small>
               <label className="intake-confirm">
                 <input type="checkbox" required />
                 {d.confirm}

@@ -61,6 +61,11 @@ export default async function Sale({
           {when(sale.occurred_at)} · {d.providers[sale.provider]} ·{' '}
           {d.statuses[sale.status]}
         </p>
+        {sale.staff_note && (
+          <p>
+            <strong>{d.note}:</strong> {sale.staff_note}
+          </p>
+        )}
         <details className="sale-reference">
           <summary>{d.reference}</summary>
           <p>{sale.external_id}</p>

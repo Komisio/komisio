@@ -20,6 +20,9 @@ test('item sale entry preselects current price and refuses a stale sold link', a
     await expect(page.locator('.sale-cart li')).toHaveCount(1)
     await expect(page.locator(`#price-${item}`)).toHaveValue('200.00')
     await page.locator(`#price-${item}`).fill('175.00')
+    await page
+      .getByLabel(d.sales.note, { exact: true })
+      .fill('Instagram MP-123')
     await page.getByLabel(d.sales.confirm, { exact: true }).check()
     await page
       .getByRole('button', { name: d.sales.record, exact: true })
@@ -29,6 +32,13 @@ test('item sale entry preselects current price and refuses a stale sold link', a
     ).toBeVisible()
     await page.getByRole('link', { name: d.sales.open, exact: true }).click()
     await expect(page).toHaveURL(/\/intake\/sales\/[a-f0-9-]+/)
+    await expect(
+      page.getByText('Instagram MP-123', { exact: false }),
+    ).toBeVisible()
+    await page.goto('/intake/sales')
+    await expect(page.locator('.sales-register-list')).toContainText(
+      'Instagram MP-123',
+    )
     const rows = (
       await f.db.query('select total_ore from sales where tenant_id=$1', [
         f.tenant,

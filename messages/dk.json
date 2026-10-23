@@ -1316,7 +1316,9 @@
     "helpLabel": "Om salg",
     "configureVat": "Åbn momsindstillinger",
     "markSold": "Markér som solgt",
-    "itemUnavailable": "Varen kan ikke sælges nu. Den kan allerede være solgt, eller salgsperioden kan være afsluttet."
+    "itemUnavailable": "Varen kan ikke sælges nu. Den kan allerede være solgt, eller salgsperioden kan være afsluttet.",
+    "note": "Note / betalingsreference (valgfrit)",
+    "noteHint": "Kun for butikken. For eksempel Instagram eller en MobilePay-reference. Højst 500 tegn."
   },
   "ledger": {
     "title": "Saldo og konto",

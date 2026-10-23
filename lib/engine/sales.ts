@@ -16,6 +16,7 @@ export const recordSaleCommand = z
     externalId: z.string().trim().min(1).max(200),
     occurredAt: z.iso.datetime({ offset: true }),
     currency: currencyCode,
+    note: z.string().trim().max(500).default(''),
     lines: z.array(saleLineInput).min(1).max(50),
   })
   .refine(
@@ -53,6 +54,7 @@ const saleRow = z.object({
   currency: currencyCode,
   occurred_at: z.iso.datetime({ offset: true }),
   total_ore: ore,
+  staff_note: z.string().max(500).default(''),
   status: z.enum(['completed', 'reversed']),
   recorded_at: z.iso.datetime({ offset: true }),
 })

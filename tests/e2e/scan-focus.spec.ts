@@ -193,6 +193,7 @@ test('reference lookup preserves navigation and is ready again on return', async
     await page.goBack()
     await expect(page).toHaveURL('/intake/open')
     await expect(input).toBeVisible()
+    await expect(input).toHaveValue('')
     if (touch)
       await page.getByRole('button', { name: d.scanFocus, exact: true }).tap()
     await expect(input).toBeFocused()

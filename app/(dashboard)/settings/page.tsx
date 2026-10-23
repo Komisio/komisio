@@ -182,16 +182,6 @@ export default async function Settings({
   const creditPrice = creditPriceForCountry(profile?.profile?.address.country)
   const chain =
     tab === 'store' ? await readChainOverview(ctx.client, active.id) : null
-  const events =
-    tab === 'store' && can(active.role, 'audit.read')
-      ? await ctx.client
-          .from('access_events')
-          .select('id,action,occurred_at')
-          .eq('tenant_id', active.id)
-          .order('occurred_at', { ascending: false })
-          .limit(12)
-      : { data: [], error: null }
-  if (events.error) throw events.error
   const pr = d.printing
   const jobDetails = (job: PrintJob) => (
     <PrintJobDetails
@@ -567,7 +557,7 @@ export default async function Settings({
         </section>
       )}
       {tab === 'store' && (
-        <div className="settings-grid">
+        <div className="settings-store">
           <section className="card">
             <h2>{d.tenantIdentity}</h2>
             {can(active.role, 'tenant.edit') ? (
@@ -590,28 +580,7 @@ export default async function Settings({
                   : d.chain.none}
               </p>
             )}
-            <PlanPanel
-              status={plan}
-              locale={ctx.locale}
-              d={d.plans}
-              actions={
-                plan && plan.billing && active.role === 'owner' ? (
-                  <BillingActions
-                    tenantId={active.id}
-                    status={plan}
-                    configured={stripeConfigured(process.env)}
-                    outcome={
-                      query.billing === 'success' ||
-                      query.billing === 'cancelled'
-                        ? query.billing
-                        : null
-                    }
-                    d={d.plans}
-                    purchaseLinks={purchaseLinks}
-                  />
-                ) : null
-              }
-            />
+
             <details className="settings-technical">
               <summary>{d.technicalDetails}</summary>
               <div className="read-details">
@@ -623,36 +592,27 @@ export default async function Settings({
               </div>
             </details>
           </section>
-          {can(active.role, 'audit.read') && (
-            <section className="card">
-              <h2>{d.audit}</h2>
-              <p>{d.auditHint}</p>
-              {events.data?.map((e) => (
-                <div key={e.id} className="audit-row">
-                  <span>
-                    {d.events[e.action as keyof typeof d.events] ?? (
-                      <details>
-                        <summary>{d.otherActivity}</summary>
-                        <code>{e.action}</code>
-                      </details>
-                    )}
-                  </span>
-                  <small>
-                    {new Date(e.occurred_at).toLocaleDateString(
-                      intlLocale(ctx.locale),
-                      {
-                        timeZone: 'Europe/Stockholm',
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      },
-                    )}
-                  </small>
-                </div>
-              ))}
-              {!events.data?.length && <p>{d.noAudit}</p>}
-            </section>
-          )}
+          <PlanPanel
+            status={plan}
+            locale={ctx.locale}
+            d={d.plans}
+            actions={
+              plan && plan.billing && active.role === 'owner' ? (
+                <BillingActions
+                  tenantId={active.id}
+                  status={plan}
+                  configured={stripeConfigured(process.env)}
+                  outcome={
+                    query.billing === 'success' || query.billing === 'cancelled'
+                      ? query.billing
+                      : null
+                  }
+                  d={d.plans}
+                  purchaseLinks={purchaseLinks}
+                />
+              ) : null
+            }
+          />
         </div>
       )}
       {hasLegal && (

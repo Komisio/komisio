@@ -4903,6 +4903,7 @@
     "former": "Tidligere medlem",
     "member": "Medlem uden visningsnavn",
     "system": "System",
+    "loadError": "Butikkens aktivitet kunne ikke indlæses. Prøv igen.",
     "empty": "Ingen hændelser matcher dit valg.",
     "unknown": "Anden butikshændelse",
     "details": "Tekniske referencer",

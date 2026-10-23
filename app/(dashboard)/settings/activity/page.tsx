@@ -33,7 +33,21 @@ export default async function StoreActivity({
       </section>
     )
   const q = parsed.data,
-    result = await readStoreActivity(ctx.client, active.id, q)
+    read = await readStoreActivity(ctx.client, active.id, q)
+  if (!read.ok)
+    return (
+      <section className="card">
+        <h1>{a.title}</h1>
+        <p role="alert">{a.loadError}</p>
+        <form action="/settings/activity" method="get">
+          {Object.entries(q).map(([name, value]) => (
+            <input key={name} type="hidden" name={name} value={value} />
+          ))}
+          <button className="btn">{d.retry}</button>
+        </form>
+      </section>
+    )
+  const result = read.data
   const pages = Math.max(1, Math.min(40001, Math.ceil(result.total / 25)))
   if (q.page > pages) notFound()
   const href = (page: number) => {

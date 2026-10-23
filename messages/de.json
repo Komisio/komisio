@@ -4909,6 +4909,7 @@
     "former": "Ehemaliges Mitglied",
     "member": "Mitglied ohne Anzeigenamen",
     "system": "System",
+    "loadError": "Die Geschäftsaktivitäten konnten nicht geladen werden. Bitte versuche es erneut.",
     "empty": "Keine Ereignisse entsprechen der Auswahl.",
     "unknown": "Anderes Geschäftsereignis",
     "details": "Technische Referenzen",

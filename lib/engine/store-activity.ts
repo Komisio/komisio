@@ -21,7 +21,14 @@ export const activityResult = z.object({
         actor_name: z.string().nullable(),
         actor_state: z.enum(['system', 'former', 'member']),
         action: z.string(),
-        target_id: z.uuid().nullable(),
+        // Audit targets include md5(...)::uuid references from integrations.
+        // PostgreSQL UUIDs need not carry RFC version/variant bits.
+        target_id: z
+          .string()
+          .regex(
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+          )
+          .nullable(),
         occurred_at: z.string(),
       }),
     )
@@ -43,7 +50,7 @@ export async function readStoreActivity(
   query: z.infer<typeof activityQuery>,
 ) {
   const q = activityQuery.parse(query)
-  const result = await client.rpc('store_activity', {
+  const args = {
     p_tenant: z.uuid().parse(tenant),
     p_from: q.from || null,
     p_to: q.to || null,
@@ -51,7 +58,19 @@ export async function readStoreActivity(
     p_action: q.kind || null,
     p_offset: (q.page - 1) * 25,
     p_limit: 25,
-  })
-  if (result.error) throw new Error('Unable to read store activity')
-  return activityResult.parse(result.data)
+  }
+  const failed = (reason: 'rpc' | 'response' | 'transport') => {
+    // Never log returned event data, names, IDs or database error details.
+    console.error('Store activity read failed', { reason })
+    return { ok: false as const }
+  }
+  try {
+    const result = await client.rpc('store_activity', args)
+    if (result.error) return failed('rpc')
+    const parsed = activityResult.safeParse(result.data)
+    if (!parsed.success) return failed('response')
+    return { ok: true as const, data: parsed.data }
+  } catch {
+    return failed('transport')
+  }
 }

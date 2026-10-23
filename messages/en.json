@@ -4903,6 +4903,7 @@
     "former": "Former member",
     "member": "Member without display name",
     "system": "System",
+    "loadError": "Could not load store activity. Please try again.",
     "empty": "No events match your selection.",
     "unknown": "Other store event",
     "details": "Technical references",

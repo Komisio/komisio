@@ -4903,6 +4903,7 @@
     "former": "Tidigare medlem",
     "member": "Medlem utan visningsnamn",
     "system": "System",
+    "loadError": "Kunde inte läsa butikens händelser. Försök igen.",
     "empty": "Inga händelser matchar ditt urval.",
     "unknown": "Annan butikshändelse",
     "details": "Tekniska referenser",

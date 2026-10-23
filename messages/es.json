@@ -4909,6 +4909,7 @@
     "former": "Antiguo miembro",
     "member": "Miembro sin nombre visible",
     "system": "Sistema",
+    "loadError": "No se pudo cargar la actividad de la tienda. Inténtalo de nuevo.",
     "empty": "Ningún evento coincide con tu selección.",
     "unknown": "Otro evento de tienda",
     "details": "Referencias técnicas",

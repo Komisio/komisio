@@ -2837,7 +2837,7 @@
     "matchHint": "Søk etter varen eller skann etiketten. Velg riktig vare og lagre koblingen for hver kvitteringslinje.",
     "open": "Åpne kvittering",
     "done": "Lagret",
-    "unsupported": "Rabatter, refusjoner, gebyrer og antall som ikke er hele enheter krever en senere integrasjonsdel.",
+    "unsupported": "Kontroller originalkvitteringen i PayPal POS før du prøver igjen. Fullførte returer av hele varer kan importeres når de samsvarer nøyaktig med det opprinnelige salget. Delvise eller uklare returer må undersøkes.",
     "older": "Eldre kvitteringer",
     "newest": "Nyeste kvitteringer",
     "errors": {
@@ -3009,6 +3009,17 @@
       "unavailable": "PayPal POS-tilkoblingen er ennå ikke aktivert av Komisio.",
       "appAuthFailed": "PayPal POS avviste Komisios apptilkobling. Kontakt Komisio; du trenger ikke å endre butikkens konto.",
       "authorizationFailed": "Tilkoblingen til PayPal POS ble ikke fullført. Prøv å koble til igjen. Kontakt Komisio hvis problemet vedvarer."
+    },
+    "diagnosticReason": "Teknisk årsak",
+    "blockedReasons": {
+      "source": "Kvitteringen kommer ikke fra et støttet kassesalg.",
+      "refund": "Returen kunne ikke kobles til en fullført retur av en hel vare. Kontroller det opprinnelige salget og returbeløpet.",
+      "currency": "Kvitteringens valuta er forskjellig fra butikkens. Ingen valutaomregning eller salg er registrert. Kontroller valuta og butikk i PayPal POS.",
+      "discount": "Kvitteringen inneholder en rabatt som ikke kan fordeles sikkert på varene.",
+      "service_charge": "Kvitteringen inneholder et tjenestegebyr som ikke støttes.",
+      "quantity": "Kvitteringen må gjelde ett eksemplar per varelinje.",
+      "product_type": "Kvitteringen inneholder en produkttype som ikke støttes.",
+      "amount": "Kvitteringens totalbeløp og varelinjer kan ikke avstemmes. Kontroller beløpene på originalkvitteringen."
     }
   },
   "priceEvidence": {

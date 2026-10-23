@@ -7,6 +7,7 @@ import { dictionary, intlLocale } from '@/lib/i18n'
 import { readZettlePurchase } from '@/lib/engine/zettle'
 import { ZettleAction } from '@/components/intake/zettle-action'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
+import { blockedPurchaseReason } from '@/extensions/zettle/purchase'
 export default async function Receipt({
   params,
 }: {
@@ -25,6 +26,7 @@ export default async function Receipt({
   })
   const editable =
     a.role !== 'readonly' && !r.saleId && !r.blocked_reason && !r.returnInfo
+  const reason = blockedPurchaseReason.safeParse(r.blocked_reason)
   return (
     <>
       <div className="page-heading">
@@ -57,9 +59,17 @@ export default async function Receipt({
           </p>
         </details>
         {r.blocked_reason && !r.returnInfo && (
-          <p role="status">
-            {d.blocked}: {r.blocked_reason}. {d.unsupported}
-          </p>
+          <>
+            <p role="status">
+              {d.blocked}:{' '}
+              {reason.success ? d.blockedReasons[reason.data] : d.held}
+            </p>
+            <p>{d.unsupported}</p>
+            <details className="sale-reference">
+              <summary>{d.diagnosticReason}</summary>
+              <code>{r.blocked_reason}</code>
+            </details>
+          </>
         )}
         {r.saleId && <p role="status">{d.recorded}</p>}
         {r.returnInfo?.returnIds && <p role="status">{d.returns.recorded}</p>}

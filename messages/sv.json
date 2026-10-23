@@ -2837,7 +2837,7 @@
     "matchHint": "Sök efter varan eller skanna etiketten. Välj rätt vara och spara matchningen för varje kvittorad.",
     "open": "Öppna kvitto",
     "done": "Sparat",
-    "unsupported": "Rabatter, returer, avgifter och antal andra än ett hanteras i en senare integrationsdel.",
+    "unsupported": "Kontrollera originalkvittot i PayPal POS innan du försöker igen. Genomförda returer av hela varor kan importeras när de matchar ursprungsförsäljningen exakt. Partiella eller oklara returer kräver utredning.",
     "older": "Äldre kvitton",
     "newest": "Senaste kvittona",
     "errors": {
@@ -3009,6 +3009,17 @@
       "unavailable": "PayPal POS-anslutningen är ännu inte aktiverad av Komisio.",
       "appAuthFailed": "PayPal POS nekade Komisios appanslutning. Kontakta Komisio; du behöver inte ändra butikens konto.",
       "authorizationFailed": "Anslutningen till PayPal POS slutfördes inte. Försök ansluta igen. Om felet kvarstår, kontakta Komisio."
+    },
+    "diagnosticReason": "Teknisk orsak",
+    "blockedReasons": {
+      "source": "Kvittot kommer inte från en kassaförsäljning som stöds.",
+      "refund": "Returen kunde inte matchas som en genomförd retur av en hel vara. Kontrollera ursprungsförsäljning och returbelopp.",
+      "currency": "Kvittots valuta skiljer sig från butikens. Ingen valutaomräkning eller försäljning har registrerats. Kontrollera valuta och butik i PayPal POS.",
+      "discount": "Kvittot innehåller en rabatt som inte kan fördelas säkert på varorna.",
+      "service_charge": "Kvittot innehåller en serviceavgift som inte stöds.",
+      "quantity": "Kvittot måste avse ett exemplar per varurad.",
+      "product_type": "Kvittot innehåller en produkttyp som inte stöds.",
+      "amount": "Kvittots totalbelopp och varurader kan inte stämmas av. Kontrollera beloppen i originalkvittot."
     }
   },
   "priceEvidence": {

@@ -2837,7 +2837,7 @@
     "matchHint": "Search for the item or scan its label. Choose the correct item and save the match for each receipt line.",
     "open": "Open receipt",
     "done": "Saved",
-    "unsupported": "Discounts, refunds, fees and non-unit quantities need a later integration slice.",
+    "unsupported": "Check the original receipt in PayPal POS before retrying. Completed whole-item refunds can be imported when they match the original sale exactly. Partial or ambiguous refunds need investigation.",
     "older": "Older receipts",
     "newest": "Newest receipts",
     "errors": {
@@ -3009,6 +3009,17 @@
       "unavailable": "The PayPal POS connection has not yet been enabled by Komisio.",
       "appAuthFailed": "PayPal POS rejected the Komisio app connection. Contact Komisio; you do not need to change the store account.",
       "authorizationFailed": "The PayPal POS connection was not completed. Try connecting again. If the problem persists, contact Komisio."
+    },
+    "diagnosticReason": "Technical reason",
+    "blockedReasons": {
+      "source": "The receipt is not from a supported point-of-sale transaction.",
+      "refund": "The refund could not be matched as a completed whole-item refund. Check the original sale and refund amount.",
+      "currency": "The receipt currency differs from the store currency. No currency conversion or sale was recorded. Check the currency and store in PayPal POS.",
+      "discount": "The receipt contains a discount that cannot be safely allocated to items.",
+      "service_charge": "The receipt contains an unsupported service charge.",
+      "quantity": "The receipt must contain one unit per item line.",
+      "product_type": "The receipt contains an unsupported product type.",
+      "amount": "The receipt total and item lines cannot be reconciled. Check the amounts on the original receipt."
     }
   },
   "priceEvidence": {

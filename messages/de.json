@@ -2837,7 +2837,7 @@
     "matchHint": "Suchen Sie den Artikel oder scannen Sie das Etikett. Wählen Sie den richtigen Artikel und speichern Sie die Zuordnung für jede Belegzeile.",
     "open": "Beleg öffnen",
     "done": "Gespeichert",
-    "unsupported": "Rabatte, Erstattungen, Gebühren und Mengen ungleich eins benötigen einen späteren Integrationsschritt.",
+    "unsupported": "Prüfe den Originalbeleg in PayPal POS vor einem erneuten Versuch. Abgeschlossene Rückgaben ganzer Artikel können importiert werden, wenn sie genau zum ursprünglichen Verkauf passen. Teilweise oder unklare Rückgaben müssen geprüft werden.",
     "older": "Ältere Belege",
     "newest": "Neueste Belege",
     "errors": {
@@ -3009,6 +3009,17 @@
       "unavailable": "Die PayPal POS-Verbindung wurde von Komisio noch nicht aktiviert.",
       "appAuthFailed": "PayPal POS hat die Komisio-App-Verbindung abgelehnt. Kontaktieren Sie Komisio; das Geschäftskonto muss nicht geändert werden.",
       "authorizationFailed": "Die Verbindung zu PayPal POS wurde nicht abgeschlossen. Versuchen Sie es erneut. Falls das Problem weiterhin besteht, kontaktieren Sie Komisio."
+    },
+    "diagnosticReason": "Technischer Grund",
+    "blockedReasons": {
+      "source": "Der Beleg stammt nicht aus einem unterstützten Kassenverkauf.",
+      "refund": "Die Rückgabe konnte keiner abgeschlossenen Rückgabe eines ganzen Artikels zugeordnet werden. Prüfe den ursprünglichen Verkauf und den Erstattungsbetrag.",
+      "currency": "Die Belegwährung weicht von der Ladenwährung ab. Es wurde weder eine Währungsumrechnung noch ein Verkauf erfasst. Prüfe Währung und Laden in PayPal POS.",
+      "discount": "Der Beleg enthält einen Rabatt, der den Artikeln nicht sicher zugeordnet werden kann.",
+      "service_charge": "Der Beleg enthält eine nicht unterstützte Servicegebühr.",
+      "quantity": "Der Beleg muss eine Einheit je Artikelzeile enthalten.",
+      "product_type": "Der Beleg enthält einen nicht unterstützten Produkttyp.",
+      "amount": "Belegsumme und Artikelzeilen lassen sich nicht abstimmen. Prüfe die Beträge auf dem Originalbeleg."
     }
   },
   "priceEvidence": {

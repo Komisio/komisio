@@ -5,8 +5,7 @@ import { platformContext } from '@/lib/platform/context'
 import { commandSchema, errorCode } from '@/lib/platform/validation'
 import { can } from '@/lib/platform/permissions'
 import { sendInvitationEmail } from '@/lib/platform/invitation-email'
-import { readStoreProfile } from '@/lib/engine/store-profile'
-import { emailLocale } from '@/lib/communications/locale'
+import { resolveSellerEmailLocale } from '@/lib/communications/locale'
 import { scheduleEvent } from '@/lib/events/webhook'
 import {
   readMarketingConsent,
@@ -173,12 +172,10 @@ export async function POST(request: Request) {
             invitationId: result.data,
             email: command.email,
             inviteUrl,
-            locale: emailLocale(
-              command.locale,
-              command.locale
-                ? undefined
-                : (await readStoreProfile(context.client, command.tenantId))
-                    .profile?.language,
+            locale: await resolveSellerEmailLocale(
+              context.client,
+              command.tenantId,
+              { language: command.locale },
             ),
           })
         : undefined

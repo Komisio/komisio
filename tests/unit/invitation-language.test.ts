@@ -6,6 +6,7 @@ vi.mock('@/lib/platform/invitation-email', () => ({
 }))
 import { POST } from '../../app/api/platform/route'
 import { emptyStoreProfile } from '../../lib/engine/store-profile'
+import { defaultStorePolicy } from '../../lib/engine/store-policy'
 import { locales, type Locale } from '../../lib/i18n'
 const tenant = '11111111-1111-4111-8111-111111111111'
 afterEach(() => {
@@ -58,9 +59,14 @@ it.each([...locales, undefined])(
     )
   },
 )
-it.each([undefined, 'dk'] as (Locale | undefined)[])(
-  'defaults to store language or English, never staff Italian',
-  async (language) => {
+it.each([
+  [undefined, undefined, 'en'],
+  [undefined, 'sv', 'sv'],
+  [undefined, 'dk', 'dk'],
+  ['fi', 'dk', 'fi'],
+] as [Locale | undefined, Locale | undefined, Locale][])(
+  'uses profile %s and store default %s as %s, never staff Italian',
+  async (language, fallback, expected) => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', 'http://localhost:3000')
     const rpc = vi.fn(async (name: string) => ({
       data:
@@ -71,7 +77,16 @@ it.each([undefined, 'dk'] as (Locale | undefined)[])(
               publishedAt: null,
               profile: language ? emptyStoreProfile(language) : null,
             }
-          : tenant,
+          : name === 'current_store_policy'
+            ? {
+                id: null,
+                version: 0,
+                policy: {
+                  ...defaultStorePolicy(),
+                  communicationLanguage: fallback,
+                },
+              }
+            : tenant,
       error: null,
     }))
     mocks.context.mockResolvedValue({
@@ -80,7 +95,7 @@ it.each([undefined, 'dk'] as (Locale | undefined)[])(
       locale: 'it',
     })
     mocks.send.mockResolvedValue('manual')
-    await POST(
+    const response = await POST(
       new Request('http://localhost:3000/api/platform', {
         method: 'POST',
         headers: { origin: 'http://localhost:3000' },
@@ -92,8 +107,9 @@ it.each([undefined, 'dk'] as (Locale | undefined)[])(
         }),
       }),
     )
+    expect(response.status).toBe(200)
     expect(mocks.send).toHaveBeenCalledWith(
-      expect.objectContaining({ locale: language ?? 'en' }),
+      expect.objectContaining({ locale: expected }),
     )
   },
 )

@@ -1260,7 +1260,9 @@
       "reviewHelp": "Prima di finalizzare il prezzo e le condizioni dell’articolo in accettazione.",
       "acceptanceHelp": "Prima di registrare l’articolo in magazzino per la vendita.",
       "more": "Informazioni sulle impostazioni"
-    }
+    },
+    "communicationLanguage": "Lingua predefinita dei messaggi",
+    "communicationLanguageHint": "Usata per le email ai venditori e come lingua predefinita degli inviti al personale quando il profilo del negozio non ha una lingua. Ha priorità la lingua del venditore, poi quella del profilo del negozio. La lingua del tuo menu non influisce sulle email."
   },
   "sellerTerms": {
     "title": "Condizioni del conferente",

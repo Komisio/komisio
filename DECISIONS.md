@@ -1141,7 +1141,7 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-20: #524 tests existing PayPal POS currency/VAT behavior without changing it. Workspace percentages and receipt amounts retain fixed decimals and ISO currency codes; surrounding labels follow locale. Emoji receipt truncation is tracked separately in #528.
 
-- 2026-10-20: #522 seller mail uses seller language, then store language, then English, with whole-template fallback and exact localized amounts. Staff invitations have an explicit language choice, defaulting to store language then English. Existing message history is unchanged.
+- 2026-10-20: #522 added eight-locale seller mail, whole-template fallback, exact localized amounts and explicit invitation language. Its original seller/store/English default is superseded by #611 on 2026-10-23. Existing message history stays unchanged.
 
 - 2026-10-20: Operator-configured legal links follow all eight product locales. Unset or invalid base URLs hide links. Document navigation adds no acceptance statement, checkbox or terms-version record; those require separately approved wording and decisions (#527).
 
@@ -1187,3 +1187,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-23: #604 renders canonical PostgreSQL audit target UUIDs regardless of version/variant bits, preserving hash-derived references. Failed activity reads show a translated retry state and log only a failure category. Identity, tenant, actor filters and audit permissions stay unchanged.
 - 2026-10-23: #592 separates Windows and Weblink setup with local per-user/store/printer checklists and labeled illustrations. Manual ticks never activate printing. USB uses the existing scoped single-use pairing; Weblink activation, held-job fences and unknown-result recovery are unchanged.
 - 2026-10-23: #606 keeps bag-receiving seller search full width with one seller per row and a single inline registration disclosure. Long names/contact use ellipsis without changing accessible text; selection, pagination, draft preservation and agreement checks stay unchanged.
+- 2026-10-23: #611 resolves seller mail from seller language, store profile, policy communicationLanguage, then English. Invitations use the same store default. Staff UI and AI item language never select mail language; incomplete templates fall back wholly to English. History stays immutable.

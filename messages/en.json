@@ -1260,7 +1260,9 @@
       "reviewHelp": "Before the item’s price and terms are finalized in reception.",
       "acceptanceHelp": "Before the item is registered in stock for sale.",
       "more": "About these settings"
-    }
+    },
+    "communicationLanguage": "Default message language",
+    "communicationLanguageHint": "Used for seller emails and the default staff invitation language when the store profile has no language. The seller’s preference takes priority, followed by the store profile language. Your own menu language does not affect emails."
   },
   "sellerTerms": {
     "title": "Seller terms",

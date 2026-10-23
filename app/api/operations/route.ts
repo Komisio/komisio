@@ -97,7 +97,6 @@ export async function POST(request: Request) {
           const sent = await sendSellerCommunication(ctx.client, {
             tenantId: c.data.tenantId,
             storeName: ctx.active.name,
-            locale: p.locale,
             requestId: c.data.operationId,
             sellerId: p.sellerId,
             kind: 'message',
@@ -127,7 +126,6 @@ export async function POST(request: Request) {
             {
               tenantId: c.data.tenantId,
               storeName: ctx.active.name,
-              locale: ctx.locale,
               policy: policy.policy,
             },
             facts,

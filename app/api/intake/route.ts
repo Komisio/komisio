@@ -223,7 +223,6 @@ export async function POST(request: Request) {
           {
             tenantId: parsed.data.tenantId,
             storeName: ctx.active.name,
-            locale: ctx.locale,
             policy: policy.policy,
           },
           await notificationsForIntake(ctx.client, parsed.data),
@@ -239,7 +238,6 @@ export async function POST(request: Request) {
           tenantId: parsed.data.tenantId,
           sellerId: String(result.data),
           storeName: ctx.active.name,
-          locale: ctx.locale,
           requestId: factCommunicationId('welcome', String(result.data)),
           kind: 'message',
           referenceId: null,

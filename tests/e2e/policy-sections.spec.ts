@@ -134,6 +134,9 @@ test('policy sections retain fields and reveal invalid controls before publishin
     await expect(
       page.getByLabel(d.storePolicy.itemLanguage, { exact: true }),
     ).toHaveValue('no')
+    // A second WebKit navigation can interrupt hydration after reload. Wait
+    // for the form's existing readiness guard before same-document navigation.
+    await expect(commission).toBeEnabled()
     // Same-document hash navigation reveals the nested field.
     await page.goto('/settings#policy-item-language')
     await expect(

@@ -12,7 +12,11 @@ export async function raceStorePolicy({ setup, sessions, tenant }) {
       .query('select publish_store_policy($1,$2,null,$3)', [
         tenant,
         randomUUID(),
-        { ...body, commissionRatePercent: 40 + i },
+        {
+          ...body,
+          commissionRatePercent: 40 + i,
+          communicationLanguage: i === 0 ? 'sv' : 'dk',
+        },
       ])
       .then(
         () => 'published',
@@ -44,7 +48,14 @@ export async function raceStorePolicy({ setup, sessions, tenant }) {
     ).rows[0].n,
     1,
   )
+  const winner = (
+    await sessions[0].c.query('select current_store_policy($1) p', [tenant])
+  ).rows[0].p.policy
+  assert.equal(
+    winner.communicationLanguage,
+    winner.commissionRatePercent === 40 ? 'sv' : 'dk',
+  )
   console.log(
-    'PASS: concurrent policy publications have one winner and one stale version; no overwritten terms.',
+    'PASS: concurrent policy publications have one winner and one stale version; terms and mail language belong to the same version.',
   )
 }

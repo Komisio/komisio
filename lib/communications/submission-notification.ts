@@ -1,9 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Locale } from '../i18n'
 import { factCommunicationId, sendSellerCommunication } from './dispatch'
 export async function notifySubmissionReview(
   client: SupabaseClient,
-  store: { tenantId: string; storeName: string; locale: Locale },
+  store: { tenantId: string; storeName: string },
   reviewId: string,
   manual = false,
 ) {

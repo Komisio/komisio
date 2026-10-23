@@ -22,6 +22,9 @@ for (const lost of [false, true])
       await f.commit()
       await page.setViewportSize({ width: 375, height: 812 })
       await page.goto('/settings?tab=printing')
+      await page
+        .getByRole('radio', { name: d.printing.setup.weblink, exact: false })
+        .check()
       const fold = page.locator('.printing-printers > details').filter({
         has: page.locator('summary').filter({ hasText: 'Managed Zebra' }),
       })

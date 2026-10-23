@@ -195,7 +195,6 @@ export function WeblinkSetup({ tenantId, d, reload, leaveUnsaved }: Common) {
           dirty.resetDirty(f)
       }}
     >
-      <p>{d.weblink.preparation}</p>
       <fieldset
         className="intake-fields"
         data-draft-readiness={!dirty.ready ? '' : undefined}

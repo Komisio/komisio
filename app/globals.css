@@ -1820,6 +1820,51 @@ button.text-link:hover:not(:disabled) {
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
+.settings-store {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+.settings-store > .card,
+.chain-panel,
+.chain-panel .field {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.chain-store-choices {
+  padding: 0;
+  border: 0;
+}
+.chain-store-choice {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.chain-store-choice input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+}
+.chain-add-store {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-block: 16px;
+}
+.chain-add-store .field {
+  flex: 1 1 220px;
+  margin: 0;
+}
+.chain-add-store select {
+  min-width: 0;
+  max-width: 100%;
+}
 .audit-row {
   display: flex;
   justify-content: space-between;
@@ -1827,6 +1872,110 @@ button.text-link:hover:not(:disabled) {
   padding: 12px 0;
   border-bottom: 1px solid var(--line);
   font-size: 12px;
+}
+.activity-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.activity-filters .field {
+  min-width: 0;
+  margin: 0;
+}
+.activity-filters .actions {
+  grid-column: 1 / -1;
+}
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.activity-list li {
+  display: grid;
+  gap: 6px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.activity-list time,
+.activity-list summary {
+  font-size: 0.875rem;
+}
+.activity-list dd {
+  margin-left: 0;
+}
+.printer-track-choice {
+  border: 0;
+  padding: 0;
+  margin: 0 0 24px;
+  min-width: 0;
+}
+.printer-track-choice > label {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-block: 8px;
+  cursor: pointer;
+}
+.printer-track-choice small,
+.printer-step-heading small {
+  display: block;
+  font-weight: normal;
+}
+.printer-track-choice input[type='radio'],
+.printer-checklist input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  min-height: 20px;
+  flex: 0 0 20px;
+  margin: 2px 0;
+  padding: 0;
+}
+.printer-checklist {
+  padding-left: 24px;
+}
+.printer-checklist > li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.printer-step-heading label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 44px;
+}
+.printer-step-heading summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.printer-step-help {
+  padding: 12px;
+  background: var(--paper);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+.printer-step-help figure {
+  margin: 16px 0;
+}
+.zebra-setup-illustration {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  gap: 16px;
+  width: 100%;
+}
+.zebra-setup-illustration svg {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin-inline: auto;
 }
 .audit-row:last-child {
   border: 0;

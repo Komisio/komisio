@@ -54,7 +54,7 @@ export function ChainPanel({
 
   if (!chain)
     return (
-      <form onSubmit={create}>
+      <form onSubmit={create} className="chain-panel">
         <p>{c.intro}</p>
         <div className="field">
           <label htmlFor="chain-name">{c.name}</label>
@@ -67,11 +67,12 @@ export function ChainPanel({
           />
         </div>
         {candidates.length > 0 && (
-          <fieldset className="field">
+          <fieldset className="field chain-store-choices">
             <legend>{c.includeStores}</legend>
             {candidates.map((t) => (
-              <label key={t.id} className="row">
-                <input type="checkbox" name="store" value={t.id} /> {t.name}
+              <label key={t.id} className="chain-store-choice">
+                <input type="checkbox" name="store" value={t.id} />
+                <span>{t.name}</span>
               </label>
             ))}
           </fieldset>
@@ -84,7 +85,7 @@ export function ChainPanel({
     )
 
   return (
-    <div>
+    <div className="chain-panel">
       <p>
         <strong>{chain.name}</strong> ·{' '}
         {c.storesInChain.replace('{count}', String(chain.stores.length))}
@@ -98,15 +99,17 @@ export function ChainPanel({
         ))}
       </ul>
       {candidates.length > 0 && (
-        <form onSubmit={join} className="row">
-          <label htmlFor="chain-store">{c.addStore}</label>
-          <select id="chain-store" name="store" required>
-            {candidates.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
+        <form onSubmit={join} className="chain-add-store">
+          <div className="field">
+            <label htmlFor="chain-store">{c.addStore}</label>
+            <select id="chain-store" name="store" required>
+              {candidates.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <Button variant="secondary" disabled={action.busy}>
             {c.add}
           </Button>

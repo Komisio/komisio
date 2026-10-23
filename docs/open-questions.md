@@ -4,6 +4,10 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Zebra setup illustrations (#592, resolved 2026-10-23): the owner approves
+clearly labeled original illustrations until current iPad screenshots are
+available. These explain the steps and do not establish hardware verification.
+
 Account email language (#526, resolved 2026-10-20): the owner specifies all eight
 languages and a user-session Auth metadata mirror when account language is saved.
 Frozen activation snapshots take priority; otherwise saved product language,

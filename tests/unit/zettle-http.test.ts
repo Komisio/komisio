@@ -82,20 +82,33 @@ it.each([
   expect(mapZettlePurchase(purchase, 'NOK').lines[0].description).toBe(name)
 })
 
-// Export validation already counts code points; receipt truncation is tracked in #528.
+// Both export validation and receipt truncation count Unicode code points.
 it('accepts a SQL-produced title of 120 code points ending in emoji', () => {
   expect(
     catalogProduct.safeParse({ ...product, name: 'a'.repeat(119) + '🧥' })
       .success,
   ).toBe(true)
 })
-it.fails(
-  'does not split a receipt description surrogate pair at the boundary',
-  () => {
+it('does not split a receipt description surrogate pair at the boundary', () => {
+  const purchase = matrixPurchase('NOK')
+  purchase.products[0].name = 'a'.repeat(119) + '🧥'
+  expect(mapZettlePurchase(purchase, 'NOK').lines[0].description).toBe(
+    purchase.products[0].name,
+  )
+})
+it.each(['a'.repeat(119) + '🧥extra', '🧥'.repeat(121), 'é'.repeat(121)])(
+  'truncates receipt descriptions at 120 complete code points: %s',
+  (name) => {
     const purchase = matrixPurchase('NOK')
-    purchase.products[0].name = 'a'.repeat(119) + '🧥'
-    expect(mapZettlePurchase(purchase, 'NOK').lines[0].description).toBe(
-      purchase.products[0].name,
+    purchase.products[0].name = name
+    const result = mapZettlePurchase(purchase, 'NOK')
+    expect(result.lines[0].description).toBe(
+      Array.from(name).slice(0, 120).join(''),
+    )
+    expect(Array.from(result.lines[0].description)).toHaveLength(120)
+    expect(result.lines[0].description.isWellFormed()).toBe(true)
+    expect(JSON.parse(JSON.stringify(result)).lines[0].description).toBe(
+      result.lines[0].description,
     )
   },
 )

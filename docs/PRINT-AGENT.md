@@ -1,7 +1,15 @@
 # Komisio Print (the local print agent)
 
-For the separate Linux Weblink pilot, see [Weblink operations](PRINT-WEBLINK.md).
-It is under hardware verification and is not generally available.
+For direct printer connections without Windows, see [Weblink operations](PRINT-WEBLINK.md).
+The settings page offers separate Windows and Weblink setup tracks. Weblink
+availability depends on the operator's gateway configuration and feature flag.
+
+Choose Windows under Settings → Printers and labels, then follow Installation.
+The PC must remain on while printing. Network printers use their local address;
+USB printers use an exact local Windows queue name and the Zebra driver. Both
+now use the same owner/admin-created, single-use 15-minute pairing code.
+Install `install.cmd` as administrator and verify the device contact time.
+Checklist ticks are browser-local observations, never commands or print receipts.
 
 ## Weblink dispatch journal (development only)
 

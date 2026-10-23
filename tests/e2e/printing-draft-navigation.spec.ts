@@ -26,6 +26,10 @@ for (const kind of ['printer', 'dimensions'] as const) {
       await page.goto(
         `/settings?tab=printing${kind === 'dimensions' ? '#printing-labels' : ''}`,
       )
+      if (kind === 'printer')
+        await page
+          .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+          .check()
       if (kind === 'dimensions')
         await page.locator('.label-formats-fold > summary').click()
       const field =
@@ -76,6 +80,9 @@ test('saving one printing form preserves another draft and establishes the confi
     ])
     await f.commit()
     await page.goto('/settings?tab=printing')
+    await page
+      .getByRole('radio', { name: d.printing.setup.windows, exact: false })
+      .check()
     await page
       .locator('summary')
       .filter({ hasText: 'Synthetic existing printer' })

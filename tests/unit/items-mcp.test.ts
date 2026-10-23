@@ -74,7 +74,7 @@ it('fails closed on prices that cannot be represented exactly', async () => {
   })
   await expect(findItemsTool(client, config, {})).rejects.toThrow()
 })
-it('omits free-text reasons and event details from the item summary', async () => {
+it('omits price reasons and private event details from the item summary', async () => {
   vi.mocked(readItem).mockResolvedValue({
     item: {
       id,
@@ -92,7 +92,7 @@ it('omits free-text reasons and event details from the item summary', async () =
       {
         id,
         price_ore: 25000,
-        reason: 'PRIVATE REASON',
+        reason: 'manual',
         set_at: '2026-09-14T10:00:00+00:00',
       },
     ],
@@ -108,6 +108,7 @@ it('omits free-text reasons and event details from the item summary', async () =
   const r = await readItemSummaryTool(client, config, { itemId: id })
   expect(JSON.stringify(r)).not.toContain('PRIVATE')
   expect(r.prices[0].priceOre).toBe(25000)
+  expect(r.prices[0]).not.toHaveProperty('reason')
   expect(r.events[0].kind).toBe('accepted')
   vi.mocked(readItem).mockResolvedValue(null)
   await expect(

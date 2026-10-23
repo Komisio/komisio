@@ -1,4 +1,5 @@
 import { WorkingForm } from '@/components/platform/working-form'
+import { ScanFocusInput } from '@/components/platform/scan-focus'
 import { ChevronRight } from 'lucide-react'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -169,7 +170,9 @@ export default async function Intake({
                       {all.sellersList.search}
                     </label>
                     <div className="row">
-                      <input
+                      <ScanFocusInput
+                        focusLabel={all.scanFocus}
+                        contextLabel={d.title}
                         key={q}
                         id="seller-search"
                         type="search"

@@ -9121,6 +9121,29 @@ button.text-link:hover:not(:disabled) {
 .stock-empty {
   margin-bottom: 1.5rem;
 }
+.scan-focus-field {
+  flex: 1;
+  min-width: 0;
+}
+.scan-focus-field input {
+  width: 100%;
+  min-width: 0;
+}
+.scan-focus-field + button {
+  align-self: flex-start;
+}
+.scan-focus-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  margin-top: 0.5rem;
+}
+@media (pointer: fine) {
+  .scan-focus-button {
+    display: none;
+  }
+}
 .stock-overview .stock-report-filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));

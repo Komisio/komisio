@@ -1,4 +1,5 @@
 'use client'
+import { ScanFocusButton, useScanFocus } from '@/components/platform/scan-focus'
 import { CreateItemType } from './create-item-type'
 import { useWorkActivity } from '@/components/platform/work-activity'
 import { ReceivingPanel } from './receiving-panel'
@@ -167,6 +168,7 @@ export function QuickReception({
   canManageTypes = false,
   groups = [],
   lang,
+  scanFocusLabel,
   d,
   bagId,
   sellerForms,
@@ -182,6 +184,7 @@ export function QuickReception({
   canManageTypes?: boolean
   groups?: { id: string; name: string }[]
   lang: string
+  scanFocusLabel: string
   d: Dictionary['quickIntake']
   bagId?: string
   sellerForms?: {
@@ -329,19 +332,26 @@ export function QuickReception({
       if (photo.current) URL.revokeObjectURL(photo.current.previewUrl)
     }
   }, [])
+  const descriptionInput = useRef<HTMLTextAreaElement>(null)
+  const itemScan = useScanFocus(
+    descriptionInput,
+    ready && stage === 'idle' && !!seller && !done && !uncertain,
+  )
+  const { focusNext: focusNextDescription } = itemScan
   const fileInput = useRef<HTMLInputElement>(null)
   const itemHeading = useRef<HTMLHeadingElement>(null)
   const doneHeading = useRef<HTMLHeadingElement>(null)
   const focusNextItem = useRef(false)
   useEffect(() => {
     // Only an explicit seller selection or Next item moves the user's place.
-    // Focus the heading so mobile users can choose photo or typing themselves.
+    // A touch session that already used the field can continue typing/scanning.
     if (!focusNextItem.current || !seller || done || !itemHeading.current)
       return
     focusNextItem.current = false
-    itemHeading.current.focus({ preventScroll: true })
+    if (!focusNextDescription())
+      itemHeading.current.focus({ preventScroll: true })
     itemHeading.current.scrollIntoView({ block: 'start', behavior: 'instant' })
-  }, [seller, done])
+  }, [seller, done, focusNextDescription])
   useEffect(() => {
     // "Ready for the shelf" unmounts the button that had focus. Move focus to
     // the confirmation heading so completion is announced and the next Tab
@@ -772,15 +782,19 @@ export function QuickReception({
           />
         ) : key === 'description' ? (
           <textarea
+            ref={descriptionInput}
             id={id}
             value={facts[key] ?? ''}
             rows={3}
             maxLength={1000}
             required
             aria-invalid={invalidDescription || undefined}
-            aria-describedby={
-              invalidDescription ? 'quick-description-error' : undefined
-            }
+            aria-describedby={[
+              itemScan.contextId,
+              invalidDescription ? 'quick-description-error' : null,
+            ]
+              .filter(Boolean)
+              .join(' ')}
             disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.value)}
           />
@@ -793,6 +807,14 @@ export function QuickReception({
             required={key === 'description'}
             disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.value)}
+          />
+        )}
+        {key === 'description' && (
+          <ScanFocusButton
+            scan={itemScan}
+            label={scanFocusLabel}
+            context={d.garment}
+            disabled={busy || !!done || uncertain}
           />
         )}
         {key === 'description' && invalidDescription && (
@@ -912,17 +934,19 @@ export function QuickReception({
                     )}
                   </div>
                   <QuickSellerPicker
+                    focusLabel={scanFocusLabel}
                     tenantId={tenantId}
                     sellers={sellers}
                     total={sellersTotal}
                     onSelect={(selected) => {
                       if (!confirmNavigation()) return
                       setSeller(selected)
-                      requestAnimationFrame(() =>
-                        document
-                          .getElementById('quick-selected-seller')
-                          ?.focus(),
-                      )
+                      requestAnimationFrame(() => {
+                        if (!window.matchMedia('(pointer: fine)').matches)
+                          document
+                            .getElementById('quick-selected-seller')
+                            ?.focus()
+                      })
                     }}
                     d={d}
                   />

@@ -4970,5 +4970,6 @@
       "tenant": "Butikk",
       "zettle": "PayPal POS"
     }
-  }
+  },
+  "scanFocus": "Skann / skriv"
 }

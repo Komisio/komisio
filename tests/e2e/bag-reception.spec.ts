@@ -74,7 +74,8 @@ test('bag reception saves one item at a time with optional photo and inherited s
     await expect(
       page.getByLabel(d.quickIntake.description, { exact: true }),
     ).toHaveValue('')
-    await expect(page.locator('.quick-item h2')).toBeFocused()
+    // Explicit Next item restores the description used for the previous item.
+    await expect(page.locator('#quick-description')).toBeFocused()
     await expect(page.locator('.quick-item h2')).toBeInViewport()
     await page.screenshot({
       path: test.info().outputPath('next-item-mobile.png'),

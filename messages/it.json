@@ -4970,5 +4970,6 @@
       "tenant": "Negozio",
       "zettle": "PayPal POS"
     }
-  }
+  },
+  "scanFocus": "Scansiona / scrivi"
 }

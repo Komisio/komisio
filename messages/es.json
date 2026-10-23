@@ -4976,5 +4976,6 @@
       "tenant": "Tienda",
       "zettle": "PayPal POS"
     }
-  }
+  },
+  "scanFocus": "Escanear / escribir"
 }

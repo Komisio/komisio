@@ -39,7 +39,12 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
       const links = buildNavigation(d, {
         intakeEnabled: true,
         host: false,
+        audit: true,
       }).flatMap((g) => g.links)
+      expect(links).toContainEqual(
+        expect.objectContaining({ path: '/settings/activity' }),
+      )
+      await expect(page.locator('main a')).toHaveCount(links.length + 1)
       for (const link of [...links, { path: '/account', label: d.account }]) {
         const target = page.locator(`main a[href="${link.path}"]`)
         await expect(target).toHaveAccessibleName(link.label)
@@ -61,9 +66,9 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
           .getByRole('main')
           .evaluate((main) => main.getBoundingClientRect().height)
         console.log('menu content height at 320px:', height)
-        // Purchases and item import each add one 44px destination.
+        // Purchases, item import and owner/admin activity each add a 44px destination.
         // Keep the per-destination density and accessible target size unchanged.
-        expect(height).toBeLessThan(1220 + 2 * 44)
+        expect(height).toBeLessThan(1220 + 3 * 44)
       }
       await page.screenshot({
         path: info.outputPath(`menu-${locale}.png`),

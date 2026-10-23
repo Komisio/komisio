@@ -37,8 +37,16 @@ test('Zebra shortcuts queue the selected label from item and browser-label pages
         )
       }
       await page.goto(path)
-      if (index === 0)
+      if (index === 0) {
         await page.locator('.item-print-options > summary').click()
+        // Safari sends focus to the focusable ancestor between pointerdown and
+        // click on a button. The menu must survive that event sequence.
+        await page.locator('main').focus()
+        await expect(page.locator('.item-print-options')).toHaveAttribute(
+          'open',
+          '',
+        )
+      }
       const trigger = page.getByRole('button', {
         name: d.printing.zebraPrint,
         exact: true,

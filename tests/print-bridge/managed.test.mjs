@@ -236,6 +236,58 @@ test(
       return socket
     }
     const devices = [...credentials.values()]
+    // Like Link-OS, first ask without preemptive Basic credentials. The gateway
+    // must preserve the challenge without opening a channel or dispatching work.
+    for (const record of devices) {
+      const handshake = (headers = {}) =>
+        new Promise((resolve, reject) => {
+          const req = request(
+            {
+              hostname: '127.0.0.1',
+              port: f.address().port,
+              path: `/weblink/${record.deviceId}`,
+              headers: {
+                Host: f.config.host,
+                'X-Forwarded-Proto': 'https',
+                'X-Komisio-Bridge': f.config.proxySecret,
+                Connection: 'Upgrade',
+                Upgrade: 'websocket',
+                'Sec-WebSocket-Version': '13',
+                'Sec-WebSocket-Key': randomBytes(16).toString('base64'),
+                'Sec-WebSocket-Protocol': MAIN_PROTOCOL,
+                ...headers,
+              },
+            },
+            (res) => {
+              res.resume()
+              resolve(res)
+            },
+          )
+          req.on('error', reject)
+          req.end()
+        })
+      await assert.rejects(handshake({ 'X-Komisio-Bridge': 'wrong' }))
+      await assert.rejects(handshake({ 'X-Forwarded-Proto': 'http' }))
+      await assert.rejects(
+        handshake({ Authorization: ['Basic one', 'Basic two'] }),
+      )
+      const response = await handshake()
+      assert.equal(response.statusCode, 401)
+      assert.equal(
+        response.headers['www-authenticate'],
+        'Basic realm="Komisio print"',
+      )
+      const health = await fetch(
+        `http://127.0.0.1:${services.get(record.deviceId).address.port}/healthz`,
+      ).then((r) => r.json())
+      assert.equal(health.connected, false)
+      // A worker-generated challenge must survive the gateway as well.
+      const rejected = await handshake({
+        Authorization: `Basic ${Buffer.from(`${record.deviceId}:${record.password}`).toString('base64')}`,
+        'Sec-WebSocket-Protocol': 'unsupported',
+      })
+      assert.equal(rejected.statusCode, 401)
+    }
     await assert.rejects(connect(devices[0].deviceId, devices[1].password))
     await assert.rejects(connect(devices[1].deviceId, devices[0].password))
     const outputs = new Map()

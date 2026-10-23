@@ -257,14 +257,17 @@ export async function createManagedWeblink({
       await checkpoint.close()
     }
   }
-  function proxyAllowed(req) {
+  function proxyAllowed(req, challenge = false) {
     const names = req.rawHeaders
       .filter((_value, index) => index % 2 === 0)
       .map((name) => name.toLowerCase())
     return (
-      ['host', 'x-forwarded-proto', 'x-komisio-bridge', 'authorization'].every(
+      ['host', 'x-forwarded-proto', 'x-komisio-bridge'].every(
         (name) => names.filter((n) => n === name).length === 1,
       ) &&
+      (challenge
+        ? names.filter((name) => name === 'authorization').length <= 1
+        : names.filter((name) => name === 'authorization').length === 1) &&
       names.filter((name) => name === 'sec-websocket-protocol').length <= 1 &&
       req.headers.host === host &&
       req.headers['x-forwarded-proto'] === 'https' &&
@@ -333,7 +336,14 @@ export async function createManagedWeblink({
   server.on('upgrade', (req, socket, head) => {
     const match = /^\/weblink\/([0-9a-f-]{36})$/.exec(req.url ?? '')
     const worker = match && workers.get(match[1])
-    if (closing || !worker || !proxyAllowed(req)) return socket.destroy()
+    if (closing || !worker || !proxyAllowed(req, true)) return socket.destroy()
+    const challenge = () =>
+      socket.end(
+        'HTTP/1.1 401 Unauthorized\r\nWWW-Authenticate: Basic realm="Komisio print"\r\nContent-Length: 0\r\nConnection: close\r\n\r\n',
+      )
+    // Firmware waits for the Basic challenge before sending its credentials.
+    // This response opens no channel and never reaches the queue worker.
+    if (!req.headers.authorization) return challenge()
     const upstream = proxyRequest({
       host: '127.0.0.1',
       port: worker.service.address.port,
@@ -350,7 +360,8 @@ export async function createManagedWeblink({
     upstream.on('error', () => socket.destroy())
     upstream.on('response', (response) => {
       response.resume()
-      socket.destroy()
+      if (response.statusCode === 401) challenge()
+      else socket.destroy()
     })
     upstream.on('upgrade', (response, remote, remoteHead) => {
       if (

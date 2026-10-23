@@ -66,7 +66,10 @@ export function ItemDetailWorkspace({
       if (
         event.target instanceof Node &&
         menu.current &&
-        !menu.current.contains(event.target)
+        !menu.current.contains(event.target) &&
+        // WebKit focuses the surrounding focusable <main> when a menu button
+        // is tapped. Hiding the menu then removes the button before its click.
+        !(event.type === 'focusin' && event.target.contains(menu.current))
       )
         menu.current.open = false
     }

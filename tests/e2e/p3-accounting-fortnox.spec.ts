@@ -209,7 +209,9 @@ test('accounting page shows the Fortnox connection state and records a refused s
         await page.goto('/intake/accounting?view=accounts')
         await expect(page.locator('.accounting-ai')).toHaveCount(0)
         await expect(page.locator('#account-map input:enabled')).toHaveCount(0)
-        await expect(page.locator('#account-map input').first()).toBeDisabled()
+        await expect(
+          page.locator('#account-map input[name="account:grossOre"]'),
+        ).toBeDisabled()
       }
       await page.goto('/intake/accounting?view=exports')
     }

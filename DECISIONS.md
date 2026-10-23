@@ -1179,3 +1179,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-23: #571 freezes payment method on sales and per-method totals in new day closes. Legacy/imported sales without verified tender evidence stay unspecified. Explicit methods need mapped receipt/refund accounts; existing frozen sales, closes and exports are not rewritten.
 - 2026-10-23: #571 explicit per-method exclusion omits the entire sale's export contributions, including commission, VAT and seller liability, plus its return contributions. The store books these externally. Seller ledger, payouts and independently mapped consignment fees remain unchanged.
+- 2026-10-23: Weblink gateways preserve the Basic authentication challenge for printer firmware; no unauthenticated channel or queue access is granted. Item print menus ignore ancestor focus changes during Safari taps, preserving the mounted dialog and exact-retry behavior.

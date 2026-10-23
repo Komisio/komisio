@@ -1,3 +1,4 @@
+import { ItemHistory } from '@/components/intake/item-history'
 import { searchSaleItems } from '@/lib/engine/sale-search'
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
 import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
@@ -308,56 +309,13 @@ export default async function Item({
           </>
         }
         history={
-          <>
-            <details className="card intake-form item-detail-section">
-              <summary>
-                {d.prices} <span>({prices.length})</span>
-              </summary>
-              <ul className="item-detail-history">
-                {prices.map((p) => (
-                  <li key={p.id}>
-                    <div className="item-actor-line">
-                      <strong>
-                        {formatOre(p.price_ore)} {currency}
-                      </strong>
-                      <ActorSignature
-                        actor={p.actor}
-                        unknown={d.unknownActor}
-                      />
-                    </div>
-                    <span>
-                      {d.priceReasons[
-                        p.reason as keyof typeof d.priceReasons
-                      ] ?? p.reason}
-                    </span>
-                    <EventTime value={p.set_at} locale={ctx.locale} />
-                  </li>
-                ))}
-              </ul>
-            </details>
-            <details className="card intake-form item-detail-section">
-              <summary>
-                {d.events} <span>({events.length})</span>
-              </summary>
-              <ul className="item-detail-history">
-                {events.map((e) => (
-                  <li key={e.id}>
-                    <div className="item-actor-line">
-                      <strong>
-                        {d.eventKinds[e.kind as keyof typeof d.eventKinds] ??
-                          e.kind}
-                      </strong>
-                      <ActorSignature
-                        actor={e.actor}
-                        unknown={d.unknownActor}
-                      />
-                    </div>
-                    <EventTime value={e.occurred_at} locale={ctx.locale} />
-                  </li>
-                ))}
-              </ul>
-            </details>
-          </>
+          <ItemHistory
+            prices={prices}
+            events={events}
+            currency={currency}
+            locale={ctx.locale}
+            d={d}
+          />
         }
       />
     </>

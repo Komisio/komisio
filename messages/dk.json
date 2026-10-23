@@ -1224,12 +1224,18 @@
     },
     "priceReasons": {
       "accepted": "accepteret pris",
-      "manual": "Manuel prisændring"
+      "manual": "Manuel prisændring",
+      "markdown": "Prisnedsættelse"
     },
     "eventKinds": {
       "accepted": "Accepteret",
       "price_set": "Pris sat",
-      "provenance": "Oprindelse registreret"
+      "provenance": "Oprindelse registreret",
+      "sold": "Solgt",
+      "returned": "Returneret",
+      "markdown_applied": "Prisnedsættelse gennemført",
+      "period_extended": "Salgsperiode forlænget",
+      "period_ended": "Salgsperiode afsluttet"
     },
     "clearFilters": "Ryd filtre",
     "showingRange": "Viser {from}–{to} af {total} varer",

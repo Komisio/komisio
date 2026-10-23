@@ -1224,12 +1224,18 @@
     },
     "priceReasons": {
       "accepted": "akseptert pris",
-      "manual": "Manuell prisendring"
+      "manual": "Manuell prisendring",
+      "markdown": "Prisnedsettelse"
     },
     "eventKinds": {
       "accepted": "Tatt imot",
       "price_set": "Pris satt",
-      "provenance": "Opphav registrert"
+      "provenance": "Opphav registrert",
+      "sold": "Solgt",
+      "returned": "Returnert",
+      "markdown_applied": "Prisnedsettelse gjennomført",
+      "period_extended": "Salgsperiode forlenget",
+      "period_ended": "Salgsperiode avsluttet"
     },
     "clearFilters": "Nullstill filtre",
     "showingRange": "Viser {from}–{to} av {total} varer",

@@ -4903,6 +4903,7 @@
     "former": "Ex membro",
     "member": "Membro senza nome visualizzato",
     "system": "Sistema",
+    "loadError": "Impossibile caricare le attività del negozio. Riprova.",
     "empty": "Nessun evento corrisponde alla selezione.",
     "unknown": "Altro evento del negozio",
     "details": "Riferimenti tecnici",

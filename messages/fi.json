@@ -4909,6 +4909,7 @@
     "former": "Entinen jäsen",
     "member": "Jäsen ilman näyttönimeä",
     "system": "Järjestelmä",
+    "loadError": "Myymälän tapahtumia ei voitu ladata. Yritä uudelleen.",
     "empty": "Valintaa vastaavia tapahtumia ei ole.",
     "unknown": "Muu myymälätapahtuma",
     "details": "Tekniset viitteet",

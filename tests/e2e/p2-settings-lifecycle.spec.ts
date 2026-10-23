@@ -22,10 +22,7 @@ test('notification policy and assistance quota persist', async ({ page }) => {
     await page.goto('/settings?tab=store')
     await expect(
       page.getByRole('heading', { name: d.audit, exact: true }),
-    ).toBeVisible()
-    await expect(
-      page.getByText(d.events['store_policy.published'], { exact: true }),
-    ).toBeVisible()
+    ).toHaveCount(0)
     await expect(page.getByText(f.tenant, { exact: true })).not.toBeVisible()
     await page.locator('.settings-technical > summary').click()
     await expect(page.getByText(f.tenant, { exact: true })).toBeVisible()

@@ -1314,7 +1314,9 @@
     "receiptsTab": "Ricevute",
     "manualTab": "Registra manualmente",
     "helpLabel": "Sulle vendite",
-    "configureVat": "Apri impostazioni IVA"
+    "configureVat": "Apri impostazioni IVA",
+    "markSold": "Segna come venduto",
+    "itemUnavailable": "Questo articolo non può essere venduto ora. Potrebbe essere già venduto o il periodo di vendita potrebbe essere terminato."
   },
   "ledger": {
     "title": "Saldo e registro",
@@ -3315,7 +3317,13 @@
     "eyebrow": "Come lavoriamo",
     "intro": "Segui una consegna dalla ricezione alla vendita e al pagamento. Seleziona un passaggio per aprire l’area di lavoro.",
     "guide": "La mappa spiega il lavoro. Non mostra lo stato in tempo reale e non avvia operazioni.",
-    "groups": ["Ricevi", "Registra", "Vendi", "Gestisci invenduti", "Paga"],
+    "groups": [
+      "Ricevi",
+      "Registra",
+      "Vendi",
+      "Gestisci invenduti",
+      "Paga"
+    ],
     "details": "Dettagli del passaggio",
     "happens": "Cosa succede",
     "inKomisio": "In Komisio",

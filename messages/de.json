@@ -1314,7 +1314,9 @@
     "receiptsTab": "Belege",
     "manualTab": "Manuell erfassen",
     "helpLabel": "Über Verkäufe",
-    "configureVat": "Umsatzsteuereinstellungen öffnen"
+    "configureVat": "Umsatzsteuereinstellungen öffnen",
+    "markSold": "Als verkauft markieren",
+    "itemUnavailable": "Dieser Artikel kann derzeit nicht verkauft werden. Er ist möglicherweise bereits verkauft oder der Verkaufszeitraum ist beendet."
   },
   "ledger": {
     "title": "Guthaben und Konto",

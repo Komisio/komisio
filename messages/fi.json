@@ -1314,7 +1314,9 @@
     "receiptsTab": "Kuitit",
     "manualTab": "Kirjaa käsin",
     "helpLabel": "Tietoa myynnistä",
-    "configureVat": "Avaa ALV-asetukset"
+    "configureVat": "Avaa ALV-asetukset",
+    "markSold": "Merkitse myydyksi",
+    "itemUnavailable": "Tuotetta ei voi myydä nyt. Se voi olla jo myyty tai sen myyntiaika on päättynyt."
   },
   "ledger": {
     "title": "Saldo ja tilikirja",

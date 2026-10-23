@@ -22,7 +22,11 @@ export function SaleForm({
   intake,
   leaveUnsaved,
   canConfigureVat = false,
+  initialItem,
+  unavailableItem = false,
 }: {
+  initialItem?: SaleSearchItem
+  unavailableItem?: boolean
   tenantId: string
   currency: string
   d: Dictionary['sales']
@@ -38,7 +42,12 @@ export function SaleForm({
     [results, setResults] = useState<SaleSearchItem[]>([])
   const [searched, setSearched] = useState(false),
     [searching, setSearching] = useBusyState(false)
-  const [cart, setCart] = useState<(SaleSearchItem & { price: string })[]>([])
+  const [cart, setCart] = useState<(SaleSearchItem & { price: string })[]>(
+    () =>
+      initialItem
+        ? [{ ...initialItem, price: decimal(BigInt(initialItem.priceOre)) }]
+        : [],
+  )
   const [invalidPriceId, setInvalidPriceId] = useState<string | null>(null)
   const [error, setError] = useState(''),
     [saved, setSaved] = useState<string | null>(null)
@@ -128,6 +137,7 @@ export function SaleForm({
   return (
     <section className="card intake-form sale-workspace">
       <p>{d.recordHint}</p>
+      {unavailableItem && <p role="status">{d.itemUnavailable}</p>}
       <form
         onSubmit={(e) => {
           e.preventDefault()

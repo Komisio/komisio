@@ -1314,7 +1314,9 @@
     "receiptsTab": "Kvitton",
     "manualTab": "Registrera manuellt",
     "helpLabel": "Om försäljning",
-    "configureVat": "Öppna momshantering"
+    "configureVat": "Öppna momshantering",
+    "markSold": "Markera som såld",
+    "itemUnavailable": "Varan kan inte säljas nu. Den kan redan vara såld eller försäljningsperioden avslutad."
   },
   "ledger": {
     "title": "Saldo",
@@ -3315,7 +3317,13 @@
     "eyebrow": "Så arbetar vi",
     "intro": "Följ en inlämning från mottagning till försäljning och utbetalning. Välj ett steg för att förstå vad som händer och öppna arbetsvyn.",
     "guide": "Kartan förklarar arbetssättet. Den visar inte aktuell status och startar inga aktiviteter.",
-    "groups": ["Ta emot", "Registrera", "Sälj", "Hantera osålt", "Betala ut"],
+    "groups": [
+      "Ta emot",
+      "Registrera",
+      "Sälj",
+      "Hantera osålt",
+      "Betala ut"
+    ],
     "details": "Om aktiviteten",
     "happens": "Vad som händer",
     "inKomisio": "I Komisio",

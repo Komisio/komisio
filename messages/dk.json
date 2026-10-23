@@ -3547,13 +3547,7 @@
     "eyebrow": "Sådan arbejder vi",
     "intro": "Følg en indlevering fra indlevering til salg og udbetaling. Vælg et trin for at åbne arbejdsvisningen.",
     "guide": "Kortet forklarer arbejdet. Det viser ikke aktuel status og starter ingen aktiviteter.",
-    "groups": [
-      "Modtag",
-      "Registrer",
-      "Sælg",
-      "Håndter usolgt",
-      "Udbetal"
-    ],
+    "groups": ["Modtag", "Registrer", "Sælg", "Håndter usolgt", "Udbetal"],
     "details": "Om aktiviteten",
     "happens": "Hvad der sker",
     "inKomisio": "I Komisio",

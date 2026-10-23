@@ -1314,7 +1314,21 @@
     "receiptsTab": "Kvitton",
     "manualTab": "Registrera manuellt",
     "helpLabel": "Om försäljning",
-    "configureVat": "Öppna momshantering"
+    "configureVat": "Öppna momshantering",
+    "markSold": "Markera som såld",
+    "itemUnavailable": "Varan kan inte säljas nu. Den kan redan vara såld eller försäljningsperioden avslutad.",
+    "note": "Anteckning / betalningsreferens (valfritt)",
+    "noteHint": "Endast för butiken. Exempel: Instagram eller en MobilePay-referens. Högst 500 tecken.",
+    "paymentMethod": "Betalningssätt",
+    "paymentMethods": {
+      "unspecified": "Ej angivet",
+      "card": "Kort",
+      "cash": "Kontant",
+      "mobilepay": "MobilePay",
+      "swish": "Swish",
+      "other": "Annat"
+    },
+    "paymentHint": "Registrera hur betalningen redan togs emot. Komisio utför ingen betalning."
   },
   "ledger": {
     "title": "Saldo",
@@ -1622,7 +1636,17 @@
       "mode:consignment_fee:vatOre": "Månadsavgifter · Moms",
       "mode:consignment_fee_reversal:grossOre": "Återför avgift · Avgift i butikens valuta",
       "mode:consignment_fee_reversal:netOre": "Återför avgift · Exklusive moms",
-      "mode:consignment_fee_reversal:vatOre": "Återför avgift · Moms"
+      "mode:consignment_fee_reversal:vatOre": "Återför avgift · Moms",
+      "payment:card:grossOre": "Kort · Bruttoförsäljning (mottagna betalningar)",
+      "payment:card:refundsOre": "Kort · Återbetalningar",
+      "payment:cash:grossOre": "Kontant · Bruttoförsäljning (mottagna betalningar)",
+      "payment:cash:refundsOre": "Kontant · Återbetalningar",
+      "payment:mobilepay:grossOre": "MobilePay · Bruttoförsäljning (mottagna betalningar)",
+      "payment:mobilepay:refundsOre": "MobilePay · Återbetalningar",
+      "payment:swish:grossOre": "Swish · Bruttoförsäljning (mottagna betalningar)",
+      "payment:swish:refundsOre": "Swish · Återbetalningar",
+      "payment:other:grossOre": "Annat · Bruttoförsäljning (mottagna betalningar)",
+      "payment:other:refundsOre": "Annat · Återbetalningar"
     },
     "netOf": "netto",
     "vatOf": "moms",
@@ -1715,7 +1739,11 @@
       "payoutId": "Utbetalnings-ID",
       "sellerId": "Säljar-ID",
       "paidAt": "Betald"
-    }
+    },
+    "paymentHeading": "Betalningssätt i bokföringen",
+    "paymentExclusionHint": "Fyll i en orsak för att undanta hela betalningssättets försäljningar och returer: butiken bokför även provision, moms och säljarskuld externt. Inlämningsavgifter och utbetalningar ingår fortsatt.",
+    "paymentExclusionReason": "Bokförs externt – orsak",
+    "paymentExcluded": "Undantaget från export"
   },
   "communications": {
     "welcomeTitle": "Aktiveringsmejl",
@@ -3013,7 +3041,10 @@
     "integrations": "Integrationer",
     "store": "Butik",
     "more": "Mer",
-    "sellersList": "Säljare"
+    "sellersList": "Säljare",
+    "collapseMenu": "Dölj menyn",
+    "expandMenu": "Visa menyn",
+    "menuShortcut": "Ctrl+B eller Cmd+B"
   },
   "planNotices": {
     "trial_week": {

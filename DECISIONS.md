@@ -1171,3 +1171,11 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-22: #542 accepts bounded discovery metadata with an optional four-hex firmware suffix after canonical Base64. Discovery never authenticates or grants queue access. Both channels still require scoped credentials; physical acceptance remains unverified until tested.
 - 2026-10-22: #542 classifies independently authenticated Weblink connections by their first binary greeting; firmware may reuse the main subprotocol for raw. Pending handles cannot dispatch; raw must bind to the requested current main, and stale or duplicate channels fail closed.
 - 2026-10-22: Owner selects Weblink setup from Komisio. Owner/admin provision scoped devices through an environment-bound gateway using existing pairing RPCs; per-device journals and explicit activation remain. No printer is enrolled by deployment and no tenant role or core table changes.
+- 2026-10-23: #565 remembers sidebar width per browser. Keyboard focus stays below the sticky header; Escape dismisses rail labels, and scrolling/resizing dismisses the store flyout. Navigation destinations, draft guards and mobile navigation remain unchanged.
+
+- 2026-10-23: #569 starts an existing manual sale from an eligible item's page with its current price. The shared sale search and record_sale enforce eligibility and permissions; the store still confirms the sale. A stale link never selects another item.
+
+- 2026-10-23: #570 stores an optional 500-character manual-sale note as immutable staff-only sale evidence. Exact retries include the note; changed notes conflict. Store receipt reads expose it, while seller reads and financial calculations remain unchanged.
+
+- 2026-10-23: #571 freezes payment method on sales and per-method totals in new day closes. Legacy/imported sales without verified tender evidence stay unspecified. Explicit methods need mapped receipt/refund accounts; existing frozen sales, closes and exports are not rewritten.
+- 2026-10-23: #571 explicit per-method exclusion omits the entire sale's export contributions, including commission, VAT and seller liability, plus its return contributions. The store books these externally. Seller ledger, payouts and independently mapped consignment fees remain unchanged.

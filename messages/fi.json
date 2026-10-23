@@ -1314,7 +1314,21 @@
     "receiptsTab": "Kuitit",
     "manualTab": "Kirjaa käsin",
     "helpLabel": "Tietoa myynnistä",
-    "configureVat": "Avaa ALV-asetukset"
+    "configureVat": "Avaa ALV-asetukset",
+    "markSold": "Merkitse myydyksi",
+    "itemUnavailable": "Tuotetta ei voi myydä nyt. Se voi olla jo myyty tai sen myyntiaika on päättynyt.",
+    "note": "Muistiinpano / maksuviite (valinnainen)",
+    "noteHint": "Vain myymälän henkilökunnalle. Esimerkiksi Instagram tai MobilePay-viite. Enintään 500 merkkiä.",
+    "paymentMethod": "Maksutapa",
+    "paymentMethods": {
+      "unspecified": "Ei määritetty",
+      "card": "Kortti",
+      "cash": "Käteinen",
+      "mobilepay": "MobilePay",
+      "swish": "Swish",
+      "other": "Muu"
+    },
+    "paymentHint": "Kirjaa, miten maksu on jo vastaanotettu. Komisio ei peri maksua."
   },
   "ledger": {
     "title": "Saldo ja tilikirja",
@@ -1622,7 +1636,17 @@
       "mode:consignment_fee:vatOre": "Kuukausimaksut · ALV",
       "mode:consignment_fee_reversal:grossOre": "Hyvitä maksu · Maksu liikkeen valuutassa",
       "mode:consignment_fee_reversal:netOre": "Hyvitä maksu · Ilman ALV:tä",
-      "mode:consignment_fee_reversal:vatOre": "Hyvitä maksu · ALV"
+      "mode:consignment_fee_reversal:vatOre": "Hyvitä maksu · ALV",
+      "payment:card:grossOre": "Kortti · Bruttomyynti (vastaanotetut maksut)",
+      "payment:card:refundsOre": "Kortti · Hyvitykset",
+      "payment:cash:grossOre": "Käteinen · Bruttomyynti (vastaanotetut maksut)",
+      "payment:cash:refundsOre": "Käteinen · Hyvitykset",
+      "payment:mobilepay:grossOre": "MobilePay · Bruttomyynti (vastaanotetut maksut)",
+      "payment:mobilepay:refundsOre": "MobilePay · Hyvitykset",
+      "payment:swish:grossOre": "Swish · Bruttomyynti (vastaanotetut maksut)",
+      "payment:swish:refundsOre": "Swish · Hyvitykset",
+      "payment:other:grossOre": "Muu · Bruttomyynti (vastaanotetut maksut)",
+      "payment:other:refundsOre": "Muu · Hyvitykset"
     },
     "netOf": "netto",
     "vatOf": "alv",
@@ -1715,7 +1739,11 @@
       "payoutId": "Tilityksen tunnus",
       "sellerId": "Myyjän tunnus",
       "paidAt": "Maksettu"
-    }
+    },
+    "paymentHeading": "Maksutavat kirjanpidossa",
+    "paymentExclusionHint": "Anna syy jättää tämän maksutavan myynnit ja palautukset pois: myymälä kirjaa myös provision, ALV:n ja velan myyjille muualla. Vastaanottomaksut ja tilitykset sisältyvät edelleen.",
+    "paymentExclusionReason": "Kirjataan muualla – syy",
+    "paymentExcluded": "Jätetty pois viennistä"
   },
   "communications": {
     "welcomeTitle": "Aktivointiviesti",
@@ -3013,7 +3041,10 @@
     "integrations": "Integraatiot",
     "store": "Kauppa",
     "more": "Lisää",
-    "sellersList": "Tuojat"
+    "sellersList": "Tuojat",
+    "collapseMenu": "Pienennä valikko",
+    "expandMenu": "Laajenna valikko",
+    "menuShortcut": "Ctrl+B tai Cmd+B"
   },
   "planNotices": {
     "trial_week": {

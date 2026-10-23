@@ -6,17 +6,15 @@ import {
   NavigationLink as Link,
   useConfirmNavigation,
 } from './navigation-warning'
-import { Plus, LogOut } from 'lucide-react'
 import { NavIcon } from './nav-icon'
 import {
   buildNavigation,
   currentLink,
-  isActivePath,
   mobileNavigation,
   mobileCurrentPath,
 } from '@/lib/platform/navigation'
 import { Brand } from './brand'
-import { Button } from '@/components/ui/button'
+import { Sidebar } from './sidebar'
 import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
 import { LanguagePicker } from './language-picker'
 import type { Tenant } from '@/lib/platform/types'
@@ -38,6 +36,7 @@ export function Shell({
   name,
   intakeEnabled = false,
   host = false,
+  sidebarCollapsed = false,
 }: {
   children: React.ReactNode
   d: Dictionary
@@ -48,10 +47,10 @@ export function Shell({
   name: string
   intakeEnabled?: boolean
   host?: boolean
+  sidebarCollapsed?: boolean
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const pathname = usePathname()
-  const isActive = (path: string) => isActivePath(pathname, path)
   const router = useRouter()
   const action = useCommand(d)
   const [signingOut, setSigningOut] = useBusyState(false)
@@ -130,61 +129,21 @@ export function Shell({
       <a className="skip-link no-print" href="#main-content">
         {d.skipToContent}
       </a>
-      <aside className="sidebar">
-        <Brand />
-        <div className="tenant-picker">
-          <small>{d.activeTenant}</small>
-          {picker()}
-          <Link
-            href="/onboarding"
-            className="text-link row"
-            style={{ fontSize: 12 }}
-          >
-            <Plus size={12} />
-            {d.newTenant}
-          </Link>
-        </div>
-        <nav aria-label={d.platform} className="sidebar-nav">
-          {groups.map((group, i) => (
-            <div key={i} className="nav-group">
-              {group.label && (
-                <div className="nav-label eyebrow">{group.label}</div>
-              )}
-              {group.links.map(({ path, label, icon }) => (
-                <Link
-                  key={path}
-                  href={path}
-                  className={`nav-link ${isActive(path) ? 'active' : ''}`}
-                  aria-current={isActive(path) ? 'page' : undefined}
-                >
-                  <NavIcon name={icon} size={16} strokeWidth={1.7} />
-                  {label}
-                </Link>
-              ))}
-            </div>
-          ))}
-        </nav>
-        <div className="sidebar-footer">
-          <p style={{ fontSize: 12, padding: '0 12px' }}>{d.help}</p>
-          <Link href="/account" className="account-link row">
-            <span className="avatar">
-              {(name || email).slice(0, 2).toUpperCase()}
-            </span>
-            <span>
-              <span className="account-label">
-                {name || email.split('@')[0]}
-              </span>
-              <small style={{ display: 'block', fontSize: 12 }}>
-                {d.roles[active.role]}
-              </small>
-            </span>
-          </Link>
-          <Button variant="ghost" onClick={signOut} className="full">
-            <LogOut size={14} />
-            {d.logout}
-          </Button>
-        </div>
-      </aside>
+      <Sidebar
+        d={d}
+        tenants={tenants}
+        active={active}
+        email={email}
+        name={name}
+        intakeEnabled={intakeEnabled}
+        host={host}
+        collapsed={sidebarCollapsed}
+        ready={ready}
+        busy={action.busy}
+        signingOut={signingOut}
+        onSelect={select}
+        onSignOut={signOut}
+      />
       <header className="topbar">
         <Brand />
         <span className="breadcrumb">

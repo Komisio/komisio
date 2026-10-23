@@ -4,6 +4,14 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 
 // Sales (P2 S11): a fact from a POS or the counter, idempotent by provider and
 // external id, with commission, seller credit and VAT frozen per line in SQL.
+export const paymentMethod = z.enum([
+  'unspecified',
+  'card',
+  'cash',
+  'mobilepay',
+  'swish',
+  'other',
+])
 export const saleProvider = z.enum(['manual', 'zettle', 'shopify'])
 const price = z.string().regex(/^(?:0|[1-9]\d{0,8})\.\d{2}$/)
 export const saleLineInput = z.strictObject({ itemId: z.guid(), price })
@@ -16,6 +24,8 @@ export const recordSaleCommand = z
     externalId: z.string().trim().min(1).max(200),
     occurredAt: z.iso.datetime({ offset: true }),
     currency: currencyCode,
+    paymentMethod: paymentMethod.default('unspecified'),
+    note: z.string().trim().max(500).default(''),
     lines: z.array(saleLineInput).min(1).max(50),
   })
   .refine(
@@ -53,6 +63,8 @@ const saleRow = z.object({
   currency: currencyCode,
   occurred_at: z.iso.datetime({ offset: true }),
   total_ore: ore,
+  payment_method: paymentMethod.default('unspecified'),
+  staff_note: z.string().max(500).default(''),
   status: z.enum(['completed', 'reversed']),
   recorded_at: z.iso.datetime({ offset: true }),
 })

@@ -14,7 +14,33 @@ export type PayoutSource = z.infer<typeof payoutSource>
 // Accounting export (P2 S17): the tenant's account map and the exports made
 // under it. SQL validates the map, builds voucher lines and refuses an
 // unbalanced voucher; this module validates the boundary and reads.
+export const paymentAccountingKeys = [
+  'card',
+  'cash',
+  'mobilepay',
+  'swish',
+  'other',
+].flatMap((method) => [
+  `payment:${method}:grossOre`,
+  `payment:${method}:refundsOre`,
+])
+export function paymentExclusionsComplete(
+  map: Record<
+    string,
+    { excludeReason?: string; account?: string; side?: string }
+  >,
+) {
+  return ['card', 'cash', 'mobilepay', 'swish', 'other'].every((method) => {
+    const gross = map[`payment:${method}:grossOre`]
+    const refund = map[`payment:${method}:refundsOre`]
+    return (
+      !(gross?.excludeReason || refund?.excludeReason) ||
+      !!(gross?.excludeReason && gross.excludeReason === refund?.excludeReason)
+    )
+  })
+}
 export const accountingKeys = [
+  ...paymentAccountingKeys,
   'mode:consignment_fee:grossOre',
   'mode:consignment_fee:netOre',
   'mode:consignment_fee:vatOre',
@@ -71,7 +97,27 @@ export const accountMapping = z.strictObject({
   side: z.enum(['debit', 'credit']),
 })
 export const accountingMapBody = z
-  .record(z.string(), accountMapping)
+  .record(
+    z.string(),
+    z.union([
+      accountMapping.extend({ excludeReason: z.never().optional() }),
+      z.strictObject({
+        excludeReason: z.string().trim().min(1).max(500),
+        account: z.never().optional(),
+        side: z.never().optional(),
+      }),
+    ]),
+  )
+  .refine((map) =>
+    Object.entries(map).every(
+      ([key, value]) =>
+        !('excludeReason' in value) || paymentAccountingKeys.includes(key),
+    ),
+  )
+  .refine(
+    paymentExclusionsComplete,
+    'Exclude both receipts and refunds with the same reason',
+  )
   .refine(
     (m) =>
       Object.keys(m).every((k) =>
@@ -118,6 +164,9 @@ export const voucherPreview = z.object({
   creditOre: ore,
   balanced: z.boolean(),
   unmapped: z.array(z.string()),
+  excluded: z
+    .record(z.string(), z.object({ amountOre: ore, reason: z.string() }))
+    .default({}),
 })
 export type VoucherPreview = z.infer<typeof voucherPreview>
 const exportRow = z.object({
@@ -128,6 +177,9 @@ const exportRow = z.object({
   voucher: z.array(voucherLine),
   debit_ore: ore,
   credit_ore: ore,
+  excluded: z
+    .record(z.string(), z.object({ amountOre: ore, reason: z.string() }))
+    .default({}),
   created_at: z.iso.datetime({ offset: true }),
 })
 const exportListRow = exportRow.extend({
@@ -168,7 +220,7 @@ export async function readAccountingExports(
   const { data, error } = await client
     .from('accounting_exports')
     .select(
-      'id,day_close_id,map_id,format,voucher,debit_ore,credit_ore,created_at,accounting_maps(version)',
+      'id,day_close_id,map_id,format,voucher,debit_ore,credit_ore,excluded,created_at,accounting_maps(version)',
     )
     .eq('tenant_id', z.uuid().parse(tenantInput))
     .order('created_at', { ascending: false })
@@ -187,7 +239,7 @@ export async function readAccountingExport(
   const row = await client
     .from('accounting_exports')
     .select(
-      'id,day_close_id,map_id,format,voucher,debit_ore,credit_ore,created_at',
+      'id,day_close_id,map_id,format,voucher,debit_ore,credit_ore,excluded,created_at',
     )
     .eq('tenant_id', tenantId)
     .eq('id', z.uuid().parse(exportInput))

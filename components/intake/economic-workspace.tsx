@@ -1,3 +1,4 @@
+import { formatMoney } from '@/lib/engine/money'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Dictionary, Locale } from '@/lib/i18n'
 import { readAccountingDraft } from '@/lib/engine/accounting-assistance'
@@ -167,6 +168,18 @@ export async function EconomicWorkspace({
               {preview.closeDate} · {d.accounting.version}{' '}
               {preview.closeVersion}
             </summary>
+            {Object.entries(
+              closes.find((close) => close.id === preview.dayCloseId)
+                ?.payment_totals ?? {},
+            ).map(([method, totals]) => (
+              <p key={method}>
+                {d.sales.paymentMethods[
+                  method as keyof typeof d.sales.paymentMethods
+                ] ?? method}
+                : {formatMoney(totals.grossOre, 'DKK')} · {d.accounting.refunds}{' '}
+                {formatMoney(totals.refundsOre, 'DKK')}
+              </p>
+            ))}
             <EconomicPrepare
               key={`${preview.dayCloseId}-${preview.mapId}`}
               tenantId={tenantId}

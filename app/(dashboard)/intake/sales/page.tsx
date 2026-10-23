@@ -1,3 +1,4 @@
+import { searchSaleItems } from '@/lib/engine/sale-search'
 import { WorkingForm } from '@/components/platform/working-form'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -29,6 +30,12 @@ export default async function Sales({
   const parsed = receiptSearch.safeParse(await searchParams)
   if (!parsed.success) notFound()
   const search = parsed.data
+  const selectedItem =
+    search.item && active.role !== 'readonly'
+      ? (await searchSaleItems(ctx.client, active.id, search.item)).find(
+          (item) => item.id === search.item,
+        )
+      : undefined
   const query = receiptSearchQuery(search)
   const filtered = !!query
   const sales = await readSales(ctx.client, active.id, {
@@ -130,7 +137,11 @@ export default async function Sales({
                           <strong>
                             {formatOre(s.total_ore)} {currency}
                           </strong>
-                          <span>{d.providers[s.provider]}</span>
+                          <span>
+                            {d.providers[s.provider]} ·{' '}
+                            {d.paymentMethods[s.payment_method]}
+                          </span>
+                          {s.staff_note && <span>{s.staff_note}</span>}
                         </span>
                         <time dateTime={s.occurred_at}>
                           {when(s.occurred_at)}
@@ -159,7 +170,9 @@ export default async function Sales({
                     <div className="sale-manual">
                       <p className="intake-notice">{d.notice}</p>
                       <SaleForm
-                        key={active.id}
+                        key={`${active.id}:${search.item ?? ''}`}
+                        initialItem={selectedItem}
+                        unavailableItem={!!search.item && !selectedItem}
                         tenantId={active.id}
                         currency={currency}
                         d={d}

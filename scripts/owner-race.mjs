@@ -1,3 +1,4 @@
+import { raceSalePayment } from './sale-payment-race.mjs'
 import {
   raceSellerSubmission,
   raceSellerAI,
@@ -111,6 +112,7 @@ try {
   await raceStocktake({ setup, connectionString: parsed.toString() })
   await raceDayCloseAutomation({ setup, connectionString: parsed.toString() })
   await racePayoutConfirmation({ setup, connectionString: parsed.toString() })
+  await raceSalePayment({ setup, connectionString: parsed.toString() })
   await raceZettleStock({ setup, connectionString: parsed.toString() })
   await raceZettleImage({ setup, connectionString: parsed.toString() })
   await raceZettlePull({ setup, connectionString: parsed.toString() })

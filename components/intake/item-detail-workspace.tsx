@@ -37,6 +37,7 @@ export function ItemDetailWorkspace({
   terms,
   printing,
   saleHref,
+  markSoldHref,
 }: {
   item: DirectoryItem
   tenantId: string
@@ -55,6 +56,7 @@ export function ItemDetailWorkspace({
   terms: ReactNode
   printing: ReactNode
   saleHref: string
+  markSoldHref?: string
 }) {
   const editor = useItemQuickEdit({ item, tenantId, write, d })
   const menu = useRef<HTMLDetailsElement>(null)
@@ -182,6 +184,11 @@ export function ItemDetailWorkspace({
                 <div className="item-overview-fields">
                   <div className="item-overview-price">
                     {price}
+                    {write && markSoldHref && (
+                      <Link className="btn btn-primary" href={markSoldHref}>
+                        {d.sales.markSold}
+                      </Link>
+                    )}
                     {write && (
                       <Link className="text-link" href={saleHref}>
                         {d.items.manageSalePeriod}

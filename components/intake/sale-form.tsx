@@ -22,7 +22,11 @@ export function SaleForm({
   intake,
   leaveUnsaved,
   canConfigureVat = false,
+  initialItem,
+  unavailableItem = false,
 }: {
+  initialItem?: SaleSearchItem
+  unavailableItem?: boolean
   tenantId: string
   currency: string
   d: Dictionary['sales']
@@ -32,20 +36,31 @@ export function SaleForm({
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
+  const [payment, setPayment] = useState('unspecified')
+  const [note, setNote] = useState('')
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [externalId, setExternalId] = useState(() => crypto.randomUUID())
   const [query, setQuery] = useState(''),
     [results, setResults] = useState<SaleSearchItem[]>([])
   const [searched, setSearched] = useState(false),
     [searching, setSearching] = useBusyState(false)
-  const [cart, setCart] = useState<(SaleSearchItem & { price: string })[]>([])
+  const [cart, setCart] = useState<(SaleSearchItem & { price: string })[]>(
+    () =>
+      initialItem
+        ? [{ ...initialItem, price: decimal(BigInt(initialItem.priceOre)) }]
+        : [],
+  )
   const [invalidPriceId, setInvalidPriceId] = useState<string | null>(null)
   const [error, setError] = useState(''),
     [saved, setSaved] = useState<string | null>(null)
   const searchVersion = useRef(0),
     searchInput = useRef<HTMLInputElement>(null)
   const locked = action.busy || action.locked || action.needsReload
-  useUnsavedChanges(cart.length > 0 || action.locked ? leaveUnsaved : null)
+  useUnsavedChanges(
+    cart.length > 0 || note.trim() || payment !== 'unspecified' || action.locked
+      ? leaveUnsaved
+      : null,
+  )
   let total: bigint | null = 0n
   try {
     for (const item of cart)
@@ -108,6 +123,8 @@ export function SaleForm({
       tenantId,
       requestId,
       provider: 'manual',
+      note,
+      paymentMethod: payment,
       externalId,
       occurredAt: new Date().toISOString(),
       currency,
@@ -116,6 +133,8 @@ export function SaleForm({
     if (id) {
       setSaved(id)
       setCart([])
+      setNote('')
+      setPayment('unspecified')
       setResults([])
       setSearched(false)
       setQuery('')
@@ -128,6 +147,7 @@ export function SaleForm({
   return (
     <section className="card intake-form sale-workspace">
       <p>{d.recordHint}</p>
+      {unavailableItem && <p role="status">{d.itemUnavailable}</p>}
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -250,6 +270,29 @@ export function SaleForm({
                   {total === null ? '—' : decimal(total)} {currency}
                 </strong>
               </p>
+              <label htmlFor="sale-payment">{d.paymentMethod}</label>
+              <select
+                id="sale-payment"
+                value={payment}
+                onChange={(event) => setPayment(event.target.value)}
+                aria-describedby="sale-payment-hint"
+              >
+                {Object.entries(d.paymentMethods).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <small id="sale-payment-hint">{d.paymentHint}</small>
+              <label htmlFor="sale-note">{d.note}</label>
+              <textarea
+                id="sale-note"
+                value={note}
+                maxLength={500}
+                aria-describedby="sale-note-hint"
+                onChange={(event) => setNote(event.target.value)}
+              />
+              <small id="sale-note-hint">{d.noteHint}</small>
               <label className="intake-confirm">
                 <input type="checkbox" required />
                 {d.confirm}

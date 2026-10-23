@@ -35,6 +35,19 @@ function otherEditor(input: ScanField) {
   )
 }
 
+function fragmentIncludes(field: ScanField) {
+  if (!window.location.hash) return true
+  try {
+    return (
+      document
+        .getElementById(decodeURIComponent(window.location.hash.slice(1)))
+        ?.contains(field) ?? false
+    )
+  } catch {
+    return false
+  }
+}
+
 /** Focus is a convenience, never a scanner listener or permission to submit. */
 export function useScanFocus(
   inputRef: RefObject<ScanField | null>,
@@ -77,7 +90,15 @@ export function useScanFocus(
   )
   const focusKeyboard = useCallback(() => {
     const field = inputRef.current
-    return !!field && finePointer() && !otherEditor(field) && focus()
+    // An explicit section/item link takes precedence over arrival focus. Even
+    // preventScroll cannot stop the shell from revealing a focused editor.
+    return (
+      !!field &&
+      finePointer() &&
+      fragmentIncludes(field) &&
+      !otherEditor(field) &&
+      focus()
+    )
   }, [inputRef, focus])
 
   const focusNext = useCallback(() => {

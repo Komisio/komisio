@@ -52,10 +52,12 @@ page. Seller search, camera input, facts, price, printer, result card with
 the reference and "Next garment" that keeps the seller and the printer.
 
 Fine-pointer devices focus seller search on arrival and the description after
-seller selection or "Next garment". Touch devices show a translated "Scan / type"
-button; initial loading does not open the keyboard. Completion still focuses the
-confirmation heading before staff explicitly choose the next item. That action
-restores description focus on touch too if the field was already used. The shared
+seller selection or "Next garment". Explicit section or item links keep their
+destination instead of moving arrival focus to an unrelated editor. Touch devices
+show a translated "Scan / type" button; initial loading does not open the keyboard.
+Completion still focuses the confirmation heading before staff explicitly choose
+the next item. That action restores description focus on touch too if the field
+was already used. The shared
 `useScanFocus` helper also serves label lookup, receiving, manual sales and stocktake;
 it does not capture global keystrokes or add or sell items automatically.
 

@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { createRequire } from 'node:module'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
+import { localTestUrl } from '../helpers/local-services'
 import d from '../../messages/sv.json' with { type: 'json' }
 
 test('optional seller details survive a lost reply and concurrent registration replays', async ({
@@ -82,15 +83,13 @@ test('optional seller details survive a lost reply and concurrent registration r
     ).toBe(true)
 
     const { Client } = createRequire(import.meta.url)('pg')
+    const connectionString = localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    )
     const clients = [
-      new Client({
-        connectionString:
-          'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
-      }),
-      new Client({
-        connectionString:
-          'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
-      }),
+      new Client({ connectionString }),
+      new Client({ connectionString }),
     ]
     const id = randomUUID()
     const profile = {

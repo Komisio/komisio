@@ -75,6 +75,16 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
             exact: true,
           })
           .click()
+        if (
+          await page.evaluate(() => matchMedia('(pointer: coarse)').matches)
+        ) {
+          await expect(
+            page.getByLabel(d.quickIntake.searchSeller),
+          ).not.toBeFocused()
+          await page
+            .getByRole('button', { name: d.scanFocus, exact: true })
+            .tap()
+        }
         await expect(page.getByLabel(d.quickIntake.searchSeller)).toBeFocused()
         await page
           .getByRole('button', { name: /Synthetic second seller/ })

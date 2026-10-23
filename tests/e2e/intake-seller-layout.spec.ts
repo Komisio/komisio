@@ -88,6 +88,8 @@ for (const locale of [
               nameWidth: nameBox.width,
               actionRight: actionBox.right,
               rowRight: box.right,
+              rowWidth: box.width,
+              listWidth: element.closest('ul')!.clientWidth,
               height: box.height,
             }
           })
@@ -96,6 +98,10 @@ for (const locale of [
           )
           expect(geometry.nameWidth).toBeGreaterThan(60)
           expect(geometry.actionRight).toBeLessThanOrEqual(geometry.rowRight)
+          // A single result must still use the entire list, not half a two-column grid.
+          expect(geometry.rowWidth).toBeGreaterThanOrEqual(
+            geometry.listWidth - 8,
+          )
           expect(geometry.height).toBeGreaterThanOrEqual(44)
           expect((await search.boundingBox())!.height).toBeGreaterThanOrEqual(
             44,

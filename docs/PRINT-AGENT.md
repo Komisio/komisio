@@ -11,10 +11,9 @@ now use the same owner/admin-created, single-use 15-minute pairing code.
 Install `install.cmd` as administrator and verify the device contact time.
 Checklist ticks are browser-local observations, never commands or print receipts.
 
-## Weblink dispatch journal (development only)
+## Weblink dispatch journal
 
-The owner requested software implementation before the physical printer test
-(#542). `scripts/print-bridge/dispatch.mjs` supplies an inactive building block:
+`scripts/print-bridge/dispatch.mjs` supplies the journal used by the Weblink runtime:
 it exclusively reserves a job ID and syncs its intent to disk before handing
 the original ZPL to a transport. Concurrent processes sharing the directory and
 restarted processes refuse an already reserved job. A failed write, torn journal
@@ -36,17 +35,18 @@ supported. Linux syncs the file and directory before transport. Windows runs
 development tests only; it does not establish Linux filesystem durability.
 
 Do not delete, prune or restore journal files to retry work. Missing restored
-evidence could allow duplicate output. Hosted activation still requires
-authenticated printer main/raw channels and reconnects,
-service integration, and physical TLS/copy/revocation tests. The database now
-fences Weblink separately; legacy TCP/USB stale claims and Windows printing are
-unchanged.
-This component alone does not make Weblink printing available in Komisio.
+evidence could allow duplicate output. The runtime integrates independently
+authenticated printer main/raw channels and a device-scoped queue worker;
+see [Weblink operations](PRINT-WEBLINK.md) for setup and the verified hardware scope.
+The database fences Weblink separately; legacy TCP/USB stale claims and Windows
+printing are unchanged. This component alone does not make Weblink printing
+available in Komisio.
 
-## Weblink authentication components (development only)
+## Weblink authentication components
 
-`scripts/print-bridge/auth.mjs` and `credentials.mjs` provide inactive components
-for the future bridge. They open no listener, pair no devices and consume no jobs.
+`scripts/print-bridge/auth.mjs` and `credentials.mjs` provide authentication and
+encrypted storage to the runtime. On their own they open no listener, pair no
+devices and consume no jobs.
 They use the existing paired device identity and `print_device_context` RPC;
 there are no schema, membership or Windows-agent changes.
 
@@ -90,13 +90,14 @@ Windows tests establish development behavior, not production file protection.
 
 Zebra documents server credentials in `weblink.ip.conn[1|2].authentication.add`
 in its [Programming Guide](https://cpws.zebra.com/cpws/docs/zpl/zpl-zbi2-pm-en.pdf).
-Actual ZD420 firmware challenge handling on both channels remains unverified.
-The TLS upgrade handler, rate limits, discovery/channel association, secure
-provisioning and queue service wiring remain required
-before hosted activation. These components and local fixtures do not establish
-printer compatibility or a complete Weblink service.
+The managed gateway preserves the firmware's initial Basic authentication
+challenge only behind the trusted TLS proxy for a registered worker. Both
+channels must then authenticate independently; a challenge grants no queue
+access. The verified ZD420 Link-OS 6.2 flow is documented in
+[Weblink operations](PRINT-WEBLINK.md). Local component fixtures alone do not
+establish compatibility with another model or firmware.
 
-## Weblink queue backend (inactive)
+## Weblink queue backend
 
 The owner approved the one-attempt model on 2026-10-22. Migration
 `20261022150000` extends the existing printer/job records; it creates no new core
@@ -134,8 +135,9 @@ claim response returns `claim_unknown`; recover using the same attempt UUID.
 A lost completion response remains uncertain even if the local transport write
 succeeded. `createWeblinkRpc` uses the existing device token provider, permits
 only claim/finish calls, pins store/printer scope and bounds HTTP responses.
-Service startup, durable scheduling of attempt IDs, the actual WebSocket write
-adapter and hardware acceptance are not implemented by this module.
+The composed runtime adds service startup, durable attempt scheduling and the
+WebSocket write adapter. Hardware acceptance is separate from this module's
+software contract.
 
 Run `npm run test:print-bridge`, the pgTAP suite and `npm run test:concurrency`.
 The concurrency harness creates an isolated database, verifies competing claims
@@ -150,7 +152,9 @@ After migration `20261022160000`, the server-only flag
 to owners/admins. It defaults off. Registration stores name, model and DPI with
 `active=false`; it neither provisions a secret nor starts printing. Exact repeated
 registrations return the same printer; changed input for that ID is refused.
-There is no Weblink activation or Windows pairing control in this form.
+Registration alone does not activate the printer. The managed preparation,
+private installation-file download and explicit activation are separate controls
+described in [Weblink operations](PRINT-WEBLINK.md); Windows retains its own setup track.
 
 Existing Weblink jobs remain visible when preparation is disabled. Print history
 distinguishes a reserved attempt, transport acceptance and an unknown outcome.
@@ -162,8 +166,9 @@ an inspection note. The database enforces revocation and retains the human actor
 No recovery action creates or resends a job. Unconfirmed HTTP responses lock the
 form and require reloading the current state before another action.
 
-Software checks use synthetic printers; actual secure provisioning, service wiring,
-the printer's main/raw handshake, TLS and physical output remain activation gates.
+Software checks use synthetic printers. Physical acceptance is recorded separately
+in [Weblink operations](PRINT-WEBLINK.md); it does not establish compatibility
+with every printer or replace checking the intended printer after installation.
 
 ## Existing Windows agent
 

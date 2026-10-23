@@ -14,13 +14,15 @@ import {
 } from '../../lib/communications/locale'
 import { emailDecimalAmount } from '../../lib/communications/amount'
 import { renderInvitationEmail } from '../../lib/platform/invitation-email'
+import { renderSellerWelcome } from '../../lib/communications/welcome'
+import { renderSubmissionReply } from '../../lib/communications/submission-reply'
 
 const facts = { storeName: 'Synthetic Store', sellerName: 'Anna', freeText: '' }
 
 it.each(locales)(
   'has complete, placeholder-compatible seller and invitation copy in %s',
   (locale) => {
-    const source = dictionary('sv').communications.templates
+    const source = dictionary('en').communications.templates
     const target = dictionary(locale).communications.templates
     expect(target.footer.trim()).not.toBe('')
     expect(templatePlaceholders(target.footer)).toEqual(
@@ -75,6 +77,45 @@ it.each(locales)(
     expect(invitation.locale).toBe(locale)
     expect(invitation.text).toContain('https://example.test/invite/synthetic')
     expect(invitation.text + invitation.subject).not.toMatch(/\{[^}]+\}/)
+    const extra = (code: typeof locale) => {
+      const d = dictionary(code)
+      return {
+        welcomeSubject: d.communications.welcomeSubject,
+        welcomeBody: d.communications.welcomeBody,
+        activationBody: d.communications.activationBody,
+        activationLabel: d.sellerActivation.confirm,
+        activationNote: d.sellerActivation.emailNote,
+        replySubject: d.submissions.replySubject,
+        replyBody: d.submissions.replyBody,
+      }
+    }
+    for (const [key, source] of Object.entries(extra('en'))) {
+      const text = extra(locale)[key as keyof ReturnType<typeof extra>]
+      expect(typeof text, `${locale}.${key}`).toBe('string')
+      expect(text.trim(), `${locale}.${key}`).not.toBe('')
+      expect(templatePlaceholders(text), `${locale}.${key}`).toEqual(
+        templatePlaceholders(source),
+      )
+    }
+    for (const branded of [false, true]) {
+      const welcome = renderSellerWelcome(
+        locale,
+        facts.storeName,
+        facts.sellerName,
+        'https://example.test',
+        branded,
+      )
+      expect(welcome.locale).toBe(locale)
+      expect(welcome.subject + welcome.body).not.toMatch(/\{[^}]+\}/)
+    }
+    expect(
+      renderSubmissionReply(
+        locale,
+        facts.storeName,
+        'synthetic',
+        'https://example.test',
+      ).locale,
+    ).toBe(locale)
   },
 )
 
@@ -105,10 +146,13 @@ it.each(['dk', 'no', 'fi'] as const)(
   },
 )
 
-it('resolves only seller, store, then English and falls back as an entire template', () => {
+it('resolves seller, store, store default, then English; broken templates use English', () => {
   expect(emailLocale('fi', 'dk')).toBe('fi')
   expect(emailLocale('unsupported', 'dk')).toBe('dk')
   expect(emailLocale(undefined, 'unsupported')).toBe('en')
+  expect(emailLocale(undefined, undefined, 'dk')).toBe('dk')
+  expect(emailLocale('fi', 'no', 'dk')).toBe('fi')
+  expect(emailLocale(undefined, 'no', 'dk')).toBe('no')
   const english = { subject: 'Hello {seller}', body: 'Amount: {amount}' }
   for (const bad of [
     undefined,
@@ -137,6 +181,45 @@ it('preserves exact signed database minor units beyond floating point precision'
       currency: 'EUR',
     }).body,
   ).toContain('9,007,199,254,740,993.57')
+})
+
+it('falls back as a whole for incomplete welcome, activation and submission copy', () => {
+  const d = dictionary('fi')
+  const welcome = d.communications.welcomeBody
+  const activation = d.sellerActivation.emailNote
+  const submission = d.submissions.replyBody
+  try {
+    d.communications.welcomeBody = ''
+    d.sellerActivation.emailNote = ''
+    d.submissions.replyBody = 'Missing {unknown}'
+    for (const branded of [false, true])
+      expect(
+        renderSellerWelcome(
+          'fi',
+          'Store',
+          'Seller',
+          'https://example.test',
+          branded,
+        ),
+      ).toEqual(
+        renderSellerWelcome(
+          'en',
+          'Store',
+          'Seller',
+          'https://example.test',
+          branded,
+        ),
+      )
+    expect(
+      renderSubmissionReply('fi', 'Store', 'seller', 'https://example.test'),
+    ).toEqual(
+      renderSubmissionReply('en', 'Store', 'seller', 'https://example.test'),
+    )
+  } finally {
+    d.communications.welcomeBody = welcome
+    d.sellerActivation.emailNote = activation
+    d.submissions.replyBody = submission
+  }
 })
 
 it('renders versioned wording with localized plain-text facts', () => {

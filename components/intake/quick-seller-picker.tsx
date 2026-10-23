@@ -1,4 +1,5 @@
 'use client'
+import { ScanFocusInput } from '@/components/platform/scan-focus'
 import { useWorkActivity } from '@/components/platform/work-activity'
 import { useEffect, useState } from 'react'
 import { ArrowRight } from 'lucide-react'
@@ -13,12 +14,14 @@ export function QuickSellerPicker({
   sellers,
   total,
   onSelect,
+  focusLabel,
   d,
 }: {
   tenantId: string
   sellers: SellerChoice[]
   total: number
   onSelect: (seller: SellerChoice) => void
+  focusLabel?: string
   d: Dictionary['quickIntake']
 }) {
   const [query, setQuery] = useState('')
@@ -76,7 +79,9 @@ export function QuickSellerPicker({
         <label htmlFor="quick-seller-search" className="sr-only">
           {d.searchSeller}
         </label>
-        <input
+        <ScanFocusInput
+          focusLabel={focusLabel ?? d.searchSeller}
+          contextLabel={d.title}
           id="quick-seller-search"
           type="search"
           value={query}
@@ -85,7 +90,6 @@ export function QuickSellerPicker({
             setOffset(0)
           }}
           maxLength={120}
-          autoFocus
           placeholder={d.sellerSearchHint}
           aria-describedby={idle ? 'quick-search-prompt' : undefined}
         />

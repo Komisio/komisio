@@ -37,7 +37,7 @@ test('quick intake focuses invalid fields without sending or discarding a partia
     await expect(description).toBeInViewport()
     await expect(description).toHaveAttribute('aria-invalid', 'true')
     await expect(description).toHaveAccessibleDescription(
-      d.quickIntake.descriptionRequired,
+      `${d.quickIntake.garment} ${d.quickIntake.descriptionRequired}`,
     )
     await expect(price).not.toHaveAttribute('aria-invalid', 'true')
     await expect(price).toHaveValue('150')

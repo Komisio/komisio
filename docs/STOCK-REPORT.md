@@ -23,9 +23,13 @@ agent tool and, later, the chain view. Read only; nothing is forecast.
 
 ## Surfaces
 
-- `/intake/stock` (menu: Money): period form, totals and a table per
-  category. Until the migration is live the page says the report is not
-  available yet.
+- `/intake/stock`: separate current-stock, category, assortment and sales tabs.
+  One ownership/from/to form applies the filters while retaining the selected
+  tab. Dates affect sales; current stock remains a snapshot of now. Sales amounts,
+  percentages, counts and the displayed date range follow the selected language.
+  The category sales table separates the margin amount from its percentage and
+  stacks its labeled values when the available content width is narrow, including
+  when the sidebar is expanded. Unavailable report reads have an explicit state.
 - MCP `komisio_read_stock_report` under `economy:read`, same shape as the
   page, amounts in öre.
 
@@ -34,6 +38,12 @@ agent tool and, later, the chain view. Read only; nothing is forecast.
 `supabase/tests/0098_stock_report.test.sql`: totals, buckets, per-category
 rows including consignment and store-owned margin, sell-through, empty
 category, period bounds, no names, outsider refused.
+
+`tests/e2e/stock-sales-layout.spec.ts` checks all eight languages, phone/desktop
+and both iPad orientations with expanded/collapsed menus: one apply action,
+non-overlapping controls, single-line values, unclipped table cells and retained
+filter behavior. The existing stock overview/lifecycle and ownership journeys
+cover the other tabs and current-stock semantics.
 
 ## Current lifecycle overview
 

@@ -36,4 +36,20 @@ describe('economy presentation', () => {
     expect(economyFormat('en').date('2026-10-01')).toBe('01/10/2026')
     expect(economyFormat('dk').date('2026-10-01')).toBe('01.10.2026')
   })
+
+  it('formats report percentages without changing their scale or dropping decimals', () => {
+    expect(spaces(economyFormat('sv').percent(60))).toBe('60 %')
+    expect(spaces(economyFormat('sv').percent(12.34))).toBe('12,34 %')
+    expect(economyFormat('en').percent(-0.5)).toBe('-0.5%')
+  })
+
+  it.each(locales)('formats complete calendar-date ranges in %s', (locale) => {
+    const format = economyFormat(locale)
+    const range = format.dateRange('2026-10-01', '2026-10-31')
+    expect(range).toContain('2026')
+    expect(range).not.toContain('2026-10-01')
+    expect(range).not.toContain('2026-10-31')
+    expect(format.dateRange('2024-12-31', '2025-01-01')).toContain('2024')
+    expect(format.dateRange('2024-12-31', '2025-01-01')).toContain('2025')
+  })
 })

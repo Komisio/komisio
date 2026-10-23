@@ -20,7 +20,7 @@ import {
   initialSellerProfile,
   sellerProfileBody,
 } from '@/lib/engine/seller-profile'
-import { readStoreProfile } from '@/lib/engine/store-profile'
+import { resolveSellerEmailLocale } from '@/lib/communications/locale'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import HistoryLink from '@/components/platform/working-link'
 import { Info } from 'lucide-react'
@@ -309,8 +309,7 @@ export default async function Seller({
   const profile = seller.data.profile
     ? sellerProfileBody.parse(seller.data.profile)
     : initialSellerProfile(seller.data)
-  const storeProfile = await readStoreProfile(ctx.client, tenant.id)
-  const storeLanguage = storeProfile.profile?.language ?? ctx.locale
+  const storeLanguage = await resolveSellerEmailLocale(ctx.client, tenant.id)
   const profileHistory = await ctx.client
     .from('seller_profile_versions')
     .select('id,revision,profile,created_at')

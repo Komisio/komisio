@@ -1260,7 +1260,9 @@
       "reviewHelp": "Innan varans pris och villkor färdigställs i mottagningsflödet.",
       "acceptanceHelp": "Innan varan registreras i lagret för försäljning.",
       "more": "Mer om inställningarna"
-    }
+    },
+    "communicationLanguage": "Standardspråk för meddelanden",
+    "communicationLanguageHint": "Används för säljarmejl och som förval för personalinbjudningar när butiksprofilen saknar språk. Säljarens eget språk går först, därefter butiksprofilens språk. Språket i din egen meny påverkar inte mejlen."
   },
   "sellerTerms": {
     "title": "Säljarvillkor",
@@ -4903,6 +4905,7 @@
     "former": "Tidigare medlem",
     "member": "Medlem utan visningsnamn",
     "system": "System",
+    "loadError": "Kunde inte läsa butikens händelser. Försök igen.",
     "empty": "Inga händelser matchar ditt urval.",
     "unknown": "Annan butikshändelse",
     "details": "Tekniska referenser",
@@ -4967,5 +4970,6 @@
       "tenant": "Butik",
       "zettle": "PayPal POS"
     }
-  }
+  },
+  "scanFocus": "Skanna / skriv"
 }

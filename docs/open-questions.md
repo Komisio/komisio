@@ -582,14 +582,25 @@ HTTP fixtures test the product/purchase loop without a real merchant account.
 
 ## USB print verification, 2026-10-13
 
+Current Weblink acceptance (2026-10-23): managed preparation and installation-file
+download, scoped queue delivery and setup guidance are deployed in both
+environments. The owner installed the combined file through Zebra Printer Setup
+Utility and confirmed exactly one readable production label after the gateway's
+Basic-challenge correction. The earlier staging test also verified controlled
+service restart, revocation and inspected recovery without a resend.
+See [PRINT-WEBLINK.md](PRINT-WEBLINK.md) and #542 for the evidence boundary:
+physical scanning, real certificate renewal/chain replacement, power/network loss
+during output and other hardware remain open. The dated preparation notes below
+record earlier stages, not outstanding implementation work.
+
 Managed Weblink setup (2026-10-22): the owner selected preparation and private
 installation-file download from Komisio, with no per-printer server installation.
 Each environment has its own gateway/keys and each printer keeps a separate
 identity and queue. Existing owner/admin/MFA checks, explicit activation and
 uncertain-output recovery remain. Platform deployment must not enroll a
-production store or physical printer. Shared gateway rollout and the new file
-installation path remain to be verified; the existing staging hardware pilot
-does not by itself verify this new flow.
+production store or physical printer. Shared gateway rollout and file installation
+were verified subsequently as recorded above; the original staging hardware
+pilot alone did not establish that new flow.
 
 Weblink software preparation (2026-10-22, #542): the owner requests locally
 testable implementation before the ZD420/iPad test. A separate dispatch journal
@@ -647,8 +658,8 @@ connection and inspecting the empty printer buffer, the owner's physical result
 was recorded through the recovery UI. Fresh enrollment of the same printer
 reconnected with zero new dispatches and unchanged original dispatch evidence.
 Barcode scanning is deferred at the owner's request. The standalone pilot runtime
-includes locally tested fixes in the hardware batch;
-those fixes have not released the application or reached production.
+included locally tested fixes in the hardware batch. Those fixes and the later
+managed gateway have since been released; the current acceptance scope is above.
 
 The owner requested native ZPL output to a USB Zebra and has hardware for a
 later pilot. Komisio Print 1.1 uses local Windows RAW queues and retains the
@@ -768,7 +779,7 @@ Staff Active filter (resolved 2026-10-18, owner #510): a small additive item-dir
 
 Stock lifecycle overview (resolved 2026-10-18, owner #511): an additional read RPC may return stock stage counts and ownership values. The item-directory filter may also express the same upcoming seven-day stock window, including pending markdowns and excluding sold, ended and expired periods. No lifecycle action or stock-membership rule changes.
 
-Invitation language (resolved 2026-10-20, owner #522): staff explicitly select the invitation language, defaulting to the store profile language then English. Do not infer it through recipient-profile lookups or the staff session. No membership or access-control rules change.
+Seller and invitation language (updated 2026-10-23, #611): seller mail uses the seller's language, saved store profile language, the optional store-policy communicationLanguage, then English. Invitations keep an explicit language choice with the same store default. A stored unpublished profile does not exist; unsaved browser drafts are never read. The policy setting requires no public profile. Staff UI and AI item language are unrelated. Incomplete/invalid templates also fall back wholly to English; historical messages, recipient lookup and membership rules are unchanged.
 
 Service legal links (#527): localized navigation is implemented without acceptance statements or tracking. Any acceptance wording, checkbox or terms-version storage still requires company-approved text and an explicit decision; website document translations and pricing discrepancies remain outside this repository.
 

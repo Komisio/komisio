@@ -1260,7 +1260,9 @@
       "reviewHelp": "Ennen kuin tuotteen hinta ja ehdot viimeistellään vastaanotossa.",
       "acceptanceHelp": "Ennen kuin tuote kirjataan varastoon myyntiä varten.",
       "more": "Lisätietoa asetuksista"
-    }
+    },
+    "communicationLanguage": "Viestien oletuskieli",
+    "communicationLanguageHint": "Käytetään myyjien sähköposteissa ja henkilöstökutsujen oletuskielenä, kun myymäläprofiilissa ei ole kieltä. Myyjän oma kielivalinta on ensisijainen, sen jälkeen myymäläprofiilin kieli. Oman valikkosi kieli ei vaikuta sähköposteihin."
   },
   "sellerTerms": {
     "title": "Tuojan ehdot",
@@ -4909,6 +4911,7 @@
     "former": "Entinen jäsen",
     "member": "Jäsen ilman näyttönimeä",
     "system": "Järjestelmä",
+    "loadError": "Myymälän tapahtumia ei voitu ladata. Yritä uudelleen.",
     "empty": "Valintaa vastaavia tapahtumia ei ole.",
     "unknown": "Muu myymälätapahtuma",
     "details": "Tekniset viitteet",
@@ -4973,5 +4976,6 @@
       "tenant": "Myymälä",
       "zettle": "PayPal POS"
     }
-  }
+  },
+  "scanFocus": "Skannaa / kirjoita"
 }

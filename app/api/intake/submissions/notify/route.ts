@@ -31,7 +31,6 @@ export async function POST(request: Request) {
         {
           tenantId: c.tenantId,
           storeName: ctx.active.name,
-          locale: ctx.locale,
         },
         c.reviewId,
         true,

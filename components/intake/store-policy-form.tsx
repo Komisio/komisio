@@ -265,6 +265,7 @@ export function StorePolicyForm({
               submissionPricing: f.get('submissionPricing'),
               assistanceEnabled: f.get('assistanceEnabled') === 'on',
               itemLanguage: f.get('itemLanguage'),
+              communicationLanguage: f.get('communicationLanguage'),
               automaticSellerNotifications:
                 f.get('automaticSellerNotifications') === 'on',
               automaticMarkdowns: f.get('automaticMarkdowns') === 'on',
@@ -806,6 +807,26 @@ export function StorePolicyForm({
                 <summary>{t.editor.more}</summary>
                 <p>{t.notificationsIntro}</p>
               </details>
+              <div className="field">
+                <label htmlFor="policy-communication-language">
+                  {t.communicationLanguage}
+                </label>
+                <select
+                  id="policy-communication-language"
+                  name="communicationLanguage"
+                  defaultValue={base.policy.communicationLanguage ?? 'en'}
+                  aria-describedby="policy-communication-language-hint"
+                >
+                  {locales.map((locale) => (
+                    <option key={locale} value={locale}>
+                      {localeNames[locale]}
+                    </option>
+                  ))}
+                </select>
+                <small id="policy-communication-language-hint">
+                  {t.communicationLanguageHint}
+                </small>
+              </div>
               <label className="intake-confirm">
                 <input
                   type="checkbox"

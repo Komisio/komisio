@@ -68,7 +68,14 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
       .getByLabel(d.quickIntake.searchSeller, { exact: true })
       .fill('Synthetic')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
-    await expect(page.locator('.quick-seller-context')).toBeFocused()
+    const finePointer = await page.evaluate(
+      () => matchMedia('(pointer: fine)').matches,
+    )
+    await expect(
+      page.locator(
+        finePointer ? '#quick-description' : '.quick-seller-context',
+      ),
+    ).toBeFocused()
     await expect(page.locator('.quick-item h2')).toBeInViewport()
     await expect(
       page.getByLabel(d.quickIntake.description, { exact: true }),
@@ -178,7 +185,7 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await page.keyboard.press('Tab')
     await expect(nextItem).toBeFocused()
     await page.keyboard.press('Enter')
-    await expect(page.locator('.quick-item h2')).toBeFocused()
+    await expect(page.locator('#quick-description')).toBeFocused()
     await expect(page.locator('.quick-item h2')).toBeInViewport()
     await expect(
       page.getByLabel(d.quickIntake.description, { exact: true }),

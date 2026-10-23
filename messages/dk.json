@@ -1260,7 +1260,9 @@
       "reviewHelp": "Før varens pris og vilkår færdiggøres i modtagelsen.",
       "acceptanceHelp": "Før varen registreres på lager til salg.",
       "more": "Mere om indstillingerne"
-    }
+    },
+    "communicationLanguage": "Standardsprog for beskeder",
+    "communicationLanguageHint": "Bruges til e-mails til sælgere og som standard for personaleinvitationer, når butiksprofilen ikke har et sprog. Sælgerens eget sprog har førsteprioritet, derefter butiksprofilens sprog. Sproget i din egen menu påvirker ikke e-mails."
   },
   "sellerTerms": {
     "title": "Indleverervilkår",
@@ -4903,6 +4905,7 @@
     "former": "Tidligere medlem",
     "member": "Medlem uden visningsnavn",
     "system": "System",
+    "loadError": "Butikkens aktivitet kunne ikke indlæses. Prøv igen.",
     "empty": "Ingen hændelser matcher dit valg.",
     "unknown": "Anden butikshændelse",
     "details": "Tekniske referencer",
@@ -4967,5 +4970,6 @@
       "tenant": "Butik",
       "zettle": "PayPal POS"
     }
-  }
+  },
+  "scanFocus": "Scan / skriv"
 }

@@ -12,8 +12,24 @@ export function economyFormat(locale: Locale) {
     timeZone: 'UTC',
   })
   const parts = dates.formatToParts(new Date('2006-11-22T00:00:00Z'))
+  const ranges = new Intl.DateTimeFormat(tag, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  })
+  const percentages = new Intl.NumberFormat(tag, {
+    style: 'percent',
+    maximumFractionDigits: 2,
+  })
   return {
     number: (value: number) => numbers.format(value),
+    percent: (value: number) => percentages.format(value / 100),
+    dateRange: (from: string, to: string) =>
+      ranges.formatRange(
+        new Date(`${from}T00:00:00Z`),
+        new Date(`${to}T00:00:00Z`),
+      ),
     money: (ore: number, currency: string) => {
       const formatter = new Intl.NumberFormat(tag, {
         style: 'currency',

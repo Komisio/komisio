@@ -1260,7 +1260,9 @@
       "reviewHelp": "Bevor Preis und Bedingungen des Artikels in der Annahme fertiggestellt werden.",
       "acceptanceHelp": "Bevor der Artikel zum Verkauf im Bestand erfasst wird.",
       "more": "Mehr zu den Einstellungen"
-    }
+    },
+    "communicationLanguage": "Standardsprache für Nachrichten",
+    "communicationLanguageHint": "Wird für E-Mails an Verkäufer und als Vorgabe für Mitarbeitereinladungen verwendet, wenn im Ladenprofil keine Sprache festgelegt ist. Die Sprache des Verkäufers hat Vorrang, danach die Sprache des Ladenprofils. Ihre eigene Menüsprache beeinflusst die E-Mails nicht."
   },
   "sellerTerms": {
     "title": "Einlieferer-Bedingungen",
@@ -4909,6 +4911,7 @@
     "former": "Ehemaliges Mitglied",
     "member": "Mitglied ohne Anzeigenamen",
     "system": "System",
+    "loadError": "Die Geschäftsaktivitäten konnten nicht geladen werden. Bitte versuche es erneut.",
     "empty": "Keine Ereignisse entsprechen der Auswahl.",
     "unknown": "Anderes Geschäftsereignis",
     "details": "Technische Referenzen",
@@ -4973,5 +4976,6 @@
       "tenant": "Geschäft",
       "zettle": "PayPal POS"
     }
-  }
+  },
+  "scanFocus": "Scannen / eingeben"
 }

@@ -12,6 +12,7 @@ import { exactPrice } from '@/lib/engine/manual-reception'
 import { saleSearchRows, type SaleSearchItem } from '@/lib/engine/sale-search'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
+import { ScanFocusButton, useScanFocus } from '@/components/platform/scan-focus'
 
 const decimal = (ore: bigint) =>
   `${ore / 100n}.${String(ore % 100n).padStart(2, '0')}`
@@ -24,6 +25,7 @@ export function SaleForm({
   canConfigureVat = false,
   initialItem,
   unavailableItem = false,
+  scanFocusLabel,
 }: {
   initialItem?: SaleSearchItem
   unavailableItem?: boolean
@@ -33,6 +35,7 @@ export function SaleForm({
   intake: Dictionary['intake']
   leaveUnsaved: string
   canConfigureVat?: boolean
+  scanFocusLabel: string
 }) {
   const action = useIntakeAction(intake),
     router = useRouter()
@@ -56,6 +59,7 @@ export function SaleForm({
   const searchVersion = useRef(0),
     searchInput = useRef<HTMLInputElement>(null)
   const locked = action.busy || action.locked || action.needsReload
+  const scan = useScanFocus(searchInput, !locked)
   useUnsavedChanges(
     cart.length > 0 || note.trim() || payment !== 'unspecified' || action.locked
       ? leaveUnsaved
@@ -72,6 +76,7 @@ export function SaleForm({
     const q = query.trim(),
       version = ++searchVersion.current
     if (q.length < 2 || locked) return
+    const restoreFocus = scan.prepareRestore(true)
     setSearching(true)
     setError('')
     setResults([])
@@ -86,6 +91,7 @@ export function SaleForm({
       if (version === searchVersion.current) {
         setResults(rows)
         setSearched(true)
+        restoreFocus()
       }
     } catch {
       if (version === searchVersion.current) setError(d.searchFailed)
@@ -100,12 +106,20 @@ export function SaleForm({
         : [...current, { ...item, price: decimal(BigInt(item.priceOre)) }],
     )
     setSaved(null)
-    searchInput.current?.focus()
+    if (/^I-?[0-9A-F]{8}$/i.test(query.trim())) {
+      ++searchVersion.current
+      setQuery('')
+      setResults([])
+      setSearched(false)
+      setSearching(false)
+    }
+    scan.focus(true)
   }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget
     if (!cart.length) return
+    const restoreFocus = scan.prepareRestore()
     setError('')
     const lines: { itemId: string; price: string }[] = []
     for (const item of cart) {
@@ -142,6 +156,7 @@ export function SaleForm({
       setExternalId(crypto.randomUUID())
       form.reset()
       router.refresh()
+      restoreFocus()
     }
   }
   return (
@@ -160,6 +175,7 @@ export function SaleForm({
           <input
             ref={searchInput}
             id="sale-search"
+            aria-describedby={scan.contextId}
             value={query}
             maxLength={120}
             disabled={locked}
@@ -176,6 +192,12 @@ export function SaleForm({
             {searching ? intake.busy : d.searchButton}
           </Button>
         </div>
+        <ScanFocusButton
+          scan={scan}
+          label={scanFocusLabel}
+          context={d.title}
+          disabled={locked}
+        />
       </form>
       {searched && !results.length && <p role="status">{d.noMatches}</p>}
       {results.length > 20 && <p>{d.narrowSearch}</p>}

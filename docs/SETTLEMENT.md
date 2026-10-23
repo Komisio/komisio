@@ -82,9 +82,20 @@ the real MCP boundary.
 
 ## Seller notification languages
 
-Settlement and payout notices use the seller profile language, then the store
-profile language, then English. The staff session language never selects the mail
-language. The six transactional templates and their footer are versioned (`v2`)
+All seller notices use the seller profile language, then the saved store profile
+language, then the store policy's `communicationLanguage`, then English. This
+includes settlement and payout notices, ordinary messages, welcome/activation
+and submission-review replies. The staff session language and the AI item-text
+language never select the mail language.
+
+Owners/admins can save **Default message language** under **Store settings → Store
+policy → Seller notifications** without publishing a public store profile. There
+is no saved unpublished profile in the current schema; an unsaved browser draft
+cannot select an email language. Existing stores without any saved choice keep
+English until an explicit choice is saved. A saved seller or store-profile language
+still takes priority over the policy default.
+
+The six transactional templates and their footer are versioned (`v2`)
 in `messages/{locale}.json` under `communications.templates`, for all eight product
 languages. A missing or incompatible translation falls back to the whole English
 template, and that actual language is recorded with the rendered text. Existing
@@ -92,5 +103,11 @@ communication history stays unchanged; store-written free text is not translated
 
 Amounts use the store currency and exact minor units with locale-aware formatting.
 Dates use the resolved language and Europe/Stockholm time. Staff invitations use
-`communications.invitation`; their explicit language selector defaults to the store
-language, then English, without looking up the recipient account.
+`communications.invitation`; their explicit language selector defaults to the saved
+store profile language, then the same policy default, then English, without looking
+up the recipient account. Account authentication emails have their own language
+rules in [the operations runbook](OPERATIONS-RUNBOOK.md#account-email-language).
+
+`tests/unit/seller-mail-paths.test.ts` covers saved-language dispatch through direct
+and automatic paths. `tests/e2e/seller-email-language.spec.ts` verifies the setting
+without a public profile, stored message language and unchanged earlier messages.

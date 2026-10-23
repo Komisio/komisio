@@ -18,7 +18,7 @@ test('activity filters, stable pages and role restriction', async ({
       [f.tenant, f.actor],
     )
     await f.db.query(
-      "insert into access_events(tenant_id,actor_id,action,occurred_at) values($1,$2,'future.new_action','2025-10-22T22:31:00Z')",
+      "insert into access_events(tenant_id,actor_id,action,occurred_at,target_id) values($1,$2,'future.new_action','2025-10-22T22:31:00Z','01234567-89ab-cdef-0123-456789abcdef')",
       [f.tenant, f.actor],
     )
     await page.goto('/settings/activity')
@@ -45,6 +45,9 @@ test('activity filters, stable pages and role restriction', async ({
     await page.locator('.activity-list li').first().locator('summary').click()
     await expect(
       page.getByText('future.new_action', { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText('01234567-89ab-cdef-0123-456789abcdef', { exact: true }),
     ).toBeVisible()
     await expect(page.getByText('PRIVATE_PAYLOAD')).toHaveCount(0)
     await expect(page.locator('.activity-list time').first()).toContainText(

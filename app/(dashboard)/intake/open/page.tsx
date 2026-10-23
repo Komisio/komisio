@@ -1,4 +1,5 @@
 import { WorkingForm } from '@/components/platform/working-form'
+import { ScanFocusInput } from '@/components/platform/scan-focus'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
 import { notFound, redirect } from 'next/navigation'
@@ -15,7 +16,8 @@ export default async function OpenByReference({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform(),
     tenant = ctx.active!,
-    d = dictionary(ctx.locale).openByReference
+    all = dictionary(ctx.locale),
+    d = all.openByReference
   const raw = (await searchParams).ref
   const ref = typeof raw === 'string' ? raw.trim().toUpperCase() : ''
   const itemReference = /^I-?([0-9A-F]{8})$/.exec(ref)
@@ -85,11 +87,12 @@ export default async function OpenByReference({
         <WorkingForm action="/intake/open">
           <div className="field">
             <label htmlFor="open-ref">{d.reference}</label>
-            <input
+            <ScanFocusInput
+              focusLabel={all.scanFocus}
+              contextLabel={d.title}
               key={ref}
               id="open-ref"
               name="ref"
-              autoFocus
               inputMode="text"
               autoComplete="off"
               autoCapitalize="characters"

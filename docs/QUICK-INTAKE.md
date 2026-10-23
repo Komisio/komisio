@@ -51,6 +51,14 @@ audit); without a provider the screen says so and the staff fills them in.
 page. Seller search, camera input, facts, price, printer, result card with
 the reference and "Next garment" that keeps the seller and the printer.
 
+Fine-pointer devices focus seller search on arrival and the description after
+seller selection or "Next garment". Touch devices show a translated "Scan / type"
+button; initial loading does not open the keyboard. Completion still focuses the
+confirmation heading before staff explicitly choose the next item. That action
+restores description focus on touch too if the field was already used. The shared
+`useScanFocus` helper also serves label lookup, receiving, manual sales and stocktake;
+it does not capture global keystrokes or add or sell items automatically.
+
 ## Verification
 
 `supabase/tests/0106_quick_intake.test.sql` (profile validation, agreement
@@ -58,6 +66,8 @@ rule, seller binding, fact whitelist, revision check, the item and its
 provenance, replay, photo citation, full profile refusal, per-item approval
 still binding, readonly refused) and `tests/e2e/quick-intake.spec.ts` (a
 garment without a photo to an accepted item and the next-garment reset).
+`tests/e2e/scan-focus.spec.ts` covers fine-pointer and touch focus, scan loops,
+preserved navigation, tab keyboard behavior and delayed-response focus guards.
 
 ## Not in this slice
 

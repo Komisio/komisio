@@ -3,12 +3,13 @@ import {
   useBusyState,
   useBusyTransition as useTransition,
 } from '@/components/platform/work-activity'
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useRef, useState } from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import type { StocktakeReport } from '@/lib/engine/stocktake'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { useIntakeAction } from './use-intake-action'
+import { ScanFocusButton, useScanFocus } from '@/components/platform/scan-focus'
 
 const Workspace = createContext<{
   busy: boolean
@@ -138,16 +139,10 @@ export function StocktakeScan({
   d: Dictionary
 }) {
   const action = useStocktakeAction(d),
-    input = useRef<HTMLInputElement>(null),
-    focusAfterScan = useRef(false)
+    input = useRef<HTMLInputElement>(null)
+  const scan = useScanFocus(input, !action.busy && !action.locked)
   const [reference, setReference] = useState(''),
     [last, setLast] = useState('')
-  useEffect(() => {
-    if (focusAfterScan.current && !action.busy) {
-      focusAfterScan.current = false
-      input.current?.focus()
-    }
-  }, [last, action.busy])
   useUnsavedChanges(
     reference.length > 0 || action.locked
       ? d.inspection.leaveUnconfirmed
@@ -158,6 +153,7 @@ export function StocktakeScan({
       className="card intake-form"
       onSubmit={async (e) => {
         e.preventDefault()
+        const restoreFocus = scan.prepareRestore()
         const id = await action.run({
           action: 'scanStocktake',
           tenantId,
@@ -166,9 +162,9 @@ export function StocktakeScan({
           requestId: crypto.randomUUID(),
         })
         if (id) {
-          focusAfterScan.current = true
           setLast(reference)
           setReference('')
+          restoreFocus()
         }
       }}
     >
@@ -178,6 +174,7 @@ export function StocktakeScan({
           <input
             id="stocktake-scan"
             ref={input}
+            aria-describedby={scan.contextId}
             value={reference}
             maxLength={64}
             required
@@ -194,6 +191,12 @@ export function StocktakeScan({
             {action.busy ? d.intake.busy : d.stocktake.scan}
           </button>
         </div>
+        <ScanFocusButton
+          scan={scan}
+          label={d.scanFocus}
+          context={d.stocktake.title}
+          disabled={action.busy || action.locked}
+        />
       </div>
       {last && (
         <p role="status">

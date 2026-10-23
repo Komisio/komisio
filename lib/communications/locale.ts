@@ -1,8 +1,34 @@
 import { dictionary, isLocale, type Dictionary, type Locale } from '../i18n'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { readStoreProfile } from '../engine/store-profile'
+import { readStorePolicy } from '../engine/store-policy'
 
 /** Email language never depends on the staff session that initiated delivery. */
-export function emailLocale(preferred?: unknown, store?: unknown): Locale {
-  return isLocale(preferred) ? preferred : isLocale(store) ? store : 'en'
+export function emailLocale(
+  preferred?: unknown,
+  store?: unknown,
+  fallback?: unknown,
+): Locale {
+  return isLocale(preferred)
+    ? preferred
+    : isLocale(store)
+      ? store
+      : isLocale(fallback)
+        ? fallback
+        : 'en'
+}
+
+/** Read only saved store choices; an unsaved profile or staff UI cannot select mail language. */
+export async function resolveSellerEmailLocale(
+  client: SupabaseClient,
+  tenantId: string,
+  sellerProfile?: { language?: unknown } | null,
+): Promise<Locale> {
+  if (isLocale(sellerProfile?.language)) return sellerProfile.language
+  const store = await readStoreProfile(client, tenantId)
+  if (isLocale(store.profile?.language)) return store.profile.language
+  const policy = await readStorePolicy(client, tenantId)
+  return emailLocale(undefined, undefined, policy.policy.communicationLanguage)
 }
 
 export function templatePlaceholders(text: string) {
@@ -21,7 +47,8 @@ export function emailTemplate(
     Object.values(english).some((v) => typeof v !== 'string' || !v.trim())
   )
     throw new Error('EMAIL_TEMPLATE_MISSING')
-  const locale = emailLocale(requested)
+  // Invalid template identifiers still fall back to English; this is not a store default.
+  const locale = isLocale(requested) ? requested : 'en'
   const candidate = read(dictionary(locale))
   const complete =
     candidate &&

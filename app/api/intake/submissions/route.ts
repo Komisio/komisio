@@ -33,7 +33,6 @@ export async function POST(request: Request) {
       {
         tenantId: ctx.active.id,
         storeName: ctx.active.name,
-        locale: ctx.locale,
       },
       saved.id,
     )

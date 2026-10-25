@@ -90,7 +90,7 @@ test('receive with an assortment, print four attributes and find the group in st
     }
     await page.goto('/intake/stock#stock-assortments')
     const row = page.getByRole('row').filter({ hasText: 'Synthetic standard' })
-    await expect(row).toContainText('200.00 SEK')
+    await expect(row).toContainText('200,00 kr')
     await expect(row.getByRole('cell').first()).toHaveText('1')
     await page.setViewportSize({ width: 390, height: 844 })
     expect(

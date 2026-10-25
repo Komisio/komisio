@@ -101,8 +101,8 @@ test('stock cards match upcoming items across pages, ownership and all display l
       name: d.stock.ownershipValue,
       exact: true,
     })
-    await expect(values).toContainText('5800.00 SEK')
-    await expect(values).toContainText('250.00 SEK')
+    await expect(values).toContainText('5 800,00 kr')
+    await expect(values).toContainText('250,00 kr')
     await stages
       .getByRole('link', { name: `${d.stock.nearingEnd}: 27`, exact: true })
       .click()

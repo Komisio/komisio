@@ -88,7 +88,7 @@ test('ownership filters count and page all goods and carry through stock reports
     ).toHaveAttribute('aria-selected', 'true')
     await expect(
       page.getByRole('region', { name: d.stock.current }),
-    ).toContainText('6500.00 SEK')
+    ).toContainText('6 500,00 kr')
     const salesTab = page.getByRole('tab', {
       name: d.stock.tabs.sales,
       exact: true,
@@ -115,7 +115,7 @@ test('ownership filters count and page all goods and carry through stock reports
       .click()
     await expect(
       page.getByRole('region', { name: d.stock.current }),
-    ).toContainText('6500.00 SEK')
+    ).toContainText('6 500,00 kr')
     await page
       .getByRole('combobox', { name: d.items.ownership })
       .selectOption('consignment')
@@ -125,7 +125,7 @@ test('ownership filters count and page all goods and carry through stock reports
     ).toHaveAttribute('aria-selected', 'true')
     await expect(
       page.getByRole('region', { name: d.stock.current }),
-    ).toContainText('200.00 SEK')
+    ).toContainText('200,00 kr')
     for (const [tab, ownership] of [
       [d.stock.tabs.categories, 'store'],
       [d.stock.tabs.sales, 'consignment'],

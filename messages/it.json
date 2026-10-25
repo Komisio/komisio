@@ -1639,7 +1639,19 @@
     "issued": "Il rendiconto è emesso.",
     "open": "Apri rendiconto",
     "closedPeriodHint": "La data finale deve essere ieri o precedente.",
-    "issueInfo": "Informazioni sul rendiconto"
+    "issueInfo": "Informazioni sul rendiconto",
+    "selfBilling": "Autofattura",
+    "selfBillingCredit": "Nota di credito per autofattura",
+    "supplier": "Venditore / fornitore",
+    "buyer": "Acquirente",
+    "supplierNet": "Importo IVA esclusa",
+    "supplierVat": "IVA del fornitore",
+    "supplierGross": "Importo IVA inclusa",
+    "vatRate": "Aliquota IVA",
+    "noSeparateVat": "Nessuna IVA addebitata separatamente",
+    "downloadPdf": "Scarica PDF",
+    "invoiceTotals": "Importi della fattura",
+    "invoiceNote": "L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto."
   },
   "handovers": {
     "title": "Consegne annunciate",
@@ -1992,6 +2004,22 @@
       "message": {
         "subject": "Messaggio da {store}",
         "body": "Ciao {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Autofattura · {store}",
+        "subjectNumber": "Autofattura #{number} · {store}",
+        "body": "L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+        "bodyNumber": "Autofattura #{number}. L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+        "amount": "Saldo finale: {amount}.",
+        "note": "Puoi aprire il documento e scaricare il PDF nel portale del venditore."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Nota di credito per autofattura · {store}",
+        "subjectNumber": "Nota di credito per autofattura #{number} · {store}",
+        "body": "L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+        "bodyNumber": "Nota di credito per autofattura #{number}. L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+        "amount": "Saldo finale: {amount}.",
+        "note": "Puoi aprire il documento e scaricare il PDF nel portale del venditore."
       }
     },
     "invitation": {

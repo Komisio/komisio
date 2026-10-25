@@ -1639,7 +1639,19 @@
     "issued": "Afregningen er udstedt.",
     "open": "Åbn afregning",
     "closedPeriodHint": "Slutdatoen skal være i går eller tidligere.",
-    "issueInfo": "Om afregningen"
+    "issueInfo": "Om afregningen",
+    "selfBilling": "Selvfaktura",
+    "selfBillingCredit": "Kreditnota til selvfaktura",
+    "supplier": "Sælger / leverandør",
+    "buyer": "Køber",
+    "supplierNet": "Beløb eksklusive moms",
+    "supplierVat": "Leverandørens moms",
+    "supplierGross": "Beløb inklusive moms",
+    "vatRate": "Momssats",
+    "noSeparateVat": "Ingen særskilt opkrævet moms",
+    "downloadPdf": "Download PDF",
+    "invoiceTotals": "Selvfakturaens beløb",
+    "invoiceNote": "Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen."
   },
   "handovers": {
     "title": "Forhåndsanmeldelser",
@@ -1992,6 +2004,22 @@
       "message": {
         "subject": "Besked fra {store}",
         "body": "Hej {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Selvfaktura · {store}",
+        "subjectNumber": "Selvfaktura #{number} · {store}",
+        "body": "Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
+        "bodyNumber": "Selvfaktura #{number}. Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
+        "amount": "Udgående saldo: {amount}.",
+        "note": "Du kan åbne dokumentet og downloade PDF i sælgerportalen."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Kreditnota til selvfaktura · {store}",
+        "subjectNumber": "Kreditnota til selvfaktura #{number} · {store}",
+        "body": "Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
+        "bodyNumber": "Kreditnota til selvfaktura #{number}. Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
+        "amount": "Udgående saldo: {amount}.",
+        "note": "Du kan åbne dokumentet og downloade PDF i sælgerportalen."
       }
     },
     "invitation": {

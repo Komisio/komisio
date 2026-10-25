@@ -1639,7 +1639,19 @@
     "issued": "Die Abrechnung ist ausgestellt.",
     "open": "Abrechnung öffnen",
     "closedPeriodHint": "Das Enddatum muss spätestens gestern sein.",
-    "issueInfo": "Zur Abrechnung"
+    "issueInfo": "Zur Abrechnung",
+    "selfBilling": "Gutschrift (Selbstfakturierung)",
+    "selfBillingCredit": "Korrektur der Selbstfakturierung",
+    "supplier": "Verkäufer / Lieferant",
+    "buyer": "Käufer",
+    "supplierNet": "Nettobetrag",
+    "supplierVat": "Umsatzsteuer des Lieferanten",
+    "supplierGross": "Bruttobetrag",
+    "vatRate": "Steuersatz",
+    "noSeparateVat": "Keine gesondert berechnete Umsatzsteuer",
+    "downloadPdf": "PDF herunterladen",
+    "invoiceTotals": "Rechnungsbeträge",
+    "invoiceNote": "Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen."
   },
   "handovers": {
     "title": "Angekündigte Übergaben",
@@ -1992,6 +2004,22 @@
       "message": {
         "subject": "Nachricht von {store}",
         "body": "Hallo {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Gutschrift (Selbstfakturierung) · {store}",
+        "subjectNumber": "Gutschrift (Selbstfakturierung) #{number} · {store}",
+        "body": "Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen.",
+        "bodyNumber": "Gutschrift (Selbstfakturierung) #{number}. Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen.",
+        "amount": "Endsaldo: {amount}.",
+        "note": "Sie können das Dokument im Verkäuferportal öffnen und als PDF herunterladen."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Korrektur der Selbstfakturierung · {store}",
+        "subjectNumber": "Korrektur der Selbstfakturierung #{number} · {store}",
+        "body": "Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen.",
+        "bodyNumber": "Korrektur der Selbstfakturierung #{number}. Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen.",
+        "amount": "Endsaldo: {amount}.",
+        "note": "Sie können das Dokument im Verkäuferportal öffnen und als PDF herunterladen."
       }
     },
     "invitation": {

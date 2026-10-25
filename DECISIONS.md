@@ -1199,3 +1199,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-25: #626: Staff register immutable private/business seller types; existing sellers remain private. Business identity is versioned, with optional fields and no VIES lookup. Business commission defaults to exclusive, retaining seller overrides.
 - 2026-10-25: #626: Future sales freeze seller type, VAT registration and VAT ID from the seller profile. Non-registered businesses use private VAT policy; registered businesses use tenant-selected full or margin VAT. Existing sale lines and financial history remain unchanged.
 - 2026-10-25: #626: Sales/returns use frozen seller type and paid payouts use immutable registered type for separate period/day totals. Historical lines without type are private; store-owned goods stay outside these consignment groups. Existing accounting mappings are unchanged.
+
+- 2026-10-25: #626: Full-VAT business seller credit includes supplier VAT, extracted per sale line in öre (100 = 80 net + 20 VAT at 25%). Freeze supplier amounts; returns reverse original facts. Self-billing uses settlement numbering and immutable identity snapshots.

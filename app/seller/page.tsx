@@ -1,3 +1,5 @@
+import { SelfBillingDetails } from '@/components/intake/self-billing-details'
+import { statementTitle } from '@/lib/engine/self-billing'
 import { SellerBusinessSummary } from '@/components/intake/seller-business-summary'
 import { businessDetails } from '@/lib/engine/seller-business'
 import { SellerItems } from '@/components/seller/items'
@@ -146,7 +148,8 @@ export default async function SellerPortal({
             {account.storeName}
           </Link>
           <h1>
-            {d.statements} #{statement.header.number}
+            {statementTitle(statement.header, all.statements)} #
+            {statement.header.number}
           </h1>
           <p>
             {when(statement.header.period_from)} —{' '}
@@ -158,6 +161,20 @@ export default async function SellerPortal({
           <p>
             {d.closing}: {amount(statement.header.closing_ore)}
           </p>
+          {statement.header.self_billing && (
+            <>
+              <SelfBillingDetails
+                invoice={statement.header.self_billing}
+                locale={ctx.locale}
+              />
+              <a
+                className="btn btn-secondary"
+                href={`/api/seller/statement/pdf?tenant=${account.tenantId}&seller=${account.sellerId}&statement=${statement.header.id}`}
+              >
+                {all.statements.downloadPdf}
+              </a>
+            </>
+          )}
           <table className="seller-statement-lines">
             <thead>
               <tr>
@@ -513,7 +530,7 @@ export default async function SellerPortal({
         {economy.statements.map((s) => (
           <p key={s.id}>
             <Link href={`${base}&statement=${s.id}`}>
-              {d.open} #{s.number}
+              {statementTitle(s, all.statements)} #{s.number}
             </Link>{' '}
             · {amount(s.closing_ore)}
           </p>

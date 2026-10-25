@@ -1639,7 +1639,19 @@
     "issued": "The statement is issued.",
     "open": "Open statement",
     "closedPeriodHint": "The end date must be yesterday or earlier.",
-    "issueInfo": "About the statement"
+    "issueInfo": "About the statement",
+    "selfBilling": "Self-billing invoice",
+    "selfBillingCredit": "Self-billing credit note",
+    "supplier": "Seller / supplier",
+    "buyer": "Buyer",
+    "supplierNet": "Amount excluding VAT",
+    "supplierVat": "Supplier VAT",
+    "supplierGross": "Amount including VAT",
+    "vatRate": "VAT rate",
+    "noSeparateVat": "No separately charged VAT",
+    "downloadPdf": "Download PDF",
+    "invoiceTotals": "Invoice amounts",
+    "invoiceNote": "This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement."
   },
   "handovers": {
     "title": "Announced drop-offs",
@@ -1992,6 +2004,22 @@
       "message": {
         "subject": "Message from {store}",
         "body": "Hello {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Self-billing invoice · {store}",
+        "subjectNumber": "Self-billing invoice #{number} · {store}",
+        "body": "This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+        "bodyNumber": "Self-billing invoice #{number}. This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+        "amount": "Closing balance: {amount}.",
+        "note": "You can open the document and download its PDF in the seller portal."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Self-billing credit note · {store}",
+        "subjectNumber": "Self-billing credit note #{number} · {store}",
+        "body": "This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+        "bodyNumber": "Self-billing credit note #{number}. This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+        "amount": "Closing balance: {amount}.",
+        "note": "You can open the document and download its PDF in the seller portal."
       }
     },
     "invitation": {

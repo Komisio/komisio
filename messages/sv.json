@@ -1639,7 +1639,19 @@
     "issued": "Avräkningen är utfärdad.",
     "open": "Öppna avräkningen",
     "closedPeriodHint": "Slutdatum kan vara senast i går.",
-    "issueInfo": "Om avräkningen"
+    "issueInfo": "Om avräkningen",
+    "selfBilling": "Självfaktura",
+    "selfBillingCredit": "Kreditnota för självfaktura",
+    "supplier": "Säljare / leverantör",
+    "buyer": "Köpare",
+    "supplierNet": "Belopp exklusive moms",
+    "supplierVat": "Leverantörens moms",
+    "supplierGross": "Belopp inklusive moms",
+    "vatRate": "Momssats",
+    "noSeparateVat": "Ingen separat debiterad moms",
+    "downloadPdf": "Ladda ner PDF",
+    "invoiceTotals": "Självfakturans belopp",
+    "invoiceNote": "Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen."
   },
   "handovers": {
     "title": "Föranmälningar",
@@ -1992,6 +2004,22 @@
       "message": {
         "subject": "Meddelande från {store}",
         "body": "Hej {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Självfaktura · {store}",
+        "subjectNumber": "Självfaktura #{number} · {store}",
+        "body": "Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
+        "bodyNumber": "Självfaktura #{number}. Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
+        "amount": "Utgående saldo: {amount}.",
+        "note": "Du kan öppna underlaget och ladda ner PDF i säljarportalen."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Kreditnota för självfaktura · {store}",
+        "subjectNumber": "Kreditnota för självfaktura #{number} · {store}",
+        "body": "Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
+        "bodyNumber": "Kreditnota för självfaktura #{number}. Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
+        "amount": "Utgående saldo: {amount}.",
+        "note": "Du kan öppna underlaget och ladda ner PDF i säljarportalen."
       }
     },
     "invitation": {

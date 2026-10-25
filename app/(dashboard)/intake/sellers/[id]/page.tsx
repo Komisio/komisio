@@ -1,3 +1,4 @@
+import { statementTitle } from '@/lib/engine/self-billing'
 import { SellerBusinessSummary } from '@/components/intake/seller-business-summary'
 import { readStaffMailStatus } from '@/lib/engine/store-mail'
 import { StoreMailStatus } from '@/components/seller/store-mail-status'
@@ -301,7 +302,7 @@ export default async function Seller({
       })),
     statement_issued: statements.map((s) => ({
       id: s.id,
-      label: `${s.kind === 'credit_note' ? all.statements.creditNote : all.statements.statement} ${s.number}`,
+      label: `${statementTitle(s, all.statements)} ${s.number}`,
     })),
   }
   const l = all.ledger,
@@ -675,10 +676,7 @@ export default async function Seller({
                         className="text-link"
                         href={`/intake/statements/${s.id}`}
                       >
-                        {s.kind === 'credit_note'
-                          ? st.creditNote
-                          : st.statement}{' '}
-                        {s.number}
+                        {statementTitle(s, st)} {s.number}
                       </Link>{' '}
                       · {when(s.period_from)} – {when(s.period_to)} ·{' '}
                       {st.closing} {formatSignedOre(s.closing_ore)} {currency}

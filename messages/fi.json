@@ -1639,7 +1639,19 @@
     "issued": "Tiliote on annettu.",
     "open": "Avaa tiliote",
     "closedPeriodHint": "Päättymispäivän on oltava viimeistään eilinen.",
-    "issueInfo": "Tietoa tilityksestä"
+    "issueInfo": "Tietoa tilityksestä",
+    "selfBilling": "Itselaskutuslasku",
+    "selfBillingCredit": "Itselaskutuksen hyvityslasku",
+    "supplier": "Myyjä / toimittaja",
+    "buyer": "Ostaja",
+    "supplierNet": "Veroton määrä",
+    "supplierVat": "Toimittajan ALV",
+    "supplierGross": "Verollinen määrä",
+    "vatRate": "ALV-kanta",
+    "noSeparateVat": "Ei erikseen veloitettavaa ALV:tä",
+    "downloadPdf": "Lataa PDF",
+    "invoiceTotals": "Laskun määrät",
+    "invoiceNote": "Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä."
   },
   "handovers": {
     "title": "Ennakkoilmoitukset",
@@ -1992,6 +2004,22 @@
       "message": {
         "subject": "Viesti myymälältä {store}",
         "body": "Hei {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Itselaskutuslasku · {store}",
+        "subjectNumber": "Itselaskutuslasku #{number} · {store}",
+        "body": "Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+        "bodyNumber": "Itselaskutuslasku #{number}. Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+        "amount": "Loppusaldo: {amount}.",
+        "note": "Voit avata asiakirjan ja ladata PDF-tiedoston myyjäportaalissa."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Itselaskutuksen hyvityslasku · {store}",
+        "subjectNumber": "Itselaskutuksen hyvityslasku #{number} · {store}",
+        "body": "Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+        "bodyNumber": "Itselaskutuksen hyvityslasku #{number}. Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+        "amount": "Loppusaldo: {amount}.",
+        "note": "Voit avata asiakirjan ja ladata PDF-tiedoston myyjäportaalissa."
       }
     },
     "invitation": {

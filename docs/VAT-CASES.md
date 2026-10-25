@@ -63,4 +63,4 @@ Komisio's responsibility ends at deterministic, documented computation. The
 choice of mode, and its correctness for the store, is the tenant's, made with
 its accountant; the settings page says so in plain words and links the skill.
 
-Self-billing (#626): the VAT basis of the supplier invoice is awaiting an explicit owner decision. Retail sale VAT must not be presented as supplier invoice VAT. Business identity and reporting alone do not establish complete self-billing support.
+Self-billing (#626, owner approved 2026-10-25): supplier gross is seller credit. For a registered business under full VAT, supplier VAT is round(gross × rateBp / (10000 + rateBp)); net is gross minus VAT. Freeze per sale in minor units. Returns negate the original supplier facts, regardless of later profile/rate changes. Margin and non-registered suppliers have no separately charged supplier VAT. Retail VAT and commission VAT remain distinct. Self-billing documents freeze supplier identity, store identity, currency and line amounts; corrections reference and negate the original invoice facts. Existing private statements and old sale lines remain unchanged.

@@ -124,11 +124,13 @@ export async function sendSellerCommunication(
   } else if (c.kind === 'statement_issued' && c.referenceId) {
     const statement = await client
       .from('settlement_statements')
-      .select('number,closing_ore')
+      .select('number,kind,closing_ore,self_billing')
       .eq('tenant_id', c.tenantId)
       .eq('id', c.referenceId)
       .maybeSingle()
     if (statement.data) {
+      facts.selfBilling = !!statement.data.self_billing
+      facts.statementKind = statement.data.kind
       facts.number = statement.data.number
       facts.amount = emailDecimalAmount(statement.data.closing_ore)
     }

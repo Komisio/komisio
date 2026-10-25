@@ -1639,7 +1639,19 @@
     "issued": "La liquidación está emitida.",
     "open": "Abrir liquidación",
     "closedPeriodHint": "La fecha final debe ser ayer o anterior.",
-    "issueInfo": "Sobre la liquidación"
+    "issueInfo": "Sobre la liquidación",
+    "selfBilling": "Autofactura",
+    "selfBillingCredit": "Nota de crédito de autofactura",
+    "supplier": "Vendedor / proveedor",
+    "buyer": "Comprador",
+    "supplierNet": "Importe sin IVA",
+    "supplierVat": "IVA del proveedor",
+    "supplierGross": "Importe con IVA",
+    "vatRate": "Tipo de IVA",
+    "noSeparateVat": "Sin IVA cobrado por separado",
+    "downloadPdf": "Descargar PDF",
+    "invoiceTotals": "Importes de la factura",
+    "invoiceNote": "La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación."
   },
   "handovers": {
     "title": "Entregas anunciadas",
@@ -1992,6 +2004,22 @@
       "message": {
         "subject": "Mensaje de {store}",
         "body": "Hola {seller}:"
+      },
+      "self_billing_issued": {
+        "subject": "Autofactura · {store}",
+        "subjectNumber": "Autofactura #{number} · {store}",
+        "body": "La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación.",
+        "bodyNumber": "Autofactura #{number}. La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación.",
+        "amount": "Saldo final: {amount}.",
+        "note": "Puede abrir el documento y descargar el PDF en el portal del vendedor."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Nota de crédito de autofactura · {store}",
+        "subjectNumber": "Nota de crédito de autofactura #{number} · {store}",
+        "body": "La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación.",
+        "bodyNumber": "Nota de crédito de autofactura #{number}. La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación.",
+        "amount": "Saldo final: {amount}.",
+        "note": "Puede abrir el documento y descargar el PDF en el portal del vendedor."
       }
     },
     "invitation": {

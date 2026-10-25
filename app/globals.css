@@ -9469,3 +9469,199 @@ button.text-link:hover:not(:disabled) {
     min-width: 0;
   }
 }
+
+/* Staff directories share table semantics, touch targets and compact phone rows. */
+.compact-directory {
+  container: directory / inline-size;
+  min-width: 0;
+}
+.compact-directory-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.875rem;
+}
+.compact-directory-table th,
+.compact-directory-table td {
+  padding: 8px 6px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+.compact-directory-table th {
+  font-size: 0.8rem;
+}
+.directory-date {
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+.compact-directory-table .directory-number {
+  text-align: end;
+}
+.compact-directory-table td.directory-number {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+.compact-directory-table .badge {
+  display: inline-block;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.directory-sort-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  max-width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+.directory-sort-link svg {
+  flex: 0 0 auto;
+}
+.compact-directory-table tbody tr {
+  height: 44px;
+  cursor: pointer;
+}
+.compact-directory-table tbody tr:hover,
+.compact-directory-table tbody tr:focus-within {
+  background: var(--mint);
+}
+.directory-primary-link {
+  display: block;
+  font-weight: 650;
+  color: var(--green);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.directory-contact {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0 8px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.directory-contact > * {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.directory-contact a {
+  color: inherit;
+}
+.directory-cell-label {
+  display: none;
+}
+.directory-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+.directory-filters .field {
+  flex: 1 1 180px;
+  min-width: 0;
+  margin: 0;
+}
+.directory-filters label {
+  display: block;
+  margin-bottom: 4px;
+}
+.directory-filters input,
+.directory-filters select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+}
+.directory-filters .btn {
+  min-height: 44px;
+}
+.directory-filters .directory-order {
+  flex: 1 1 210px;
+}
+@container directory (max-width: 26rem) {
+  .compact-directory-table,
+  .compact-directory-table tbody {
+    display: block;
+  }
+  .compact-directory-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .compact-directory-table thead:focus-within {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    display: block;
+  }
+  .compact-directory-table thead:focus-within tr {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .compact-directory-table thead:focus-within th {
+    width: auto;
+  }
+  .compact-directory-table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    height: auto;
+    min-height: 44px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .compact-directory-table td {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    min-width: 0;
+    max-width: 100%;
+    border: 0;
+    padding: 2px 0;
+    font-size: 0.8rem;
+  }
+  .compact-directory-table td:first-child {
+    flex-basis: 100%;
+    display: block;
+  }
+  .directory-identity {
+    position: relative;
+  }
+  .directory-primary-link {
+    padding-right: 0;
+  }
+  .directory-contact {
+    flex-wrap: nowrap;
+  }
+  .directory-cell-label {
+    display: inline;
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+  .directory-cell-label::after {
+    content: ':';
+  }
+  .directory-cell-value {
+    min-width: 0;
+  }
+  .compact-directory-table .badge {
+    white-space: normal;
+    padding: 1px 4px;
+  }
+}

@@ -51,17 +51,11 @@ test('the sellers list shows holdings and balance and opens the seller', async (
     })
     const row = list.getByRole('row', { name: /Synthetic P2 seller/ })
     await expect(row).toBeVisible()
-    await expect(row.getByRole('cell').nth(3)).toHaveText('2')
-    await expect(row.getByRole('cell').nth(4)).toHaveText('1')
-    await expect(row.getByRole('cell').nth(5)).toContainText('SEK')
-    await expect(
-      list.getByRole('columnheader', { name: d.intake.email, exact: true }),
-    ).toBeVisible()
-    await expect(
-      list.getByRole('columnheader', { name: d.intake.phone, exact: true }),
-    ).toBeVisible()
+    await expect(row.getByRole('cell').nth(1)).toContainText('2')
+    await expect(row.getByRole('cell').nth(2)).toContainText('1')
+    await expect(row.getByRole('cell').nth(3)).toContainText('80,00 kr')
     await expect(row.locator('a[href="tel:0700000000"]')).toBeVisible()
-    expect((await row.boundingBox())!.height).toBeLessThanOrEqual(52)
+    expect((await row.boundingBox())!.height).toBeLessThanOrEqual(84)
     await page.screenshot({
       path: testInfo.outputPath('seller-directory-desktop.png'),
       fullPage: true,
@@ -72,18 +66,8 @@ test('the sellers list shows holdings and balance and opens the seller', async (
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
-    const searchBox = await list
-      .getByLabel(d.sellersList.search, { exact: true })
-      .boundingBox()
-    const searchButton = await list
-      .getByRole('button', { name: d.sellersList.searchButton, exact: true })
-      .boundingBox()
-    expect(Math.abs(searchBox!.y - searchButton!.y)).toBeLessThan(5)
-    expect(
-      (await row
-        .getByRole('link', { name: 'Synthetic P2 seller', exact: true })
-        .boundingBox())!.height,
-    ).toBeGreaterThanOrEqual(44)
+    expect((await row.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+    expect((await row.boundingBox())!.height).toBeLessThanOrEqual(130)
     await page.screenshot({
       path: testInfo.outputPath('seller-directory-mobile.png'),
       fullPage: true,

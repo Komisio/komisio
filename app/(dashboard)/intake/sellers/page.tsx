@@ -5,11 +5,14 @@ import { notFound, redirect } from 'next/navigation'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
+import { sellerSortKeys, readSellersOverviewPage } from '@/lib/engine/sellers'
+import { economyFormat } from '@/lib/intake/economy-format'
+import { directoryOrder } from '@/lib/intake/directory-order'
 import {
-  readSellersOverview,
-  readSellersOverviewPage,
-} from '@/lib/engine/sellers'
-import { formatSignedOre } from '@/lib/engine/seller-ledger'
+  CompactDirectory,
+  DirectoryOrder,
+  type DirectoryColumn,
+} from '@/components/ui/compact-directory'
 
 /** The store's sellers: search, what the store holds for each, balance, and the way to each seller's page. */
 export default async function Sellers({
@@ -20,14 +23,16 @@ export default async function Sellers({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const params = await searchParams
   const q = typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
+  const order = directoryOrder(sellerSortKeys, params.order)
   const pageSize = 25
   const requestedPage =
     typeof params.page === 'string' && /^[1-9]\d{0,6}$/.test(params.page)
       ? Number(params.page)
       : 1
-  const pageHref = (page: number) => {
+  const pageHref = (page: number, nextOrder = order.value, query = q) => {
     const search = new URLSearchParams()
-    if (q) search.set('q', q)
+    if (query) search.set('q', query)
+    if (nextOrder !== 'name:asc') search.set('order', nextOrder)
     if (page > 1) search.set('page', String(page))
     return '/intake/sellers' + (search.size ? '?' + search.toString() : '')
   }
@@ -43,13 +48,31 @@ export default async function Sellers({
       q,
       (requestedPage - 1) * pageSize,
       pageSize,
+      order.sort,
+      order.direction,
     ),
   ])
   const pages = paged ? Math.max(1, Math.ceil(paged.total / pageSize)) : 1
   if (paged && requestedPage > pages) redirect(pageHref(pages))
-  const overview =
-    paged ?? (await readSellersOverview(ctx.client, active.id, q))
-  const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
+  const overview = paged
+  const format = economyFormat(ctx.locale)
+  const money = (ore: number) => format.money(ore, currency)
+  const columns: DirectoryColumn[] = sellerSortKeys.map((key) => ({
+    key,
+    label: key === 'name' ? d.name : d[key],
+    numeric: key !== 'name',
+    width: key === 'name' ? 30 : key === 'items' || key === 'sold' ? 10 : 25,
+    href: pageHref(
+      1,
+      `${key}:${order.sort === key && order.direction === 'asc' ? 'desc' : 'asc'}`,
+    ),
+    order:
+      order.sort === key
+        ? order.direction === 'asc'
+          ? 'ascending'
+          : 'descending'
+        : undefined,
+  }))
   return (
     <div className="seller-directory-page">
       <div className="page-heading seller-directory-heading">
@@ -76,10 +99,10 @@ export default async function Sellers({
       <section className="card seller-directory" aria-label={d.title}>
         <WorkingForm
           action="/intake/sellers"
-          className="seller-directory-search"
+          className="seller-directory-search directory-filters"
         >
-          <label htmlFor="sellers-q">{d.search}</label>
-          <div className="row">
+          <div className="field directory-search-field">
+            <label htmlFor="sellers-q">{d.search}</label>
             <input
               id="sellers-q"
               name="q"
@@ -88,13 +111,21 @@ export default async function Sellers({
               defaultValue={q}
               maxLength={120}
             />
-            <button className="btn btn-secondary">{d.searchButton}</button>
-            {q && (
-              <Link className="text-link" href="/intake/sellers">
-                {d.clear}
-              </Link>
-            )}
           </div>
+          <DirectoryOrder
+            columns={columns}
+            value={order.value}
+            id="sellers-order"
+            label={all.directory.sortBy}
+            ascending={all.items.directory.sortAsc}
+            descending={all.items.directory.sortDesc}
+          />
+          <button className="btn btn-secondary">{d.searchButton}</button>
+          {q && (
+            <Link className="text-link" href={pageHref(1, order.value, '')}>
+              {d.clear}
+            </Link>
+          )}
         </WorkingForm>
         {overview && (
           <p className="seller-directory-count">
@@ -117,81 +148,46 @@ export default async function Sellers({
         )}
         {overview && overview.sellers.length === 0 && <p>{d.empty}</p>}
         {overview && overview.sellers.length > 0 && (
-          <div className="seller-directory-results">
-            <table className="seller-directory-table">
-              <thead>
-                <tr>
-                  <th>{d.name}</th>
-                  <th>{all.intake.email}</th>
-                  <th>{all.intake.phone}</th>
-                  <th>{d.items}</th>
-                  <th>{d.sold}</th>
-                  <th>{d.available}</th>
-                  <th>{d.reserved}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {overview.sellers.map((s) => (
-                  <tr key={s.id}>
-                    <td data-label={d.name}>
-                      <Link
-                        className="text-link"
-                        href={`/intake/sellers/${s.id}`}
+          <CompactDirectory
+            label={d.title}
+            columns={columns}
+            rows={overview.sellers.map((s) => ({
+              id: s.id,
+              cells: [
+                <div key="identity" className="directory-identity">
+                  <Link
+                    className="directory-primary-link"
+                    href={`/intake/sellers/${s.id}`}
+                  >
+                    {s.name}
+                  </Link>
+                  <div className="directory-contact">
+                    {s.email && (
+                      <a href={`mailto:${s.email}`} title={s.email}>
+                        {s.email}
+                      </a>
+                    )}
+                    {s.phone && (
+                      <a
+                        href={`tel:${s.phone.replace(/[^+0-9]/g, '')}`}
+                        title={s.phone}
                       >
-                        {s.name}
-                      </Link>
-                      {!s.email && !s.phone && s.contact && (
-                        <small className="seller-directory-city">
-                          {s.contact}
-                        </small>
-                      )}
-                      {s.city && (
-                        <small className="seller-directory-city">
-                          {s.city}
-                        </small>
-                      )}
-                    </td>
-                    <td
-                      data-label={all.intake.email}
-                      className="seller-directory-contact"
-                    >
-                      {s.email ? (
-                        <a href={`mailto:${s.email}`} title={s.email}>
-                          {s.email}
-                        </a>
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                    <td
-                      data-label={all.intake.phone}
-                      className="seller-directory-contact"
-                    >
-                      {s.phone ? (
-                        <a
-                          href={`tel:${s.phone.replace(/[^+0-9]/g, '')}`}
-                          title={s.phone}
-                        >
-                          {s.phone}
-                        </a>
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                    <td data-label={d.items}>{s.itemsTotal}</td>
-                    <td data-label={d.sold}>{s.itemsSold}</td>
-                    <td
-                      data-label={d.available}
-                      className="seller-directory-balance"
-                    >
-                      {money(s.availableOre)}
-                    </td>
-                    <td data-label={d.reserved}>{money(s.reservedOre)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        {s.phone}
+                      </a>
+                    )}
+                    {!s.email && !s.phone && s.contact && (
+                      <span>{s.contact}</span>
+                    )}
+                    {s.city && <span title={s.city}>{s.city}</span>}
+                  </div>
+                </div>,
+                format.number(s.itemsTotal),
+                format.number(s.itemsSold),
+                money(s.availableOre),
+                money(s.reservedOre),
+              ],
+            }))}
+          />
         )}
         {paged && pages > 1 && (
           <nav

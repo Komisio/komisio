@@ -3284,6 +3284,10 @@
     "openPayoutsPage": "Apri i pagamenti",
     "openEconomy": "Apri l'economia"
   },
+  "directory": {
+    "sortBy": "Ordina per",
+    "via": "Tramite"
+  },
   "sellersList": {
     "title": "Conferenti",
     "intro": "Tutti coloro che hanno consegnato al negozio: cosa il negozio tiene per loro, cosa è stato venduto e cosa possono richiedere.",

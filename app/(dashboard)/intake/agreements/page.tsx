@@ -11,7 +11,16 @@ import { dictionary, intlLocale, localeNames, locales } from '@/lib/i18n'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import type { SellerAgreement } from '@/lib/engine/intake'
 import { readAgreementDraft } from '@/lib/engine/agreement-assistance'
-import { readAgreementSellers } from '@/lib/engine/agreement-workspace'
+import {
+  readAgreementSellers,
+  agreementSortKeys,
+} from '@/lib/engine/agreement-workspace'
+import { directoryOrder } from '@/lib/intake/directory-order'
+import {
+  CompactDirectory,
+  DirectoryOrder,
+  type DirectoryColumn,
+} from '@/components/ui/compact-directory'
 import {
   agreementLinkSummary,
   readSellerAgreementLinks,
@@ -31,6 +40,7 @@ const navigation = z.object({
   page: z.coerce.number().int().min(1).max(1000000).default(1),
   sellersPage: z.coerce.number().int().min(1).max(1000000).default(1),
   q: z.string().trim().max(120).default(''),
+  order: z.string().max(40).optional(),
   status: z.enum(['all', 'accepted', 'missing']).default('all'),
 })
 export default async function Agreements({
@@ -42,6 +52,7 @@ export default async function Agreements({
   const parsed = navigation.safeParse(await searchParams)
   if (!parsed.success) notFound()
   const params = parsed.data
+  const order = directoryOrder(agreementSortKeys, params.order)
   const ctx = await requirePlatform(),
     active = ctx.active!,
     d = dictionary(ctx.locale),
@@ -115,6 +126,8 @@ export default async function Agreements({
           params.q,
           params.status,
           params.sellersPage,
+          order.sort,
+          order.direction,
         )
       : null,
   ])
@@ -125,12 +138,55 @@ export default async function Agreements({
       next.set('translation', params.translation)
     if (params.page > 1) next.set('page', String(params.page))
     if (params.q) next.set('q', params.q)
+    if (order.value !== 'name:asc') next.set('order', order.value)
     if (params.status !== 'all') next.set('status', params.status)
     if (params.sellersPage > 1)
       next.set('sellersPage', String(params.sellersPage))
     for (const [key, value] of Object.entries(change)) next.set(key, value)
     return `/intake/agreements?${next}#${tab === 'document' ? 'agreement-document' : 'agreements-' + tab}`
   }
+  const sortableColumns = [
+    { key: 'name', label: d.intake.name },
+    { key: 'status', label: w.status },
+    { key: 'date', label: a.usage.date },
+  ]
+  const columns: DirectoryColumn[] = [
+    sortableColumns[0],
+    sortableColumns[1],
+    { key: 'source', label: w.source },
+    { key: 'language', label: a.translations.acceptedLanguage },
+    sortableColumns[2],
+  ].map((column) => ({
+    ...column,
+    mobileLabel: column.key === 'source' ? d.directory.via : null,
+    width:
+      column.key === 'name'
+        ? 26
+        : column.key === 'language'
+          ? 16
+          : column.key === 'date'
+            ? 18
+            : 20,
+    ...(agreementSortKeys.includes(
+      column.key as (typeof agreementSortKeys)[number],
+    )
+      ? {
+          href: href(
+            {
+              order: `${column.key}:${order.sort === column.key && order.direction === 'asc' ? 'desc' : 'asc'}`,
+              sellersPage: '1',
+            },
+            'sellers',
+          ),
+          order:
+            order.sort === column.key
+              ? order.direction === 'asc'
+                ? ('ascending' as const)
+                : ('descending' as const)
+              : undefined,
+        }
+      : {}),
+  }))
   const versionPages = Math.max(1, Math.ceil((history.count ?? 0) / 20))
   const sellerPages = Math.max(1, Math.ceil((acceptances?.total ?? 0) / 25))
   const versionContext = shown && (
@@ -469,7 +525,7 @@ export default async function Agreements({
                   <WorkingForm
                     key={`${shown.id}:${params.q}:${params.status}`}
                     action="/intake/agreements#agreements-sellers"
-                    className="agreement-filters"
+                    className="agreement-filters directory-filters"
                   >
                     <input type="hidden" name="version" value={shown.id} />
                     <div className="field">
@@ -496,74 +552,92 @@ export default async function Agreements({
                         <option value="missing">{w.missing}</option>
                       </select>
                     </div>
+                    <DirectoryOrder
+                      columns={sortableColumns}
+                      value={order.value}
+                      id="agreement-order"
+                      label={d.directory.sortBy}
+                      ascending={d.items.directory.sortAsc}
+                      descending={d.items.directory.sortDesc}
+                    />
                     <button className="btn btn-secondary">
                       {d.intake.searchButton}
                     </button>
                   </WorkingForm>
                   <p>
-                    {d.sellersList.showingAll.replace(
-                      '{total}',
-                      String(acceptances?.total ?? 0),
-                    )}
+                    {acceptances && acceptances.sellers.length
+                      ? d.sellersList.showingRange
+                          .replace(
+                            '{from}',
+                            String((params.sellersPage - 1) * 25 + 1),
+                          )
+                          .replace(
+                            '{to}',
+                            String(
+                              (params.sellersPage - 1) * 25 +
+                                acceptances.sellers.length,
+                            ),
+                          )
+                          .replace('{total}', String(acceptances.total))
+                      : d.sellersList.showingAll.replace(
+                          '{total}',
+                          String(acceptances?.total ?? 0),
+                        )}
                   </p>
                   {acceptances?.sellers.length ? (
-                    <div className="seller-directory-results">
-                      <table className="seller-directory-table">
-                        <thead>
-                          <tr>
-                            <th>{d.intake.name}</th>
-                            <th>{w.status}</th>
-                            <th>{w.source}</th>
-                            <th>{a.translations.acceptedLanguage}</th>
-                            <th>{a.usage.date}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {acceptances.sellers.map((s) => (
-                            <tr key={s.id}>
-                              <td data-label={d.intake.name}>
-                                <Link
-                                  className="text-link"
-                                  href={`/intake/sellers/${s.id}#seller-terms`}
-                                >
-                                  {s.name}
-                                </Link>
-                                <small className="seller-directory-city">
-                                  {s.email || s.phone}
-                                </small>
-                              </td>
-                              <td data-label={w.status}>
-                                <span className="badge">
-                                  {s.acceptance ? w.accepted : w.missing}
-                                </span>
-                              </td>
-                              <td data-label={w.source}>
-                                {s.acceptance
-                                  ? s.acceptance.source === 'seller_portal'
-                                    ? w.portal
-                                    : w.staff
-                                  : '—'}
-                              </td>
-                              <td data-label={a.translations.acceptedLanguage}>
-                                {s.acceptance?.language
-                                  ? localeNames[s.acceptance.language]
-                                  : '—'}
-                              </td>
-                              <td data-label={a.usage.date}>
-                                {s.acceptance ? (
-                                  <EventTime
-                                    value={s.acceptance.at}
-                                    locale={ctx.locale}
-                                  />
-                                ) : (
-                                  '—'
-                                )}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                    <CompactDirectory
+                      label={w.acceptances}
+                      columns={columns}
+                      rows={acceptances.sellers.map((s) => ({
+                        id: s.id,
+                        cells: [
+                          <div key="identity" className="directory-identity">
+                            <Link
+                              className="directory-primary-link"
+                              href={`/intake/sellers/${s.id}#seller-terms`}
+                            >
+                              {s.name}
+                            </Link>
+                            <div className="directory-contact">
+                              <span title={s.email || s.phone}>
+                                {s.email || s.phone}
+                              </span>
+                            </div>
+                          </div>,
+                          <span key="status" className="badge">
+                            {s.acceptance
+                              ? w.accepted
+                              : d.quickIntake.workspace.agreementPending}
+                          </span>,
+                          s.acceptance
+                            ? s.acceptance.source === 'seller_portal'
+                              ? w.portal
+                              : d.sellerPortal.staff
+                            : '—',
+                          s.acceptance?.language
+                            ? localeNames[s.acceptance.language]
+                            : '—',
+                          s.acceptance ? (
+                            <time
+                              key="date"
+                              className="directory-date"
+                              dateTime={s.acceptance.at}
+                              title={new Date(s.acceptance.at).toLocaleString(
+                                intlLocale(ctx.locale),
+                                { timeZone: 'Europe/Stockholm' },
+                              )}
+                            >
+                              {new Date(s.acceptance.at).toLocaleDateString(
+                                intlLocale(ctx.locale),
+                                { timeZone: 'Europe/Stockholm' },
+                              )}
+                            </time>
+                          ) : (
+                            '—'
+                          ),
+                        ],
+                      }))}
+                    />
                   ) : (
                     <p>{w.noSellers}</p>
                   )}

@@ -3284,6 +3284,10 @@
     "openPayoutsPage": "Abrir los pagos",
     "openEconomy": "Abrir la economía"
   },
+  "directory": {
+    "sortBy": "Ordenar por",
+    "via": "Vía"
+  },
   "sellersList": {
     "title": "Depositantes",
     "intro": "Todos los que han entregado en la tienda: lo que la tienda guarda para ellos, lo que se ha vendido y lo que pueden solicitar.",

@@ -29,6 +29,8 @@ const register = z.object({
     )
     .max(25),
 })
+export const agreementSortKeys = ['name', 'status', 'date'] as const
+
 export async function readAgreementSellers(
   client: SupabaseClient,
   tenant: string,
@@ -36,12 +38,16 @@ export async function readAgreementSellers(
   query: string,
   status: 'all' | 'accepted' | 'missing',
   page: number,
+  sort: (typeof agreementSortKeys)[number] = 'name',
+  direction: 'asc' | 'desc' = 'asc',
 ) {
-  const result = await client.rpc('agreement_sellers', {
+  const result = await client.rpc('agreement_sellers_sorted', {
     p_tenant: z.uuid().parse(tenant),
     p_agreement: z.uuid().parse(agreement),
     p_query: z.string().max(120).parse(query),
-    p_status: status,
+    p_status: z.enum(['all', 'accepted', 'missing']).parse(status),
+    p_sort: z.enum(agreementSortKeys).parse(sort),
+    p_direction: z.enum(['asc', 'desc']).parse(direction),
     p_offset: (z.number().int().min(1).max(1000000).parse(page) - 1) * 25,
   })
   if (result.error) throw new Error('Unable to read agreement acceptances')

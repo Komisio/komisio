@@ -3284,6 +3284,10 @@
     "openPayoutsPage": "Öppna utbetalningar",
     "openEconomy": "Öppna ekonomin"
   },
+  "directory": {
+    "sortBy": "Sortera efter",
+    "via": "Via"
+  },
   "sellersList": {
     "title": "Säljare",
     "intro": "Alla som lämnat in till butiken: vad butiken har för dem, vad som sålts och vad de kan begära ut.",

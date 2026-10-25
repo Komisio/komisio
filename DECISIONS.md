@@ -1193,3 +1193,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-23: Scan arrival focus respects explicit URL fragments: focus only a field within that target, never an unrelated editor. Unknown targets keep navigation intent. Explicit scan actions and confirmed next-item focus remain available.
 
 - 2026-10-25: #621 shares bounded stock filters across all tabs and formats current stock values with the shared locale formatter. Tablet filters wrap in pairs; touch navigation dismisses rail hints. Report membership, periods and calculations are unchanged.
+
+- 2026-10-25: #622/#623 share compact seller/approval tables. Allowlisted sorting precedes bounded paging in authenticated SQL reads, with stable ID ties and missing approval dates last. Existing search, balance, evidence, tenant and MFA rules remain unchanged.

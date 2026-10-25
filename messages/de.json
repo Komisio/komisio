@@ -3284,6 +3284,10 @@
     "openPayoutsPage": "Auszahlungen öffnen",
     "openEconomy": "Wirtschaft öffnen"
   },
+  "directory": {
+    "sortBy": "Sortieren nach",
+    "via": "Über"
+  },
   "sellersList": {
     "title": "Einlieferer",
     "intro": "Alle, die im Store eingeliefert haben: was der Store für sie verwahrt, was verkauft wurde und was sie beantragen können.",

@@ -1,3 +1,4 @@
+import { sellerTypeTotals } from './seller-type-totals'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -17,6 +18,7 @@ const modeTotals = z.object({
   netOre: ore,
 })
 const dayCloseRow = z.object({
+  seller_totals: sellerTypeTotals.nullable().optional(),
   id: z.uuid(),
   close_date: z.string(),
   version: z.number().int(),

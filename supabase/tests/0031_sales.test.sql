@@ -58,8 +58,8 @@ select is((select count(*) from sales),1::bigint,'failed attempts wrote nothing'
 -- A later policy change does not touch the recorded line; a new sale uses the new mode.
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.policy')::uuid,current_setting('test.body')::jsonb || '{"vatModeConsignmentPrivate":"consignment_full","vatModeStoreOwned":"store_full","vatRatePercent":25}');
 select is((select vat_mode from sale_lines where sale_id=current_setting('test.sale')::uuid and line_no=1),'consignment_margin','recorded mode frozen');
--- Exclusive basis: commission invoiced plus VAT, business mode, full VAT on the sale.
-select publish_seller_terms(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'exclusive',null,'VAT-registered seller');
+-- Exclusive commission does not make a private seller VAT-registered (#626).
+select publish_seller_terms(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,null,'exclusive',null,'Exclusive commission for private seller');
 select set_config('test.draft2',gen_random_uuid()::text,true);
 select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft2')::uuid,0,'Synthetic bag','Bags','Good');
 select set_config('test.item3',gen_random_uuid()::text,true);
@@ -68,7 +68,7 @@ select set_config('test.sim2',simulate_sale(current_setting('test.tenant')::uuid
 select is((current_setting('test.sim2')::jsonb->'lines'->0->>'commissionOre')::bigint,15000::bigint,'commission ex VAT');
 select is((current_setting('test.sim2')::jsonb->'lines'->0->>'commissionVatOre')::bigint,3750::bigint,'VAT on the commission invoice');
 select is((current_setting('test.sim2')::jsonb->'lines'->0->>'sellerCreditOre')::bigint,6250::bigint,'seller credit after commission and its VAT');
-select is(current_setting('test.sim2')::jsonb->'lines'->0->>'vatMode','consignment_business','business mode');
+select is(current_setting('test.sim2')::jsonb->'lines'->0->>'vatMode','consignment_full','private seller uses private mode despite exclusive commission');
 select is((current_setting('test.sim2')::jsonb->'lines'->0->>'vatOre')::bigint,5000::bigint,'sale VAT on the whole price');
 -- Unattested purchase never sells on margin even when the policy says margin.
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),(current_store_policy(current_setting('test.tenant')::uuid)->>'id')::uuid,current_setting('test.body')::jsonb || '{"vatModeConsignmentPrivate":"consignment_full","vatModeStoreOwned":"store_margin","vatRatePercent":25}');

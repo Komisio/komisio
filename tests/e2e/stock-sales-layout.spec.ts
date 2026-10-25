@@ -60,6 +60,7 @@ for (const [locale, tag] of Object.entries(languageTags)) {
       await readFile(`messages/${locale}.json`, 'utf8'),
     )
     try {
+      await f.item('Synthetic unsold jacket')
       const item = await f.item('Synthetic layout jacket')
       await f.db.query(
         "select record_sale($1,$2,'manual',$3,'2026-10-12T10:00:00Z','SEK',$4::jsonb)",
@@ -101,6 +102,32 @@ for (const [locale, tag] of Object.entries(languageTags)) {
             )
             .toBeLessThanOrEqual(viewport.width)
           await assertControlsFit(filters)
+          for (const tab of [
+            'overview',
+            'categories',
+            'assortments',
+            'sales',
+          ] as const) {
+            const label =
+              tab === 'assortments' ? d.stock.assortments : d.stock.tabs[tab]
+            await page.getByRole('tab', { name: label, exact: true }).click()
+            await assertControlsFit(filters)
+            expect(
+              await page.evaluate(() => document.documentElement.scrollWidth),
+            ).toBeLessThanOrEqual(viewport.width)
+            if (tab !== 'sales') {
+              const expected = new Intl.NumberFormat(tag, {
+                style: 'currency',
+                currency: 'SEK',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(200)
+              await expect(page.locator(`#stock-${tab}`)).toContainText(
+                expected,
+              )
+            }
+          }
+
           await expect(
             page.getByRole('button', { name: d.economy.show, exact: true }),
           ).toHaveCount(1)

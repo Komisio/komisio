@@ -1262,7 +1262,9 @@
       "more": "About these settings"
     },
     "communicationLanguage": "Default message language",
-    "communicationLanguageHint": "Used for seller emails and the default staff invitation language when the store profile has no language. The seller’s preference takes priority, followed by the store profile language. Your own menu language does not affect emails."
+    "communicationLanguageHint": "Used for seller emails and the default staff invitation language when the store profile has no language. The seller’s preference takes priority, followed by the store profile language. Your own menu language does not affect emails.",
+    "vatModeConsignmentBusiness": "VAT for VAT-registered businesses",
+    "consignment_business": "VAT on the whole sale price"
   },
   "sellerTerms": {
     "title": "Seller terms",
@@ -1637,7 +1639,19 @@
     "issued": "The statement is issued.",
     "open": "Open statement",
     "closedPeriodHint": "The end date must be yesterday or earlier.",
-    "issueInfo": "About the statement"
+    "issueInfo": "About the statement",
+    "selfBilling": "Self-billing invoice",
+    "selfBillingCredit": "Self-billing credit note",
+    "supplier": "Seller / supplier",
+    "buyer": "Buyer",
+    "supplierNet": "Amount excluding VAT",
+    "supplierVat": "Supplier VAT",
+    "supplierGross": "Amount including VAT",
+    "vatRate": "VAT rate",
+    "noSeparateVat": "No separately charged VAT",
+    "downloadPdf": "Download PDF",
+    "invoiceTotals": "Invoice amounts",
+    "invoiceNote": "This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement."
   },
   "handovers": {
     "title": "Announced drop-offs",
@@ -1990,6 +2004,22 @@
       "message": {
         "subject": "Message from {store}",
         "body": "Hello {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Self-billing invoice · {store}",
+        "subjectNumber": "Self-billing invoice #{number} · {store}",
+        "body": "This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+        "bodyNumber": "Self-billing invoice #{number}. This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+        "amount": "Closing balance: {amount}.",
+        "note": "You can open the document and download its PDF in the seller portal."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Self-billing credit note · {store}",
+        "subjectNumber": "Self-billing credit note #{number} · {store}",
+        "body": "This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+        "bodyNumber": "Self-billing credit note #{number}. This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+        "amount": "Closing balance: {amount}.",
+        "note": "You can open the document and download its PDF in the seller portal."
       }
     },
     "invitation": {
@@ -2057,7 +2087,16 @@
     "column": {
       "name": "Name",
       "email": "E-mail",
-      "phone": "Phone"
+      "phone": "Phone",
+      "sellerType": "Seller type",
+      "companyName": "Company name",
+      "organisationNumber": "Company registration number",
+      "vatNumber": "VAT number",
+      "vatRegistered": "VAT-registered business",
+      "contactPerson": "Contact person",
+      "billingAddress": "Billing address (if different)",
+      "invoiceEmail": "Invoice email",
+      "invoiceReference": "Invoice reference"
     },
     "ignore": "Not in the file",
     "skipHeader": "The first row is a header",
@@ -2067,7 +2106,8 @@
     "reasons": {
       "name": "no name",
       "contact": "neither e-mail nor phone",
-      "email": "e-mail is not valid"
+      "email": "e-mail is not valid",
+      "business": "Check seller type and company details."
     },
     "line": "line",
     "tooMany": "The file has more than 200 usable rows. Split it and import in parts.",
@@ -2084,7 +2124,9 @@
     "reviewHelp": "Check names and contact details in the preview. Then click Import to add the sellers. Existing email addresses are skipped.",
     "import": "Import",
     "completed": "Import complete.",
-    "viewSellers": "View sellers"
+    "viewSellers": "View sellers",
+    "businessHint": "Use private or business for seller type and true or false for VAT registration. Company fields require business type.",
+    "businessLabel": "Business"
   },
   "lifecycle": {
     "agentHeading": "Markdown runs",
@@ -3284,6 +3326,10 @@
     "openPayoutsPage": "Open payouts",
     "openEconomy": "Open the economy"
   },
+  "directory": {
+    "sortBy": "Sort by",
+    "via": "Via"
+  },
   "sellersList": {
     "title": "Sellers",
     "intro": "Everyone who has handed in to the store: what the store holds for them, what has sold and what they can request.",
@@ -3459,7 +3505,25 @@
     "history": "Change history",
     "emailHint": "Check the email address carefully. It is used for messages and seller access.",
     "moreFields": "More fields",
-    "nationalId": "National ID / SSN (optional)"
+    "nationalId": "National ID / SSN (optional)",
+    "business": {
+      "type": "Seller type",
+      "private": "Private person",
+      "business": "Business",
+      "typeFixed": "The seller type cannot be changed after registration.",
+      "companyName": "Company name",
+      "organisationNumber": "Company registration number",
+      "vatNumber": "VAT number",
+      "vatRegistered": "VAT-registered business",
+      "contactPerson": "Contact person",
+      "billingAddress": "Billing address (if different)",
+      "invoiceEmail": "Invoice email",
+      "invoiceReference": "Invoice reference",
+      "all": "All seller types",
+      "report": "Consignment sales and payouts by seller type",
+      "yes": "Yes",
+      "no": "No"
+    }
   },
   "bagIntake": {
     "intro": "Handle one item at a time. Add a photo for help with the details, check the description and price, then save.",

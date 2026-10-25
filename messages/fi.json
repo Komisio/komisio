@@ -1262,7 +1262,9 @@
       "more": "Lisätietoa asetuksista"
     },
     "communicationLanguage": "Viestien oletuskieli",
-    "communicationLanguageHint": "Käytetään myyjien sähköposteissa ja henkilöstökutsujen oletuskielenä, kun myymäläprofiilissa ei ole kieltä. Myyjän oma kielivalinta on ensisijainen, sen jälkeen myymäläprofiilin kieli. Oman valikkosi kieli ei vaikuta sähköposteihin."
+    "communicationLanguageHint": "Käytetään myyjien sähköposteissa ja henkilöstökutsujen oletuskielenä, kun myymäläprofiilissa ei ole kieltä. Myyjän oma kielivalinta on ensisijainen, sen jälkeen myymäläprofiilin kieli. Oman valikkosi kieli ei vaikuta sähköposteihin.",
+    "vatModeConsignmentBusiness": "ALV-rekisteröityjen yritysten ALV",
+    "consignment_business": "Alv koko myyntihinnasta"
   },
   "sellerTerms": {
     "title": "Tuojan ehdot",
@@ -1637,7 +1639,19 @@
     "issued": "Tiliote on annettu.",
     "open": "Avaa tiliote",
     "closedPeriodHint": "Päättymispäivän on oltava viimeistään eilinen.",
-    "issueInfo": "Tietoa tilityksestä"
+    "issueInfo": "Tietoa tilityksestä",
+    "selfBilling": "Itselaskutuslasku",
+    "selfBillingCredit": "Itselaskutuksen hyvityslasku",
+    "supplier": "Myyjä / toimittaja",
+    "buyer": "Ostaja",
+    "supplierNet": "Veroton määrä",
+    "supplierVat": "Toimittajan ALV",
+    "supplierGross": "Verollinen määrä",
+    "vatRate": "ALV-kanta",
+    "noSeparateVat": "Ei erikseen veloitettavaa ALV:tä",
+    "downloadPdf": "Lataa PDF",
+    "invoiceTotals": "Laskun määrät",
+    "invoiceNote": "Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä."
   },
   "handovers": {
     "title": "Ennakkoilmoitukset",
@@ -1990,6 +2004,22 @@
       "message": {
         "subject": "Viesti myymälältä {store}",
         "body": "Hei {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Itselaskutuslasku · {store}",
+        "subjectNumber": "Itselaskutuslasku #{number} · {store}",
+        "body": "Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+        "bodyNumber": "Itselaskutuslasku #{number}. Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+        "amount": "Loppusaldo: {amount}.",
+        "note": "Voit avata asiakirjan ja ladata PDF-tiedoston myyjäportaalissa."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Itselaskutuksen hyvityslasku · {store}",
+        "subjectNumber": "Itselaskutuksen hyvityslasku #{number} · {store}",
+        "body": "Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+        "bodyNumber": "Itselaskutuksen hyvityslasku #{number}. Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+        "amount": "Loppusaldo: {amount}.",
+        "note": "Voit avata asiakirjan ja ladata PDF-tiedoston myyjäportaalissa."
       }
     },
     "invitation": {
@@ -2057,7 +2087,16 @@
     "column": {
       "name": "Nimi",
       "email": "Sähköposti",
-      "phone": "Puhelin"
+      "phone": "Puhelin",
+      "sellerType": "Myyjätyyppi",
+      "companyName": "Yrityksen nimi",
+      "organisationNumber": "Y-tunnus",
+      "vatNumber": "ALV-tunniste",
+      "vatRegistered": "ALV-rekisteröity yritys",
+      "contactPerson": "Yhteyshenkilö",
+      "billingAddress": "Laskutusosoite (jos eri)",
+      "invoiceEmail": "Laskutuksen sähköposti",
+      "invoiceReference": "Laskuviite"
     },
     "ignore": "Ei tiedostossa",
     "skipHeader": "Ensimmäinen rivi on otsikkorivi",
@@ -2067,7 +2106,8 @@
     "reasons": {
       "name": "ei nimeä",
       "contact": "ei sähköpostia eikä puhelinta",
-      "email": "sähköposti ei ole kelvollinen"
+      "email": "sähköposti ei ole kelvollinen",
+      "business": "Tarkista myyjätyyppi ja yritystiedot."
     },
     "line": "rivi",
     "tooMany": "Tiedostossa on yli 200 käyttökelpoista riviä. Jaa se osiin ja tuo osissa.",
@@ -2084,7 +2124,9 @@
     "reviewHelp": "Tarkista nimet ja yhteystiedot esikatselussa. Lisää myyjät napsauttamalla Tuo. Olemassa olevat sähköpostiosoitteet ohitetaan.",
     "import": "Tuo",
     "completed": "Tuonti valmis.",
-    "viewSellers": "Näytä myyjät"
+    "viewSellers": "Näytä myyjät",
+    "businessHint": "Käytä myyjätyypille arvoa private tai business ja ALV-rekisteröinnille true tai false. Yritystiedot vaativat tyypin business.",
+    "businessLabel": "Yritys"
   },
   "lifecycle": {
     "agentHeading": "Alennusajot",
@@ -3284,6 +3326,10 @@
     "openPayoutsPage": "Avaa tilitykset",
     "openEconomy": "Avaa talous"
   },
+  "directory": {
+    "sortBy": "Lajitteluperuste",
+    "via": "Kautta"
+  },
   "sellersList": {
     "title": "Tuojat",
     "intro": "Kaikki, jotka ovat tuoneet tavaraa kauppaan: mitä kauppa pitää hallussaan heidän puolestaan, mitä on myyty ja mitä he voivat pyytää.",
@@ -3459,7 +3505,25 @@
     "history": "Muutoshistoria",
     "emailHint": "Tarkista sähköpostiosoite. Sitä käytetään viesteihin ja myyjän käyttöoikeuteen.",
     "moreFields": "Lisää kenttiä",
-    "nationalId": "Henkilötunnus (valinnainen)"
+    "nationalId": "Henkilötunnus (valinnainen)",
+    "business": {
+      "type": "Myyjätyyppi",
+      "private": "Yksityishenkilö",
+      "business": "Yritys",
+      "typeFixed": "Myyjätyyppiä ei voi muuttaa rekisteröinnin jälkeen.",
+      "companyName": "Yrityksen nimi",
+      "organisationNumber": "Y-tunnus",
+      "vatNumber": "ALV-tunniste",
+      "vatRegistered": "ALV-rekisteröity yritys",
+      "contactPerson": "Yhteyshenkilö",
+      "billingAddress": "Laskutusosoite (jos eri)",
+      "invoiceEmail": "Laskutuksen sähköposti",
+      "invoiceReference": "Laskuviite",
+      "all": "Kaikki myyjätyypit",
+      "report": "Välitysmyynti ja tilitykset myyjätyypeittäin",
+      "yes": "Kyllä",
+      "no": "Ei"
+    }
   },
   "bagIntake": {
     "intro": "Käsittele yksi tuote kerrallaan. Lisää halutessasi kuva tietojen avuksi, tarkista kuvaus ja hinta ja tallenna.",

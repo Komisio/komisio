@@ -1,0 +1,62 @@
+begin;
+\ir bag-reception-fixture.inc
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000491','so-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000492','so-readonly@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000493','so-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000491","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Sellers overview test','sellers-overview-test',gen_random_uuid())::text,true);
+select set_config('test.s1',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Anna Andersson','anna@so.test','')::text,true);
+select set_config('test.s2',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Bo Berg','','0701234567')::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
+select set_config('test.d1',gen_random_uuid()::text,true);
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Jacket','Jackets','Good');
+select set_config('test.i1',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'reception_review',current_setting('test.d1')::uuid,1,20000);
+select set_config('test.d2',gen_random_uuid()::text,true);
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Coat','Coats','Good');
+select set_config('test.i2',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'reception_review',current_setting('test.d2')::uuid,1,30000);
+select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','K-1','2026-09-10T10:00:00Z','SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.i1'),'priceOre',200000)));
+
+select set_config('test.payout',request_payout(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,10000)::text,true);
+select approve_payout(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.payout')::uuid);
+select register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'A paging '||lpad(i::text,2,'0'),'paging'||i||'@example.test','') from generate_series(1,30) i;
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'available','desc')->'sellers'->0->>'id',current_setting('test.s1'),'balance sort happens before the page limit');
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'items','desc')->'sellers'->0->>'id',current_setting('test.s1'),'item sort happens before the page limit');
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'sold','desc')->'sellers'->0->>'id',current_setting('test.s1'),'sold sort uses completed unreturned sales');
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'reserved','desc')->'sellers'->0->>'reservedOre','10000','reserved sort retains approved payout facts');
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'anna',25,0,'available','desc')->'sellers',sellers_overview_page(current_setting('test.tenant')::uuid,'anna',25,0)->'sellers','all returned seller facts equal the legacy read');
+select is((sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'paging',25,25,'name','desc')->>'total')::int,30,'search count is independent of page and sort');
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'paging',25,25,'name','desc')->'sellers'->0->>'name','A paging 05','descending name sorting covers later pages');
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',1,31,'available','asc')->'sellers'->0->>'id',current_setting('test.s1'),'ascending balance reaches largest balance on final page');
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'paging',25,0,'items','desc')->'sellers'->0->>'name','A paging 01','equal metrics have deterministic name and ID ordering');
+select throws_ok($$select sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'bad','asc')$$,'INVALID_INPUT','sort whitelist enforced');
+select throws_ok($$select sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'name',null)$$,'INVALID_INPUT','direction required');
+select throws_ok($$select sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,-1,'name','asc')$$,'INVALID_INPUT','negative offset refused');
+select register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Equal name','equal1@example.test','');
+select register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Equal name','equal2@example.test','');
+select is(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'Equal name',1,0,'available','desc')->'sellers'->0->>'id',(select id::text from sellers where tenant_id=current_setting('test.tenant')::uuid and name='Equal name' order by id limit 1),'IDs break equal sort-key and name ties');
+select isnt(sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'Equal name',1,0,'available','desc')->'sellers'->0->>'id',sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'Equal name',1,1,'available','desc')->'sellers'->0->>'id','ties never repeat across adjacent pages');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000492','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000492","role":"authenticated"}';
+select lives_ok($$select sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'available','desc')$$,'readonly member may sort');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000493","role":"authenticated"}';
+select throws_ok($$select sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'name','asc')$$,'42501',null,'outsider refused');
+reset role;
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'f0000000-0000-4000-8000-000000000491','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000491","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select sellers_overview_sorted_page(current_setting('test.tenant')::uuid,'',25,0,'name','asc')$$,'42501',null,'MFA required');
+reset role;
+select ok(not has_function_privilege('anon','public.sellers_overview_sorted_page(uuid,text,integer,integer,text,text)','execute'),'anonymous read denied');
+select * from finish();
+rollback;

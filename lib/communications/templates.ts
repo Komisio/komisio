@@ -26,6 +26,8 @@ export const messageFacts = z.strictObject({
     .regex(/^-?\d+\.\d{2}$/)
     .optional(),
   currency: z.enum(storeCurrencies).optional(),
+  selfBilling: z.boolean().optional(),
+  statementKind: z.enum(['statement', 'credit_note']).optional(),
   number: z.number().int().positive().optional(),
   date: z.union([z.iso.date(), z.iso.datetime({ offset: true })]).optional(),
   itemLabel: z.string().trim().max(120).optional(),
@@ -51,7 +53,13 @@ export function renderSellerMessage(
   const kind = communicationKind.parse(kindInput)
   const facts = messageFacts.parse(factsInput)
   const { locale, copy } = emailTemplate(localeInput, (d) => ({
-    ...d.communications.templates?.[kind],
+    ...d.communications.templates?.[
+      kind === 'statement_issued' && facts.selfBilling
+        ? facts.statementKind === 'credit_note'
+          ? 'self_billing_credit_issued'
+          : 'self_billing_issued'
+        : kind
+    ],
     footer: d.communications.templates?.footer,
   }))
   const amount =
@@ -103,7 +111,10 @@ export function renderSellerMessage(
   paragraphs.push(fill(copy.footer))
   return {
     templateKey: kind,
-    templateVersion: TEMPLATE_VERSION,
+    templateVersion:
+      kind === 'statement_issued' && facts.selfBilling
+        ? 'v3'
+        : TEMPLATE_VERSION,
     locale,
     subject: plainText(fill(subject).slice(0, 200)),
     body: paragraphs.join('\n\n'),

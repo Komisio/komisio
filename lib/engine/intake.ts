@@ -1,3 +1,4 @@
+import { businessDetails, sellerType } from './seller-business'
 import {
   startStocktakeCommand,
   scanStocktakeCommand,
@@ -109,6 +110,8 @@ export const intakeCommand = z.discriminatedUnion('action', [
   z
     .object({
       action: z.literal('registerSeller'),
+      sellerType: sellerType.default('private'),
+      business: businessDetails.optional(),
       agreementApproval: agreementApproval.optional(),
       tenantId: z.uuid(),
       requestId: z.uuid(),
@@ -126,7 +129,11 @@ export const intakeCommand = z.discriminatedUnion('action', [
         })
         .optional(),
     })
-    .refine((v) => v.email !== '' || v.phone !== ''),
+    .refine(
+      (v) =>
+        (v.email !== '' || v.phone !== '') &&
+        (v.sellerType === 'business' || v.business === undefined),
+    ),
   z.object({
     action: z.literal('receiveBag'),
     tenantId: z.uuid(),
@@ -557,16 +564,26 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
             p_id: c.requestId,
             p_seller: null,
             p_expected: null,
-            p_profile: { ...initialSellerProfile(c), ...c.details },
+            p_profile: {
+              ...initialSellerProfile(c),
+              ...c.details,
+              sellerType: c.sellerType,
+              ...(c.business ? { business: c.business } : {}),
+            },
             p_agreement: c.agreementApproval.agreementId,
             p_reference: c.agreementApproval.reference,
           },
         )
-      if (c.details)
+      if (c.details || c.sellerType === 'business')
         return client.rpc('register_seller_with_profile', {
           p_tenant: c.tenantId,
           p_id: c.requestId,
-          p_profile: { ...initialSellerProfile(c), ...c.details },
+          p_profile: {
+            ...initialSellerProfile(c),
+            ...c.details,
+            sellerType: c.sellerType,
+            ...(c.business ? { business: c.business } : {}),
+          },
         })
       return client.rpc('register_seller', {
         p_tenant: c.tenantId,

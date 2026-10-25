@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { selfBilling } from './self-billing'
 import { locales } from '../i18n'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -31,6 +32,7 @@ const ore = z.union([z.number().int(), z.string()]).transform(Number)
 const statementRow = z.object({
   id: z.uuid(),
   seller_id: z.uuid(),
+  self_billing: selfBilling.nullable().optional(),
   seller_contact: z
     .object({
       name: z.string(),
@@ -74,7 +76,7 @@ const lineRow = z.object({
   commission_ore: ore.nullable(),
 })
 const columns =
-  'id,seller_id,seller_contact,number,kind,corrects_id,period_from,period_to,opening_ore,sales_gross_ore,commission_ore,credited_ore,reversed_ore,paid_ore,adjustments_ore,closing_ore,issued_at'
+  'id,seller_id,seller_contact,self_billing,number,kind,corrects_id,period_from,period_to,opening_ore,sales_gross_ore,commission_ore,credited_ore,reversed_ore,paid_ore,adjustments_ore,closing_ore,issued_at'
 
 /** Newest 50 statements for one seller. RLS scopes the read. */
 export async function readSellerStatements(

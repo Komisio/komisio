@@ -1,3 +1,4 @@
+import { SellerTypeTotals } from '@/components/intake/seller-type-totals'
 import { helpArticle } from '@/lib/help/content'
 import { EconomicWorkspace } from '@/components/intake/economic-workspace'
 import { z } from 'zod'
@@ -311,6 +312,13 @@ export default async function Accounting({
                         </p>
                       ),
                     )}
+                    <SellerTypeTotals
+                      totals={c.seller_totals}
+                      d={all.sellerDetails.business}
+                      labels={all.economy}
+                      locale={ctx.locale}
+                      currency={currency}
+                    />
                     {Object.entries(c.per_mode).map(([mode, t]) => (
                       <small key={mode}>
                         {vatModes[mode] ?? mode}: {t.lines} · {d.net}{' '}

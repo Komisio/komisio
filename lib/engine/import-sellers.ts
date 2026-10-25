@@ -1,3 +1,4 @@
+import { importRow, importSellersPayload } from './seller-import-schema'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { proposeOperation } from './operations'
@@ -8,15 +9,18 @@ import { proposeOperation } from './operations'
 // rows. Approval registers them through the ordinary seller command; nothing
 // is written by the upload itself. No AI is involved yet: the header guess is
 // a fixed list of names.
-export const importRow = z.strictObject({
-  name: z.string().trim().min(1).max(120),
-  email: z.string().trim().max(254).default(''),
-  phone: z.string().trim().max(40).default(''),
-})
-export const importSellersPayload = z.strictObject({
-  source: z.string().trim().min(1).max(200),
-  rows: z.array(importRow).min(1).max(200),
-})
+export const businessImportKeys = [
+  'sellerType',
+  'companyName',
+  'organisationNumber',
+  'vatNumber',
+  'vatRegistered',
+  'contactPerson',
+  'billingAddress',
+  'invoiceEmail',
+  'invoiceReference',
+] as const
+export { importRow, importSellersPayload } from './seller-import-schema'
 export type ImportSellersPayload = z.infer<typeof importSellersPayload>
 
 /** A small RFC 4180 parser: comma or semicolon (detected on the first line), quotes, CRLF. */
@@ -57,12 +61,24 @@ export function parseCsv(text: string): string[][] {
   return rows
 }
 
-export type ColumnMapping = {
+export type ColumnMapping = Partial<
+  Record<(typeof businessImportKeys)[number], number | null>
+> & {
   name: number | null
   email: number | null
   phone: number | null
 }
 const headerNames: Record<keyof ColumnMapping, string[]> = {
+  sellerType: ['sellertype'],
+  companyName: ['companyname'],
+  organisationNumber: ['organisationnumber'],
+  vatNumber: ['vatnumber'],
+  vatRegistered: ['vatregistered'],
+  contactPerson: ['contactperson'],
+  billingAddress: ['billingaddress'],
+  invoiceEmail: ['invoiceemail'],
+  invoiceReference: ['invoicereference'],
+
   name: [
     'name',
     'namn',
@@ -98,7 +114,16 @@ export function guessMapping(header: string[]): ColumnMapping {
     )
     return j >= 0 ? j : null
   }
-  return { name: find('name'), email: find('email'), phone: find('phone') }
+  return {
+    name: find('name'),
+    email: find('email'),
+    phone: find('phone'),
+    ...Object.fromEntries(
+      businessImportKeys
+        .map((key) => [key, find(key)])
+        .filter(([, value]) => value !== null),
+    ),
+  }
 }
 
 /** Rows under a mapping, with the reason each unusable row is left out. */
@@ -108,11 +133,14 @@ export function mapRows(
   skipHeader: boolean,
 ) {
   const accepted: ImportSellersPayload['rows'] = []
-  const rejected: { line: number; reason: 'name' | 'contact' | 'email' }[] = []
+  const rejected: {
+    line: number
+    reason: 'name' | 'contact' | 'email' | 'business'
+  }[] = []
   rows.forEach((cells, index) => {
     if (skipHeader && index === 0) return
-    const pick = (i: number | null) =>
-      i === null ? '' : (cells[i] ?? '').trim()
+    const pick = (i: number | null | undefined) =>
+      i == null ? '' : (cells[i] ?? '').trim()
     const row = {
       name: pick(mapping.name),
       email: pick(mapping.email).toLowerCase(),
@@ -123,7 +151,27 @@ export function mapRows(
       return rejected.push({ line: index + 1, reason: 'contact' })
     if (row.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email))
       return rejected.push({ line: index + 1, reason: 'email' })
-    const parsed = importRow.safeParse(row)
+    const type = pick(mapping.sellerType)
+    const vat = pick(mapping.vatRegistered)
+    const details = Object.fromEntries(
+      businessImportKeys
+        .filter((k) => k !== 'sellerType' && k !== 'vatRegistered')
+        .map((k) => [k, pick(mapping[k])]),
+    )
+    const hasBusiness = vat !== '' || Object.values(details).some(Boolean)
+    if (
+      (type !== '' && type !== 'private' && type !== 'business') ||
+      (vat !== '' && vat !== 'true' && vat !== 'false') ||
+      (type !== 'business' && hasBusiness)
+    )
+      return rejected.push({ line: index + 1, reason: 'business' })
+    const parsed = importRow.safeParse({
+      ...row,
+      ...(type ? { sellerType: type } : {}),
+      ...(type === 'business'
+        ? { business: { ...details, vatRegistered: vat === 'true' } }
+        : {}),
+    })
     if (!parsed.success)
       return rejected.push({ line: index + 1, reason: 'name' })
     accepted.push(parsed.data)

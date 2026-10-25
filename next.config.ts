@@ -7,6 +7,8 @@ const config: NextConfig = {
   serverExternalPackages: ['pdfkit'],
   outputFileTracingIncludes: {
     '/api/items/labels': ['./assets/fonts/*'],
+    '/api/statements/pdf': ['./assets/fonts/*'],
+    '/api/seller/statement/pdf': ['./assets/fonts/*'],
     '/api/agreements/pdf': ['./assets/fonts/*'],
     '/api/seller/agreement/pdf': ['./assets/fonts/*'],
   },

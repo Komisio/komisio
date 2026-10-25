@@ -18,6 +18,6 @@ select throws_like($$select publish_store_policy(current_setting('test.tenant'):
 select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id2')::uuid,current_setting('test.body')::jsonb || '{"vatRatePercent":25.001}')$$,'%INVALID_INPUT%','rate beyond two decimals rejected');
 select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id2')::uuid,current_setting('test.body')::jsonb || '{"vatRatePercent":100.01}')$$,'%INVALID_INPUT%','rate above 100 rejected');
 select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id2')::uuid,current_setting('test.body')::jsonb || '{"vatRatePercent":"25"}')$$,'%INVALID_INPUT%','rate as text rejected');
-select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id2')::uuid,current_setting('test.body')::jsonb || '{"vatModeConsignmentBusiness":"consignment_business"}')$$,'%INVALID_INPUT%','fixed business mode is not a key');
+select throws_like($$select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.id2')::uuid,current_setting('test.body')::jsonb || '{"vatModeConsignmentBusiness":"store_full"}')$$,'%INVALID_INPUT%','business setting rejects store-owned mode');
 select * from finish();
 rollback;

@@ -9,6 +9,7 @@ import { FileUp, Info } from 'lucide-react'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import {
+  businessImportKeys,
   guessMapping,
   mapRows,
   parseCsv,
@@ -318,6 +319,8 @@ export function ImportSellers({
             <summary>{d.columns}</summary>
             <div className="import-column-mapping">
               {(['name', 'email', 'phone'] as const).map(select)}
+              {businessImportKeys.map(select)}
+              <small>{d.businessHint}</small>
             </div>
             <label className="import-header-checkbox">
               <input
@@ -353,7 +356,19 @@ export function ImportSellers({
                 <tbody>
                   {accepted.slice(0, 200).map((r, i) => (
                     <tr key={i}>
-                      <td data-label={d.column.name}>{r.name}</td>
+                      <td data-label={d.column.name}>
+                        {r.name}
+                        {r.sellerType === 'business' && (
+                          <>
+                            <br />
+                            <small>
+                              {d.businessLabel}:{' '}
+                              {r.business?.companyName || r.name} ·{' '}
+                              {r.business?.vatNumber || '—'}
+                            </small>
+                          </>
+                        )}
+                      </td>
                       <td data-label={d.column.email}>{r.email || '—'}</td>
                       <td data-label={d.column.phone}>{r.phone || '—'}</td>
                     </tr>

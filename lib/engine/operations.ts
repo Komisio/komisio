@@ -1,3 +1,4 @@
+import { importSellersPayload } from './seller-import-schema'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { receptionSuggestions } from './reception'
@@ -164,19 +165,7 @@ export const updateStoreProfilePayload = z.strictObject({
 })
 // Seller import (low, P5 import wizard): rows a person mapped and previewed;
 // approval registers them through register_seller, skipping known e-mails.
-export const importSellersPayload = z.strictObject({
-  source: z.string().trim().min(1).max(200),
-  rows: z
-    .array(
-      z.strictObject({
-        name: z.string().trim().min(1).max(120),
-        email: z.string().trim().max(254),
-        phone: z.string().trim().max(40),
-      }),
-    )
-    .min(1)
-    .max(200),
-})
+export { importSellersPayload } from './seller-import-schema'
 const proposeBase = z.strictObject({
   tenantId: z.uuid(),
   requestId: z.uuid(),

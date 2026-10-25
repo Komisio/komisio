@@ -23,6 +23,9 @@ export const rateBasisPoints = z.number().int().min(0).max(10_000)
  * (lib/engine/store-policy.ts). All optional: absent mode means the tenant has not
  * chosen, absent rate means 25.00. Komisio never picks a mode for a store. */
 export const vatPolicyShape = {
+  vatModeConsignmentBusiness: z
+    .enum(['consignment_business', 'consignment_margin'])
+    .optional(),
   vatModeConsignmentPrivate: z
     .enum(['consignment_margin', 'consignment_full'])
     .optional(),
@@ -72,7 +75,8 @@ export function selectVatMode(
   const c = vatLineContext.parse(contextInput),
     p = vatPolicy.parse(policyInput)
   if (c.ownership === 'consignment') {
-    if (c.sellerTaxable) return 'consignment_business'
+    if (c.sellerTaxable)
+      return p.vatModeConsignmentBusiness ?? 'consignment_business'
     if (!p.vatModeConsignmentPrivate) throw new Error('VAT_MODE_NOT_SET')
     return p.vatModeConsignmentPrivate
   }

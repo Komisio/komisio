@@ -127,6 +127,7 @@ export function StorePolicyForm({
   } as const
   // VAT modes are optional choices; an empty selection stays unchosen.
   const vatModes = {
+    vatModeConsignmentBusiness: ['consignment_business', 'consignment_margin'],
     vatModeConsignmentPrivate: ['consignment_margin', 'consignment_full'],
     vatModeStoreOwned: ['store_margin', 'store_full'],
   } as const
@@ -718,10 +719,18 @@ export function StorePolicyForm({
                     id={`policy-${key}`}
                     name={key}
                     defaultValue={
-                      base.policy[key as keyof typeof vatModes] ?? ''
+                      base.policy[key as keyof typeof vatModes] ??
+                      (key === 'vatModeConsignmentBusiness'
+                        ? 'consignment_business'
+                        : '')
                     }
                   >
-                    <option value="">{t.vatNotChosen}</option>
+                    <option
+                      value=""
+                      disabled={key === 'vatModeConsignmentBusiness'}
+                    >
+                      {t.vatNotChosen}
+                    </option>
                     {options.map((value) => (
                       <option key={value} value={value}>
                         {t[value]}

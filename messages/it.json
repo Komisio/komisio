@@ -1262,7 +1262,9 @@
       "more": "Informazioni sulle impostazioni"
     },
     "communicationLanguage": "Lingua predefinita dei messaggi",
-    "communicationLanguageHint": "Usata per le email ai venditori e come lingua predefinita degli inviti al personale quando il profilo del negozio non ha una lingua. Ha priorità la lingua del venditore, poi quella del profilo del negozio. La lingua del tuo menu non influisce sulle email."
+    "communicationLanguageHint": "Usata per le email ai venditori e come lingua predefinita degli inviti al personale quando il profilo del negozio non ha una lingua. Ha priorità la lingua del venditore, poi quella del profilo del negozio. La lingua del tuo menu non influisce sulle email.",
+    "vatModeConsignmentBusiness": "IVA per aziende registrate",
+    "consignment_business": "IVA sull'intero prezzo di vendita"
   },
   "sellerTerms": {
     "title": "Condizioni del conferente",
@@ -1637,7 +1639,19 @@
     "issued": "Il rendiconto è emesso.",
     "open": "Apri rendiconto",
     "closedPeriodHint": "La data finale deve essere ieri o precedente.",
-    "issueInfo": "Informazioni sul rendiconto"
+    "issueInfo": "Informazioni sul rendiconto",
+    "selfBilling": "Autofattura",
+    "selfBillingCredit": "Nota di credito per autofattura",
+    "supplier": "Venditore / fornitore",
+    "buyer": "Acquirente",
+    "supplierNet": "Importo IVA esclusa",
+    "supplierVat": "IVA del fornitore",
+    "supplierGross": "Importo IVA inclusa",
+    "vatRate": "Aliquota IVA",
+    "noSeparateVat": "Nessuna IVA addebitata separatamente",
+    "downloadPdf": "Scarica PDF",
+    "invoiceTotals": "Importi della fattura",
+    "invoiceNote": "L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto."
   },
   "handovers": {
     "title": "Consegne annunciate",
@@ -1990,6 +2004,22 @@
       "message": {
         "subject": "Messaggio da {store}",
         "body": "Ciao {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Autofattura · {store}",
+        "subjectNumber": "Autofattura #{number} · {store}",
+        "body": "L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+        "bodyNumber": "Autofattura #{number}. L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+        "amount": "Saldo finale: {amount}.",
+        "note": "Puoi aprire il documento e scaricare il PDF nel portale del venditore."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Nota di credito per autofattura · {store}",
+        "subjectNumber": "Nota di credito per autofattura #{number} · {store}",
+        "body": "L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+        "bodyNumber": "Nota di credito per autofattura #{number}. L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+        "amount": "Saldo finale: {amount}.",
+        "note": "Puoi aprire il documento e scaricare il PDF nel portale del venditore."
       }
     },
     "invitation": {
@@ -2057,7 +2087,16 @@
     "column": {
       "name": "Nome",
       "email": "E-mail",
-      "phone": "Telefono"
+      "phone": "Telefono",
+      "sellerType": "Tipo di venditore",
+      "companyName": "Ragione sociale",
+      "organisationNumber": "Numero di registrazione aziendale",
+      "vatNumber": "Partita IVA",
+      "vatRegistered": "Azienda soggetta a IVA",
+      "contactPerson": "Persona di contatto",
+      "billingAddress": "Indirizzo di fatturazione (se diverso)",
+      "invoiceEmail": "Email di fatturazione",
+      "invoiceReference": "Riferimento fattura"
     },
     "ignore": "Non presente nel file",
     "skipHeader": "La prima riga è un'intestazione",
@@ -2067,7 +2106,8 @@
     "reasons": {
       "name": "nessun nome",
       "contact": "né e-mail né telefono",
-      "email": "l'e-mail non è valida"
+      "email": "l'e-mail non è valida",
+      "business": "Controlla il tipo di venditore e i dati aziendali."
     },
     "line": "riga",
     "tooMany": "Il file ha più di 200 righe utilizzabili. Dividilo e importa a parti.",
@@ -2084,7 +2124,9 @@
     "reviewHelp": "Controlla nomi e contatti nell’anteprima. Poi fai clic su Importa per aggiungere i venditori. Gli indirizzi e-mail già presenti vengono saltati.",
     "import": "Importa",
     "completed": "Importazione completata.",
-    "viewSellers": "Mostra venditori"
+    "viewSellers": "Mostra venditori",
+    "businessHint": "Usa private o business per il tipo e true o false per la registrazione IVA. I dati aziendali richiedono business.",
+    "businessLabel": "Azienda"
   },
   "lifecycle": {
     "agentHeading": "Esecuzioni dei ribassi",
@@ -3463,7 +3505,25 @@
     "history": "Cronologia modifiche",
     "emailHint": "Controlla l’indirizzo e-mail. Viene usato per i messaggi e l’accesso del venditore.",
     "moreFields": "Altri campi",
-    "nationalId": "Codice identificativo personale (facoltativo)"
+    "nationalId": "Codice identificativo personale (facoltativo)",
+    "business": {
+      "type": "Tipo di venditore",
+      "private": "Privato",
+      "business": "Azienda",
+      "typeFixed": "Il tipo di venditore non può essere modificato dopo la registrazione.",
+      "companyName": "Ragione sociale",
+      "organisationNumber": "Numero di registrazione aziendale",
+      "vatNumber": "Partita IVA",
+      "vatRegistered": "Azienda soggetta a IVA",
+      "contactPerson": "Persona di contatto",
+      "billingAddress": "Indirizzo di fatturazione (se diverso)",
+      "invoiceEmail": "Email di fatturazione",
+      "invoiceReference": "Riferimento fattura",
+      "all": "Tutti i tipi di venditore",
+      "report": "Vendite in conto vendita e pagamenti per tipo di venditore",
+      "yes": "Sì",
+      "no": "No"
+    }
   },
   "bagIntake": {
     "intro": "Gestisci un articolo alla volta. Aggiungi una foto per ricevere aiuto con i dati, controlla descrizione e prezzo e salva.",

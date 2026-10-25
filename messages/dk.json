@@ -1262,7 +1262,9 @@
       "more": "Mere om indstillingerne"
     },
     "communicationLanguage": "Standardsprog for beskeder",
-    "communicationLanguageHint": "Bruges til e-mails til sælgere og som standard for personaleinvitationer, når butiksprofilen ikke har et sprog. Sælgerens eget sprog har førsteprioritet, derefter butiksprofilens sprog. Sproget i din egen menu påvirker ikke e-mails."
+    "communicationLanguageHint": "Bruges til e-mails til sælgere og som standard for personaleinvitationer, når butiksprofilen ikke har et sprog. Sælgerens eget sprog har førsteprioritet, derefter butiksprofilens sprog. Sproget i din egen menu påvirker ikke e-mails.",
+    "vatModeConsignmentBusiness": "Moms for momsregistrerede virksomheder",
+    "consignment_business": "Moms af hele salgsprisen"
   },
   "sellerTerms": {
     "title": "Indleverervilkår",
@@ -1637,7 +1639,19 @@
     "issued": "Afregningen er udstedt.",
     "open": "Åbn afregning",
     "closedPeriodHint": "Slutdatoen skal være i går eller tidligere.",
-    "issueInfo": "Om afregningen"
+    "issueInfo": "Om afregningen",
+    "selfBilling": "Selvfaktura",
+    "selfBillingCredit": "Kreditnota til selvfaktura",
+    "supplier": "Sælger / leverandør",
+    "buyer": "Køber",
+    "supplierNet": "Beløb eksklusive moms",
+    "supplierVat": "Leverandørens moms",
+    "supplierGross": "Beløb inklusive moms",
+    "vatRate": "Momssats",
+    "noSeparateVat": "Ingen særskilt opkrævet moms",
+    "downloadPdf": "Download PDF",
+    "invoiceTotals": "Selvfakturaens beløb",
+    "invoiceNote": "Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen."
   },
   "handovers": {
     "title": "Forhåndsanmeldelser",
@@ -1990,6 +2004,22 @@
       "message": {
         "subject": "Besked fra {store}",
         "body": "Hej {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Selvfaktura · {store}",
+        "subjectNumber": "Selvfaktura #{number} · {store}",
+        "body": "Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
+        "bodyNumber": "Selvfaktura #{number}. Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
+        "amount": "Udgående saldo: {amount}.",
+        "note": "Du kan åbne dokumentet og downloade PDF i sælgerportalen."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Kreditnota til selvfaktura · {store}",
+        "subjectNumber": "Kreditnota til selvfaktura #{number} · {store}",
+        "body": "Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
+        "bodyNumber": "Kreditnota til selvfaktura #{number}. Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
+        "amount": "Udgående saldo: {amount}.",
+        "note": "Du kan åbne dokumentet og downloade PDF i sælgerportalen."
       }
     },
     "invitation": {
@@ -2057,7 +2087,16 @@
     "column": {
       "name": "Navn",
       "email": "E-mail",
-      "phone": "Telefon"
+      "phone": "Telefon",
+      "sellerType": "Sælgertype",
+      "companyName": "Virksomhedsnavn",
+      "organisationNumber": "CVR-nummer",
+      "vatNumber": "Momsnummer",
+      "vatRegistered": "Momsregistreret virksomhed",
+      "contactPerson": "Kontaktperson",
+      "billingAddress": "Faktureringsadresse (hvis anden)",
+      "invoiceEmail": "Faktura-e-mail",
+      "invoiceReference": "Fakturareference"
     },
     "ignore": "Ikke i filen",
     "skipHeader": "Den første række er en overskrift",
@@ -2067,7 +2106,8 @@
     "reasons": {
       "name": "intet navn",
       "contact": "hverken e-mail eller telefon",
-      "email": "e-mail er ikke gyldig"
+      "email": "e-mail er ikke gyldig",
+      "business": "Kontrollér sælgertype og virksomhedsoplysninger."
     },
     "line": "linje",
     "tooMany": "Filen har mere end 200 brugbare rækker. Del den op, og importér i dele.",
@@ -2084,7 +2124,9 @@
     "reviewHelp": "Kontrollér navne og kontaktoplysninger i forhåndsvisningen. Klik derefter på Importér for at tilføje sælgerne. Eksisterende e-mailadresser springes over.",
     "import": "Importér",
     "completed": "Importen er færdig.",
-    "viewSellers": "Vis sælgere"
+    "viewSellers": "Vis sælgere",
+    "businessHint": "Brug private eller business til sælgertype og true eller false til momsregistrering. Virksomhedsfelter kræver business.",
+    "businessLabel": "Virksomhed"
   },
   "lifecycle": {
     "agentHeading": "Prisnedsættelseskørsler",
@@ -3463,7 +3505,25 @@
     "history": "Ændringshistorik",
     "emailHint": "Kontrollér e-mailadressen. Den bruges til beskeder og sælgerens adgang.",
     "moreFields": "Flere felter",
-    "nationalId": "CPR-nummer (valgfrit)"
+    "nationalId": "CPR-nummer (valgfrit)",
+    "business": {
+      "type": "Sælgertype",
+      "private": "Privatperson",
+      "business": "Virksomhed",
+      "typeFixed": "Sælgertypen kan ikke ændres efter registrering.",
+      "companyName": "Virksomhedsnavn",
+      "organisationNumber": "CVR-nummer",
+      "vatNumber": "Momsnummer",
+      "vatRegistered": "Momsregistreret virksomhed",
+      "contactPerson": "Kontaktperson",
+      "billingAddress": "Faktureringsadresse (hvis anden)",
+      "invoiceEmail": "Faktura-e-mail",
+      "invoiceReference": "Fakturareference",
+      "all": "Alle sælgertyper",
+      "report": "Kommissionssalg og udbetalinger efter sælgertype",
+      "yes": "Ja",
+      "no": "Nej"
+    }
   },
   "bagIntake": {
     "intro": "Tag én vare ad gangen. Tilføj et billede for hjælp til oplysningerne, kontrollér beskrivelse og pris, og gem.",

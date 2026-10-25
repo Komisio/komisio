@@ -1,6 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select no_plan();
+select set_config('test.review_seller_email','seller-'||gen_random_uuid()::text||'@review.test',true);
 insert into auth.users(id,email,email_confirmed_at) values
  ('90000000-0000-4000-8000-000000000001','owner@review.test',now()),
  ('90000000-0000-4000-8000-000000000002','reader@review.test',now());
@@ -8,7 +9,7 @@ set local role authenticated;
 set local "request.jwt.claims"='{"sub":"90000000-0000-4000-8000-000000000001","role":"authenticated"}';
 select set_config('test.a',create_tenant('Review A','review-a',gen_random_uuid())::text,true);
 select set_config('test.b',create_tenant('Review B','review-b',gen_random_uuid())::text,true);
-select set_config('test.seller',register_seller(current_setting('test.a')::uuid,gen_random_uuid(),'Seller','seller@example.test','')::text,true);
+select set_config('test.seller',register_seller(current_setting('test.a')::uuid,gen_random_uuid(),'Seller',current_setting('test.review_seller_email'),'')::text,true);
 select set_config('test.session',create_reception_session(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid)::text,true);
 select set_config('test.agreement',publish_seller_agreement(current_setting('test.a')::uuid,gen_random_uuid(),null,'TEST terms','Fictional terms','en',false)::text,true);
 select set_config('test.sources','[{"id":"90000000-0000-4000-8000-000000000010","kind":"observation","reference":"TEST","observation":"Blue jacket"},{"id":"90000000-0000-4000-8000-000000000011","kind":"price-evidence","reference":"TEST appraisal","observation":"Fictional 250 SEK appraisal"}]',true);
@@ -23,7 +24,7 @@ select lives_ok($$select set_reception_access(current_setting('test.a')::uuid,cu
 select throws_like($$select set_reception_access(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.review')::uuid,null,repeat('b',64))$$,'%RECEPTION_ACCESS_CHANGED%','stale issuance rejected');
 select throws_like($$select read_seller_review(repeat('a',64))$$,'%REVIEW_UNAVAILABLE%','owner cannot impersonate seller');
 reset role;
-insert into auth.users(id,email,email_confirmed_at) values('90000000-0000-4000-8000-000000000003','seller@example.test',now());
+insert into auth.users(id,email,email_confirmed_at) values('90000000-0000-4000-8000-000000000003',current_setting('test.review_seller_email'),now());
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"90000000-0000-4000-8000-000000000003","role":"authenticated"}';
 select is((select count(*) from tenant_members),0::bigint,'seller has no staff membership');

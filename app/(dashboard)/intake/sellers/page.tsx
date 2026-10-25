@@ -23,6 +23,10 @@ export default async function Sellers({
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const params = await searchParams
   const q = typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
+  const type =
+    params.type === 'private' || params.type === 'business'
+      ? params.type
+      : 'all'
   const order = directoryOrder(sellerSortKeys, params.order)
   const pageSize = 25
   const requestedPage =
@@ -31,6 +35,7 @@ export default async function Sellers({
       : 1
   const pageHref = (page: number, nextOrder = order.value, query = q) => {
     const search = new URLSearchParams()
+    if (type !== 'all') search.set('type', type)
     if (query) search.set('q', query)
     if (nextOrder !== 'name:asc') search.set('order', nextOrder)
     if (page > 1) search.set('page', String(page))
@@ -50,6 +55,7 @@ export default async function Sellers({
       pageSize,
       order.sort,
       order.direction,
+      type,
     ),
   ])
   const pages = paged ? Math.max(1, Math.ceil(paged.total / pageSize)) : 1
@@ -112,6 +118,20 @@ export default async function Sellers({
               maxLength={120}
             />
           </div>
+          <div className="field">
+            <label htmlFor="sellers-type">
+              {all.sellerDetails.business.type}
+            </label>
+            <select id="sellers-type" name="type" defaultValue={type}>
+              <option value="all">{all.sellerDetails.business.all}</option>
+              <option value="private">
+                {all.sellerDetails.business.private}
+              </option>
+              <option value="business">
+                {all.sellerDetails.business.business}
+              </option>
+            </select>
+          </div>
           <DirectoryOrder
             columns={columns}
             value={order.value}
@@ -161,6 +181,11 @@ export default async function Sellers({
                   >
                     {s.name}
                   </Link>
+                  {s.sellerType === 'business' && (
+                    <small className="badge">
+                      {all.sellerDetails.business.business}
+                    </small>
+                  )}
                   <div className="directory-contact">
                     {s.email && (
                       <a href={`mailto:${s.email}`} title={s.email}>

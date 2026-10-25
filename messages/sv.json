@@ -1262,7 +1262,9 @@
       "more": "Mer om inställningarna"
     },
     "communicationLanguage": "Standardspråk för meddelanden",
-    "communicationLanguageHint": "Används för säljarmejl och som förval för personalinbjudningar när butiksprofilen saknar språk. Säljarens eget språk går först, därefter butiksprofilens språk. Språket i din egen meny påverkar inte mejlen."
+    "communicationLanguageHint": "Används för säljarmejl och som förval för personalinbjudningar när butiksprofilen saknar språk. Säljarens eget språk går först, därefter butiksprofilens språk. Språket i din egen meny påverkar inte mejlen.",
+    "vatModeConsignmentBusiness": "Moms för momsregistrerade företag",
+    "consignment_business": "Moms på hela försäljningspriset"
   },
   "sellerTerms": {
     "title": "Säljarvillkor",
@@ -1637,7 +1639,19 @@
     "issued": "Avräkningen är utfärdad.",
     "open": "Öppna avräkningen",
     "closedPeriodHint": "Slutdatum kan vara senast i går.",
-    "issueInfo": "Om avräkningen"
+    "issueInfo": "Om avräkningen",
+    "selfBilling": "Självfaktura",
+    "selfBillingCredit": "Kreditnota för självfaktura",
+    "supplier": "Säljare / leverantör",
+    "buyer": "Köpare",
+    "supplierNet": "Belopp exklusive moms",
+    "supplierVat": "Leverantörens moms",
+    "supplierGross": "Belopp inklusive moms",
+    "vatRate": "Momssats",
+    "noSeparateVat": "Ingen separat debiterad moms",
+    "downloadPdf": "Ladda ner PDF",
+    "invoiceTotals": "Självfakturans belopp",
+    "invoiceNote": "Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen."
   },
   "handovers": {
     "title": "Föranmälningar",
@@ -1990,6 +2004,22 @@
       "message": {
         "subject": "Meddelande från {store}",
         "body": "Hej {seller},"
+      },
+      "self_billing_issued": {
+        "subject": "Självfaktura · {store}",
+        "subjectNumber": "Självfaktura #{number} · {store}",
+        "body": "Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
+        "bodyNumber": "Självfaktura #{number}. Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
+        "amount": "Utgående saldo: {amount}.",
+        "note": "Du kan öppna underlaget och ladda ner PDF i säljarportalen."
+      },
+      "self_billing_credit_issued": {
+        "subject": "Kreditnota för självfaktura · {store}",
+        "subjectNumber": "Kreditnota för självfaktura #{number} · {store}",
+        "body": "Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
+        "bodyNumber": "Kreditnota för självfaktura #{number}. Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
+        "amount": "Utgående saldo: {amount}.",
+        "note": "Du kan öppna underlaget och ladda ner PDF i säljarportalen."
       }
     },
     "invitation": {
@@ -2057,7 +2087,16 @@
     "column": {
       "name": "Namn",
       "email": "E-post",
-      "phone": "Telefon"
+      "phone": "Telefon",
+      "sellerType": "Säljartyp",
+      "companyName": "Företagsnamn",
+      "organisationNumber": "Organisationsnummer",
+      "vatNumber": "Momsregistreringsnummer",
+      "vatRegistered": "Momsregistrerat företag",
+      "contactPerson": "Kontaktperson",
+      "billingAddress": "Fakturaadress (om annan)",
+      "invoiceEmail": "Faktura-e-post",
+      "invoiceReference": "Fakturareferens"
     },
     "ignore": "Finns inte i filen",
     "skipHeader": "Första raden innehåller kolumnnamn",
@@ -2067,7 +2106,8 @@
     "reasons": {
       "name": "saknar namn",
       "contact": "varken e-post eller telefon",
-      "email": "e-posten är inte giltig"
+      "email": "e-posten är inte giltig",
+      "business": "Kontrollera säljartyp och företagsuppgifter."
     },
     "line": "rad",
     "tooMany": "Importera högst 200 säljare åt gången. Dela upp filen och försök igen.",
@@ -2084,7 +2124,9 @@
     "reviewHelp": "Kontrollera namn och kontaktuppgifter i förhandsgranskningen. Klicka sedan på Importera för att lägga till säljarna. Befintliga e-postadresser hoppas över.",
     "import": "Importera",
     "completed": "Importen är klar.",
-    "viewSellers": "Visa säljare"
+    "viewSellers": "Visa säljare",
+    "businessHint": "Använd private eller business för säljartyp och true eller false för momsregistrering. Företagsfält kräver typen business.",
+    "businessLabel": "Företag"
   },
   "lifecycle": {
     "agentHeading": "Prissänkningskörningar",
@@ -3463,7 +3505,25 @@
     "history": "Ändringshistorik",
     "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst.",
     "moreFields": "Fler fält",
-    "nationalId": "Personnummer (valfritt)"
+    "nationalId": "Personnummer (valfritt)",
+    "business": {
+      "type": "Säljartyp",
+      "private": "Privatperson",
+      "business": "Företag",
+      "typeFixed": "Säljartypen kan inte ändras efter registrering.",
+      "companyName": "Företagsnamn",
+      "organisationNumber": "Organisationsnummer",
+      "vatNumber": "Momsregistreringsnummer",
+      "vatRegistered": "Momsregistrerat företag",
+      "contactPerson": "Kontaktperson",
+      "billingAddress": "Fakturaadress (om annan)",
+      "invoiceEmail": "Faktura-e-post",
+      "invoiceReference": "Fakturareferens",
+      "all": "Alla säljartyper",
+      "report": "Inlämnad försäljning och utbetalningar per säljartyp",
+      "yes": "Ja",
+      "no": "Nej"
+    }
   },
   "bagIntake": {
     "intro": "Ta en vara i taget. Lägg till en bild om du vill ha hjälp med uppgifterna, kontrollera beskrivning och pris och spara.",

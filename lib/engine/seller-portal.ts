@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { selfBilling } from './self-billing'
 import { ledgerItemDetails } from './seller-ledger'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -39,6 +40,7 @@ export const sellerEconomy = z.object({
   statements: z.array(
     z.object({
       id: z.uuid(),
+      is_self_billing: z.boolean().optional(),
       number: z.number().int(),
       kind: z.string(),
       period_from: z.string(),
@@ -59,6 +61,19 @@ export const sellerEconomy = z.object({
 })
 export const sellerStatement = z.object({
   header: z.object({
+    self_billing: selfBilling.nullable().optional(),
+    corrects_id: z.uuid().nullable().optional(),
+    issued_at: z.string().optional(),
+    sales_gross_ore: money.optional(),
+    commission_ore: money.optional(),
+    credited_ore: money.optional(),
+    reversed_ore: money.optional(),
+    paid_ore: money.optional(),
+    adjustments_ore: money.optional(),
+    seller_contact: z
+      .object({ language: z.string().optional() })
+      .nullable()
+      .optional(),
     id: z.uuid(),
     number: z.number().int(),
     kind: z.string(),

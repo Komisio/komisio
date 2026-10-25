@@ -1,3 +1,5 @@
+import { SelfBillingDetails } from '@/components/intake/self-billing-details'
+import { statementTitle } from '@/lib/engine/self-billing'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStatementSellerContact } from '@/lib/engine/seller-profile'
 import Link from '@/components/platform/working-link'
@@ -27,9 +29,11 @@ export default async function Statement({
   const seller =
     s.seller_contact ??
     (await readStatementSellerContact(ctx.client, active.id, s.seller_id))
-  const documentLanguage = isLocale(s.seller_contact?.language)
-    ? s.seller_contact.language
-    : ctx.locale
+  const documentLanguage =
+    s.self_billing?.language ??
+    (isLocale(s.seller_contact?.language)
+      ? s.seller_contact.language
+      : ctx.locale)
   const all = dictionary(documentLanguage),
     d = all.statements
   const locale = intlLocale(documentLanguage)
@@ -52,9 +56,9 @@ export default async function Statement({
         className="card intake-form statement"
         lang={intlLocale(documentLanguage)}
       >
-        <p className="eyebrow">{active.name}</p>
+        <p className="eyebrow">{s.self_billing?.buyer.name ?? active.name}</p>
         <h2>
-          {s.kind === 'credit_note' ? d.creditNote : d.statement} {s.number}
+          {statementTitle(s, d)} {s.number}
         </h2>
         <p>
           {seller.name}
@@ -88,6 +92,12 @@ export default async function Statement({
               {d.original}
             </Link>
           </p>
+        )}
+        {s.self_billing && (
+          <SelfBillingDetails
+            invoice={s.self_billing}
+            locale={documentLanguage}
+          />
         )}
         <dl className="statement-totals">
           <div>
@@ -177,6 +187,14 @@ export default async function Statement({
       </article>
       <div className="row no-print">
         <PrintLabel label={d.print} />
+        {s.self_billing && (
+          <a
+            className="btn btn-secondary"
+            href={`/api/statements/pdf?tenant=${active.id}&statement=${s.id}`}
+          >
+            {d.downloadPdf}
+          </a>
+        )}
       </div>
     </>
   )

@@ -4870,6 +4870,53 @@ button.text-link:hover:not(:disabled) {
   padding: 12px 8px;
   border-bottom: 1px solid var(--line);
 }
+.self-billing-details {
+  container-type: inline-size;
+  overflow-wrap: anywhere;
+}
+.self-billing-details .statement-lines td:not(:first-child) {
+  white-space: nowrap;
+}
+@media screen {
+  @container (max-width: 45rem) {
+    .self-billing-details .statement-lines thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .self-billing-details .statement-lines,
+    .self-billing-details .statement-lines tbody,
+    .self-billing-details .statement-lines tfoot {
+      display: block;
+    }
+    .self-billing-details .statement-lines tr {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .self-billing-details .statement-lines td,
+    .self-billing-details .statement-lines th {
+      display: block;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+    }
+    .self-billing-details .statement-lines tr > :first-child {
+      grid-column: 1 / -1;
+    }
+    .self-billing-details .statement-lines td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: normal;
+    }
+  }
+}
 .statement-lines .statement-money {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;

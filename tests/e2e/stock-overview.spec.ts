@@ -15,7 +15,7 @@ test('stock overview separates current inventory from period sales on desktop an
     await page.goto('/intake/stock')
     await expect(
       page.getByRole('region', { name: d.stock.current }),
-    ).toContainText('200.00 SEK')
+    ).toContainText('200,00 kr')
     await page
       .getByRole('tab', { name: d.stock.tabs.categories, exact: true })
       .click()
@@ -72,7 +72,7 @@ test('stock overview separates current inventory from period sales on desktop an
       .click()
     await expect(
       page.getByRole('region', { name: d.stock.current, includeHidden: true }),
-    ).toContainText('200.00 SEK')
+    ).toContainText('200,00 kr')
     await page.locator('.stock-details summary').click()
     await expect(
       page.getByText(d.stock.definitions, { exact: true }),

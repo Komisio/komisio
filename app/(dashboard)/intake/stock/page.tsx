@@ -13,7 +13,6 @@ import {
   readStockAssortments,
   readStockLifecycle,
 } from '@/lib/engine/stock-report'
-import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { economyFormat } from '@/lib/intake/economy-format'
 import { ChevronDown } from 'lucide-react'
 
@@ -71,9 +70,8 @@ export default async function Stock({
       : stage === 'markdown_due'
         ? all.items.markdownWaiting
         : all.lifecycle.stages[stage]
-  const money = (ore: number) =>
-    `${formatSignedOre(ore)} ${report?.currency ?? ''}`
   const format = economyFormat(ctx.locale)
+  const money = (ore: number) => format.money(ore, report!.currency)
   const pct = (value: number | null) =>
     value === null ? '—' : format.percent(value)
   const days = (value: number | null) => (value === null ? '—' : String(value))
@@ -370,9 +368,12 @@ export default async function Stock({
                             )}
                           </th>
                           <td data-label={d.inStock}>{g.inStock}</td>
-                          <td
-                            data-label={d.stockValue}
-                          >{`${formatSignedOre(g.stockValueOre)} ${assortments.currency}`}</td>
+                          <td data-label={d.stockValue}>
+                            {format.money(
+                              g.stockValueOre,
+                              assortments.currency,
+                            )}
+                          </td>
                           <td data-label={d.averageAge}>
                             {days(g.averageAgeDays)}
                           </td>

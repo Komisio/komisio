@@ -1191,3 +1191,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-23: #614 combines stock ownership and period filters. Sales facts use locale formatting and available-width layouts, with separate margin amount/percent columns. Current stock remains independent of the sales period; calculations, permissions and saved facts are unchanged.
 - 2026-10-23: #615 shares scan-field focus across intake, label lookup, sales and stocktake. Fine-pointer devices focus ready fields; touch requires a tap. Confirmed loops may restore focus unless the user moved on or a dialog is open. Scanning never auto-adds or submits a financial operation.
 - 2026-10-23: Scan arrival focus respects explicit URL fragments: focus only a field within that target, never an unrelated editor. Unknown targets keep navigation intent. Explicit scan actions and confirmed next-item focus remain available.
+
+- 2026-10-25: #621 shares bounded stock filters across all tabs and formats current stock values with the shared locale formatter. Tablet filters wrap in pairs; touch navigation dismisses rail hints. Report membership, periods and calculations are unchanged.

@@ -148,8 +148,10 @@ export default async function SellerPortal({
             {account.storeName}
           </Link>
           <h1>
-            {statementTitle(statement.header, all.statements)} #
-            {statement.header.number}
+            {statement.header.self_billing
+              ? statementTitle(statement.header, all.statements)
+              : d.statements}{' '}
+            #{statement.header.number}
           </h1>
           <p>
             {when(statement.header.period_from)} —{' '}
@@ -530,7 +532,8 @@ export default async function SellerPortal({
         {economy.statements.map((s) => (
           <p key={s.id}>
             <Link href={`${base}&statement=${s.id}`}>
-              {statementTitle(s, all.statements)} #{s.number}
+              {s.is_self_billing ? statementTitle(s, all.statements) : d.open} #
+              {s.number}
             </Link>{' '}
             · {amount(s.closing_ore)}
           </p>

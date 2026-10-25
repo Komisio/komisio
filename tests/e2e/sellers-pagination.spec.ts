@@ -23,9 +23,9 @@ test('staff can browse every matching seller on a phone and search from later pa
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto('/intake/sellers?q=Paging')
-    const rows = page.locator('.seller-directory-table tbody tr')
+    const rows = page.locator('.compact-directory-table tbody tr')
     await expect(rows).toHaveCount(25)
-    const links = () => rows.locator('td:first-child a')
+    const links = () => rows.locator('.directory-primary-link')
     const seen = new Set(
       await links().evaluateAll((nodes) =>
         nodes.map((a) => a.getAttribute('href')),

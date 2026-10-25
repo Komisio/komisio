@@ -1,0 +1,46 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('30100000-0000-4000-8000-000000000001','owner@agreement-workspace.test',now()),
+ ('30100000-0000-4000-8000-000000000002','outsider@agreement-workspace.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"30100000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Workspace TEST','agreement-workspace-test',gen_random_uuid())::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'TEST terms','Synthetic terms','sv',false)::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Accepted TEST','','0101')::text,true);
+select register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Missing TEST','','0102');
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Paper TEST');
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Second paper TEST');
+select is((agreement_sellers(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0)->>'total')::int,2,'one row per seller despite multiple evidence rows');
+select is((agreement_sellers(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','accepted',0)->>'total')::int,1,'accepted filter counts sellers');
+select is(agreement_sellers(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','missing',0)->'sellers'->0->>'name','Missing TEST','missing filter does not mix accepted sellers');
+select is((agreement_sellers(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'Accepted','all',25)->>'total')::int,1,'count retained beyond last page');
+select is(jsonb_array_length(agreement_sellers(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'Accepted','all',25)->'sellers'),0,'offset applied after search');
+
+select register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'A unapproved '||lpad(i::text,2,'0'),'approval'||i||'@example.test','') from generate_series(1,30) i;
+select is(agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'status','desc')->'sellers'->0->>'id',current_setting('test.seller'),'approved first across whole register');
+select is(agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',25,'status','asc')->'sellers'->6->>'id',current_setting('test.seller'),'missing first includes last approval on later page');
+select is(agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'date','asc')->'sellers'->0->>'id',current_setting('test.seller'),'missing dates last ascending');
+select is(agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'date','desc')->'sellers'->0->>'id',current_setting('test.seller'),'missing dates last descending');
+select is(agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'name','asc'),agreement_sellers(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0),'default order preserves all evidence facts');
+select is(agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'unapproved','missing',25,'name','desc')->'sellers'->0->>'name','A unapproved 05','search and status applied before sorted paging');
+select is((agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','accepted',0,'date','desc')->>'total')::int,1,'multiple evidence facts never duplicate a seller');
+select throws_ok($$select agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'bad','asc')$$,'INVALID_INPUT','sort whitelist enforced');
+select throws_ok($$select agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'date',null)$$,'INVALID_INPUT','null direction refused');
+select throws_ok($$select agreement_sellers_sorted(current_setting('test.tenant')::uuid,gen_random_uuid(),'','all',0,'date','desc')$$,'AGREEMENT_NOT_FOUND','exact agreement required');
+set local "request.jwt.claims"='{"sub":"30100000-0000-4000-8000-000000000002","role":"authenticated"}';
+select throws_ok($$select agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'name','asc')$$,'42501',null,'outsider denied');
+reset role;
+insert into public.tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'30100000-0000-4000-8000-000000000002','readonly');
+set local role authenticated;
+select lives_ok($$select agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'date','asc')$$,'readonly member may sort approvals');
+reset role;
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'30100000-0000-4000-8000-000000000001','totp','verified',now(),now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"30100000-0000-4000-8000-000000000001","role":"authenticated","aal":"aal1"}';
+select throws_ok($$select agreement_sellers_sorted(current_setting('test.tenant')::uuid,current_setting('test.agreement')::uuid,'','all',0,'name','asc')$$,'42501',null,'MFA required');
+reset role;
+select ok(not has_function_privilege('anon','public.agreement_sellers_sorted(uuid,uuid,text,text,integer,text,text)','execute'),'anonymous access denied');
+select * from finish();
+rollback;

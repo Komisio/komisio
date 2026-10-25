@@ -3284,6 +3284,10 @@
     "openPayoutsPage": "Avaa tilitykset",
     "openEconomy": "Avaa talous"
   },
+  "directory": {
+    "sortBy": "Lajitteluperuste",
+    "via": "Kautta"
+  },
   "sellersList": {
     "title": "Tuojat",
     "intro": "Kaikki, jotka ovat tuoneet tavaraa kauppaan: mitä kauppa pitää hallussaan heidän puolestaan, mitä on myyty ja mitä he voivat pyytää.",

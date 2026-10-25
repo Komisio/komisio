@@ -3284,6 +3284,10 @@
     "openPayoutsPage": "Open payouts",
     "openEconomy": "Open the economy"
   },
+  "directory": {
+    "sortBy": "Sort by",
+    "via": "Via"
+  },
   "sellersList": {
     "title": "Sellers",
     "intro": "Everyone who has handed in to the store: what the store holds for them, what has sold and what they can request.",

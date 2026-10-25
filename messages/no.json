@@ -3284,6 +3284,10 @@
     "openPayoutsPage": "Åpne utbetalinger",
     "openEconomy": "Åpne økonomien"
   },
+  "directory": {
+    "sortBy": "Sorter etter",
+    "via": "Via"
+  },
   "sellersList": {
     "title": "Innleverere",
     "intro": "Alle som har levert inn til butikken: hva butikken har for dem, hva som er solgt og hva de kan be om.",

@@ -1,3 +1,5 @@
+import { SellerBusinessSummary } from '@/components/intake/seller-business-summary'
+import { businessDetails } from '@/lib/engine/seller-business'
 import { SellerItems } from '@/components/seller/items'
 import { MyRegistrations } from '@/components/seller-registration/pending'
 import { readMyRegistrations } from '@/lib/engine/seller-registration'
@@ -96,6 +98,14 @@ export default async function SellerPortal({
         <MyRegistrations rows={registrations} d={all.selfRegistration} />
       </main>
     )
+  const identity = await ctx.client.rpc('my_seller_business', {
+    p_tenant: account.tenantId,
+    p_seller: account.sellerId,
+  })
+  if (identity.error) throw new Error('Unable to read seller identity')
+  const business = identity.data?.business
+    ? businessDetails.parse(identity.data.business)
+    : null
   const mailConsent = await readMailConsent(
     ctx.client,
     account.tenantId,
@@ -272,6 +282,12 @@ export default async function SellerPortal({
           {d.reserved}: {amount(economy.balance.reservedOre)}
         </p>
       </section>
+      {identity.data?.sellerType === 'business' && (
+        <SellerBusinessSummary
+          d={all.sellerDetails.business}
+          business={business}
+        />
+      )}
       <nav className="seller-portal-shortcuts" aria-label={d.title}>
         {process.env.KOMISIO_SELLER_SUBMISSIONS_ENABLED === 'true' &&
           submissionSettings.enabled && (

@@ -36,7 +36,7 @@ it('rejects modes from the wrong group and lossy rates', () => {
   for (const patch of [
     { vatModeConsignmentPrivate: 'store_margin' },
     { vatModeStoreOwned: 'consignment_full' },
-    { vatModeConsignmentBusiness: 'consignment_business' },
+    { vatModeConsignmentBusiness: 'store_full' },
     { vatRatePercent: 25.001 },
     { vatRatePercent: 100.01 },
     { vatRatePercent: '25' },

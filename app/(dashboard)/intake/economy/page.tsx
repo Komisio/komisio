@@ -1,3 +1,4 @@
+import { SellerTypeTotals } from '@/components/intake/seller-type-totals'
 import { EconomyPeriodForm } from '@/components/intake/economy-period-form'
 import { economyFormat } from '@/lib/intake/economy-format'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
@@ -89,6 +90,13 @@ export default async function Economy({
           help={{ label: d.helpLabel, steps: [d.intro] }}
         />
       </div>
+      <SellerTypeTotals
+        totals={summary.sellerTypes}
+        d={all.sellerDetails.business}
+        labels={all.economy}
+        locale={ctx.locale}
+        currency={summary.currency}
+      />
       <WorkspaceTabs
         id="economy"
         label={d.title}

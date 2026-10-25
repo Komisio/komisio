@@ -1,3 +1,4 @@
+import { SellerBusinessSummary } from '@/components/intake/seller-business-summary'
 import { readStaffMailStatus } from '@/lib/engine/store-mail'
 import { StoreMailStatus } from '@/components/seller/store-mail-status'
 import { readSellerBank } from '@/lib/engine/seller-bank'
@@ -95,7 +96,7 @@ export default async function Seller({
   const seller = await ctx.client
     .from('sellers')
     .select(
-      'id,name,email,phone,created_at,profile,profile_revision,privacy_closed_at',
+      'id,name,email,phone,seller_type,created_at,profile,profile_revision,privacy_closed_at',
     )
     .eq('tenant_id', tenant.id)
     .eq('id', id.data)
@@ -1028,6 +1029,12 @@ export default async function Seller({
                     ? localeNames[profile.language]
                     : `${all.sellerDetails.followStore} (${localeNames[storeLanguage]})`}
                 </p>
+                {profile.sellerType === 'business' && (
+                  <SellerBusinessSummary
+                    d={all.sellerDetails.business}
+                    business={profile.business}
+                  />
+                )}
                 {profile.nationalId && (
                   <p>
                     <strong>{all.sellerDetails.nationalId}</strong>:{' '}
@@ -1107,6 +1114,12 @@ export default async function Seller({
                               ? localeNames[previous.language]
                               : all.sellerDetails.followStore}
                           </p>
+                          {previous.sellerType === 'business' && (
+                            <SellerBusinessSummary
+                              d={all.sellerDetails.business}
+                              business={previous.business}
+                            />
+                          )}
                           {previous.notes && (
                             <p>
                               <strong>{all.sellerDetails.notes}</strong>:{' '}

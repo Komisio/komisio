@@ -1,4 +1,6 @@
 'use client'
+import { SellerBusinessFields } from './seller-business-fields'
+import { businessFromFields } from '@/lib/engine/seller-business'
 import { useRef, useState } from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
@@ -52,11 +54,14 @@ export function SellerProfileForm({
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const data = new FormData(e.currentTarget)
-    const parsed = sellerProfileBody.safeParse(
-      Object.fromEntries(
-        Object.keys(profile).map((k) => [k, String(data.get(k) ?? '').trim()]),
+    const parsed = sellerProfileBody.safeParse({
+      ...Object.fromEntries(
+        Object.keys(profile)
+          .filter((k) => k !== 'business' && k !== 'sellerType')
+          .map((k) => [k, String(data.get(k) ?? '').trim()]),
       ),
-    )
+      ...businessFromFields(data),
+    })
     if (!action.locked && !parsed.success) {
       setInvalid(true)
       return
@@ -81,7 +86,7 @@ export function SellerProfileForm({
     }
   }
   const field = (
-    key: keyof SellerProfile,
+    key: Exclude<keyof SellerProfile, 'business'>,
     label: string,
     maxLength: number,
     type = 'text',
@@ -108,6 +113,12 @@ export function SellerProfileForm({
           !ready || action.busy || action.locked || action.needsReload || saved
         }
       >
+        <SellerBusinessFields
+          d={d.business}
+          initialType={profile.sellerType}
+          business={profile.business}
+          fixed
+        />
         {field('name', intake.name, 120, 'text', true)}
         <div className="seller-profile-fields">
           {field('email', intake.email, 254, 'email')}

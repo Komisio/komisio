@@ -1,4 +1,6 @@
 'use client'
+import { SellerBusinessFields } from './seller-business-fields'
+import { businessFromFields } from '@/lib/engine/seller-business'
 import { useBusyState } from '@/components/platform/work-activity'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { useEffect, useRef, useState } from 'react'
@@ -59,7 +61,7 @@ export function ReceivingPanel({
       ? `/intake/sellers/${id}`
       : `/intake?seller=${id}#new-seller`
   const formRef = useRef<HTMLFormElement>(null)
-  const { dirty, checkDirty, resetDirty } = useFormDirty(formRef)
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(formRef)
   const [confirmed, setConfirmed] = useState(false)
   const nameInput = useRef<HTMLInputElement>(null)
   useEffect(() => {
@@ -105,6 +107,7 @@ export function ReceivingPanel({
           }
         : {
             action: 'registerSeller',
+            ...businessFromFields(fields),
             agreementApproval: approvalFromFields(fields),
             tenantId,
             requestId: crypto.randomUUID(),
@@ -261,7 +264,8 @@ export function ReceivingPanel({
         }}
       >
         <fieldset
-          disabled={busy || locked}
+          data-draft-readiness={!ready ? '' : undefined}
+          disabled={!ready || busy || locked}
           className="intake-fields"
           onChange={() => {
             if (!seller && !pending.current) setMatches(null)
@@ -286,6 +290,7 @@ export function ReceivingPanel({
             </>
           ) : (
             <>
+              <SellerBusinessFields d={details.business} />
               <p id="seller-contact-hint">{d.contactHint}</p>
               <div className="field">
                 <label htmlFor="seller-name">{d.name}</label>
@@ -412,7 +417,9 @@ export function ReceivingPanel({
         )}
         <Button
           type="submit"
-          disabled={busy || needsReload || (agreementBlocked && !locked)}
+          disabled={
+            !ready || busy || needsReload || (agreementBlocked && !locked)
+          }
         >
           {busy
             ? d.busy

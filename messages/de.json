@@ -1262,7 +1262,9 @@
       "more": "Mehr zu den Einstellungen"
     },
     "communicationLanguage": "Standardsprache für Nachrichten",
-    "communicationLanguageHint": "Wird für E-Mails an Verkäufer und als Vorgabe für Mitarbeitereinladungen verwendet, wenn im Ladenprofil keine Sprache festgelegt ist. Die Sprache des Verkäufers hat Vorrang, danach die Sprache des Ladenprofils. Ihre eigene Menüsprache beeinflusst die E-Mails nicht."
+    "communicationLanguageHint": "Wird für E-Mails an Verkäufer und als Vorgabe für Mitarbeitereinladungen verwendet, wenn im Ladenprofil keine Sprache festgelegt ist. Die Sprache des Verkäufers hat Vorrang, danach die Sprache des Ladenprofils. Ihre eigene Menüsprache beeinflusst die E-Mails nicht.",
+    "vatModeConsignmentBusiness": "Umsatzsteuer für registrierte Unternehmen",
+    "consignment_business": "MwSt. auf den gesamten Verkaufspreis"
   },
   "sellerTerms": {
     "title": "Einlieferer-Bedingungen",
@@ -2057,7 +2059,16 @@
     "column": {
       "name": "Name",
       "email": "E-Mail",
-      "phone": "Telefon"
+      "phone": "Telefon",
+      "sellerType": "Verkäufertyp",
+      "companyName": "Firmenname",
+      "organisationNumber": "Unternehmensnummer",
+      "vatNumber": "Umsatzsteuer-ID",
+      "vatRegistered": "Umsatzsteuerpflichtiges Unternehmen",
+      "contactPerson": "Kontaktperson",
+      "billingAddress": "Rechnungsadresse (falls abweichend)",
+      "invoiceEmail": "Rechnungs-E-Mail",
+      "invoiceReference": "Rechnungsreferenz"
     },
     "ignore": "Nicht in der Datei",
     "skipHeader": "Die erste Zeile ist eine Kopfzeile",
@@ -2067,7 +2078,8 @@
     "reasons": {
       "name": "kein Name",
       "contact": "weder E-Mail noch Telefon",
-      "email": "E-Mail-Adresse ist ungültig"
+      "email": "E-Mail-Adresse ist ungültig",
+      "business": "Verkäufertyp und Firmendaten prüfen."
     },
     "line": "Zeile",
     "tooMany": "Die Datei hat mehr als 200 verwendbare Zeilen. Teilen Sie sie auf und importieren Sie in Teilen.",
@@ -2084,7 +2096,9 @@
     "reviewHelp": "Prüfen Sie Namen und Kontaktdaten in der Vorschau. Klicken Sie dann auf Importieren, um die Verkäufer hinzuzufügen. Bereits vorhandene E-Mail-Adressen werden übersprungen.",
     "import": "Importieren",
     "completed": "Import abgeschlossen.",
-    "viewSellers": "Verkäufer anzeigen"
+    "viewSellers": "Verkäufer anzeigen",
+    "businessHint": "Verwenden Sie private oder business als Verkäufertyp und true oder false für die Umsatzsteuerregistrierung. Firmendaten erfordern business.",
+    "businessLabel": "Unternehmen"
   },
   "lifecycle": {
     "agentHeading": "Preissenkungsläufe",
@@ -3463,7 +3477,25 @@
     "history": "Änderungsverlauf",
     "emailHint": "Prüfen Sie die E-Mail-Adresse. Sie wird für Nachrichten und den Verkäuferzugang verwendet.",
     "moreFields": "Weitere Felder",
-    "nationalId": "Personenkennnummer (optional)"
+    "nationalId": "Personenkennnummer (optional)",
+    "business": {
+      "type": "Verkäufertyp",
+      "private": "Privatperson",
+      "business": "Unternehmen",
+      "typeFixed": "Der Verkäufertyp kann nach der Registrierung nicht geändert werden.",
+      "companyName": "Firmenname",
+      "organisationNumber": "Unternehmensnummer",
+      "vatNumber": "Umsatzsteuer-ID",
+      "vatRegistered": "Umsatzsteuerpflichtiges Unternehmen",
+      "contactPerson": "Kontaktperson",
+      "billingAddress": "Rechnungsadresse (falls abweichend)",
+      "invoiceEmail": "Rechnungs-E-Mail",
+      "invoiceReference": "Rechnungsreferenz",
+      "all": "Alle Verkäufertypen",
+      "report": "Kommissionsverkäufe und Auszahlungen nach Verkäufertyp",
+      "yes": "Ja",
+      "no": "Nein"
+    }
   },
   "bagIntake": {
     "intro": "Bearbeiten Sie einen Artikel nach dem anderen. Fügen Sie bei Bedarf ein Foto hinzu, prüfen Sie Beschreibung und Preis und speichern Sie.",

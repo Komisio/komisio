@@ -27,15 +27,21 @@ totals are sums of lines, never re-rounded.
 | Key | Values | Default |
 | --- | --- | --- |
 | `vatModeConsignmentPrivate` | `consignment_margin` \| `consignment_full` | none: the tenant must choose before its first sale |
-| `vatModeConsignmentBusiness` | `consignment_business` | fixed |
+| `vatModeConsignmentBusiness` | `consignment_business` \| `consignment_margin` | `consignment_business` when absent |
 | `vatModeStoreOwned` | `store_margin` \| `store_full`, with `store_full` as the fallback when eligibility is not attested | none: must choose |
 | `vatRatePercent` | numeric | `25.00` |
 
 ## Rules the engine enforces
 
-- Interim (S11): a seller is treated as VAT-registered when the item's frozen
-  commission basis is `exclusive`; the seller VAT id and taxable flag arrive
-  with seller registration work and will replace this proxy.
+- Owner decision #626 (2026-10-25): new sale lines use the explicit seller
+  type and current versioned VAT registration, independently of commission
+  basis. They freeze `sellerType`, `sellerTaxable`, `sellerVatNumber` and
+  `sellerProfileRevision` in `vat_basis`. Non-registered businesses use the
+  private VAT policy. Registered businesses use the tenant's business policy.
+  Existing sellers remain private and recorded lines are never recalculated.
+- Business commission defaults to exclusive at acceptance unless the seller
+  has an explicit override. The existing commission and seller-credit arithmetic
+  is unchanged; choosing a goods VAT mode does not change those amounts.
 
 - A sale cannot be recorded for a tenant that has not chosen its modes;
   `record_sale` fails with `VAT_MODE_NOT_SET`. Choosing a mode is an
@@ -56,3 +62,5 @@ totals are sums of lines, never re-rounded.
 Komisio's responsibility ends at deterministic, documented computation. The
 choice of mode, and its correctness for the store, is the tenant's, made with
 its accountant; the settings page says so in plain words and links the skill.
+
+Self-billing (#626): the VAT basis of the supplier invoice is awaiting an explicit owner decision. Retail sale VAT must not be presented as supplier invoice VAT. Business identity and reporting alone do not establish complete self-billing support.

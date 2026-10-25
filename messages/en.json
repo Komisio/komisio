@@ -1262,7 +1262,9 @@
       "more": "About these settings"
     },
     "communicationLanguage": "Default message language",
-    "communicationLanguageHint": "Used for seller emails and the default staff invitation language when the store profile has no language. The seller’s preference takes priority, followed by the store profile language. Your own menu language does not affect emails."
+    "communicationLanguageHint": "Used for seller emails and the default staff invitation language when the store profile has no language. The seller’s preference takes priority, followed by the store profile language. Your own menu language does not affect emails.",
+    "vatModeConsignmentBusiness": "VAT for VAT-registered businesses",
+    "consignment_business": "VAT on the whole sale price"
   },
   "sellerTerms": {
     "title": "Seller terms",
@@ -2057,7 +2059,16 @@
     "column": {
       "name": "Name",
       "email": "E-mail",
-      "phone": "Phone"
+      "phone": "Phone",
+      "sellerType": "Seller type",
+      "companyName": "Company name",
+      "organisationNumber": "Company registration number",
+      "vatNumber": "VAT number",
+      "vatRegistered": "VAT-registered business",
+      "contactPerson": "Contact person",
+      "billingAddress": "Billing address (if different)",
+      "invoiceEmail": "Invoice email",
+      "invoiceReference": "Invoice reference"
     },
     "ignore": "Not in the file",
     "skipHeader": "The first row is a header",
@@ -2067,7 +2078,8 @@
     "reasons": {
       "name": "no name",
       "contact": "neither e-mail nor phone",
-      "email": "e-mail is not valid"
+      "email": "e-mail is not valid",
+      "business": "Check seller type and company details."
     },
     "line": "line",
     "tooMany": "The file has more than 200 usable rows. Split it and import in parts.",
@@ -2084,7 +2096,9 @@
     "reviewHelp": "Check names and contact details in the preview. Then click Import to add the sellers. Existing email addresses are skipped.",
     "import": "Import",
     "completed": "Import complete.",
-    "viewSellers": "View sellers"
+    "viewSellers": "View sellers",
+    "businessHint": "Use private or business for seller type and true or false for VAT registration. Company fields require business type.",
+    "businessLabel": "Business"
   },
   "lifecycle": {
     "agentHeading": "Markdown runs",
@@ -3463,7 +3477,25 @@
     "history": "Change history",
     "emailHint": "Check the email address carefully. It is used for messages and seller access.",
     "moreFields": "More fields",
-    "nationalId": "National ID / SSN (optional)"
+    "nationalId": "National ID / SSN (optional)",
+    "business": {
+      "type": "Seller type",
+      "private": "Private person",
+      "business": "Business",
+      "typeFixed": "The seller type cannot be changed after registration.",
+      "companyName": "Company name",
+      "organisationNumber": "Company registration number",
+      "vatNumber": "VAT number",
+      "vatRegistered": "VAT-registered business",
+      "contactPerson": "Contact person",
+      "billingAddress": "Billing address (if different)",
+      "invoiceEmail": "Invoice email",
+      "invoiceReference": "Invoice reference",
+      "all": "All seller types",
+      "report": "Consignment sales and payouts by seller type",
+      "yes": "Yes",
+      "no": "No"
+    }
   },
   "bagIntake": {
     "intro": "Handle one item at a time. Add a photo for help with the details, check the description and price, then save.",

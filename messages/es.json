@@ -1262,7 +1262,9 @@
       "more": "Más sobre estos ajustes"
     },
     "communicationLanguage": "Idioma predeterminado de los mensajes",
-    "communicationLanguageHint": "Se usa en los correos a vendedores y como idioma predeterminado de las invitaciones al personal cuando el perfil de la tienda no tiene idioma. Tiene prioridad el idioma del vendedor y después el del perfil de la tienda. El idioma de tu menú no afecta a los correos."
+    "communicationLanguageHint": "Se usa en los correos a vendedores y como idioma predeterminado de las invitaciones al personal cuando el perfil de la tienda no tiene idioma. Tiene prioridad el idioma del vendedor y después el del perfil de la tienda. El idioma de tu menú no afecta a los correos.",
+    "vatModeConsignmentBusiness": "IVA de empresas registradas",
+    "consignment_business": "IVA sobre todo el precio de venta"
   },
   "sellerTerms": {
     "title": "Condiciones del depositante",
@@ -2057,7 +2059,16 @@
     "column": {
       "name": "Nombre",
       "email": "Correo electrónico",
-      "phone": "Teléfono"
+      "phone": "Teléfono",
+      "sellerType": "Tipo de vendedor",
+      "companyName": "Nombre de la empresa",
+      "organisationNumber": "Número de registro de la empresa",
+      "vatNumber": "Número de IVA",
+      "vatRegistered": "Empresa registrada a efectos de IVA",
+      "contactPerson": "Persona de contacto",
+      "billingAddress": "Dirección de facturación (si es distinta)",
+      "invoiceEmail": "Correo de facturación",
+      "invoiceReference": "Referencia de factura"
     },
     "ignore": "No está en el archivo",
     "skipHeader": "La primera fila es un encabezado",
@@ -2067,7 +2078,8 @@
     "reasons": {
       "name": "sin nombre",
       "contact": "ni correo electrónico ni teléfono",
-      "email": "el correo electrónico no es válido"
+      "email": "el correo electrónico no es válido",
+      "business": "Revise el tipo de vendedor y los datos de empresa."
     },
     "line": "línea",
     "tooMany": "El archivo tiene más de 200 filas utilizables. Divídelo e impórtalo por partes.",
@@ -2084,7 +2096,9 @@
     "reviewHelp": "Revisa los nombres y los datos de contacto en la vista previa. Después, haz clic en Importar para añadir los vendedores. Se omiten las direcciones de correo electrónico existentes.",
     "import": "Importar",
     "completed": "Importación completada.",
-    "viewSellers": "Ver vendedores"
+    "viewSellers": "Ver vendedores",
+    "businessHint": "Use private o business como tipo y true o false para el registro de IVA. Los datos de empresa requieren business.",
+    "businessLabel": "Empresa"
   },
   "lifecycle": {
     "agentHeading": "Ejecuciones de rebajas",
@@ -3463,7 +3477,25 @@
     "history": "Historial de cambios",
     "emailHint": "Comprueba el correo electrónico. Se utiliza para los mensajes y el acceso del vendedor.",
     "moreFields": "Más campos",
-    "nationalId": "Número de identificación personal (opcional)"
+    "nationalId": "Número de identificación personal (opcional)",
+    "business": {
+      "type": "Tipo de vendedor",
+      "private": "Particular",
+      "business": "Empresa",
+      "typeFixed": "El tipo de vendedor no se puede cambiar después del registro.",
+      "companyName": "Nombre de la empresa",
+      "organisationNumber": "Número de registro de la empresa",
+      "vatNumber": "Número de IVA",
+      "vatRegistered": "Empresa registrada a efectos de IVA",
+      "contactPerson": "Persona de contacto",
+      "billingAddress": "Dirección de facturación (si es distinta)",
+      "invoiceEmail": "Correo de facturación",
+      "invoiceReference": "Referencia de factura",
+      "all": "Todos los tipos de vendedor",
+      "report": "Ventas en consignación y pagos por tipo de vendedor",
+      "yes": "Sí",
+      "no": "No"
+    }
   },
   "bagIntake": {
     "intro": "Revisa un artículo a la vez. Añade una foto si quieres ayuda con los datos, comprueba la descripción y el precio y guarda.",

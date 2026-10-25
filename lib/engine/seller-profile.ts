@@ -1,10 +1,13 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { locales } from '../i18n'
+import { businessDetails, sellerType } from './seller-business'
 import { agreementApproval } from './agreement-workspace'
 
 export const sellerProfileBody = z
   .strictObject({
+    sellerType: sellerType.default('private'),
+    business: businessDetails.optional(),
     name: z.string().trim().min(1).max(120),
     email: z.union([z.literal(''), z.email().max(254)]),
     phone: z.string().trim().max(40),
@@ -17,6 +20,10 @@ export const sellerProfileBody = z
     language: z.union([z.literal(''), z.enum(locales)]),
     notes: z.string().trim().max(1000),
   })
+  .refine(
+    (p) => p.sellerType === 'business' || p.business === undefined,
+    'Private seller cannot have business details',
+  )
   .refine((p) => p.email !== '' || p.phone !== '', 'Contact required')
 export type SellerProfile = z.infer<typeof sellerProfileBody>
 export const saveSellerProfileCommand = z.strictObject({
@@ -34,6 +41,7 @@ export function initialSellerProfile(seller: {
   phone: string
 }): SellerProfile {
   return {
+    sellerType: 'private',
     name: seller.name,
     email: seller.email,
     phone: seller.phone,

@@ -1262,7 +1262,9 @@
       "more": "Mer om inställningarna"
     },
     "communicationLanguage": "Standardspråk för meddelanden",
-    "communicationLanguageHint": "Används för säljarmejl och som förval för personalinbjudningar när butiksprofilen saknar språk. Säljarens eget språk går först, därefter butiksprofilens språk. Språket i din egen meny påverkar inte mejlen."
+    "communicationLanguageHint": "Används för säljarmejl och som förval för personalinbjudningar när butiksprofilen saknar språk. Säljarens eget språk går först, därefter butiksprofilens språk. Språket i din egen meny påverkar inte mejlen.",
+    "vatModeConsignmentBusiness": "Moms för momsregistrerade företag",
+    "consignment_business": "Moms på hela försäljningspriset"
   },
   "sellerTerms": {
     "title": "Säljarvillkor",
@@ -2057,7 +2059,16 @@
     "column": {
       "name": "Namn",
       "email": "E-post",
-      "phone": "Telefon"
+      "phone": "Telefon",
+      "sellerType": "Säljartyp",
+      "companyName": "Företagsnamn",
+      "organisationNumber": "Organisationsnummer",
+      "vatNumber": "Momsregistreringsnummer",
+      "vatRegistered": "Momsregistrerat företag",
+      "contactPerson": "Kontaktperson",
+      "billingAddress": "Fakturaadress (om annan)",
+      "invoiceEmail": "Faktura-e-post",
+      "invoiceReference": "Fakturareferens"
     },
     "ignore": "Finns inte i filen",
     "skipHeader": "Första raden innehåller kolumnnamn",
@@ -2067,7 +2078,8 @@
     "reasons": {
       "name": "saknar namn",
       "contact": "varken e-post eller telefon",
-      "email": "e-posten är inte giltig"
+      "email": "e-posten är inte giltig",
+      "business": "Kontrollera säljartyp och företagsuppgifter."
     },
     "line": "rad",
     "tooMany": "Importera högst 200 säljare åt gången. Dela upp filen och försök igen.",
@@ -2084,7 +2096,9 @@
     "reviewHelp": "Kontrollera namn och kontaktuppgifter i förhandsgranskningen. Klicka sedan på Importera för att lägga till säljarna. Befintliga e-postadresser hoppas över.",
     "import": "Importera",
     "completed": "Importen är klar.",
-    "viewSellers": "Visa säljare"
+    "viewSellers": "Visa säljare",
+    "businessHint": "Använd private eller business för säljartyp och true eller false för momsregistrering. Företagsfält kräver typen business.",
+    "businessLabel": "Företag"
   },
   "lifecycle": {
     "agentHeading": "Prissänkningskörningar",
@@ -3463,7 +3477,25 @@
     "history": "Ändringshistorik",
     "emailHint": "Kontrollera e-postadressen noga. Den används för utskick och säljarens åtkomst.",
     "moreFields": "Fler fält",
-    "nationalId": "Personnummer (valfritt)"
+    "nationalId": "Personnummer (valfritt)",
+    "business": {
+      "type": "Säljartyp",
+      "private": "Privatperson",
+      "business": "Företag",
+      "typeFixed": "Säljartypen kan inte ändras efter registrering.",
+      "companyName": "Företagsnamn",
+      "organisationNumber": "Organisationsnummer",
+      "vatNumber": "Momsregistreringsnummer",
+      "vatRegistered": "Momsregistrerat företag",
+      "contactPerson": "Kontaktperson",
+      "billingAddress": "Fakturaadress (om annan)",
+      "invoiceEmail": "Faktura-e-post",
+      "invoiceReference": "Fakturareferens",
+      "all": "Alla säljartyper",
+      "report": "Inlämnad försäljning och utbetalningar per säljartyp",
+      "yes": "Ja",
+      "no": "Nej"
+    }
   },
   "bagIntake": {
     "intro": "Ta en vara i taget. Lägg till en bild om du vill ha hjälp med uppgifterna, kontrollera beskrivning och pris och spara.",

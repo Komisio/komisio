@@ -864,3 +864,5 @@ It does not change the seller ledger, paid payouts or independent consignment
 fees. No complementary posting profile, bank execution or automatic MobilePay
 collection is introduced. Imported tenders remain unspecified when the adapter
 does not supply verified payment evidence. Existing frozen exports remain intact.
+
+Business sellers (#626, 2026-10-25): owner approved explicit immutable seller types, optional business details, staff-only registration, configurable VAT modes and existing accounting mappings. Self-billing VAT basis is being clarified: whether seller credit is gross with VAT extracted from that amount. Do not infer supplier invoice VAT from retail sale VAT.

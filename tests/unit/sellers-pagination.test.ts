@@ -13,12 +13,13 @@ it('keeps tenant and contact query on later pages', async () => {
       50,
     ),
   ).toEqual(data)
-  expect(rpc).toHaveBeenCalledWith('sellers_overview_sorted_page', {
+  expect(rpc).toHaveBeenCalledWith('sellers_directory_page', {
     p_tenant: tenant,
     p_query: '070-123',
     p_offset: 50,
     p_limit: 25,
     p_sort: 'name',
+    p_type: 'all',
     p_direction: 'asc',
   })
 })
@@ -55,7 +56,7 @@ it('passes validated sort and direction to the complete filtered read', async ()
     'desc',
   )
   expect(rpc).toHaveBeenCalledWith(
-    'sellers_overview_sorted_page',
+    'sellers_directory_page',
     expect.objectContaining({
       p_query: 'match',
       p_offset: 25,

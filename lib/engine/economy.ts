@@ -1,3 +1,4 @@
+import { sellerTypeTotals } from './seller-type-totals'
 import { z } from 'zod'
 import { currencyCode } from './money'
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -13,6 +14,7 @@ const modeTotals = z.object({
   netOre: ore,
 })
 export const economySummary = z.object({
+  sellerTypes: sellerTypeTotals.nullable().optional(),
   from: isoDate,
   to: isoDate,
   timeZone: z.literal('Europe/Stockholm'),

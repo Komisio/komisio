@@ -66,9 +66,14 @@ function RailTooltip({
     <span
       className="rail-tooltip-host"
       ref={host}
-      onMouseEnter={show}
-      onMouseLeave={() => setBox(null)}
-      onFocus={show}
+      onPointerEnter={(event) => {
+        if (event.pointerType === 'mouse') show()
+      }}
+      onPointerLeave={() => setBox(null)}
+      onClick={() => setBox(null)}
+      onFocus={(event) => {
+        if (event.target.matches(':focus-visible')) show()
+      }}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setBox(null)
       }}

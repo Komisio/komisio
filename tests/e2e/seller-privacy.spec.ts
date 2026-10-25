@@ -137,23 +137,12 @@ test('new financial activity invalidates an open erasure preview', async ({
       reviewOn,
       confirmed: true,
     }
+    const origin = new URL(page.url()).origin
     for (const [headers, data, expected] of [
       [{ Origin: 'https://different.example.test' }, command, 403],
-      [
-        { Origin: 'http://127.0.0.1:3000' },
-        { ...command, tenantId: randomUUID() },
-        409,
-      ],
-      [
-        { Origin: 'http://127.0.0.1:3000' },
-        { ...command, sellerId: randomUUID() },
-        400,
-      ],
-      [
-        { Origin: 'http://127.0.0.1:3000' },
-        { ...command, confirmed: false },
-        400,
-      ],
+      [{ Origin: origin }, { ...command, tenantId: randomUUID() }, 409],
+      [{ Origin: origin }, { ...command, sellerId: randomUUID() }, 400],
+      [{ Origin: origin }, { ...command, confirmed: false }, 400],
     ] as const) {
       const response = await page.request.post(
         `/api/sellers/${f.seller}/privacy`,

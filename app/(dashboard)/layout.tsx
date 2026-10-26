@@ -3,7 +3,7 @@ import { HelpSupportProvider } from '@/components/help/contact-support'
 import { HelpContentProvider } from '@/components/help/content-provider'
 import { helpCatalog } from '@/lib/help/content'
 import { supportConfig, supportVersion } from '@/lib/help/support'
-import { version } from '../../package.json'
+import packageInfo from '../../package.json'
 import { LoadingMessageProvider } from '@/components/platform/loading-message'
 import { NavigationWarningProvider } from '@/components/platform/navigation-warning'
 import {
@@ -73,7 +73,10 @@ export default async function DashboardLayout({
             storeName: ctx.active.name,
             tenantId: ctx.active.id,
             locale: ctx.locale,
-            version: supportVersion(version, process.env.VERCEL_GIT_COMMIT_SHA),
+            version: supportVersion(
+              packageInfo.version,
+              process.env.VERCEL_GIT_COMMIT_SHA,
+            ),
           }}
         >
           <HelpContentProvider

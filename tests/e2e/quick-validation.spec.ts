@@ -11,6 +11,12 @@ test('quick intake focuses invalid fields without sending or discarding a partia
   await register(page, email, `K!${randomUUID()}`)
   const f = await p2Fixture(email)
   try {
+    // Exercise the store's required-description mode; the default is optional.
+    await f.db.query(
+      `select publish_registration_settings($1,$2,null,
+        (registration_settings($1)->'settings') || '{"descriptionRequired":true}'::jsonb)`,
+      [f.tenant, randomUUID()],
+    )
     await f.commit()
     await page.setViewportSize({ width: 320, height: 720 })
     await page.goto('/intake/quick')

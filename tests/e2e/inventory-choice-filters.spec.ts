@@ -61,7 +61,10 @@ test('seller and category ID choices stay tenant-scoped and compose across pages
       'open',
       '',
     )
-    const seller = page.getByLabel(d.quickIntake.seller, { exact: true })
+    const seller = page.getByRole('combobox', {
+      name: d.quickIntake.seller,
+      exact: true,
+    })
     const category = page.getByLabel(d.quickIntake.category, { exact: true })
     await expect(seller).toBeDisabled()
     await expect(category).toBeDisabled()

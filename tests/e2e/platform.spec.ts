@@ -1,3 +1,4 @@
+import { localTestUrl } from '../helpers/local-services'
 import { expectDetailTarget } from '../helpers/detail-target'
 import { register, confirmEmail } from '../helpers/account'
 import { test, expect, type Page } from '@playwright/test'
@@ -241,18 +242,18 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   expect(response.status()).toBe(200)
   const original = response.request().postDataJSON()
   const replay = await page.request.post('/api/intake', {
-    headers: { Origin: 'http://127.0.0.1:3000' },
+    headers: { Origin: new URL(page.url()).origin },
     data: original,
   })
   expect(replay.status()).toBe(200)
   expect((await replay.json()).id).toBe((await response.json()).id)
   const conflict = await page.request.post('/api/intake', {
-    headers: { Origin: 'http://127.0.0.1:3000' },
+    headers: { Origin: new URL(page.url()).origin },
     data: { ...original, note: 'Changed' },
   })
   expect(conflict.status()).toBe(409)
   const stale = await page.request.post('/api/intake', {
-    headers: { Origin: 'http://127.0.0.1:3000' },
+    headers: { Origin: new URL(page.url()).origin },
     data: { ...original, tenantId: '10000000-0000-4000-8000-000000000001' },
   })
   expect(stale.status()).toBe(409)
@@ -261,6 +262,7 @@ test('staff receives a bag, retries safely and prints a private label', async ({
     'Inlämningen är registrerad',
   )
   await expect(page.locator('.intake-bag')).toHaveCount(1)
+  const receiptOrigin = page.url()
   await page
     .getByRole('status')
     .getByRole('link', { name: 'Visa etikett' })
@@ -283,11 +285,13 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   await expect(page.locator('.bag-label')).toBeVisible()
   await page.screenshot({ path: 'test-results/bag-label.png', fullPage: true })
   await page.emulateMedia({ media: 'screen' })
-  await page.getByRole('link', { name: 'Till inlämningar' }).click()
-  await expect(page).toHaveURL(/\/intake$/)
+  await page
+    .getByRole('link', { name: d.returnNavigation.back, exact: true })
+    .click()
+  await expect(page).toHaveURL(receiptOrigin)
   await page.reload()
   await expect(page.locator('.intake-bag')).toHaveCount(1)
-  await page.getByRole('link').filter({ hasText: 'Test Säljare' }).click()
+  await expect(page.locator('#new-seller')).toContainText('Test Säljare')
   await expect(
     page.getByRole('heading', { name: 'Ta emot en inlämning' }),
   ).toBeVisible()
@@ -1664,7 +1668,7 @@ test('operator reception guides saved evidence, exact review and link replacemen
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
   const post = (data: object) =>
     page.request.post('/api/intake', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: new URL(page.url()).origin },
       data,
     })
   expect(
@@ -1805,7 +1809,9 @@ test('operator reception guides saved evidence, exact review and link replacemen
     path: 'private/operator-reception-mobile.png',
     fullPage: true,
   })
-  await page.getByRole('link', { name: 'Till mottagningarna' }).click()
+  await page
+    .getByRole('link', { name: d.returnNavigation.back, exact: true })
+    .click()
   await expect(
     page.getByRole('link', { name: /Operator TEST Seller/ }),
   ).toBeVisible()
@@ -1813,7 +1819,10 @@ test('operator reception guides saved evidence, exact review and link replacemen
   // No direct insert bypasses the proposal's validation or authorization.
   const { Client } = createRequire(import.meta.url)('pg')
   const fixture = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await fixture.connect()
   const operationId = crypto.randomUUID(),
@@ -1912,7 +1921,10 @@ test('operator reception guides saved evidence, exact review and link replacemen
   await expect(rejected.locator('.badge')).toHaveText('Avvisat')
   await page.goto('/intake/operations')
   const verify = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await verify.connect()
   try {

@@ -42,7 +42,10 @@ test('reception observation drafts survive cancelled departure and folds; confir
     await summary.click()
     await summary.click()
     await expect(description).toHaveValue('Synthetic oak table')
-    const back = page.getByRole('link', { name: d.reception.back, exact: true })
+    const back = page.getByRole('link', {
+      name: d.returnNavigation.back,
+      exact: true,
+    })
     let warnings = 0
     page.on('dialog', async (dialog) => {
       warnings++
@@ -119,7 +122,7 @@ for (const failure of ['lost', 'wrong-id'])
         await dialog.dismiss()
       })
       await page
-        .getByRole('link', { name: d.reception.back, exact: true })
+        .getByRole('link', { name: d.returnNavigation.back, exact: true })
         .click()
       await expect(page).toHaveURL(`/intake/reception/${session}`)
       await expect.poll(() => warnings).toBe(1)
@@ -141,7 +144,7 @@ for (const failure of ['lost', 'wrong-id'])
         ).rows[0].n,
       ).toBe(1)
       await page
-        .getByRole('link', { name: d.reception.back, exact: true })
+        .getByRole('link', { name: d.returnNavigation.back, exact: true })
         .click()
       await expect(page).toHaveURL('/intake/reception')
       await expect.poll(() => warnings).toBe(1)

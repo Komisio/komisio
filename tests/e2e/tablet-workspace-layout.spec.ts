@@ -30,7 +30,9 @@ for (const locale of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
         let initialWidth = ''
         const printing = path.startsWith('/settings')
         if (printing) {
-          await page.locator('.label-formats-fold > summary').click()
+          await page
+            .locator('.label-formats-fold:has(.label-formats) > summary')
+            .click()
           await page.locator('.label-templates-fold > summary').click()
           initialWidth = await page
             .locator('.label-format input')

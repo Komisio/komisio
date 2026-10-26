@@ -21,7 +21,11 @@ test('overview prioritizes daily tasks and retains setup links across screen siz
     await expect(
       actions.getByRole('link', { name: new RegExp(d.quickIntake.title) }),
     ).toHaveAttribute('href', '/intake/quick')
-    await expect(page.locator('.dashboard-followups a')).toHaveCount(3)
+    const followUps = page.locator('.dashboard-followups a')
+    await expect(followUps).toHaveCount(4)
+    await expect(
+      followUps.filter({ hasText: d.selfRegistration.queue }),
+    ).toHaveAttribute('href', '/intake/sellers/registrations')
     const setup = page.getByRole('region', { name: d.setupTitle })
     await expect(setup.getByRole('progressbar')).toBeVisible()
     await setup.locator('summary').focus()

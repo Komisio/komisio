@@ -196,6 +196,9 @@ test('inventory sorts all results, combines advanced filters and previews defaul
     })
     await page.keyboard.press('Escape')
     await expect(preview).toHaveCount(0)
+    // The following assertions exercise keyboard focus, without a pointer
+    // hover on another status indicator keeping a second tooltip open.
+    await page.mouse.move(0, 0)
     const ownership = rows.first().getByRole('button', {
       name: d.items.ownershipKinds.consignment,
       exact: true,
@@ -238,7 +241,7 @@ test('inventory sorts all results, combines advanced filters and previews defaul
       .getByLabel(d.items.directory.maxPrice, { exact: true })
       .fill('35')
     await page
-      .getByLabel(d.quickIntake.seller, { exact: true })
+      .getByRole('combobox', { name: d.quickIntake.seller, exact: true })
       .selectOption(f.seller)
     await page
       .getByLabel(d.quickIntake.category, { exact: true })

@@ -4,6 +4,18 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Item lifecycle (#636, resolved 2026-10-26): reopening requires a new future
+sale-end date and a mandatory reason. Automatic seller notices occur seven days
+before period end and when the period ends; activation does not send notices
+for already passed events. Pause/resume is deferred until automatic external
+POS handling is verified; manual PayPal POS handling is not the chosen interim
+solution. Direct staff bulk actions, append-only corrections, richer history
+and collection evidence remain in scope. Paused days would extend the sale
+period and monthly fees would continue when pause is implemented.
+PayPal POS currently documents deletion without an explicit reversible pause
+state; local inactive status must not imply confirmed external removal.
+Source: [Product Library API](https://developer.zettle.com/docs/api/product-library/reference).
+
 Zebra setup illustrations (#592, resolved 2026-10-23): the owner approves
 clearly labeled original illustrations until current iPad screenshots are
 available. These explain the steps and do not establish hardware verification.

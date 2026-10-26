@@ -1393,7 +1393,7 @@
       "price_set": "Precio fijado",
       "provenance": "Procedencia registrada",
       "sold": "Vendido",
-      "returned": "Devuelto",
+      "returned": "Devolución del cliente",
       "markdown_applied": "Rebaja aplicada",
       "period_extended": "Periodo de venta ampliado",
       "period_ended": "Periodo de venta finalizado"
@@ -1411,7 +1411,20 @@
     "markdownWaiting": "Rebaja pendiente",
     "allOwnerships": "Todos los artículos",
     "ownership": "Propiedad",
-    "createPurchasedItem": "Crear artículo"
+    "createPurchasedItem": "Crear artículo",
+    "eventDetails": {
+      "action": "Acción",
+      "reason": "Motivo",
+      "days": "Ampliación (días)",
+      "priceChange": "Cambio de precio",
+      "price": "Precio",
+      "actions": {
+        "charity": "Donación",
+        "return": "Devolución al vendedor",
+        "recycle": "Reciclaje",
+        "transfer": "Traslado a otra tienda"
+      }
+    }
   },
   "sales": {
     "title": "Ventas",

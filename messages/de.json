@@ -1393,7 +1393,7 @@
       "price_set": "Preis festgelegt",
       "provenance": "Herkunft erfasst",
       "sold": "Verkauft",
-      "returned": "Zurückgegeben",
+      "returned": "Kundenretoure",
       "markdown_applied": "Preisreduzierung angewendet",
       "period_extended": "Verkaufszeitraum verlängert",
       "period_ended": "Verkaufszeitraum beendet"
@@ -1411,7 +1411,20 @@
     "markdownWaiting": "Preissenkung ausstehend",
     "allOwnerships": "Alle Artikel",
     "ownership": "Eigentum",
-    "createPurchasedItem": "Artikel erstellen"
+    "createPurchasedItem": "Artikel erstellen",
+    "eventDetails": {
+      "action": "Aktion",
+      "reason": "Grund",
+      "days": "Verlängerung (Tage)",
+      "priceChange": "Preisänderung",
+      "price": "Preis",
+      "actions": {
+        "charity": "Für wohltätige Zwecke",
+        "return": "Rückgabe an Verkäufer",
+        "recycle": "Recycling",
+        "transfer": "Übertragung an anderen Shop"
+      }
+    }
   },
   "sales": {
     "title": "Verkäufe",

@@ -278,7 +278,8 @@
     "typeFieldsHint": "Vælg en lignende varetype for at få de samme spørgsmål, for eksempel størrelse og materiale.",
     "typeFieldsLegend": "Vælg felter",
     "assortment": "Sortimentsgruppe",
-    "noAssortment": "Uden sortimentsgruppe"
+    "noAssortment": "Uden sortimentsgruppe",
+    "noCategory": "Ingen kategori"
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",
@@ -1316,7 +1317,7 @@
       "quickFilters": "Hurtigfiltre",
       "endsWithinWeek": "Salgsperioden slutter senest om 7 dage",
       "periodWindow": "Salgsperiode",
-      "categoryChoiceHint": "Vælg en kategori, eller skriv en anden."
+      "categoryChoiceHint": "Vælg en kategori fra butikkens liste."
     },
     "title": "Varer",
     "item": "Vare",
@@ -4651,12 +4652,13 @@
     "categories": [
       "Opret brede kategorier som Tøj, Bolig og indretning eller Bøger for at organisere varerne.",
       "Angiv kategorinavnet. Tilføj oversættelser, hvis I bruger flere sprog; egne navne oversættes ikke automatisk.",
-      "Kategorien vælges på varen. En ny kategori ændrer ikke eksisterende varer."
+      "Vælg en valgfri kategori i Hurtig modtagelse eller ved registrering af en vare fra en indlevering. Varetypens standardvalg kan ændres for hver vare."
     ],
     "types": [
       "Opret varetyper som Jakke eller Bukser. Varetypen bestemmer, hvilke oplysninger personalet udfylder ved modtagelse.",
       "Navngiv varetypen, og vælg attributter som Størrelse og Materiale. Du kan kopiere spørgsmål fra en lignende varetype.",
-      "Mangler en attribut? Opret den under Attributter først, og vælg den, når du opretter varetypen."
+      "Mangler en attribut? Opret den under Attributter først, og vælg den, når du opretter varetypen.",
+      "Rediger varetypen for at vælge en foreslået kategori fra butikkens liste. Kategorien er et separat valg, ikke et attributspørgsmål."
     ],
     "attributes": [
       "Attributter er spørgsmål om varen, som Størrelse, Farve, Mærke, Materiale og Stand. Svaret, som M eller blå, udfyldes på varen.",
@@ -4750,7 +4752,8 @@
     "changed": "Oplysningerne er ændret. Luk redigeringen og genindlæs siden, før du prøver igen.",
     "duplicate": "Navnet bruges allerede. Vælg et andet navn.",
     "suggestedCategory": "Foreslået kategori",
-    "showInactive": "Vis inaktive varetyper"
+    "showInactive": "Vis inaktive varetyper",
+    "previousCategory": "Tidligere kategoritekst: {name}"
   },
   "selfRegistration": {
     "joinLogin": "Vil du sælge gennem butikken? Opret en personlig konto, eller log ind, hvis du allerede har en. Derefter kommer du tilbage hertil for at læse butikkens vilkår og sende din ansøgning.",

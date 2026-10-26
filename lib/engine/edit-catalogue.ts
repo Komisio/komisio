@@ -27,7 +27,8 @@ export const catalogueEditCommand = z.discriminatedUnion('kind', [
     expected: itemTypeProfile,
     payload: z.strictObject({
       labels,
-      suggestedCategory: z.string().trim().max(120),
+      suggestedCategory: z.string().trim().max(120).optional(),
+      suggestedCategoryId: z.uuid().nullable().optional(),
       active: z.boolean(),
       attributes: itemTypeProfile.shape.attributes
         .max(100)

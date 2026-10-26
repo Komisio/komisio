@@ -13,6 +13,13 @@ test('inventory searches live without losing typing, filters or history', async 
   await register(page, email, `K!${randomUUID()}`)
   const f = await p2Fixture(email)
   try {
+    const categoryId = randomUUID()
+    await f.db.query('select create_item_category($1,$2,$3,$4)', [
+      f.tenant,
+      categoryId,
+      'Jackets',
+      { en: 'Jackets' },
+    ])
     await f.item('Blue coat')
     await f.item('Green coat')
     await f.commit()
@@ -40,10 +47,11 @@ test('inventory searches live without losing typing, filters or history', async 
     expect(new URL(page.url()).searchParams.get('sort')).toBe('title')
     await page.locator('.inventory-advanced summary').click()
     const category = page.getByLabel(d.quickIntake.category, { exact: true })
-    await category.fill('Jackets')
+    await category.focus()
+    await category.selectOption(categoryId)
     await expect
-      .poll(() => new URL(page.url()).searchParams.get('category'))
-      .toBe('Jackets')
+      .poll(() => new URL(page.url()).searchParams.get('categoryId'))
+      .toBe(categoryId)
     await expect(category).toBeFocused()
     await expect(page.locator('.inventory-advanced')).toHaveAttribute(
       'open',
@@ -72,7 +80,7 @@ test('inventory searches live without losing typing, filters or history', async 
     await expect(category).toHaveValue('')
     await page.goBack()
     await expect(search).toHaveValue('Green')
-    await expect(category).toHaveValue('Jackets')
+    await expect(category).toHaveValue(categoryId)
     await expect(rows).toHaveCount(1)
     await page.goto('/intake/items?paypal=failed')
     await expect(
@@ -94,6 +102,13 @@ test('inventory sorts all results, combines advanced filters and previews defaul
   const f = await p2Fixture(email)
   try {
     const ids: string[] = []
+    const categoryId = randomUUID()
+    await f.db.query('select create_item_category($1,$2,$3,$4)', [
+      f.tenant,
+      categoryId,
+      'Jackets',
+      { en: 'Jackets' },
+    ])
     for (let n = 0; n < 57; n++) {
       const item = await f.item(
         n === 0
@@ -227,7 +242,7 @@ test('inventory sorts all results, combines advanced filters and previews defaul
       .selectOption(f.seller)
     await page
       .getByLabel(d.quickIntake.category, { exact: true })
-      .fill('Jackets')
+      .selectOption(categoryId)
     await page
       .getByLabel(d.items.ownership, { exact: true })
       .selectOption('consignment')

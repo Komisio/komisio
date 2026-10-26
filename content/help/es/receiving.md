@@ -30,3 +30,5 @@ Empieza con la tienda y el consignante correctos\. Registra lo que ha llegado f�
 4. Comprueba la confirmación y la lista de artículos registrados antes de etiquetar\. Si falta la respuesta al guardar, mantén abierto el formulario y usa su opción de reintento\. No crees el mismo artículo de nuevo para obtener una confirmación\.
 
 > El número de artículos registrados describe datos guardados, no la finalización de toda la entrega\. Comprueba también los artículos físicos\. La ayuda no modifica datos; pide al personal autorizado que realice las acciones a las que no tienes acceso\.
+
+Elige una categoría opcional en la recepción rápida o al registrar un artículo de una entrega. Puedes cambiar la categoría predeterminada del tipo para cada artículo. Edita el tipo de artículo para elegir una categoría sugerida de la lista de la tienda. La categoría es una selección independiente, no una pregunta de atributo.

@@ -21,6 +21,7 @@ export const stockReport = z.object({
     .array(
       z.object({
         category: z.string(),
+        categoryId: z.uuid().nullable(),
         inStock: z.number().int(),
         stockValueOre: ore,
         averageAgeDays: z.number().int().nullable(),
@@ -59,15 +60,12 @@ export async function readStockReport(
   const ownership = ownershipInput
     ? z.enum(['consignment', 'store']).parse(ownershipInput)
     : null
-  const r = await client.rpc(
-    ownership ? 'stock_report_by_ownership' : 'stock_report',
-    {
-      ...(ownership ? { p_ownership: ownership } : {}),
-      p_tenant: z.uuid().parse(tenantInput),
-      p_from: period.from,
-      p_to: period.to,
-    },
-  )
+  const r = await client.rpc('stock_report_by_category', {
+    p_ownership: ownership,
+    p_tenant: z.uuid().parse(tenantInput),
+    p_from: period.from,
+    p_to: period.to,
+  })
   if (r.error?.code === 'PGRST202') return null
   if (r.error) {
     if (r.error.message.includes('INVALID_INPUT'))

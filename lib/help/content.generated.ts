@@ -6574,8 +6574,18 @@ export const helpContent: Record<
             },
           ],
         },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value:
+                'Välj en valfri kategori i Snabb mottagning eller när du registrerar en vara från en inlämning. Varutypens förval kan ändras för varje vara. Redigera varutypen för att välja en föreslagen kategori från butikens lista. Kategorin är ett separat val, inte en attributfråga.',
+            },
+          ],
+        },
       ],
-      text: 'Börja med rätt butik och inlämnare. Registrera det som faktiskt har kommit in och fortsätt sedan med varorna.\nKontrollera vald butik och sök efter den befintliga inlämnaren innan du skapar en ny. Följ butikens avtalskrav och lokala rutiner. En föranmälan betyder inte att varorna är mottagna. Bekräfta mottagningen först när varorna finns hos er. Använd den befintliga inlämningen när du fortsätter arbetet. Öppna inlämningen och registrera en vara i taget. Kontrollera beskrivning, pris och säljare innan du sparar. Kontrollera bekräftelsen och listan med registrerade varor innan du går vidare till märkning. Om svaret på en sparning saknas, håll formuläret öppet och använd dess återförsök. Skapa inte samma vara på nytt för att få en bekräftelse.\nAntalet registrerade varor visar sparade uppgifter, inte att hela inlämningen är färdigbehandlad. Kontrollera även de fysiska varorna. Hjälpen ändrar inga uppgifter; be behörig personal utföra åtgärder som du saknar tillgång till.',
+      text: 'Börja med rätt butik och inlämnare. Registrera det som faktiskt har kommit in och fortsätt sedan med varorna.\nKontrollera vald butik och sök efter den befintliga inlämnaren innan du skapar en ny. Följ butikens avtalskrav och lokala rutiner. En föranmälan betyder inte att varorna är mottagna. Bekräfta mottagningen först när varorna finns hos er. Använd den befintliga inlämningen när du fortsätter arbetet. Öppna inlämningen och registrera en vara i taget. Kontrollera beskrivning, pris och säljare innan du sparar. Kontrollera bekräftelsen och listan med registrerade varor innan du går vidare till märkning. Om svaret på en sparning saknas, håll formuläret öppet och använd dess återförsök. Skapa inte samma vara på nytt för att få en bekräftelse.\nAntalet registrerade varor visar sparade uppgifter, inte att hela inlämningen är färdigbehandlad. Kontrollera även de fysiska varorna. Hjälpen ändrar inga uppgifter; be behörig personal utföra åtgärder som du saknar tillgång till.\nVälj en valfri kategori i Snabb mottagning eller när du registrerar en vara från en inlämning. Varutypens förval kan ändras för varje vara. Redigera varutypen för att välja en föreslagen kategori från butikens lista. Kategorin är ett separat val, inte en attributfråga.',
     },
     en: {
       title: 'Receive and register goods',
@@ -6691,8 +6701,18 @@ export const helpContent: Record<
             },
           ],
         },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value:
+                'Choose an optional category in Quick reception or when registering an item from a drop-off. You can override the item type default for each item. Edit the item type to select a suggested category from the store list. Category is a separate choice, not an attribute question.',
+            },
+          ],
+        },
       ],
-      text: 'Start with the correct store and consignor. Record what has physically arrived, then work through the items.\nCheck the selected store and search for the existing consignor before creating another. Follow the store’s agreement requirements and local routines. An announcement does not mean goods have been received. Confirm receiving only once the goods are with you. Reuse the existing drop-off when continuing the work. Open the drop-off and register one item at a time. Check the description, price and seller before saving. Check the confirmation and registered-item list before labelling. If a save response is missing, keep the form open and use its retry action. Do not create the same item again to obtain confirmation.\nRegistered-item counts describe saved records, not completion of the entire drop-off. Check the physical goods too. Help changes no records; ask authorized staff to perform actions you cannot access.',
+      text: 'Start with the correct store and consignor. Record what has physically arrived, then work through the items.\nCheck the selected store and search for the existing consignor before creating another. Follow the store’s agreement requirements and local routines. An announcement does not mean goods have been received. Confirm receiving only once the goods are with you. Reuse the existing drop-off when continuing the work. Open the drop-off and register one item at a time. Check the description, price and seller before saving. Check the confirmation and registered-item list before labelling. If a save response is missing, keep the form open and use its retry action. Do not create the same item again to obtain confirmation.\nRegistered-item counts describe saved records, not completion of the entire drop-off. Check the physical goods too. Help changes no records; ask authorized staff to perform actions you cannot access.\nChoose an optional category in Quick reception or when registering an item from a drop-off. You can override the item type default for each item. Edit the item type to select a suggested category from the store list. Category is a separate choice, not an attribute question.',
     },
     no: {
       title: 'Ta imot og registrer varer',
@@ -6808,8 +6828,18 @@ export const helpContent: Record<
             },
           ],
         },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value:
+                'Velg en valgfri kategori i Hurtigmottak eller når du registrerer en vare fra en innlevering. Varetypens standardvalg kan endres for hver vare. Rediger varetypen for å velge en foreslått kategori fra butikkens liste. Kategorien er et eget valg, ikke et attributtspørsmål.',
+            },
+          ],
+        },
       ],
-      text: 'Start med riktig butikk og innleverer. Registrer det som faktisk har kommet inn, og fortsett deretter med varene.\nKontroller valgt butikk og søk etter eksisterende innleverer før du oppretter en ny. Følg butikkens avtalekrav og lokale rutiner. En forhåndsmelding betyr ikke at varene er mottatt. Bekreft mottaket først når varene er hos dere. Bruk den eksisterende innleveringen når du fortsetter arbeidet. Åpne innleveringen og registrer én vare om gangen. Kontroller beskrivelse, pris og selger før du lagrer. Kontroller bekreftelsen og listen over registrerte varer før merking. Hvis svaret på en lagring mangler, hold skjemaet åpent og bruk funksjonen for nytt forsøk. Ikke opprett samme vare igjen for å få en bekreftelse.\nAntall registrerte varer viser lagrede opplysninger, ikke at hele innleveringen er ferdigbehandlet. Kontroller også de fysiske varene. Hjelpen endrer ingenting; be autorisert personale utføre handlinger du ikke har tilgang til.',
+      text: 'Start med riktig butikk og innleverer. Registrer det som faktisk har kommet inn, og fortsett deretter med varene.\nKontroller valgt butikk og søk etter eksisterende innleverer før du oppretter en ny. Følg butikkens avtalekrav og lokale rutiner. En forhåndsmelding betyr ikke at varene er mottatt. Bekreft mottaket først når varene er hos dere. Bruk den eksisterende innleveringen når du fortsetter arbeidet. Åpne innleveringen og registrer én vare om gangen. Kontroller beskrivelse, pris og selger før du lagrer. Kontroller bekreftelsen og listen over registrerte varer før merking. Hvis svaret på en lagring mangler, hold skjemaet åpent og bruk funksjonen for nytt forsøk. Ikke opprett samme vare igjen for å få en bekreftelse.\nAntall registrerte varer viser lagrede opplysninger, ikke at hele innleveringen er ferdigbehandlet. Kontroller også de fysiske varene. Hjelpen endrer ingenting; be autorisert personale utføre handlinger du ikke har tilgang til.\nVelg en valgfri kategori i Hurtigmottak eller når du registrerer en vare fra en innlevering. Varetypens standardvalg kan endres for hver vare. Rediger varetypen for å velge en foreslått kategori fra butikkens liste. Kategorien er et eget valg, ikke et attributtspørsmål.',
     },
     dk: {
       title: 'Modtag og registrér varer',
@@ -6928,8 +6958,18 @@ export const helpContent: Record<
             },
           ],
         },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value:
+                'Vælg en valgfri kategori i Hurtig modtagelse eller ved registrering af en vare fra en indlevering. Varetypens standardvalg kan ændres for hver vare. Rediger varetypen for at vælge en foreslået kategori fra butikkens liste. Kategorien er et separat valg, ikke et attributspørgsmål.',
+            },
+          ],
+        },
       ],
-      text: 'Start med den rigtige butik og indleverer. Registrér det, der fysisk er ankommet, og fortsæt derefter med varerne.\nKontrollér den valgte butik, og søg efter den eksisterende indleverer, før du opretter en ny. Følg butikkens aftalekrav og lokale rutiner. En forhåndsanmeldelse betyder ikke, at varerne er modtaget. Bekræft først modtagelsen, når varerne er hos jer. Brug den eksisterende indlevering, når arbejdet fortsættes. Åbn indleveringen og registrer én vare ad gangen. Kontrollér beskrivelse, pris og sælger, før du gemmer. Kontrollér bekræftelsen og listen over registrerede varer før mærkning. Hvis svaret på en lagring mangler, hold formularen åben og brug dens mulighed for at prøve igen. Opret ikke samme vare igen for at få en bekræftelse.\nAntallet af registrerede varer viser gemte oplysninger, ikke at hele indleveringen er færdigbehandlet. Kontrollér også de fysiske varer. Hjælpen ændrer ingen oplysninger; bed autoriseret personale udføre handlinger, du ikke har adgang til.',
+      text: 'Start med den rigtige butik og indleverer. Registrér det, der fysisk er ankommet, og fortsæt derefter med varerne.\nKontrollér den valgte butik, og søg efter den eksisterende indleverer, før du opretter en ny. Følg butikkens aftalekrav og lokale rutiner. En forhåndsanmeldelse betyder ikke, at varerne er modtaget. Bekræft først modtagelsen, når varerne er hos jer. Brug den eksisterende indlevering, når arbejdet fortsættes. Åbn indleveringen og registrer én vare ad gangen. Kontrollér beskrivelse, pris og sælger, før du gemmer. Kontrollér bekræftelsen og listen over registrerede varer før mærkning. Hvis svaret på en lagring mangler, hold formularen åben og brug dens mulighed for at prøve igen. Opret ikke samme vare igen for at få en bekræftelse.\nAntallet af registrerede varer viser gemte oplysninger, ikke at hele indleveringen er færdigbehandlet. Kontrollér også de fysiske varer. Hjælpen ændrer ingen oplysninger; bed autoriseret personale udføre handlinger, du ikke har adgang til.\nVælg en valgfri kategori i Hurtig modtagelse eller ved registrering af en vare fra en indlevering. Varetypens standardvalg kan ændres for hver vare. Rediger varetypen for at vælge en foreslået kategori fra butikkens liste. Kategorien er et separat valg, ikke et attributspørgsmål.',
     },
     fi: {
       title: 'Vastaanota ja rekisteröi tuotteet',
@@ -7045,8 +7085,18 @@ export const helpContent: Record<
             },
           ],
         },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value:
+                'Valitse halutessasi kategoria pikavastaanotossa tai rekisteröidessäsi tuotetta tuontierästä. Voit muuttaa tuotetyypin oletusvalintaa jokaiselle tuotteelle. Muokkaa tuotetyyppiä ja valitse ehdotettu kategoria myymälän luettelosta. Kategoria on erillinen valinta, ei ominaisuuskysymys.',
+            },
+          ],
+        },
       ],
-      text: 'Aloita oikeasta myymälästä ja tavaran toimittajasta. Kirjaa fyysisesti saapuneet tavarat ja käsittele sitten tuotteet.\nTarkista valittu myymälä ja etsi olemassa oleva tavaran toimittaja ennen uuden luomista. Noudata myymälän sopimusvaatimuksia ja paikallisia käytäntöjä. Ennakkoilmoitus ei tarkoita, että tavarat on vastaanotettu. Vahvista vastaanotto vasta, kun tavarat ovat teillä. Jatka työtä olemassa olevasta toimituksesta. Avaa tuontierä ja rekisteröi yksi tuote kerrallaan. Tarkista kuvaus, hinta ja myyjä ennen tallennusta. Tarkista vahvistus ja rekisteröityjen tuotteiden luettelo ennen merkintää. Jos tallennuksen vastaus puuttuu, pidä lomake auki ja käytä sen uudelleenyritystä. Älä luo samaa tuotetta uudelleen saadaksesi vahvistuksen.\nRekisteröityjen tuotteiden määrä kertoo tallennetuista tiedoista, ei koko toimituksen käsittelyn valmistumisesta. Tarkista myös fyysiset tavarat. Ohje ei muuta tietoja; pyydä valtuutettua henkilökuntaa tekemään toimet, joihin sinulla ei ole pääsyä.',
+      text: 'Aloita oikeasta myymälästä ja tavaran toimittajasta. Kirjaa fyysisesti saapuneet tavarat ja käsittele sitten tuotteet.\nTarkista valittu myymälä ja etsi olemassa oleva tavaran toimittaja ennen uuden luomista. Noudata myymälän sopimusvaatimuksia ja paikallisia käytäntöjä. Ennakkoilmoitus ei tarkoita, että tavarat on vastaanotettu. Vahvista vastaanotto vasta, kun tavarat ovat teillä. Jatka työtä olemassa olevasta toimituksesta. Avaa tuontierä ja rekisteröi yksi tuote kerrallaan. Tarkista kuvaus, hinta ja myyjä ennen tallennusta. Tarkista vahvistus ja rekisteröityjen tuotteiden luettelo ennen merkintää. Jos tallennuksen vastaus puuttuu, pidä lomake auki ja käytä sen uudelleenyritystä. Älä luo samaa tuotetta uudelleen saadaksesi vahvistuksen.\nRekisteröityjen tuotteiden määrä kertoo tallennetuista tiedoista, ei koko toimituksen käsittelyn valmistumisesta. Tarkista myös fyysiset tavarat. Ohje ei muuta tietoja; pyydä valtuutettua henkilökuntaa tekemään toimet, joihin sinulla ei ole pääsyä.\nValitse halutessasi kategoria pikavastaanotossa tai rekisteröidessäsi tuotetta tuontierästä. Voit muuttaa tuotetyypin oletusvalintaa jokaiselle tuotteelle. Muokkaa tuotetyyppiä ja valitse ehdotettu kategoria myymälän luettelosta. Kategoria on erillinen valinta, ei ominaisuuskysymys.',
     },
     de: {
       title: 'Waren annehmen und erfassen',
@@ -7165,8 +7215,18 @@ export const helpContent: Record<
             },
           ],
         },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value:
+                'Wählen Sie bei der Schnellannahme oder beim Erfassen eines Artikels aus einer Abgabe optional eine Kategorie. Die Vorgabe des Artikeltyps lässt sich für jeden Artikel ändern. Bearbeiten Sie den Artikeltyp, um eine vorgeschlagene Kategorie aus der Geschäftsliste auszuwählen. Die Kategorie ist eine separate Auswahl, keine Attributfrage.',
+            },
+          ],
+        },
       ],
-      text: 'Beginnen Sie mit dem richtigen Laden und Einlieferer. Erfassen Sie tatsächlich eingetroffene Waren und bearbeiten Sie dann die Artikel.\nPrüfen Sie den ausgewählten Laden und suchen Sie nach dem vorhandenen Einlieferer, bevor Sie einen neuen anlegen. Beachten Sie die Vertragsanforderungen und lokalen Abläufe des Ladens. Eine Voranmeldung bedeutet nicht, dass Waren angenommen wurden. Bestätigen Sie die Annahme erst, wenn die Waren bei Ihnen sind. Setzen Sie die Arbeit mit der vorhandenen Einlieferung fort. Öffnen Sie die Abgabe und erfassen Sie jeweils einen Artikel. Prüfen Sie Beschreibung, Preis und Verkäufer vor dem Speichern. Prüfen Sie die Bestätigung und die Liste erfasster Artikel vor dem Etikettieren. Fehlt die Antwort auf eine Speicherung, lassen Sie das Formular geöffnet und nutzen dessen Wiederholungsfunktion. Legen Sie denselben Artikel nicht erneut an, um eine Bestätigung zu erhalten.\nArtikelzahlen beschreiben gespeicherte Daten, nicht den Abschluss der gesamten Einlieferung. Prüfen Sie auch die physischen Waren. Die Hilfe ändert keine Daten; bitten Sie berechtigtes Personal um Aktionen, auf die Sie keinen Zugriff haben.',
+      text: 'Beginnen Sie mit dem richtigen Laden und Einlieferer. Erfassen Sie tatsächlich eingetroffene Waren und bearbeiten Sie dann die Artikel.\nPrüfen Sie den ausgewählten Laden und suchen Sie nach dem vorhandenen Einlieferer, bevor Sie einen neuen anlegen. Beachten Sie die Vertragsanforderungen und lokalen Abläufe des Ladens. Eine Voranmeldung bedeutet nicht, dass Waren angenommen wurden. Bestätigen Sie die Annahme erst, wenn die Waren bei Ihnen sind. Setzen Sie die Arbeit mit der vorhandenen Einlieferung fort. Öffnen Sie die Abgabe und erfassen Sie jeweils einen Artikel. Prüfen Sie Beschreibung, Preis und Verkäufer vor dem Speichern. Prüfen Sie die Bestätigung und die Liste erfasster Artikel vor dem Etikettieren. Fehlt die Antwort auf eine Speicherung, lassen Sie das Formular geöffnet und nutzen dessen Wiederholungsfunktion. Legen Sie denselben Artikel nicht erneut an, um eine Bestätigung zu erhalten.\nArtikelzahlen beschreiben gespeicherte Daten, nicht den Abschluss der gesamten Einlieferung. Prüfen Sie auch die physischen Waren. Die Hilfe ändert keine Daten; bitten Sie berechtigtes Personal um Aktionen, auf die Sie keinen Zugriff haben.\nWählen Sie bei der Schnellannahme oder beim Erfassen eines Artikels aus einer Abgabe optional eine Kategorie. Die Vorgabe des Artikeltyps lässt sich für jeden Artikel ändern. Bearbeiten Sie den Artikeltyp, um eine vorgeschlagene Kategorie aus der Geschäftsliste auszuwählen. Die Kategorie ist eine separate Auswahl, keine Attributfrage.',
     },
     es: {
       title: 'Recibir y registrar artículos',
@@ -7285,8 +7345,18 @@ export const helpContent: Record<
             },
           ],
         },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value:
+                'Elige una categoría opcional en la recepción rápida o al registrar un artículo de una entrega. Puedes cambiar la categoría predeterminada del tipo para cada artículo. Edita el tipo de artículo para elegir una categoría sugerida de la lista de la tienda. La categoría es una selección independiente, no una pregunta de atributo.',
+            },
+          ],
+        },
       ],
-      text: 'Empieza con la tienda y el consignante correctos. Registra lo que ha llegado físicamente y después procesa los artículos.\nComprueba la tienda seleccionada y busca al consignante existente antes de crear uno nuevo. Sigue los requisitos de acuerdos y las rutinas de la tienda. Un aviso previo no significa que los artículos se hayan recibido. Confirma la recepción solo cuando estén en la tienda. Continúa el trabajo desde la entrega existente. Abre la entrega y registra un artículo a la vez. Comprueba la descripción, el precio y el vendedor antes de guardar. Comprueba la confirmación y la lista de artículos registrados antes de etiquetar. Si falta la respuesta al guardar, mantén abierto el formulario y usa su opción de reintento. No crees el mismo artículo de nuevo para obtener una confirmación.\nEl número de artículos registrados describe datos guardados, no la finalización de toda la entrega. Comprueba también los artículos físicos. La ayuda no modifica datos; pide al personal autorizado que realice las acciones a las que no tienes acceso.',
+      text: 'Empieza con la tienda y el consignante correctos. Registra lo que ha llegado físicamente y después procesa los artículos.\nComprueba la tienda seleccionada y busca al consignante existente antes de crear uno nuevo. Sigue los requisitos de acuerdos y las rutinas de la tienda. Un aviso previo no significa que los artículos se hayan recibido. Confirma la recepción solo cuando estén en la tienda. Continúa el trabajo desde la entrega existente. Abre la entrega y registra un artículo a la vez. Comprueba la descripción, el precio y el vendedor antes de guardar. Comprueba la confirmación y la lista de artículos registrados antes de etiquetar. Si falta la respuesta al guardar, mantén abierto el formulario y usa su opción de reintento. No crees el mismo artículo de nuevo para obtener una confirmación.\nEl número de artículos registrados describe datos guardados, no la finalización de toda la entrega. Comprueba también los artículos físicos. La ayuda no modifica datos; pide al personal autorizado que realice las acciones a las que no tienes acceso.\nElige una categoría opcional en la recepción rápida o al registrar un artículo de una entrega. Puedes cambiar la categoría predeterminada del tipo para cada artículo. Edita el tipo de artículo para elegir una categoría sugerida de la lista de la tienda. La categoría es una selección independiente, no una pregunta de atributo.',
     },
     it: {
       title: 'Ricevere e registrare gli articoli',
@@ -7405,8 +7475,18 @@ export const helpContent: Record<
             },
           ],
         },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value:
+                'Scegli una categoria facoltativa nella ricezione rapida o quando registri un articolo da una consegna. Puoi cambiare la categoria predefinita del tipo per ogni articolo. Modifica il tipo di articolo per scegliere una categoria suggerita dall’elenco del negozio. La categoria è una scelta separata, non una domanda sugli attributi.',
+            },
+          ],
+        },
       ],
-      text: 'Inizia dal negozio e dal conferente corretti. Registra ciò che è arrivato fisicamente, poi elabora gli articoli.\nControlla il negozio selezionato e cerca il conferente esistente prima di crearne uno nuovo. Segui i requisiti contrattuali e le procedure locali del negozio. Un preavviso non significa che gli articoli siano stati ricevuti. Conferma la ricezione solo quando sono presso di voi. Continua il lavoro dalla consegna esistente. Apri la consegna e registra un articolo alla volta. Controlla descrizione, prezzo e venditore prima di salvare. Controlla la conferma e l’elenco degli articoli registrati prima di etichettare. Se manca la risposta al salvataggio, tieni aperto il modulo e usa il suo nuovo tentativo. Non creare di nuovo lo stesso articolo per ottenere una conferma.\nIl numero di articoli registrati descrive dati salvati, non il completamento dell’intera consegna. Controlla anche gli articoli fisici. La guida non modifica dati; chiedi al personale autorizzato di eseguire le azioni a cui non hai accesso.',
+      text: 'Inizia dal negozio e dal conferente corretti. Registra ciò che è arrivato fisicamente, poi elabora gli articoli.\nControlla il negozio selezionato e cerca il conferente esistente prima di crearne uno nuovo. Segui i requisiti contrattuali e le procedure locali del negozio. Un preavviso non significa che gli articoli siano stati ricevuti. Conferma la ricezione solo quando sono presso di voi. Continua il lavoro dalla consegna esistente. Apri la consegna e registra un articolo alla volta. Controlla descrizione, prezzo e venditore prima di salvare. Controlla la conferma e l’elenco degli articoli registrati prima di etichettare. Se manca la risposta al salvataggio, tieni aperto il modulo e usa il suo nuovo tentativo. Non creare di nuovo lo stesso articolo per ottenere una conferma.\nIl numero di articoli registrati descrive dati salvati, non il completamento dell’intera consegna. Controlla anche gli articoli fisici. La guida non modifica dati; chiedi al personale autorizzato di eseguire le azioni a cui non hai accesso.\nScegli una categoria facoltativa nella ricezione rapida o quando registri un articolo da una consegna. Puoi cambiare la categoria predefinita del tipo per ogni articolo. Modifica il tipo di articolo per scegliere una categoria suggerita dall’elenco del negozio. La categoria è una scelta separata, non una domanda sugli attributi.',
     },
   },
   'sales-day-close': {

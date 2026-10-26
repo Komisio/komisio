@@ -278,7 +278,8 @@
     "typeFieldsHint": "Valitse samankaltainen tuotetyyppi, jos haluat samat kysymykset, kuten koon ja materiaalin.",
     "typeFieldsLegend": "Valitse kentät",
     "assortment": "Valikoimaryhmä",
-    "noAssortment": "Ei valikoimaryhmää"
+    "noAssortment": "Ei valikoimaryhmää",
+    "noCategory": "Ei kategoriaa"
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
@@ -1316,7 +1317,7 @@
       "quickFilters": "Pikasuodattimet",
       "endsWithinWeek": "Myyntiaika päättyy viimeistään 7 päivän kuluttua",
       "periodWindow": "Myyntiaika",
-      "categoryChoiceHint": "Valitse kategoria tai kirjoita toinen."
+      "categoryChoiceHint": "Valitse kategoria myymälän luettelosta."
     },
     "title": "Tuotteet",
     "item": "Tuote",
@@ -4657,12 +4658,13 @@
     "categories": [
       "Luo laajoja kategorioita, kuten Vaatteet, Koti ja sisustus tai Kirjat, tuotteiden järjestämiseen.",
       "Anna kategorian nimi. Lisää käännökset, jos käytätte useita kieliä; omia nimiä ei käännetä automaattisesti.",
-      "Kategoria valitaan tuotteelle. Uuden kategorian luominen ei muuta olemassa olevia tuotteita."
+      "Valitse halutessasi kategoria pikavastaanotossa tai rekisteröidessäsi tuotetta tuontierästä. Voit muuttaa tuotetyypin oletusvalintaa jokaiselle tuotteelle."
     ],
     "types": [
       "Luo tuotetyyppejä, kuten Takki tai Housut. Tuotetyyppi määrittää vastaanotossa täytettävät tiedot.",
       "Nimeä tuotetyyppi ja valitse ominaisuudet, kuten Koko ja Materiaali. Voit kopioida kysymykset samankaltaisesta tuotetyypistä.",
-      "Puuttuuko ominaisuus? Luo se ensin Ominaisuudet-välilehdellä ja valitse se tuotetyyppiä luodessasi."
+      "Puuttuuko ominaisuus? Luo se ensin Ominaisuudet-välilehdellä ja valitse se tuotetyyppiä luodessasi.",
+      "Muokkaa tuotetyyppiä ja valitse ehdotettu kategoria myymälän luettelosta. Kategoria on erillinen valinta, ei ominaisuuskysymys."
     ],
     "attributes": [
       "Ominaisuudet ovat tuotetta koskevia kysymyksiä, kuten Koko, Väri, Merkki, Materiaali ja Kunto. Vastaus, kuten M tai sininen, täytetään tuotteelle.",
@@ -4756,7 +4758,8 @@
     "changed": "Tiedot ovat muuttuneet. Sulje muokkaus ja lataa sivu uudelleen ennen uutta yritystä.",
     "duplicate": "Nimi on jo käytössä. Valitse toinen nimi.",
     "suggestedCategory": "Ehdotettu luokka",
-    "showInactive": "Näytä käytöstä poistetut tuotetyypit"
+    "showInactive": "Näytä käytöstä poistetut tuotetyypit",
+    "previousCategory": "Aiempi kategoriateksti: {name}"
   },
   "selfRegistration": {
     "joinLogin": "Haluatko myydä liikkeen kautta? Luo henkilökohtainen tili tai kirjaudu sisään, jos sinulla on jo tili. Sen jälkeen palaat tänne lukemaan liikkeen ehdot ja lähettämään hakemuksesi.",

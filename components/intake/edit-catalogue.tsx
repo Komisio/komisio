@@ -2,7 +2,11 @@
 import { useId, useRef, useState } from 'react'
 import { z } from 'zod'
 import { locales, localeNames, type Dictionary } from '@/lib/i18n'
-import { itemCategory, type ItemCategory } from '@/lib/engine/item-categories'
+import {
+  categoryChoices,
+  itemCategory,
+  type ItemCategory,
+} from '@/lib/engine/item-categories'
 import {
   itemTypeProfile,
   labelOf,
@@ -31,6 +35,7 @@ export function EditCatalogue(
     locale: string
     d: Dictionary
     definitions?: AttributeDefinition[]
+    categories?: ItemCategory[]
     onClose: () => void
   },
 ) {
@@ -45,10 +50,12 @@ export function EditCatalogue(
     props.kind === 'category' ? props.record.name : '',
   )
   const [suggestedCategory, setSuggestedCategory] = useState(
-    props.kind === 'type' ? props.record.suggested_category : '',
+    props.kind === 'type' ? (props.record.suggested_category_id ?? '') : '',
   )
   const [fields, setFields] = useState(
-    props.kind === 'type' ? props.record.attributes : [],
+    props.kind === 'type'
+      ? props.record.attributes.filter((a) => a.slug !== 'category')
+      : [],
   )
   const [busy, setBusy] = useBusyState(false)
   const [status, setStatus] = useState<
@@ -90,7 +97,7 @@ export function EditCatalogue(
               expected: props.record,
               payload: {
                 labels: cleaned,
-                suggestedCategory,
+                suggestedCategoryId: suggestedCategory || null,
                 active,
                 attributes: fields,
               },
@@ -206,19 +213,38 @@ export function EditCatalogue(
               <label htmlFor={`${prefix}-suggestion`}>
                 {t.suggestedCategory}
               </label>
-              <input
+              <select
                 id={`${prefix}-suggestion`}
-                maxLength={120}
                 value={suggestedCategory}
                 onChange={(e) => setSuggestedCategory(e.target.value)}
-              />
+              >
+                <option value="">{d.quickIntake.noCategory}</option>
+                {categoryChoices(props.categories ?? [], locale)
+                  .filter((c) => c.active || c.id === suggestedCategory)
+                  .map((c) => (
+                    <option key={c.id} value={c.id} disabled={!c.active}>
+                      {c.label}
+                    </option>
+                  ))}
+              </select>
+              {!props.record.suggested_category_id &&
+                props.record.suggested_category && (
+                  <small>
+                    {t.previousCategory.replace(
+                      '{name}',
+                      props.record.suggested_category,
+                    )}
+                  </small>
+                )}
             </div>
             <fieldset>
               <legend>{d.vocabularySettings.fields}</legend>
               <div className="vocabulary-field-choices">
                 {(props.definitions ?? [])
                   .filter(
-                    (a) => a.active || fields.some((f) => f.slug === a.slug),
+                    (a) =>
+                      a.slug !== 'category' &&
+                      (a.active || fields.some((f) => f.slug === a.slug)),
                   )
                   .map((a) => (
                     <label className="checkbox-label" key={a.slug}>

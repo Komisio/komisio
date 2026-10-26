@@ -84,6 +84,7 @@ export function InventoryFilters({ children }: { children: ReactNode }) {
     for (const [key, value] of new FormData(form.current)) {
       if (typeof value === 'string' && value.trim()) next.set(key, value.trim())
     }
+    if (next.has('categoryId')) next.delete('category')
     // There is deliberately no page field: changing filters starts at page one.
     const query = next.toString()
     if (

@@ -26,7 +26,10 @@ import {
 import { itemSyncStatus, syncProvider } from '@/lib/engine/item-sync'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
-import { readItemCategories } from '@/lib/engine/item-categories'
+import {
+  categoryChoices,
+  readItemCategories,
+} from '@/lib/engine/item-categories'
 import { readItemSellerChoices } from '@/lib/engine/item-filter-options'
 
 export default async function Items({
@@ -104,6 +107,7 @@ export default async function Items({
     ownership: d.ownership,
     seller: all.quickIntake.seller,
     category: all.quickIntake.category,
+    categoryId: all.quickIntake.category,
     itemType: all.quickIntake.itemType,
     assortment: all.itemWorkflow.group,
     minPrice: t.minPrice,
@@ -118,6 +122,11 @@ export default async function Items({
     syncStatus: all.itemSync.title,
   }
   const filterValue = (key: string, value: string) => {
+    if (key === 'categoryId')
+      return value === 'none'
+        ? all.quickIntake.noCategory
+        : (categoryChoices(categories, ctx.locale).find((c) => c.id === value)
+            ?.label ?? value)
     if (key === 'seller')
       return sellers.find((seller) => seller.id === value)?.name ?? value
     if (key === 'stage' && itemFilterStage.safeParse(value).success)
@@ -261,28 +270,23 @@ export default async function Items({
                 <label htmlFor="items-category">
                   {all.quickIntake.category}
                 </label>
-                <input
+                {raw.category && !raw.categoryId && (
+                  <input type="hidden" name="category" value={raw.category} />
+                )}
+                <select
                   id="items-category"
-                  name="category"
-                  list="items-category-choices"
-                  defaultValue={raw.category ?? ''}
-                  maxLength={120}
+                  name="categoryId"
+                  defaultValue={raw.categoryId ?? ''}
                   aria-describedby="items-category-hint"
-                />
-                <datalist id="items-category-choices">
-                  {[
-                    ...new Set(
-                      categories.flatMap((c) => [
-                        c.name,
-                        ...Object.values(c.labels),
-                      ]),
-                    ),
-                  ]
-                    .sort((a, b) => a.localeCompare(b, ctx.locale))
-                    .map((name) => (
-                      <option key={name} value={name} />
-                    ))}
-                </datalist>
+                >
+                  <option value="">{t.any}</option>
+                  <option value="none">{all.quickIntake.noCategory}</option>
+                  {categoryChoices(categories, ctx.locale).map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
                 <small id="items-category-hint">{t.categoryChoiceHint}</small>
               </div>
               {select(

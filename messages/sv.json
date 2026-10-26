@@ -278,7 +278,8 @@
     "typeFieldsHint": "Välj en liknande varutyp för att få samma frågor, till exempel storlek och material.",
     "typeFieldsLegend": "Välj fält",
     "assortment": "Sortimentsgrupp",
-    "noAssortment": "Utan sortimentsgrupp"
+    "noAssortment": "Utan sortimentsgrupp",
+    "noCategory": "Ingen kategori"
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
@@ -1316,7 +1317,7 @@
       "quickFilters": "Snabbfilter",
       "endsWithinWeek": "Säljperiod slutar senast om 7 dagar",
       "periodWindow": "Säljperiod",
-      "categoryChoiceHint": "Välj en kategori eller skriv en annan."
+      "categoryChoiceHint": "Välj en kategori från butikens lista."
     },
     "title": "Varor",
     "item": "Vara",
@@ -4651,12 +4652,13 @@
     "categories": [
       "Skapa breda kategorier, till exempel Kläder, Hem och inredning eller Böcker. De hjälper er att dela in varorna.",
       "Ange kategorins namn. Lägg gärna till översättningar om ni använder flera språk; egna namn översätts inte automatiskt.",
-      "Kategorin väljs på varan. Att skapa en kategori ändrar inte befintliga varor."
+      "Välj en valfri kategori i Snabb mottagning eller när du registrerar en vara från en inlämning. Varutypens förval kan ändras för varje vara."
     ],
     "types": [
       "Skapa varutyper som Jacka eller Byxor. Varutypen styr vilka uppgifter personalen får fylla i vid mottagningen.",
       "Ge varutypen ett namn och välj de attribut som behövs, till exempel Storlek och Material. Du kan kopiera frågor från en liknande varutyp.",
-      "Saknas ett attribut? Skapa det i fliken Attribut först och välj det när du skapar varutypen."
+      "Saknas ett attribut? Skapa det i fliken Attribut först och välj det när du skapar varutypen.",
+      "Redigera varutypen för att välja en föreslagen kategori från butikens lista. Kategorin är ett separat val, inte en attributfråga."
     ],
     "attributes": [
       "Attribut är frågor om varan, till exempel Storlek, Färg, Märke, Material och Skick. Själva svaret, som M eller blå, fylls i på varan.",
@@ -4750,7 +4752,8 @@
     "changed": "Uppgifterna har ändrats. Stäng redigeringen och ladda om sidan innan du försöker igen.",
     "duplicate": "Namnet används redan. Välj ett annat namn.",
     "suggestedCategory": "Föreslagen kategori",
-    "showInactive": "Visa inaktiva varutyper"
+    "showInactive": "Visa inaktiva varutyper",
+    "previousCategory": "Tidigare kategoritext: {name}"
   },
   "selfRegistration": {
     "joinLogin": "Vill du sälja genom butiken? Skapa ett personligt konto eller logga in om du redan har ett. Därefter kommer du tillbaka hit för att läsa butikens villkor och skicka din ansökan.",

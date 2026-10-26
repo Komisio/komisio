@@ -1,5 +1,9 @@
 'use client'
 import { ScanFocusButton, useScanFocus } from '@/components/platform/scan-focus'
+import {
+  categoryChoices,
+  type ItemCategory,
+} from '@/lib/engine/item-categories'
 import { CreateItemType } from './create-item-type'
 import { useWorkActivity } from '@/components/platform/work-activity'
 import { ReceivingPanel } from './receiving-panel'
@@ -71,6 +75,7 @@ class RequestFailure extends Error {
 const DEFINITIVE = new Set([
   'INVALID_INPUT',
   'GROUP_NOT_FOUND',
+  'CATEGORY_NOT_FOUND',
   'ITEM_TYPE_UNDEFINED',
   'INTAKE_PROFILE_FULL',
   'RECEPTION_NOT_FOUND',
@@ -100,6 +105,7 @@ const definitive = (e: unknown) =>
  */
 const STALE = new Set([
   'RECEPTION_CHANGED',
+  'CATEGORY_NOT_FOUND',
   'BAG_COMPLETED',
   'RECEPTION_NOT_FOUND',
   'RECEPTION_SESSION_SELLER',
@@ -167,6 +173,7 @@ export function QuickReception({
   typeSettings,
   canManageTypes = false,
   groups = [],
+  categories = [],
   lang,
   scanFocusLabel,
   d,
@@ -183,6 +190,7 @@ export function QuickReception({
   typeSettings: Dictionary['vocabularySettings']
   canManageTypes?: boolean
   groups?: { id: string; name: string }[]
+  categories?: ItemCategory[]
   lang: string
   scanFocusLabel: string
   d: Dictionary['quickIntake']
@@ -231,6 +239,8 @@ export function QuickReception({
     [facts, setFacts] = useState<Facts>(emptyFacts),
     [itemType, setItemType] = useState<string | null>(null),
     [assortment, setAssortment] = useState(''),
+    [categoryId, setCategoryId] = useState(''),
+    [categoryTouched, setCategoryTouched] = useState(false),
     [price, setPrice] = useState(''),
     [photoUrl, setPhotoUrl] = useState<string | null>(null),
     [session, setSession] = useState<{ id: string; revision: number } | null>(
@@ -261,7 +271,7 @@ export function QuickReception({
           .filter(
             (d) =>
               d.active &&
-              ['category', 'condition'].includes(d.slug) &&
+              d.slug === 'condition' &&
               !typeQuestions.some((q) => q.definition.slug === d.slug),
           )
           .map((definition) => ({ definition, expected: false })),
@@ -269,6 +279,20 @@ export function QuickReception({
       ]
     : typeQuestions.filter((q) => q.definition.slug !== 'category')
   const activeTypes = vocabulary.types.filter((t) => t.active)
+  const categoryOptions = categoryChoices(
+    categories.filter((c) => c.active),
+    lang,
+  )
+  function selectType(slug: string | null) {
+    setItemType(slug)
+    setCategoryTouched(false)
+    const suggested = vocabulary.types.find(
+      (t) => t.slug === slug,
+    )?.suggested_category_id
+    setCategoryId(
+      categoryOptions.some((c) => c.id === suggested) ? suggested! : '',
+    )
+  }
   const running = useRef(false)
   const itemTypeEnter = useRef(false)
   // One request id per garment attempt. It names the reception the engine
@@ -305,6 +329,7 @@ export function QuickReception({
     !done &&
     (Object.values(facts).some((value) => value.length > 0) ||
       assortment.length > 0 ||
+      categoryTouched ||
       price.length > 0 ||
       photoUrl !== null ||
       uncertain ||
@@ -545,7 +570,7 @@ export function QuickReception({
           if (result?.status === 'proposed' && s) {
             const filled = quickAiProposal(s)
             setFacts(filled.facts)
-            setItemType(filled.itemType)
+            selectType(filled.itemType)
             setPrice(filled.price)
             setMessage(d.aiDone)
           } else setMessage(d.aiUnavailable)
@@ -593,15 +618,10 @@ export function QuickReception({
         .map(([k, v]) => [k, v.trim()] as const)
         .filter(
           ([k, v]) =>
-            (k !== 'category' || !!bagId) &&
+            k !== 'category' &&
             (k === 'description' || (v !== '' && (asked.has(k) || !itemType))),
         ),
     )
-    const suggestedCategory = vocabulary.types.find(
-      (t) => t.slug === itemType,
-    )?.suggested_category
-    if (!cleaned.category && suggestedCategory?.trim())
-      cleaned.category = suggestedCategory.trim()
     requestId.current ??= crypto.randomUUID()
     return {
       ...(bagId ? { bagId } : {}),
@@ -615,6 +635,7 @@ export function QuickReception({
       facts: cleaned,
       itemType,
       assortment: assortment || null,
+      categoryId: categoryId || null,
       priceOre: ore,
     }
   }
@@ -723,6 +744,7 @@ export function QuickReception({
     setStale(false)
     setDone(null)
     setFacts(emptyFacts)
+    selectType(itemType)
     setPrice('')
     dropPhoto()
     reception.current = null
@@ -1078,7 +1100,7 @@ export function QuickReception({
                       onChange={(e) => {
                         if (e.target.value === '__create__')
                           setCreatingType(true)
-                        else setItemType(e.target.value || null)
+                        else selectType(e.target.value || null)
                       }}
                       onKeyDown={(event) => {
                         itemTypeEnter.current = event.key === 'Enter'
@@ -1099,6 +1121,25 @@ export function QuickReception({
                       {canManageTypes && (
                         <option value="__create__">{d.createType}</option>
                       )}
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="quick-category">{d.category}</label>
+                    <select
+                      id="quick-category"
+                      value={categoryId}
+                      disabled={busy || !!done || uncertain}
+                      onChange={(e) => {
+                        setCategoryId(e.target.value)
+                        setCategoryTouched(true)
+                      }}
+                    >
+                      <option value="">{d.noCategory}</option>
+                      {categoryOptions.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   {creatingType && canManageTypes && (
@@ -1124,6 +1165,7 @@ export function QuickReception({
                           ],
                         }))
                         setItemType(profile.slug)
+                        setCategoryId(profile.suggested_category_id ?? '')
                       }}
                     />
                   )}

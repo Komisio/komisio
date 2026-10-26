@@ -80,7 +80,13 @@ export function Shell({
       // Safari can focus the enclosing panel while a pointer is still down.
       // Scrolling that container moves the pressed control before click fires.
       target.matches('[role="tabpanel"]') ||
-      (target instanceof HTMLAnchorElement && !target.matches(':focus-visible'))
+      // Pointer focus must not move an action before its click/toggle completes.
+      // Text editors still need caret/keyboard clearance; keyboard focus reveals
+      // every control, including buttons, checkboxes and links.
+      (!target.matches(':focus-visible') &&
+        !target.matches(
+          'textarea,input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="reset"])',
+        ))
     )
       return
     const focusedUrl = window.location.href

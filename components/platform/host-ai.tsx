@@ -3,7 +3,8 @@ import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import type { Dictionary } from '@/lib/i18n'
-import { credits, type AiPlatformSettings } from '@/lib/engine/ai-credits'
+import type { AiPlatformSettings } from '@/lib/engine/ai-credits'
+import { credits } from '@/lib/platform/credit-prices'
 
 /** The host's AI settings: the platform cap, the included amount, the pack, the model prices. Amounts in whole kronor. */
 export function HostAi({

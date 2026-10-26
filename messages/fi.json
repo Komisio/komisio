@@ -698,7 +698,8 @@
     "item.collection_recorded": "Noutotila kirjattu",
     "item.period_reopened": "Myyntijakso avattu uudelleen",
     "item.period_end_corrected": "Päättämistoimi korjattu",
-    "item.lifecycle_batch": "Myyntiaikojen joukkomuutos"
+    "item.lifecycle_batch": "Myyntiaikojen joukkomuutos",
+    "label_fields.set": "Etikettikentät · Tallennettu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -5193,5 +5194,16 @@
     "none": "Ei kenttää",
     "save": "Tallenna etikettikentät",
     "saved": "Etikettikentät tallennettu."
+  },
+  "priceEdit": {
+    "title": "Muuta hintaa",
+    "reason": "Syy (valinnainen)",
+    "none": "Ei syytä",
+    "store": "Myymälän päätös",
+    "sale": "Alennusmyynti",
+    "defect": "Vika",
+    "other": "Muu",
+    "custom": "Oma syy",
+    "saved": "Hinta on tallennettu."
   }
 }

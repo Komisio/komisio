@@ -1,3 +1,4 @@
+import { raceInlinePrice } from './inline-price-race.mjs'
 import { raceLabelFields } from './label-fields-race.mjs'
 import { raceSalePayment } from './sale-payment-race.mjs'
 import { raceRegistrationCategory } from './registration-category-race.mjs'
@@ -187,6 +188,7 @@ try {
   await raceSellerProfile({ setup, sessions, tenant })
   await raceSellerPrivacy({ setup, sessions, tenant })
   await raceLabelFields({ setup, sessions, tenant })
+  await raceInlinePrice({ setup, sessions })
   await raceLabelPrintRule({ setup, sessions, tenant })
   await raceCatalogueDeletion({ setup, sessions, tenant })
   await raceCatalogueEditing({ setup, sessions, tenant })

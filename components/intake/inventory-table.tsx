@@ -11,7 +11,6 @@ import {
   InventorySortHeader,
 } from './inventory-table-shell'
 import { dictionary, intlLocale, type Locale } from '@/lib/i18n'
-import { formatOre } from '@/lib/engine/items'
 import type { DirectoryItem, ItemSort } from '@/lib/engine/item-directory'
 import { ItemPhotoPreview } from './item-photo-preview'
 import { ItemIndicator } from './item-indicator'
@@ -103,14 +102,14 @@ export function InventoryTable({
               <InventorySelectAll label={all.itemWorkflow.selectAll} />
             </th>
             {header('title', d.item)}
+            {header('category', all.quickIntake.category)}
+            <th scope="col">{all.quickIntake.itemType}</th>
+            {header('price', all.quickIntake.price, true)}
             <th scope="col">
               <span className="sr-only">{t.details}</span>
             </th>
-            {header('category', all.quickIntake.category)}
-            <th scope="col">{all.quickIntake.itemType}</th>
             <th scope="col">{all.itemWorkflow.group}</th>
             {header('seller', all.quickIntake.seller)}
-            {header('price', all.quickIntake.price, true)}
             {header('stage', d.stage)}
             <th scope="col">{all.itemSync.title}</th>
             {header('accepted', t.registered)}
@@ -126,6 +125,7 @@ export function InventoryTable({
               key={i.id}
               item={i}
               tenantId={tenantId}
+              currency={currency}
               write={write}
               types={types
                 .filter(
@@ -166,11 +166,6 @@ export function InventoryTable({
                 ) : (
                   '—'
                 )}
-              </td>
-              <td className="inventory-number inventory-price">
-                {i.currentPriceOre === null
-                  ? '—'
-                  : `${formatOre(i.currentPriceOre)} ${currency}`}
               </td>
               <td className="inventory-state" data-stage={i.stage}>
                 {i.stage === 'markdown_due' ? (

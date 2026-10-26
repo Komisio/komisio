@@ -37,10 +37,7 @@ export async function readAiCredits(client: SupabaseClient, tenant: string) {
   return aiCredits.parse(r.data)
 }
 
-/** Whole kronor for display: 100 credits are 100 kr are 10 000 öre. */
-export function credits(ore: number) {
-  return Math.floor(ore / 100)
-}
+export { credits } from '../platform/credit-prices'
 
 // The store's own provider key, sealed with the credential key; SQL never sees it in clear.
 const PURPOSE = 'ai-connection'

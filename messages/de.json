@@ -698,7 +698,8 @@
     "item.collection_recorded": "Abholstatus erfasst",
     "item.period_reopened": "Verkaufszeitraum wieder eröffnet",
     "item.period_end_corrected": "Abschlussgrund korrigiert",
-    "item.lifecycle_batch": "Sammeländerung der Verkaufszeiträume"
+    "item.lifecycle_batch": "Sammeländerung der Verkaufszeiträume",
+    "label_fields.set": "Etikettenfelder · Gespeichert"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -5193,5 +5194,16 @@
     "none": "Kein Feld",
     "save": "Etikettenfelder speichern",
     "saved": "Etikettenfelder gespeichert."
+  },
+  "priceEdit": {
+    "title": "Preis ändern",
+    "reason": "Grund (optional)",
+    "none": "Kein Grund",
+    "store": "Entscheidung des Geschäfts",
+    "sale": "Ausverkauf",
+    "defect": "Mangel",
+    "other": "Sonstiges",
+    "custom": "Eigener Grund",
+    "saved": "Der Preis wurde gespeichert."
   }
 }

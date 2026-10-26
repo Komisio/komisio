@@ -698,7 +698,8 @@
     "item.collection_recorded": "Hentestatus registrert",
     "item.period_reopened": "Salgsperiode gjenåpnet",
     "item.period_end_corrected": "Avslutningsårsak rettet",
-    "item.lifecycle_batch": "Masseendring av salgsperioder"
+    "item.lifecycle_batch": "Masseendring av salgsperioder",
+    "label_fields.set": "Etikettfelt · Lagret"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tillatelse til å gjøre dette.",
@@ -5187,5 +5188,16 @@
     "none": "Ingen felt",
     "save": "Lagre etikettfelt",
     "saved": "Etikettfeltene er lagret."
+  },
+  "priceEdit": {
+    "title": "Endre pris",
+    "reason": "Begrunnelse (valgfri)",
+    "none": "Ingen begrunnelse",
+    "store": "Butikkens beslutning",
+    "sale": "Salg",
+    "defect": "Feil",
+    "other": "Annet",
+    "custom": "Egen begrunnelse",
+    "saved": "Prisen er lagret."
   }
 }

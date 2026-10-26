@@ -24,7 +24,7 @@ select set_config('test.i2',gen_random_uuid()::text,true);
 select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'reception_review',current_setting('test.d2')::uuid,1,10000);
 -- Manual price set by a person.
 select throws_like($$select set_item_price(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.i1')::uuid,0,'Wrong')$$,'%INVALID_INPUT%','price must be positive');
-select throws_like($$select set_item_price(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.i1')::uuid,15000,'')$$,'%INVALID_INPUT%','reason required');
+select lives_ok($$select set_item_price(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.i1')::uuid,20000,'')$$,'human price reason is optional (#651)');
 select set_config('test.e1',gen_random_uuid()::text,true);
 select is(set_item_price(current_setting('test.tenant')::uuid,current_setting('test.e1')::uuid,current_setting('test.i1')::uuid,15000,'Seller agreed to a lower price'),current_setting('test.e1')::uuid,'price set');
 select is(set_item_price(current_setting('test.tenant')::uuid,current_setting('test.e1')::uuid,current_setting('test.i1')::uuid,15000,'Seller agreed to a lower price'),current_setting('test.e1')::uuid,'replay');

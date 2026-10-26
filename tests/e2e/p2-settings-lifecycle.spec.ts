@@ -118,7 +118,10 @@ test('manual lifecycle price form appends the reviewed price and reason', async 
     ).toBeVisible()
     await page.getByLabel(d.lifecycle.price, { exact: true }).fill('149.95')
     await page
-      .getByLabel(d.lifecycle.priceReason, { exact: true })
+      .getByLabel(d.priceEdit.reason, { exact: true })
+      .selectOption('other')
+    await page
+      .getByLabel(d.priceEdit.custom, { exact: true })
       .fill('Synthetic reviewed price')
     await page
       .getByRole('button', { name: d.lifecycle.setPrice, exact: true })

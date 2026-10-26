@@ -16,7 +16,7 @@ export const lifecycleBatchOperation = z.discriminatedUnion('kind', [
   z.strictObject({
     kind: z.literal('setPrice'),
     priceOre: z.number().int().min(1).max(99_999_999_999),
-    reason,
+    reason: z.string().trim().max(500),
   }),
   z.strictObject({ kind: z.literal('markdown') }),
 ])

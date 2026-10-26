@@ -389,13 +389,21 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_day_close: c.dayCloseId,
       })
     case 'setItemPrice':
-      return client.rpc('set_item_price', {
-        p_tenant: c.tenantId,
-        p_id: c.requestId,
-        p_item: c.itemId,
-        p_price_ore: c.priceOre,
-        p_reason: c.reason,
-      })
+      return client.rpc(
+        c.expectedPriceOre === undefined
+          ? 'set_item_price'
+          : 'set_item_price_checked',
+        {
+          ...(c.expectedPriceOre === undefined
+            ? {}
+            : { p_expected_ore: c.expectedPriceOre }),
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_item: c.itemId,
+          p_price_ore: c.priceOre,
+          p_reason: c.reason,
+        },
+      )
     case 'recordItemCollection':
       return client.rpc('record_item_collection', {
         p_tenant: c.tenantId,

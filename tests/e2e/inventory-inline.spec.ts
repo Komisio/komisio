@@ -33,8 +33,8 @@ test('blank row space opens the item while row controls keep their own actions',
     await page.getByRole('tooltip').click()
     await expect(page).toHaveURL(/\/intake\/items$/)
     await page.keyboard.press('Escape')
-    // This is the empty photo/indicator cell between the title and category.
-    await row.locator('td').nth(1).click()
+    // Empty photo/indicator space still opens the row.
+    await row.locator('.inventory-indicator-cell').click()
     await expect(page).toHaveURL(
       new RegExp(`/intake/items/${item}\\?returnTo=`),
     )

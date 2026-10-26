@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "The photo is too large (3 MB at most).",
       "INVALID_IMAGE": "The file is not a valid JPEG or PNG image.",
       "REQUEST_FAILED": "The request failed. Retry.",
-      "BAG_COMPLETED": "This drop-off is completed. Reopen it to continue."
+      "BAG_COMPLETED": "This drop-off is completed. Reopen it to continue.",
+      "DESCRIPTION_REQUIRED": "Enter a description."
     },
     "addPhoto": "Take or choose a photo",
     "sellerSearchHint": "Name, email or phone",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Choose fields",
     "assortment": "Assortment group",
     "noAssortment": "No assortment group",
-    "noCategory": "No category"
+    "noCategory": "No category",
+    "internalNote": "Internal note",
+    "internalNoteHint": "Staff only. Not shown to sellers or included on labels, sales summaries or in POS data."
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",
@@ -4272,7 +4275,9 @@
       "INVALID_INPUT": "Import could not be completed. No new items were registered.",
       "REQUEST_CONFLICT": "Import could not be completed. No new items were registered.",
       "CURRENCY_MISMATCH": "Terms have changed. Preview the file again.",
-      "CUSTODY_REQUIRED": "I confirm that the items are in the store."
+      "CUSTODY_REQUIRED": "I confirm that the items are in the store.",
+      "DESCRIPTION_REQUIRED": "Enter a description.",
+      "NOTE_CHANGED": "The data changed or access is unavailable. Reload before continuing."
     },
     "fromFile": "From file",
     "fromPos": "From POS"
@@ -4660,7 +4665,8 @@
     "categoryExists": "A category with that name already exists.",
     "translations": "Translations (optional)",
     "languages": "Languages",
-    "noCategories": "No categories yet."
+    "noCategories": "No categories yet.",
+    "inheritDefaults": "Use store default fields"
   },
   "settingsHelp": {
     "label": "Help",
@@ -5212,5 +5218,22 @@
     "returnTotal": "Recorded returns total",
     "currentDetails": "Store and item descriptions reflect current records. Amounts come from the recorded sale and any returns.",
     "generatedAt": "Generated"
+  },
+  "registration": {
+    "title": "Item registration",
+    "hint": "Default fields apply to item types that inherit the store settings.",
+    "descriptionRequired": "Require a description at registration",
+    "template": "Title when the description is empty",
+    "templateHint": "Use these placeholders. Missing values are omitted; an empty title falls back to the item reference.",
+    "fields": "Store default fields",
+    "inherit": "Use store default fields",
+    "note": "Internal note",
+    "noteHint": "Staff only. Not shown to sellers or included on labels, sales summaries or in POS data.",
+    "save": "Save",
+    "retry": "Retry",
+    "saved": "Saved.",
+    "invalid": "Check the fields and title placeholders.",
+    "changed": "The data changed or access is unavailable. Reload before continuing.",
+    "uncertain": "The response could not be confirmed. Retry with the same information."
   }
 }

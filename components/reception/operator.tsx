@@ -1,6 +1,11 @@
 'use client'
+import { RegistrationFields } from '@/components/intake/registration-fields'
 import { CreateItemType } from '@/components/intake/create-item-type'
-import { labelOf, type AttributeVocabulary } from '@/lib/engine/attributes'
+import {
+  questionsFor,
+  labelOf,
+  type AttributeVocabulary,
+} from '@/lib/engine/attributes'
 import {
   useBusyState,
   useBusyTransition as useTransition,
@@ -169,6 +174,7 @@ export function ReceptionObservation({
   vocabulary: initialVocabulary,
   typeLabels,
   typeSettings,
+  initialNote = { id: null, note: '' },
   canManageTypes,
   locale,
 }: {
@@ -179,6 +185,7 @@ export function ReceptionObservation({
   initial: {
     itemType?: string
     description: string
+    attributes?: { slug: string; value: string }[]
     amount: string
     reference: string
     rationale: string
@@ -186,6 +193,7 @@ export function ReceptionObservation({
   d: D
   vocabulary: AttributeVocabulary
   typeLabels: Dictionary['quickIntake']
+  initialNote?: { id: string | null; note: string }
   typeSettings: Dictionary['vocabularySettings']
   canManageTypes: boolean
   locale: string
@@ -234,6 +242,23 @@ export function ReceptionObservation({
             sources,
             {
               description: form.get('description'),
+              attributes: questionsFor(vocabulary, itemType || null)
+                .filter((q) => q.definition.slug !== 'description')
+                .flatMap(({ definition: a }) => {
+                  const value = String(
+                    form.get(`attribute-${a.slug}`) ?? '',
+                  ).trim()
+                  return value
+                    ? [
+                        {
+                          slug: a.slug,
+                          definitionVersion: a.version,
+                          value,
+                          sourceId: crypto.randomUUID(),
+                        },
+                      ]
+                    : []
+                }),
               itemType: form.get('itemType') || undefined,
               amount: exactPrice(String(form.get('amount'))),
               reference: form.get('reference'),
@@ -255,6 +280,10 @@ export function ReceptionObservation({
           sessionId,
           expectedRevision: revision,
           sources: next,
+          internalNote: {
+            id: initialNote.id,
+            note: String(form.get('internal-note') ?? ''),
+          },
         })
         if (result) saved()
       }}
@@ -270,7 +299,9 @@ export function ReceptionObservation({
             id="garment-description"
             name="description"
             maxLength={1000}
-            required
+            required={
+              vocabulary.registration?.settings.descriptionRequired ?? false
+            }
             defaultValue={initial?.description ?? ''}
           />
         </div>
@@ -298,6 +329,26 @@ export function ReceptionObservation({
               <option value="__create__">{typeLabels.createType}</option>
             )}
           </select>
+        </div>
+        <RegistrationFields
+          vocabulary={vocabulary}
+          itemType={itemType || null}
+          locale={locale}
+          initial={Object.fromEntries(
+            (initial?.attributes ?? []).map((a) => [a.slug, a.value]),
+          )}
+        />
+        <div className="field">
+          <label htmlFor="manual-internal-note">
+            {typeLabels.internalNote}
+          </label>
+          <textarea
+            id="manual-internal-note"
+            name="internal-note"
+            defaultValue={initialNote.note}
+            maxLength={2000}
+          />
+          <small>{typeLabels.internalNoteHint}</small>
         </div>
         {creatingType && canManageTypes && (
           <CreateItemType

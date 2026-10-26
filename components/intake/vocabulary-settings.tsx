@@ -1,4 +1,5 @@
 'use client'
+import { RegistrationSettings } from './registration-settings'
 import { DeleteCatalogueRecord } from './delete-catalogue-record'
 
 import { useState } from 'react'
@@ -67,6 +68,14 @@ export function VocabularySettings({
         <h2>{t.title}</h2>
         <p>{t.intro}</p>
       </div>
+      <RegistrationSettings
+        tenantId={tenantId}
+        vocabulary={vocabulary}
+        locale={locale}
+        editable={editable}
+        d={d}
+        onSaved={setVocabulary}
+      />
       <WorkspaceTabs
         id="vocabulary"
         initial="types"

@@ -18,7 +18,6 @@ export const publishReceptionReviewCommand = z.strictObject({
   expiresAt: z.iso.datetime(),
   suggestions: receptionSuggestions.refine(
     (s) =>
-      s.attributes.some((a) => a.slug === 'description') &&
       !!s.price &&
       s.questions.length === 0 &&
       s.attributes.every((a) => a.certainty === 'observed'),
@@ -125,6 +124,9 @@ export async function readReceptionReview(
 export const saveReceptionSourcesCommand = z
   .strictObject({
     action: z.literal('saveReceptionSources'),
+    internalNote: z
+      .object({ id: z.uuid().nullable(), note: z.string().trim().max(2000) })
+      .optional(),
     tenantId: z.uuid(),
     requestId: z.uuid(),
     sessionId: z.guid(),

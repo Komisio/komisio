@@ -34,6 +34,9 @@ test('create a type in settings, replay a lost reply and use it in reception', a
     await expect(page.getByLabel(d.quickIntake.typeName)).toBeFocused()
     await expect(editor.getByRole('checkbox', { checked: true })).toHaveCount(1)
     await page.getByLabel(d.quickIntake.typeName).fill('Synthetic shirt')
+    await editor
+      .getByLabel(d.vocabularySettings.inheritDefaults, { exact: true })
+      .uncheck()
     await page.getByLabel(d.quickIntake.typeFields).selectOption('jacket')
     const commands: Record<string, unknown>[] = []
     await page.route('**/api/item-types', async (route) => {

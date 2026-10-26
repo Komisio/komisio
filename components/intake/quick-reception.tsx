@@ -74,6 +74,7 @@ class RequestFailure extends Error {
  */
 const DEFINITIVE = new Set([
   'INVALID_INPUT',
+  'DESCRIPTION_REQUIRED',
   'GROUP_NOT_FOUND',
   'CATEGORY_NOT_FOUND',
   'ITEM_TYPE_UNDEFINED',
@@ -263,21 +264,12 @@ export function QuickReception({
   // changes the questions; answers to questions the new type does not ask are
   // dropped rather than sent for an item they do not describe.
   const typeQuestions = questionsFor(vocabulary, itemType)
-  // Drop-offs keep the former inspection's basic facts available even without a type.
-  // Definitions and labels still belong to the store's vocabulary.
-  const questions = bagId
-    ? [
-        ...vocabulary.definitions
-          .filter(
-            (d) =>
-              d.active &&
-              d.slug === 'condition' &&
-              !typeQuestions.some((q) => q.definition.slug === d.slug),
-          )
-          .map((definition) => ({ definition, expected: false })),
-        ...typeQuestions,
-      ]
-    : typeQuestions.filter((q) => q.definition.slug !== 'category')
+  const questions = typeQuestions.filter(
+    (q) => q.definition.slug !== 'category',
+  )
+  const descriptionRequired =
+    vocabulary.registration?.settings.descriptionRequired ?? false
+  const [internalNote, setInternalNote] = useState('')
   const activeTypes = vocabulary.types.filter((t) => t.active)
   const categoryOptions = categoryChoices(
     categories.filter((c) => c.active),
@@ -327,7 +319,8 @@ export function QuickReception({
   // content. Type selection carries over to the next item on purpose.
   const hasUnsavedItem =
     !done &&
-    (Object.values(facts).some((value) => value.length > 0) ||
+    (internalNote.length > 0 ||
+      Object.values(facts).some((value) => value.length > 0) ||
       assortment.length > 0 ||
       categoryTouched ||
       price.length > 0 ||
@@ -611,7 +604,11 @@ export function QuickReception({
 
   function buildCommand() {
     const ore = quickPriceOre(price)
-    if (!(facts.description ?? '').trim() || ore === null) return null
+    if (
+      (descriptionRequired && !(facts.description ?? '').trim()) ||
+      ore === null
+    )
+      return null
     const asked = new Set(questions.map((q) => q.definition.slug))
     const cleaned = Object.fromEntries(
       Object.entries(facts)
@@ -633,6 +630,7 @@ export function QuickReception({
       sessionId: session?.id ?? reception.current?.sessionId ?? null,
       expectedRevision: session?.revision ?? 0,
       facts: cleaned,
+      internalNote,
       itemType,
       assortment: assortment || null,
       categoryId: categoryId || null,
@@ -653,7 +651,7 @@ export function QuickReception({
         requestAnimationFrame(() => {
           document
             .getElementById(
-              !(facts.description ?? '').trim()
+              descriptionRequired && !(facts.description ?? '').trim()
                 ? 'quick-description'
                 : 'quick-price',
             )
@@ -744,6 +742,7 @@ export function QuickReception({
     setStale(false)
     setDone(null)
     setFacts(emptyFacts)
+    setInternalNote('')
     selectType(itemType)
     setPrice('')
     dropPhoto()
@@ -760,7 +759,9 @@ export function QuickReception({
   useWorkActivity(stage !== 'idle')
   const busy = !ready || stage !== 'idle'
   const invalidDescription =
-    validationRequested && !(facts.description ?? '').trim()
+    validationRequested &&
+    descriptionRequired &&
+    !(facts.description ?? '').trim()
   const invalidPrice = validationRequested && quickPriceOre(price) === null
   // One input per question the item type asks, shaped by the definition: a
   // number carries its unit, a choice offers its values by their stable ids,
@@ -783,7 +784,7 @@ export function QuickReception({
           <select
             id={id}
             value={facts[key] ?? ''}
-            required={key === 'description'}
+            required={key === 'description' && descriptionRequired}
             disabled={busy || !!done || uncertain}
             onChange={(e) => set(e.target.value)}
           >
@@ -809,7 +810,7 @@ export function QuickReception({
             value={facts[key] ?? ''}
             rows={3}
             maxLength={1000}
-            required
+            required={descriptionRequired}
             aria-invalid={invalidDescription || undefined}
             aria-describedby={[
               itemScan.contextId,
@@ -1052,6 +1053,21 @@ export function QuickReception({
                 {questions
                   .filter((q) => q.definition.slug === 'description')
                   .map((q) => question(q.definition))}
+                <div className="field">
+                  <label htmlFor="quick-internal-note">{d.internalNote}</label>
+                  <textarea
+                    id="quick-internal-note"
+                    rows={2}
+                    maxLength={2000}
+                    value={internalNote}
+                    disabled={busy || !!done || uncertain}
+                    onChange={(e) => setInternalNote(e.target.value)}
+                    aria-describedby="quick-internal-note-hint"
+                  />
+                  <small id="quick-internal-note-hint">
+                    {d.internalNoteHint}
+                  </small>
+                </div>
                 <div className="field quick-price-field">
                   <label htmlFor="quick-price">{d.price}</label>
                   <input

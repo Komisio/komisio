@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "Kuva on liian suuri (enintään 3 Mt).",
       "INVALID_IMAGE": "Tiedosto ei ole kelvollinen JPEG- tai PNG-kuva.",
       "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä uudelleen.",
-      "BAG_COMPLETED": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi."
+      "BAG_COMPLETED": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi.",
+      "DESCRIPTION_REQUIRED": "Kirjoita kuvaus."
     },
     "addPhoto": "Ota tai valitse kuva",
     "sellerSearchHint": "Nimi, sähköposti tai puhelin",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Valitse kentät",
     "assortment": "Valikoimaryhmä",
     "noAssortment": "Ei valikoimaryhmää",
-    "noCategory": "Ei kategoriaa"
+    "noCategory": "Ei kategoriaa",
+    "internalNote": "Sisäinen huomautus",
+    "internalNoteHint": "Vain henkilökunnalle. Ei näytetä myyjälle eikä sisälly etiketteihin, myyntiyhteenvetoihin tai kassajärjestelmän tietoihin."
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
@@ -4278,7 +4281,9 @@
       "INVALID_INPUT": "Tuontia ei voitu suorittaa. Uusia tuotteita ei kirjattu.",
       "REQUEST_CONFLICT": "Tuontia ei voitu suorittaa. Uusia tuotteita ei kirjattu.",
       "CURRENCY_MISMATCH": "Ehdot ovat muuttuneet. Esikatsele tiedosto uudelleen.",
-      "CUSTODY_REQUIRED": "Vahvistan, että tuotteet ovat myymälässä."
+      "CUSTODY_REQUIRED": "Vahvistan, että tuotteet ovat myymälässä.",
+      "DESCRIPTION_REQUIRED": "Kirjoita kuvaus.",
+      "NOTE_CHANGED": "Tiedot ovat muuttuneet tai käyttöoikeus puuttuu. Lataa sivu uudelleen."
     },
     "fromFile": "Tiedostosta",
     "fromPos": "Kassasta"
@@ -4666,7 +4671,8 @@
     "categoryExists": "Samanniminen kategoria on jo olemassa.",
     "translations": "Käännökset (valinnainen)",
     "languages": "Kielet",
-    "noCategories": "Ei vielä kategorioita."
+    "noCategories": "Ei vielä kategorioita.",
+    "inheritDefaults": "Käytä myymälän oletuskenttiä"
   },
   "settingsHelp": {
     "label": "Ohje",
@@ -5218,5 +5224,22 @@
     "returnTotal": "Kirjatut palautukset yhteensä",
     "currentDetails": "Myymälän ja tuotteiden kuvaukset perustuvat nykyisiin tietoihin. Summat perustuvat kirjattuun myyntiin ja mahdollisiin palautuksiin.",
     "generatedAt": "Luotu"
+  },
+  "registration": {
+    "title": "Tuotteen rekisteröinti",
+    "hint": "Oletuskentät koskevat tuotetyyppejä, jotka käyttävät myymälän asetuksia.",
+    "descriptionRequired": "Vaadi kuvaus rekisteröinnissä",
+    "template": "Otsikko, kun kuvaus puuttuu",
+    "templateHint": "Käytä näitä paikkamerkkejä. Puuttuvat arvot ohitetaan; tyhjän otsikon tilalla käytetään tuoteviitettä.",
+    "fields": "Myymälän oletuskentät",
+    "inherit": "Käytä myymälän oletuskenttiä",
+    "note": "Sisäinen huomautus",
+    "noteHint": "Vain henkilökunnalle. Ei näytetä myyjälle eikä sisälly etiketteihin, myyntiyhteenvetoihin tai kassajärjestelmän tietoihin.",
+    "save": "Tallenna",
+    "retry": "Yritä uudelleen",
+    "saved": "Tallennettu.",
+    "invalid": "Tarkista kentät ja otsikon paikkamerkit.",
+    "changed": "Tiedot ovat muuttuneet tai käyttöoikeus puuttuu. Lataa sivu uudelleen.",
+    "uncertain": "Vastausta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla."
   }
 }

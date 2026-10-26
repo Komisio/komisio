@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "La foto es demasiado grande (máximo 3 MB).",
       "INVALID_IMAGE": "El archivo no es una imagen JPEG o PNG válida.",
       "REQUEST_FAILED": "La solicitud falló. Vuelve a intentarlo.",
-      "BAG_COMPLETED": "Esta entrega está completada. Reábrela para continuar."
+      "BAG_COMPLETED": "Esta entrega está completada. Reábrela para continuar.",
+      "DESCRIPTION_REQUIRED": "Introduce una descripción."
     },
     "addPhoto": "Hacer o elegir una foto",
     "sellerSearchHint": "Nombre, correo o teléfono",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Elegir campos",
     "assortment": "Grupo de surtido",
     "noAssortment": "Sin grupo de surtido",
-    "noCategory": "Sin categoría"
+    "noCategory": "Sin categoría",
+    "internalNote": "Nota interna",
+    "internalNoteHint": "Solo para el personal. No se muestra al vendedor ni se incluye en etiquetas, resúmenes de venta o datos del TPV."
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",
@@ -4278,7 +4281,9 @@
       "INVALID_INPUT": "No se pudo completar la importación. No se registraron artículos nuevos.",
       "REQUEST_CONFLICT": "No se pudo completar la importación. No se registraron artículos nuevos.",
       "CURRENCY_MISMATCH": "Las condiciones han cambiado. Revisa el archivo de nuevo.",
-      "CUSTODY_REQUIRED": "Confirmo que los artículos están en la tienda."
+      "CUSTODY_REQUIRED": "Confirmo que los artículos están en la tienda.",
+      "DESCRIPTION_REQUIRED": "Introduce una descripción.",
+      "NOTE_CHANGED": "Los datos han cambiado o no tienes acceso. Recarga la página."
     },
     "fromFile": "Desde archivo",
     "fromPos": "Desde TPV"
@@ -4666,7 +4671,8 @@
     "categoryExists": "Ya existe una categoría con ese nombre.",
     "translations": "Traducciones (opcional)",
     "languages": "Idiomas",
-    "noCategories": "Aún no hay categorías."
+    "noCategories": "Aún no hay categorías.",
+    "inheritDefaults": "Usar los campos predeterminados de la tienda"
   },
   "settingsHelp": {
     "label": "Ayuda",
@@ -5218,5 +5224,22 @@
     "returnTotal": "Total de devoluciones registradas",
     "currentDetails": "Las descripciones de la tienda y los artículos reflejan los datos actuales. Los importes proceden de la venta registrada y de las posibles devoluciones.",
     "generatedAt": "Generado"
+  },
+  "registration": {
+    "title": "Registro de artículos",
+    "hint": "Los campos predeterminados se aplican a los tipos que heredan la configuración de la tienda.",
+    "descriptionRequired": "Exigir descripción al registrar",
+    "template": "Título cuando falta la descripción",
+    "templateHint": "Usa estos marcadores. Se omiten los valores ausentes; un título vacío se sustituye por la referencia del artículo.",
+    "fields": "Campos predeterminados de la tienda",
+    "inherit": "Usar los campos predeterminados de la tienda",
+    "note": "Nota interna",
+    "noteHint": "Solo para el personal. No se muestra al vendedor ni se incluye en etiquetas, resúmenes de venta o datos del TPV.",
+    "save": "Guardar",
+    "retry": "Reintentar",
+    "saved": "Guardado.",
+    "invalid": "Revisa los campos y los marcadores del título.",
+    "changed": "Los datos han cambiado o no tienes acceso. Recarga la página.",
+    "uncertain": "No se pudo confirmar la respuesta. Reintenta con los mismos datos."
   }
 }

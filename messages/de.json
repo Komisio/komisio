@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "Das Foto ist zu groß (höchstens 3 MB).",
       "INVALID_IMAGE": "Die Datei ist kein gültiges JPEG- oder PNG-Bild.",
       "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es erneut.",
-      "BAG_COMPLETED": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren."
+      "BAG_COMPLETED": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren.",
+      "DESCRIPTION_REQUIRED": "Geben Sie eine Beschreibung ein."
     },
     "addPhoto": "Foto aufnehmen oder auswählen",
     "sellerSearchHint": "Name, E-Mail oder Telefon",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Felder auswählen",
     "assortment": "Sortimentsgruppe",
     "noAssortment": "Ohne Sortimentsgruppe",
-    "noCategory": "Keine Kategorie"
+    "noCategory": "Keine Kategorie",
+    "internalNote": "Interne Notiz",
+    "internalNoteHint": "Nur für Mitarbeitende. Wird Verkäufern nicht angezeigt und nicht auf Etiketten, Verkaufsübersichten oder in Kassendaten ausgegeben."
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
@@ -4278,7 +4281,9 @@
       "INVALID_INPUT": "Der Import konnte nicht abgeschlossen werden. Keine neuen Artikel wurden erfasst.",
       "REQUEST_CONFLICT": "Der Import konnte nicht abgeschlossen werden. Keine neuen Artikel wurden erfasst.",
       "CURRENCY_MISMATCH": "Die Bedingungen haben sich geändert. Öffnen Sie die Vorschau erneut.",
-      "CUSTODY_REQUIRED": "Ich bestätige, dass die Artikel im Geschäft sind."
+      "CUSTODY_REQUIRED": "Ich bestätige, dass die Artikel im Geschäft sind.",
+      "DESCRIPTION_REQUIRED": "Geben Sie eine Beschreibung ein.",
+      "NOTE_CHANGED": "Die Daten wurden geändert oder der Zugriff fehlt. Seite neu laden."
     },
     "fromFile": "Aus Datei",
     "fromPos": "Aus Kassensystem"
@@ -4666,7 +4671,8 @@
     "categoryExists": "Eine Kategorie mit diesem Namen existiert bereits.",
     "translations": "Übersetzungen (optional)",
     "languages": "Sprachen",
-    "noCategories": "Noch keine Kategorien."
+    "noCategories": "Noch keine Kategorien.",
+    "inheritDefaults": "Standardfelder des Ladens verwenden"
   },
   "settingsHelp": {
     "label": "Hilfe",
@@ -5218,5 +5224,22 @@
     "returnTotal": "Erfasste Rückgaben insgesamt",
     "currentDetails": "Geschäfts- und Artikelbeschreibungen entsprechen dem aktuellen Stand. Die Beträge stammen aus dem erfassten Verkauf und etwaigen Rückgaben.",
     "generatedAt": "Erstellt"
+  },
+  "registration": {
+    "title": "Artikelerfassung",
+    "hint": "Standardfelder gelten für Artikeltypen, die die Ladeneinstellungen übernehmen.",
+    "descriptionRequired": "Beschreibung bei der Erfassung verlangen",
+    "template": "Titel bei fehlender Beschreibung",
+    "templateHint": "Diese Platzhalter verwenden. Fehlende Werte werden ausgelassen; ein leerer Titel wird durch die Artikelreferenz ersetzt.",
+    "fields": "Standardfelder des Ladens",
+    "inherit": "Standardfelder des Ladens verwenden",
+    "note": "Interne Notiz",
+    "noteHint": "Nur für Mitarbeitende. Wird Verkäufern nicht angezeigt und nicht auf Etiketten, Verkaufsübersichten oder in Kassendaten ausgegeben.",
+    "save": "Speichern",
+    "retry": "Erneut versuchen",
+    "saved": "Gespeichert.",
+    "invalid": "Felder und Platzhalter im Titel prüfen.",
+    "changed": "Die Daten wurden geändert oder der Zugriff fehlt. Seite neu laden.",
+    "uncertain": "Die Antwort konnte nicht bestätigt werden. Mit denselben Angaben erneut versuchen."
   }
 }

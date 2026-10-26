@@ -51,5 +51,15 @@ select throws_ok($$select prepare_submission_reception(current_setting('test.ten
 reset role;
 select is((select count(*) from items where tenant_id=current_setting('test.tenant')::uuid),0::bigint,'preparation never accepts inventory');
 select is((select count(*) from garment_receipts where tenant_id=current_setting('test.tenant')::uuid),0::bigint,'preparation never claims custody');
+-- Real conversion: absent description is not fabricated as a source observation.
+select set_config('test.target',current_setting('test.tenant')||'/'||current_setting('test.session')||'/'||split_part(current_setting('test.path'),'/',3),true);
+insert into storage.objects(bucket_id,name) values('reception-photos',current_setting('test.target')),('seller-reception-photos',current_setting('test.target'));
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000008001","role":"authenticated"}';
+select publish_registration_settings(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'{"descriptionRequired":true,"titleTemplate":"{type}","attributes":[]}');
+select throws_like($$select complete_submission_reception(current_setting('test.tenant')::uuid,current_setting('test.approval')::uuid,'','150.00')$$,'%DESCRIPTION_REQUIRED%','photo conversion enforces the store requirement');
+select publish_registration_settings(current_setting('test.tenant')::uuid,gen_random_uuid(),(registration_settings(current_setting('test.tenant')::uuid)->>'id')::uuid,'{"descriptionRequired":false,"titleTemplate":"{type}","attributes":[]}');
+select lives_ok($$select complete_submission_reception(current_setting('test.tenant')::uuid,current_setting('test.approval')::uuid,'','150.00')$$,'photo conversion accepts an optional description');
+select is((select count(*) from reception_source_revisions r,jsonb_array_elements(r.sources) s where r.session_id=current_setting('test.session')::uuid and s->>'reference'='komisio:manual-description:v1'),0::bigint,'empty description never becomes invented evidence');
 select * from finish();
 rollback;

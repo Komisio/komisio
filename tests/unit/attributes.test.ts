@@ -102,14 +102,14 @@ describe('attribute vocabulary', () => {
   it('keeps category outside attribute questions when no known type is chosen', () => {
     expect(
       questionsFor(vocabulary, null).map((q) => q.definition.slug),
-    ).toEqual(['description'])
+    ).toEqual(['description', 'size'])
     expect(
       questionsFor(vocabulary, 'no_such_type').map((q) => q.expected),
-    ).toEqual([true])
+    ).toEqual([false, false])
   })
   it('keeps the profile order and marks what is expected', () => {
     const lamp = questionsFor(vocabulary, 'lamp')
-    expect(lamp.map((q) => q.expected)).toEqual([true, true, false])
+    expect(lamp.map((q) => q.expected)).toEqual([false, true, false])
   })
   it('reads historical category observations but never offers category as a type question', () => {
     const copy = structuredClone(vocabulary)

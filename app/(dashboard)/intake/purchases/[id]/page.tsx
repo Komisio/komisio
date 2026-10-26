@@ -1,3 +1,5 @@
+import { InternalNote } from '@/components/intake/internal-note'
+import { readInternalNote } from '@/lib/engine/registration-store'
 import { BackLink } from '@/components/platform/back-link'
 import { z } from 'zod'
 import { notFound } from 'next/navigation'
@@ -42,6 +44,19 @@ export default async function PurchaseReceipt({
           {all.returnNavigation.back}
         </BackLink>
       </div>
+      <InternalNote
+        tenantId={active.id}
+        kind="purchase"
+        subjectId={id.data}
+        initial={await readInternalNote(
+          ctx.client,
+          active.id,
+          'purchase',
+          id.data,
+        )}
+        editable={active.role !== 'readonly'}
+        d={all}
+      />
       <section className="card intake-form purchase-receipt">
         {receipt.supplier_note && <p>{receipt.supplier_note}</p>}
         <dl className="item-detail-facts">

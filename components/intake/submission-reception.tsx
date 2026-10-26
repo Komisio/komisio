@@ -11,12 +11,14 @@ export function SubmissionReception({
   price,
   d,
   leaveWarning,
+  descriptionRequired = false,
 }: {
   tenantId: string
   submissionId: string
   description: string
   price: string
   d: Dictionary['submissions']
+  descriptionRequired?: boolean
   leaveWarning: string
 }) {
   const router = useRouter(),
@@ -78,7 +80,7 @@ export function SubmissionReception({
               name="description"
               defaultValue={description.slice(0, 1000)}
               maxLength={1000}
-              required
+              required={descriptionRequired}
               rows={3}
             />
           </label>

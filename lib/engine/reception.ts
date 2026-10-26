@@ -190,11 +190,7 @@ export function prepareSellerReview(
   sameSession(session, proposal)
   // Recheck source bindings rather than trusting a caller-created proposal.
   prepareReceptionProposal(session, proposal.suggestions, proposal.proposalId)
-  if (
-    !proposal.suggestions.attributes.some((a) => a.slug === 'description') ||
-    !proposal.suggestions.price ||
-    proposal.suggestions.questions.length
-  )
+  if (!proposal.suggestions.price || proposal.suggestions.questions.length)
     throw new Error('RECEPTION_REVIEW_INCOMPLETE')
   if (
     proposal.suggestions.attributes.some(

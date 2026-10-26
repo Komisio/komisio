@@ -1,3 +1,5 @@
+import { InternalNote } from '@/components/intake/internal-note'
+import { readInternalNote } from '@/lib/engine/registration-store'
 import { BackLink } from '@/components/platform/back-link'
 import { ItemHistory } from '@/components/intake/item-history'
 import { ItemCollection } from '@/components/intake/item-collection'
@@ -142,6 +144,21 @@ export default async function Item({
     <>
       {backLink}
       <ItemDetailWorkspace
+        internalNotes={
+          <InternalNote
+            tenantId={active.id}
+            kind="item"
+            subjectId={id.data}
+            initial={await readInternalNote(
+              ctx.client,
+              active.id,
+              'item',
+              id.data,
+            )}
+            editable={active.role !== 'readonly'}
+            d={all}
+          />
+        }
         markSoldHref={
           active.role !== 'readonly' &&
           (await searchSaleItems(ctx.client, active.id, item.id)).some(

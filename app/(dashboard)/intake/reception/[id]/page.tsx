@@ -1,3 +1,5 @@
+import { InternalNote } from '@/components/intake/internal-note'
+import { readInternalNote } from '@/lib/engine/registration-store'
 import { BackLink } from '@/components/platform/back-link'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -49,6 +51,12 @@ export default async function Reception({
   const reception = await readReceptionSession(ctx.client, tenant.id, id.data)
   if (!reception) notFound()
   const bagId = await readReceptionBagId(ctx.client, tenant.id, id.data)
+  const privateNote = await readInternalNote(
+    ctx.client,
+    tenant.id,
+    'reception',
+    id.data,
+  )
   const intakeHref = bagId
     ? `/intake/bags/${bagId}/inspect`
     : `/intake/reception/${id.data}`
@@ -165,6 +173,7 @@ export default async function Reception({
           sources={sources}
           initial={prepared?.input ?? null}
           vocabulary={vocabulary}
+          initialNote={privateNote}
           typeLabels={all.quickIntake}
           typeSettings={all.vocabularySettings}
           canManageTypes={['owner', 'admin'].includes(tenant.role)}
@@ -247,6 +256,16 @@ export default async function Reception({
   )
   return (
     <div className="reception-workspace">
+      {accepted && (
+        <InternalNote
+          tenantId={tenant.id}
+          kind="reception"
+          subjectId={id.data}
+          initial={privateNote}
+          editable={tenant.role !== 'readonly'}
+          d={all}
+        />
+      )}
       <BackLink
         className="text-link item-back-link"
         href={bagId ? intakeHref : '/intake/reception'}

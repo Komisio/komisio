@@ -165,8 +165,7 @@ export function inspectInventoryRows(file: InventoryFile, currency: string) {
       email = row.email.trim().toLowerCase()
     if (!reference || reference.length > 120) issues.push('reference')
     if (reference && counts.get(reference)! > 1) issues.push('duplicate')
-    if (!row.description.trim() || row.description.length > 1000)
-      issues.push('description')
+    if (row.description.length > 1000) issues.push('description')
     const priceOre = inventoryPrice(row.price.trim())
     if (priceOre === null) issues.push('price')
     if (row.currency.trim().toUpperCase() !== currency) issues.push('currency')
@@ -237,7 +236,7 @@ export const inventoryImportRow = z.strictObject({
   reference: z.string().trim().min(1).max(120),
   sellerId: z.uuid(),
   email: z.string().trim().max(254),
-  description: z.string().trim().min(1).max(1000),
+  description: z.string().trim().max(1000),
   priceOre: z.number().int().min(1).max(99999999),
   currency: currencyCode,
 })
@@ -278,6 +277,7 @@ export const inventoryImportErrors = [
   'PLAN_LIMIT_ITEMS',
   'PLAN_PLUS_REQUIRED',
   'INVALID_INPUT',
+  'DESCRIPTION_REQUIRED',
 ] as const
 
 /** Explicit staff confirmation; one transaction composes the existing intake engine. */

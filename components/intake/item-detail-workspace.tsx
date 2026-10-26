@@ -38,6 +38,7 @@ export function ItemDetailWorkspace({
   printing,
   saleHref,
   markSoldHref,
+  internalNotes,
 }: {
   item: DirectoryItem
   tenantId: string
@@ -57,6 +58,7 @@ export function ItemDetailWorkspace({
   printing: ReactNode
   saleHref: string
   markSoldHref?: string
+  internalNotes?: ReactNode
 }) {
   const editor = useItemQuickEdit({ item, tenantId, write, d })
   const menu = useRef<HTMLDetailsElement>(null)
@@ -161,96 +163,107 @@ export function ItemDetailWorkspace({
             id: 'overview',
             label: t.overview,
             content: (
-              <div className="card item-overview-grid">
-                <Link
-                  href="#item-photos"
-                  className="item-overview-image"
-                  aria-label={d.itemPhotos.title}
-                >
-                  {item.defaultPhotoId &&
-                  failedPhoto !== item.defaultPhotoId ? (
-                    <Image
-                      src={itemPhotoUrl(tenantId, item.id, item.defaultPhotoId)}
-                      alt={editor.current.title}
-                      width={320}
-                      height={320}
-                      unoptimized
-                      onError={() => setFailedPhoto(item.defaultPhotoId)}
-                    />
-                  ) : (
-                    <span>
-                      <ImagePlus size={30} aria-hidden="true" />
-                      {write ? d.itemPhotos.add : d.itemPhotos.empty}
-                    </span>
-                  )}
-                </Link>
-                <div className="item-overview-fields">
-                  <div className="item-overview-price">
-                    {price}
-                    {write && markSoldHref && (
-                      <Link className="btn btn-primary" href={markSoldHref}>
-                        {d.sales.markSold}
-                      </Link>
-                    )}
-                    {write && (
-                      <Link className="text-link" href={saleHref}>
-                        {d.items.manageSalePeriod}
-                      </Link>
-                    )}
-                  </div>
-                  <dl className="item-quick-facts">
-                    <div>
-                      <dt>{d.quickIntake.category}</dt>
-                      <dd>
-                        {editor.cell(
-                          'category',
-                          d.quickIntake.category,
-                          categories,
+              <>
+                <div className="card item-overview-grid">
+                  <Link
+                    href="#item-photos"
+                    className="item-overview-image"
+                    aria-label={d.itemPhotos.title}
+                  >
+                    {item.defaultPhotoId &&
+                    failedPhoto !== item.defaultPhotoId ? (
+                      <Image
+                        src={itemPhotoUrl(
+                          tenantId,
+                          item.id,
+                          item.defaultPhotoId,
                         )}
-                      </dd>
+                        alt={editor.current.title}
+                        width={320}
+                        height={320}
+                        unoptimized
+                        onError={() => setFailedPhoto(item.defaultPhotoId)}
+                      />
+                    ) : (
+                      <span>
+                        <ImagePlus size={30} aria-hidden="true" />
+                        {write ? d.itemPhotos.add : d.itemPhotos.empty}
+                      </span>
+                    )}
+                  </Link>
+                  <div className="item-overview-fields">
+                    <div className="item-overview-price">
+                      {price}
+                      {write && markSoldHref && (
+                        <Link className="btn btn-primary" href={markSoldHref}>
+                          {d.sales.markSold}
+                        </Link>
+                      )}
+                      {write && (
+                        <Link className="text-link" href={saleHref}>
+                          {d.items.manageSalePeriod}
+                        </Link>
+                      )}
                     </div>
-                    <div>
-                      <dt>{d.quickIntake.itemType}</dt>
-                      <dd>
-                        {editor.cell('itemType', d.quickIntake.itemType, types)}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>{d.itemWorkflow.group}</dt>
-                      <dd>
-                        {editor.cell(
-                          'assortment',
-                          d.itemWorkflow.group,
-                          groups,
-                        )}
-                      </dd>
-                    </div>
-                    {item.sellerId && (
+                    <dl className="item-quick-facts">
                       <div>
-                        <dt>{d.sellersList.title}</dt>
+                        <dt>{d.quickIntake.category}</dt>
                         <dd>
-                          <Link
-                            className="text-link"
-                            href={`/intake/sellers/${item.sellerId}`}
-                          >
-                            {item.sellerName || d.sellersList.title}
-                          </Link>
+                          {editor.cell(
+                            'category',
+                            d.quickIntake.category,
+                            categories,
+                          )}
                         </dd>
                       </div>
+                      <div>
+                        <dt>{d.quickIntake.itemType}</dt>
+                        <dd>
+                          {editor.cell(
+                            'itemType',
+                            d.quickIntake.itemType,
+                            types,
+                          )}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>{d.itemWorkflow.group}</dt>
+                        <dd>
+                          {editor.cell(
+                            'assortment',
+                            d.itemWorkflow.group,
+                            groups,
+                          )}
+                        </dd>
+                      </div>
+                      {item.sellerId && (
+                        <div>
+                          <dt>{d.sellersList.title}</dt>
+                          <dd>
+                            <Link
+                              className="text-link"
+                              href={`/intake/sellers/${item.sellerId}`}
+                            >
+                              {item.sellerName || d.sellersList.title}
+                            </Link>
+                          </dd>
+                        </div>
+                      )}
+                      <div>
+                        <dt>{d.items.directory.periodEnd}</dt>
+                        <dd>
+                          <EventTime value={item.periodEnd} locale={locale} />
+                        </dd>
+                      </div>
+                    </dl>
+                    {write && (
+                      <small className="item-quick-hint">{t.editHint}</small>
                     )}
-                    <div>
-                      <dt>{d.items.directory.periodEnd}</dt>
-                      <dd>
-                        <EventTime value={item.periodEnd} locale={locale} />
-                      </dd>
-                    </div>
-                  </dl>
-                  {write && (
-                    <small className="item-quick-hint">{t.editHint}</small>
-                  )}
-                  {metadata}
+                    {metadata}
+                  </div>
                 </div>
-              </div>
+                {internalNotes}
+              </>
             ),
           },
           {

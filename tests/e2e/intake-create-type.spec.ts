@@ -88,7 +88,12 @@ for (const mode of ['quick', 'bag', 'stepwise'] as const) {
         exact: true,
       })
       await expect(submit).toBeDisabled()
-      await expect(editor.getByRole('checkbox')).toHaveCount(0)
+      await expect(editor.getByRole('checkbox')).toHaveCount(1)
+      await expect(
+        editor.getByLabel(d.vocabularySettings.inheritDefaults, {
+          exact: true,
+        }),
+      ).toBeChecked()
       await editor
         .getByRole('button', { name: d.quickIntake.typeCancel, exact: true })
         .click()

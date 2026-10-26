@@ -355,6 +355,9 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     // Wait for refreshed server props, not only the immediate checkbox change.
     await expect(emails).toHaveJSProperty('defaultChecked', nextPreference)
     await expect(input).toHaveValue('100,00')
+    await page
+      .getByRole('tab', { name: sv.sellerPortal.payouts, exact: true })
+      .click()
     await request
       .getByRole('button', { name: sv.intake.retry, exact: true })
       .click()

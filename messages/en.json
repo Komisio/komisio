@@ -4091,7 +4091,7 @@
     "review": "Read and accept the agreement",
     "accepted": "Agreement accepted",
     "recorded": "The store has recorded your agreement",
-    "accept": "I accept the agreement",
+    "accept": "Approve agreement",
     "failed": "The response could not be confirmed. Please try again.",
     "changed": "The agreement has changed. Read the new version before accepting.",
     "acceptedBy": "Accepted by",
@@ -5157,5 +5157,17 @@
     "invoices": "Self-billing invoices",
     "account": "Account settings",
     "noAgreement": "The store has not published an agreement yet."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Terms at a glance",
+    "currentSettings": "These are the store’s current settings. Items retain the terms saved for them. Read the full agreement below.",
+    "commission": "Store commission: {rate}% {basis}.",
+    "days": "Sale period: {days} days.",
+    "months": "Sale period: {months} calendar months from physical receipt.",
+    "collection": "Collect unsold items within {days} days after the sale period ends.",
+    "return": "After the sale period: unsold items are returned.",
+    "charity": "After the sale period: unsold items are donated to charity.",
+    "fullText": "Read the full agreement",
+    "needsApproval": "Approval needed"
   }
 }

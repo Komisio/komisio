@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
+import { agreementPdfUrl } from '../../lib/documents/agreement-pdf-url'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
@@ -79,9 +80,20 @@ test('private PDF downloads pin saved parties, version and language without acce
       ).status(),
     ).toBe(404)
     await page.goto(`/seller/agreement?seller=${seller}&text=${translation}`)
-    const portalPath = await page
-      .getByRole('link', { name: d.agreements.pdf.personal, exact: true })
-      .getAttribute('href')
+    await expect(
+      page.getByRole('link', { name: d.agreements.pdf.personal, exact: true }),
+    ).toHaveCount(0)
+    await expect(page.locator('.seller-agreement-workspace')).toContainText(
+      'Åsa Öberg TEST',
+    )
+    // Existing private download bookmarks retain their original authorization.
+    const portalPath = agreementPdfUrl({
+      tenantId: f.tenant,
+      sellerId: seller,
+      agreementId: f.agreement,
+      textId: translation,
+      portal: true,
+    })
     const portal = await page.request.get(portalPath!)
     expect(portal.status()).toBe(200)
     expect(portal.headers()['content-disposition']).toContain(

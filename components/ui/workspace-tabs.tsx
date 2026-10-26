@@ -41,7 +41,13 @@ export function WorkspaceTabs({
   toolbar?: ReactNode
   toolbarTabs?: string[]
   scrollAnchors?: boolean
-  tabs: { id: string; label: string; content: ReactNode; anchors?: string[] }[]
+  tabs: {
+    id: string
+    label: string
+    notice?: string
+    content: ReactNode
+    anchors?: string[]
+  }[]
 }) {
   const [searching, startSearch] = useTransition()
   const ready = useSyncExternalStore(subscribeReady, clientReady, serverReady)
@@ -142,6 +148,9 @@ export function WorkspaceTabs({
               type="button"
               disabled={!ready || searching}
               role="tab"
+              aria-label={
+                tab.notice ? `${tab.label} — ${tab.notice}` : undefined
+              }
               aria-selected={selected === tab.id}
               aria-controls={`${id}-${tab.id}`}
               tabIndex={selected === tab.id ? 0 : -1}
@@ -165,6 +174,12 @@ export function WorkspaceTabs({
               }}
             >
               {tab.label}
+              {tab.notice && (
+                <span aria-hidden="true" title={tab.notice}>
+                  {' '}
+                  ●
+                </span>
+              )}
             </button>
           ))}
         </div>

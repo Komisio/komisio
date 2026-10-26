@@ -30,6 +30,27 @@ export const sellerAgreementCommand = z.strictObject({
   agreementId: z.uuid(),
   translationId: z.uuid().nullable().optional(),
 })
+export const sellerTermsSummary = z.object({
+  sellerName: z.string(),
+  commissionBasis: z.enum(['inclusive', 'exclusive']),
+  commissionRatePercent: z.number().min(0).max(100),
+  salePeriodDays: z.number().int().positive(),
+  months: z.number().int().positive().nullable(),
+  collectionDays: z.number().int().nonnegative().nullable(),
+  endOfPeriodAction: z.enum(['charity', 'return']),
+})
+export async function readMySellerTermsSummary(
+  client: SupabaseClient,
+  tenant: string,
+  seller: string,
+) {
+  const result = await client.rpc('my_seller_terms_summary', {
+    p_tenant: z.uuid().parse(tenant),
+    p_seller: z.uuid().parse(seller),
+  })
+  if (result.error) throw new Error('Unable to read seller terms summary')
+  return sellerTermsSummary.parse(result.data)
+}
 export const sellerAgreementArchive = sellerAgreementState.extend({
   current: z.boolean(),
   languages: z

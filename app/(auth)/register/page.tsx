@@ -4,6 +4,7 @@ import { AuthForm } from '@/components/auth/auth-form'
 import { resolveLocale, isLocale } from '@/lib/i18n'
 import { marketingConsentEnabled } from '@/lib/platform/marketing-consent'
 import { legalBaseUrl } from '@/lib/platform/legal'
+import { registrationStoreForNext } from '@/lib/platform/registration-store'
 export default async function Register({
   searchParams,
 }: {
@@ -16,6 +17,7 @@ export default async function Register({
       legalBaseUrl={legalBaseUrl(process.env.KOMISIO_LEGAL_BASE_URL)}
       marketingConsent={marketingConsentEnabled()}
       next={query.next}
+      registrationStoreName={await registrationStoreForNext(query.next)}
       initialLocale={
         isLocale(query.locale)
           ? query.locale

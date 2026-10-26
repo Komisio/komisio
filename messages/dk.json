@@ -4756,6 +4756,7 @@
     "previousCategory": "Tidligere kategoritekst: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Registrer dig som sælger hos {store}",
     "joinLogin": "Vil du sælge gennem butikken? Opret en personlig konto, eller log ind, hvis du allerede har en. Derefter kommer du tilbage hertil for at læse butikkens vilkår og sende din ansøgning.",
     "reviewTerms": "Aftalen sælgeren accepterede",
     "title": "Sælgerregistrering",

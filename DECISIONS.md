@@ -1205,3 +1205,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-26: #632 selects optional category IDs in reception and type defaults. Only unique legacy matches backfill; original facts remain. Category reports and filters use IDs, with unlinked items grouped together. Existing financial and access rules are unchanged.
 
 - 2026-10-26: #631: PayPal item readiness uses existing sale facts and VAT mapping. Missing configuration shows attention and prevents automatic claims until corrected. No VAT choice is inferred; historic outcomes, export guards and lease/retry boundaries remain unchanged.
+
+- 2026-10-26: #637: A current enabled seller-registration capability with an agreement exposes only the store name before login. Join and auth pages resolve it server-side; invalid links return no name. Registration, verified identity, agreement access and staff approval stay unchanged.

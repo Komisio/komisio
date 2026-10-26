@@ -31,6 +31,7 @@ export function AuthForm({
   initialLocale = 'sv',
   marketingConsent = false,
   legalBaseUrl,
+  registrationStoreName,
 }: {
   mode: 'login' | 'register' | 'reset' | 'password'
   next?: string
@@ -38,6 +39,7 @@ export function AuthForm({
   initialLocale?: Locale
   marketingConsent?: boolean
   legalBaseUrl?: string
+  registrationStoreName?: string | null
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [locale, setLocale] = useState<Locale>(initialLocale)
@@ -188,6 +190,15 @@ export function AuthForm({
             <Brand />
           </div>
           <h1>{title}</h1>
+          {registrationStoreName &&
+            (mode === 'register' || mode === 'login') && (
+              <p className="registration-store-name">
+                {d.selfRegistration.storeContext.replace(
+                  '{store}',
+                  () => registrationStoreName,
+                )}
+              </p>
+            )}
           {mode === 'register' && destination === '/' && (
             <AdsConsentControl
               d={d}

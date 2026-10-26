@@ -4756,6 +4756,7 @@
     "previousCategory": "Tidigare kategoritext: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Registrera dig som säljare hos {store}",
     "joinLogin": "Vill du sälja genom butiken? Skapa ett personligt konto eller logga in om du redan har ett. Därefter kommer du tillbaka hit för att läsa butikens villkor och skicka din ansökan.",
     "reviewTerms": "Avtalet säljaren godkände",
     "title": "Säljarregistrering",

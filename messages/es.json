@@ -4762,6 +4762,7 @@
     "previousCategory": "Texto de categoría anterior: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Regístrate como vendedor en {store}",
     "joinLogin": "¿Quieres vender a través de la tienda? Crea una cuenta personal o inicia sesión si ya tienes una. Después volverás aquí para leer las condiciones de la tienda y enviar tu solicitud.",
     "reviewTerms": "El acuerdo aceptado por el vendedor",
     "title": "Registro de vendedores",

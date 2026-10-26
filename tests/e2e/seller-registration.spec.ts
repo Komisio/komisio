@@ -66,8 +66,11 @@ for (const automatic of [false, true])
         sellerPage.getByText(d.joinLogin, { exact: true }),
       ).toBeVisible()
       await expect(
-        sellerPage.getByText('P2 browser store', { exact: true }),
-      ).toHaveCount(0)
+        sellerPage.getByText(
+          d.storeContext.replace('{store}', 'P2 browser store'),
+          { exact: true },
+        ),
+      ).toBeVisible()
       await expect(
         sellerPage.getByText(/^Synthetic translated text/),
       ).toHaveCount(0)
@@ -94,6 +97,9 @@ for (const automatic of [false, true])
         .getByRole('link', { name: all.login, exact: true })
         .click()
       await expect(sellerPage).toHaveURL(/\/login\?next=/)
+      await expect(sellerPage.locator('.registration-store-name')).toHaveText(
+        d.storeContext.replace('{store}', 'P2 browser store'),
+      )
       expect(new URL(sellerPage.url()).searchParams.get('next')).toBe(
         destination,
       )
@@ -107,6 +113,9 @@ for (const automatic of [false, true])
         .getByRole('link', { name: all.register, exact: true })
         .click()
       await expect(sellerPage).toHaveURL(/\/register\?next=/)
+      await expect(sellerPage.locator('.registration-store-name')).toHaveText(
+        d.storeContext.replace('{store}', 'P2 browser store'),
+      )
       expect(new URL(sellerPage.url()).searchParams.get('next')).toBe(
         destination,
       )
@@ -345,4 +354,106 @@ test('signed-out registration shell is localized and does not disclose token val
   ).toBeVisible()
   const response = await page.goto('/join/not-a-token')
   expect(response?.status()).toBe(404)
+})
+
+test('anonymous store context is plain text, revocable and never supplied by the URL', async ({
+  page,
+  browser,
+}, testInfo) => {
+  const email = `registration-context-${randomUUID()}@example.test`
+  await register(page, email, `K!${randomUUID()}`)
+  const f = await p2Fixture(email)
+  const visitor = await browser.newContext({
+    baseURL: testInfo.project.use.baseURL,
+  })
+  const publicPage = await visitor.newPage()
+  try {
+    const name = 'Synthetic <b>$&</b> ' + 'LongStoreName'.repeat(5)
+    await f.db.query('select rename_tenant($1,$2)', [f.tenant, name])
+    const setting = randomUUID()
+    await f.db.query("select set_seller_registration($1,$2,null,'enable')", [
+      f.tenant,
+      setting,
+    ])
+    const token = (
+      await f.db.query(
+        "select seller_registration_settings($1)->>'token' token",
+        [f.tenant],
+      )
+    ).rows[0].token
+    await f.commit()
+    const routes = (value: string) => [
+      `/join/${value}`,
+      `/register?next=${encodeURIComponent('/join/' + value)}&store=Forged`,
+      `/login?next=${encodeURIComponent('/join/' + value)}&store=Forged`,
+    ]
+    await publicPage.setViewportSize({ width: 360, height: 800 })
+    for (const path of routes(token)) {
+      const response = await publicPage.goto(path)
+      expect(response?.headers()['referrer-policy']).toBe('no-referrer')
+      expect(response?.headers()['x-robots-tag']).toContain('noindex')
+      await expect(publicPage.locator('.registration-store-name')).toHaveText(
+        d.storeContext.replace('{store}', () => name),
+      )
+      await expect(
+        publicPage.locator('.registration-store-name b'),
+      ).toHaveCount(0)
+      expect(
+        await publicPage.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true)
+    }
+    await publicPage.screenshot({
+      path: testInfo.outputPath('store-context-mobile.png'),
+    })
+    const rotated = randomUUID()
+    await f.asActor(f.actor, () =>
+      f.db.query("select set_seller_registration($1,$2,$3,'rotate')", [
+        f.tenant,
+        rotated,
+        setting,
+      ]),
+    )
+    for (const path of routes(token)) {
+      await publicPage.goto(path)
+      await expect(publicPage.locator('.registration-store-name')).toHaveCount(
+        0,
+      )
+      await expect(publicPage.getByText('Forged', { exact: true })).toHaveCount(
+        0,
+      )
+    }
+    const nextToken = await f.asActor(
+      f.actor,
+      async () =>
+        (
+          await f.db.query(
+            "select seller_registration_settings($1)->>'token' token",
+            [f.tenant],
+          )
+        ).rows[0].token,
+    )
+    await publicPage.goto(`/join/${nextToken}`)
+    await expect(publicPage.locator('.registration-store-name')).toContainText(
+      name,
+    )
+    await f.asActor(f.actor, () =>
+      f.db.query("select set_seller_registration($1,$2,$3,'disable')", [
+        f.tenant,
+        randomUUID(),
+        rotated,
+      ]),
+    )
+    for (const value of [nextToken, 'f'.repeat(64)])
+      for (const path of routes(value)) {
+        await publicPage.goto(path)
+        await expect(
+          publicPage.locator('.registration-store-name'),
+        ).toHaveCount(0)
+      }
+  } finally {
+    await visitor.close()
+    await f.close()
+  }
 })

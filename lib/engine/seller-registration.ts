@@ -3,6 +3,24 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Locale } from '@/lib/i18n'
 
 export const registrationToken = z.string().regex(/^[a-f0-9]{64}$/)
+export function registrationTokenFromNext(next: unknown): string | null {
+  if (typeof next !== 'string' || !/^\/join\/[a-f0-9]{64}$/.test(next))
+    return null
+  return next.slice('/join/'.length)
+}
+
+export async function readPublicRegistrationStore(
+  client: SupabaseClient,
+  token: string,
+) {
+  if (!registrationToken.safeParse(token).success) return null
+  const result = await client.rpc('public_seller_registration_store', {
+    p_token: token,
+  })
+  if (result.error) throw new Error('REQUEST_FAILED')
+  return z.string().nullable().parse(result.data)
+}
+
 export const registrationCommand = z.discriminatedUnion('action', [
   z.strictObject({
     action: z.literal('mailSettings'),

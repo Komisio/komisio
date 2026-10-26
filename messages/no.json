@@ -5149,5 +5149,13 @@
     "seller": "Selger",
     "stores": "Mine butikker",
     "rateLimited": "For mange forsøk på kort tid. Vent litt og prøv igjen. Sjekk også om e-posten allerede har kommet."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Selgerportal",
+    "details": "Mine opplysninger",
+    "agreement": "Avtale",
+    "invoices": "Selvfakturaer",
+    "account": "Kontoinnstillinger",
+    "noAgreement": "Butikken har ikke publisert en avtale ennå."
   }
 }

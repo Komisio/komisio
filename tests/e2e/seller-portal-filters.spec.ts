@@ -281,9 +281,8 @@ test('disabled handovers are hidden without history and read-only with history',
     await expect(
       handovers.getByText(d.sellerPortal.none, { exact: true }),
     ).toHaveCount(0)
-    await expect(page.locator('a[href="#portal-handovers"]')).toHaveText(
-      d.sellerPortal.handoverHistory,
-    )
+    await page.goto(url + '#portal-handovers')
+    await expect(handovers.getByText(reference, { exact: true })).toBeVisible()
   } finally {
     await f.close()
   }

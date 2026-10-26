@@ -115,10 +115,8 @@ test('store configures fee VAT, seller months cover multiple deliveries, and pay
       .click()
     await expect(history).toContainText(d.consignmentFees.status.paid)
     await page.goto(`/seller?seller=${seller}`)
-    await expect(history).toContainText('125.01 SEK')
-    await expect(history).toContainText(d.consignmentFees.status.paid)
-    await expect(history).not.toContainText('SYNTHETIC-POS-123')
-    await expect(history.getByRole('button')).toHaveCount(0)
+    await expect(history).toHaveCount(0)
+    await expect(page.getByText('SYNTHETIC-POS-123')).toHaveCount(0)
     await page.screenshot({
       path: 'private/monthly-fees-seller.png',
       fullPage: true,

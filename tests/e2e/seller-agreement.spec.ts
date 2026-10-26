@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
+import { localTestUrl } from '../helpers/local-services'
 import { register } from '../helpers/account'
 
 test('seller accepts the displayed agreement with safe retries and sees new versions', async ({
@@ -10,7 +11,10 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
   await register(page, email, `K!${randomBytes(16).toString('hex')}`, '/seller')
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await db.connect()
   const owner = randomUUID(),
@@ -44,7 +48,7 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
       "select publish_seller_agreement($1,$2,null,'TEST seller agreement','Fictional terms for browser testing only.','en',false)",
       [tenant, version],
     )
-    await page.goto(`/seller?seller=${seller}`)
+    await page.goto(`/seller?seller=${seller}#seller-workspace-agreement`)
     await page.getByRole('link', { name: 'Läs och acceptera avtalet' }).click()
     await expect(
       page.getByRole('heading', { name: 'TEST seller agreement' }),

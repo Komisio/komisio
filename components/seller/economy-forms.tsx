@@ -23,6 +23,7 @@ export function SellerEconomyForms({
   enabled,
   d,
   recovery,
+  view = 'all',
 }: {
   tenantId: string
   sellerId: string
@@ -32,6 +33,7 @@ export function SellerEconomyForms({
   enabled: boolean
   d: Dictionary['sellerPortal']
   recovery: Pick<Dictionary['intake'], 'retry' | 'reload' | 'busy' | 'denied'>
+  view?: 'all' | 'payout' | 'notifications'
 }) {
   const router = useRouter()
   const [busy, setBusy] = useBusyState(false)
@@ -164,136 +166,148 @@ export function SellerEconomyForms({
   }
   return (
     <div className="intake-grid">
-      <section
-        id="portal-payout-request"
-        tabIndex={-1}
-        className="card intake-form"
-        aria-label={d.request}
-      >
-        <h2>{d.request}</h2>
-        {canRequest || locked.requestPayout ? (
-          <form
-            ref={payoutForm}
-            onChange={() => {
-              if (!locked.requestPayout && feedback?.action === 'requestPayout')
-                setFeedback(null)
-            }}
-            onSubmit={(e) => {
-              e.preventDefault()
-              const pending = retries.current.requestPayout
-              if (pending) {
-                void submit(pending.payload)
-                return
-              }
-              const value = String(
-                new FormData(e.currentTarget).get('amount'),
-              ).trim()
-              if (!/^\d{1,9}(?:[.,]\d{1,2})?$/.test(value)) {
-                payoutError('INVALID_INPUT')
-                return
-              }
-              const [whole, fraction = ''] = value.replace(',', '.').split('.')
-              const amountOre =
-                Number(whole) * 100 + Number(fraction.padEnd(2, '0'))
-              if (amountOre <= 0) return payoutError('INVALID_INPUT')
-              if (amountOre < thresholdOre)
-                return payoutError('PAYOUT_BELOW_THRESHOLD')
-              if (amountOre > availableOre)
-                return payoutError('PAYOUT_EXCEEDS_BALANCE')
-              void submit({ action: 'requestPayout', amountOre })
-            }}
-          >
-            <p>{d.notice}</p>
-            <p id="payout-limits">
-              {d.threshold}: {amount(thresholdOre)} · {d.available}:{' '}
-              {amount(availableOre)}
-            </p>
-            <label htmlFor="payout-amount">
-              {d.amount.replace('{currency}', currency)}
-            </label>
-            <input
-              id="payout-amount"
-              name="amount"
-              inputMode="decimal"
-              required
-              disabled={busy || locked.requestPayout}
-              aria-invalid={
-                feedback?.action === 'requestPayout' &&
-                feedback.kind === 'error'
-              }
-              aria-describedby={`payout-limits${feedback?.action === 'requestPayout' ? ' payout-feedback' : ''}`}
-            />
-            <Button type="submit" disabled={busy || needsReload.requestPayout}>
-              {busy
-                ? recovery.busy
-                : locked.requestPayout
-                  ? recovery.retry
-                  : d.request}
-            </Button>
-            {needsReload.requestPayout && (
+      {view !== 'notifications' && (
+        <section
+          id="portal-payout-request"
+          tabIndex={-1}
+          className="card intake-form"
+          aria-label={d.request}
+        >
+          <h2>{d.request}</h2>
+          {canRequest || locked.requestPayout ? (
+            <form
+              ref={payoutForm}
+              onChange={() => {
+                if (
+                  !locked.requestPayout &&
+                  feedback?.action === 'requestPayout'
+                )
+                  setFeedback(null)
+              }}
+              onSubmit={(e) => {
+                e.preventDefault()
+                const pending = retries.current.requestPayout
+                if (pending) {
+                  void submit(pending.payload)
+                  return
+                }
+                const value = String(
+                  new FormData(e.currentTarget).get('amount'),
+                ).trim()
+                if (!/^\d{1,9}(?:[.,]\d{1,2})?$/.test(value)) {
+                  payoutError('INVALID_INPUT')
+                  return
+                }
+                const [whole, fraction = ''] = value
+                  .replace(',', '.')
+                  .split('.')
+                const amountOre =
+                  Number(whole) * 100 + Number(fraction.padEnd(2, '0'))
+                if (amountOre <= 0) return payoutError('INVALID_INPUT')
+                if (amountOre < thresholdOre)
+                  return payoutError('PAYOUT_BELOW_THRESHOLD')
+                if (amountOre > availableOre)
+                  return payoutError('PAYOUT_EXCEEDS_BALANCE')
+                void submit({ action: 'requestPayout', amountOre })
+              }}
+            >
+              <p>{d.notice}</p>
+              <p id="payout-limits">
+                {d.threshold}: {amount(thresholdOre)} · {d.available}:{' '}
+                {amount(availableOre)}
+              </p>
+              <label htmlFor="payout-amount">
+                {d.amount.replace('{currency}', currency)}
+              </label>
+              <input
+                id="payout-amount"
+                name="amount"
+                inputMode="decimal"
+                required
+                disabled={busy || locked.requestPayout}
+                aria-invalid={
+                  feedback?.action === 'requestPayout' &&
+                  feedback.kind === 'error'
+                }
+                aria-describedby={`payout-limits${feedback?.action === 'requestPayout' ? ' payout-feedback' : ''}`}
+              />
               <Button
-                type="button"
-                variant="secondary"
-                onClick={() => window.location.reload()}
+                type="submit"
+                disabled={busy || needsReload.requestPayout}
               >
-                {recovery.reload}
+                {busy
+                  ? recovery.busy
+                  : locked.requestPayout
+                    ? recovery.retry
+                    : d.request}
               </Button>
-            )}
-          </form>
-        ) : (
-          <p>
-            {availableOre <= 0
-              ? d.noPayoutBalance
-              : d.payoutBelowThreshold.replace(
-                  '{minimum}',
-                  amount(thresholdOre),
-                )}
-          </p>
-        )}
-        {responseFor('requestPayout')}
-      </section>
-      <form
-        className="card intake-form"
-        onChange={() => {
-          if (!locked.notifications && feedback?.action === 'notifications')
-            setFeedback(null)
-        }}
-        onSubmit={(e) => {
-          e.preventDefault()
-          void submit({
-            action: 'notifications',
-            enabled: new FormData(e.currentTarget).get('emails') === 'on',
-          })
-        }}
-      >
-        <label className="row">
-          <input
-            type="checkbox"
-            name="emails"
-            key={String(enabled)}
-            defaultChecked={pendingPreference ?? enabled}
-            disabled={busy || locked.notifications}
-          />
-          {d.emails}
-        </label>
-        <Button type="submit" disabled={busy || needsReload.notifications}>
-          {busy
-            ? recovery.busy
-            : locked.notifications
-              ? recovery.retry
-              : d.save}
-        </Button>
-        {needsReload.notifications && (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => window.location.reload()}
-          >
-            {recovery.reload}
+              {needsReload.requestPayout && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => window.location.reload()}
+                >
+                  {recovery.reload}
+                </Button>
+              )}
+            </form>
+          ) : (
+            <p>
+              {availableOre <= 0
+                ? d.noPayoutBalance
+                : d.payoutBelowThreshold.replace(
+                    '{minimum}',
+                    amount(thresholdOre),
+                  )}
+            </p>
+          )}
+          {responseFor('requestPayout')}
+        </section>
+      )}
+      {view !== 'payout' && (
+        <form
+          className="card intake-form"
+          onChange={() => {
+            if (!locked.notifications && feedback?.action === 'notifications')
+              setFeedback(null)
+          }}
+          onSubmit={(e) => {
+            e.preventDefault()
+            void submit({
+              action: 'notifications',
+              enabled: new FormData(e.currentTarget).get('emails') === 'on',
+            })
+          }}
+        >
+          <label className="row">
+            <input
+              type="checkbox"
+              name="emails"
+              key={String(enabled)}
+              defaultChecked={pendingPreference ?? enabled}
+              disabled={busy || locked.notifications}
+            />
+            {d.emails}
+          </label>
+          <Button type="submit" disabled={busy || needsReload.notifications}>
+            {busy
+              ? recovery.busy
+              : locked.notifications
+                ? recovery.retry
+                : d.save}
           </Button>
-        )}
-        {responseFor('notifications')}
-      </form>
+          {needsReload.notifications && (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => window.location.reload()}
+            >
+              {recovery.reload}
+            </Button>
+          )}
+          {responseFor('notifications')}
+        </form>
+      )}
     </div>
   )
 }

@@ -5155,5 +5155,13 @@
     "seller": "Verkäufer",
     "stores": "Meine Geschäfte",
     "rateLimited": "Zu viele Versuche in kurzer Zeit. Warten Sie kurz und versuchen Sie es erneut. Prüfen Sie auch, ob die E-Mail bereits angekommen ist."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Verkäuferportal",
+    "details": "Meine Daten",
+    "agreement": "Vereinbarung",
+    "invoices": "Gutschriften zur Selbstfakturierung",
+    "account": "Kontoeinstellungen",
+    "noAgreement": "Das Geschäft hat noch keine Vereinbarung veröffentlicht."
   }
 }

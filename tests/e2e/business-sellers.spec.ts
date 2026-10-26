@@ -299,6 +299,22 @@ test('staff registers a business, safely retries, filters its directory and sees
       path: testInfo.outputPath('self-billing-ipad.png'),
       fullPage: true,
     })
+    await page.goto('/seller?seller=' + seller + '#seller-workspace-payouts')
+    await expect(
+      page.getByRole('heading', {
+        name: d.sellerPortalWorkspace.invoices,
+        exact: true,
+      }),
+    ).toBeVisible()
+    await page
+      .getByRole('link', {
+        name: d.statements.selfBilling + ' #1',
+        exact: true,
+      })
+      .click()
+    await expect(page.locator('.self-billing-details')).toContainText(
+      'Synthetic Company AB',
+    )
     const sellerPdf = await page.request.get(
       `/api/seller/statement/pdf?tenant=${f.tenant}&seller=${seller}&statement=${statementId}`,
     )

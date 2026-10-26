@@ -5149,5 +5149,13 @@
     "seller": "Säljare",
     "stores": "Mina butiker",
     "rateLimited": "För många försök på kort tid. Vänta en stund och försök igen. Kontrollera även om mailet redan har kommit."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Säljarportal",
+    "details": "Mina uppgifter",
+    "agreement": "Avtal",
+    "invoices": "Självfakturor",
+    "account": "Kontoinställningar",
+    "noAgreement": "Butiken har inte publicerat något avtal ännu."
   }
 }

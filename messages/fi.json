@@ -5155,5 +5155,13 @@
     "seller": "Myyjä",
     "stores": "Omat liikkeet",
     "rateLimited": "Liian monta yritystä lyhyessä ajassa. Odota hetki ja yritä uudelleen. Tarkista myös, onko sähköposti jo saapunut."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Myyjäportaali",
+    "details": "Omat tiedot",
+    "agreement": "Sopimus",
+    "invoices": "Itselaskutuslaskut",
+    "account": "Tilin asetukset",
+    "noAgreement": "Liike ei ole vielä julkaissut sopimusta."
   }
 }

@@ -4,6 +4,7 @@ import { createRequire } from 'node:module'
 import { readFileSync } from 'node:fs'
 import type { Dictionary } from '../../lib/i18n'
 import { register } from '../helpers/account'
+import { localTestUrl } from '../helpers/local-services'
 import { p2Fixture } from '../helpers/p2-fixture'
 import sv from '../../messages/sv.json' with { type: 'json' }
 
@@ -31,11 +32,8 @@ test('payout and preference retries keep separate payloads after unconfirmed rep
       'Synthetic recovery fixture',
     ])
     await f.commit()
-    await page.goto(`/seller?seller=${seller}`)
-    const request = page.getByRole('region', {
-      name: sv.sellerPortal.request,
-      exact: true,
-    })
+    await page.goto(`/seller?seller=${seller}#seller-workspace-payouts`)
+    const request = page.locator('#portal-payout-request')
     const input = request.getByLabel(
       sv.sellerPortal.amount.replace('{currency}', 'SEK'),
       { exact: true },
@@ -60,6 +58,9 @@ test('payout and preference retries keep separate payloads after unconfirmed rep
         )
       } else await route.fulfill({ response })
     })
+    await page
+      .getByRole('tab', { name: sv.sellerPortalWorkspace.details, exact: true })
+      .click()
     await checkbox.uncheck()
     await preferences
       .getByRole('button', { name: sv.sellerPortal.save, exact: true })
@@ -69,6 +70,9 @@ test('payout and preference retries keep separate payloads after unconfirmed rep
     )
     await expect(checkbox).toBeDisabled()
     await expect(checkbox).not.toBeChecked()
+    await page
+      .getByRole('tab', { name: sv.sellerPortal.payouts, exact: true })
+      .click()
     await input.fill('100,00')
     await request
       .getByRole('button', { name: sv.sellerPortal.request, exact: true })
@@ -76,6 +80,9 @@ test('payout and preference retries keep separate payloads after unconfirmed rep
     await expect(request.getByRole('alert')).toHaveText(sv.sellerPortal.error)
     await expect(input).toBeDisabled()
     await expect(input).toHaveValue('100,00')
+    await page
+      .getByRole('tab', { name: sv.sellerPortalWorkspace.details, exact: true })
+      .click()
     await preferences
       .getByRole('button', { name: sv.intake.retry, exact: true })
       .click()
@@ -86,6 +93,9 @@ test('payout and preference retries keep separate payloads after unconfirmed rep
     await expect(checkbox).not.toBeChecked()
     await expect(input).toBeDisabled()
     await expect(input).toHaveValue('100,00')
+    await page
+      .getByRole('tab', { name: sv.sellerPortal.payouts, exact: true })
+      .click()
     await request
       .getByRole('button', { name: sv.intake.retry, exact: true })
       .click()
@@ -143,7 +153,10 @@ test('seller payout guidance explains unavailable balances, validates amounts an
   await register(page, email, `K!${randomBytes(16).toString('hex')}`, '/seller')
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await db.connect()
   const owner = randomUUID()
@@ -186,7 +199,7 @@ test('seller payout guidance explains unavailable balances, validates amounts an
       ).rows[0].id as string
       return { tenant, seller }
     })
-    const url = `/seller?seller=${seller}`
+    const url = `/seller?seller=${seller}#seller-workspace-payouts`
     await page.setViewportSize({ width: 320, height: 720 })
     for (const locale of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
       await test.step(locale, async () => {
@@ -204,6 +217,7 @@ test('seller payout guidance explains unavailable balances, validates amounts an
           },
         ])
         await page.goto(url)
+        await page.reload()
         const request = page.getByRole('region', {
           name: d.sellerPortal.request,
           exact: true,
@@ -235,10 +249,8 @@ test('seller payout guidance explains unavailable balances, validates amounts an
       )
     await adjust(5000)
     await page.goto(url)
-    const request = page.getByRole('region', {
-      name: sv.sellerPortal.request,
-      exact: true,
-    })
+    await page.reload()
+    const request = page.locator('#portal-payout-request')
     await expect(request).toContainText(
       sv.sellerPortal.payoutBelowThreshold.replace('{minimum}', '100.00 SEK'),
     )
@@ -322,6 +334,9 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     await expect(input).toHaveValue('100,00')
     await expect(input).toBeDisabled()
     // Saving a different action must not forget the uncertain payout request.
+    await page
+      .getByRole('tab', { name: sv.sellerPortalWorkspace.details, exact: true })
+      .click()
     const emails = page.getByRole('checkbox', { name: sv.sellerPortal.emails })
     const nextPreference = !(await emails.isChecked())
     await emails.setChecked(nextPreference)
@@ -363,7 +378,7 @@ test('seller payout guidance explains unavailable balances, validates amounts an
       },
     ])
     await expect(input).toHaveValue('')
-    const payoutList = page.locator('section').filter({
+    const payoutList = page.locator('section.card').filter({
       has: page.getByRole('heading', {
         name: sv.sellerPortal.payouts,
         exact: true,

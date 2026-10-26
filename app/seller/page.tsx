@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { SelfBillingDetails } from '@/components/intake/self-billing-details'
 import { statementTitle } from '@/lib/engine/self-billing'
 import { SellerBusinessSummary } from '@/components/intake/seller-business-summary'
@@ -9,11 +10,8 @@ import { StoreMailConsent } from '@/components/seller/store-mail-consent'
 import { readMailConsent } from '@/lib/engine/store-mail'
 import { economyFormat } from '@/lib/intake/economy-format'
 import { WorkingForm } from '@/components/platform/working-form'
-import { LedgerItemSummary } from '@/components/intake/ledger-item-summary'
 import { readSellerBank } from '@/lib/engine/seller-bank'
 import { SellerBankEditor } from '@/components/seller/bank-details'
-import { readConsignmentFees } from '@/lib/engine/consignment-fees'
-import { ConsignmentFeeHistory } from '@/components/intake/consignment-fee-history'
 import Link from '@/components/platform/working-link'
 import { readSubmissionSettings } from '@/lib/engine/seller-submissions'
 import './seller-portal.css'
@@ -44,6 +42,7 @@ export const generateMetadata = () =>
   platformPageMetadata((d) => d.sellerPortal.title, {
     robots: { index: false, follow: false },
     referrer: 'no-referrer',
+    formatDetection: { email: false, telephone: false, address: false },
   })
 export default async function SellerPortal({
   searchParams,
@@ -54,7 +53,6 @@ export default async function SellerPortal({
     q?: string
     status?: string
     page?: string
-    feePage?: string
     stores?: string
   }>
 }) {
@@ -152,7 +150,7 @@ export default async function SellerPortal({
         <SellerHeader locale={ctx.locale} />
         <SignOut d={all} next="/seller" />
         <section className="card">
-          <Link className="text-link" href={base + '#portal-statements'}>
+          <Link className="text-link" href={base + '#seller-workspace-payouts'}>
             {account.storeName}
           </Link>
           <h1>
@@ -219,20 +217,6 @@ export default async function SellerPortal({
       </main>
     )
   }
-  const feePage =
-    params.feePage === undefined
-      ? 0
-      : /^\d{1,7}$/.test(params.feePage)
-        ? Number(params.feePage)
-        : -1
-  if (feePage < 0 || feePage > 1000000) notFound()
-  const fees = await readConsignmentFees(
-    ctx.client,
-    account.tenantId,
-    account.sellerId,
-    feePage * 25,
-    true,
-  )
   const query =
     typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
   const parsedStatus = sellerItemFilter.safeParse(params.status ?? 'active')
@@ -288,8 +272,7 @@ export default async function SellerPortal({
       )}
     </nav>
   )
-  // Ledger and message history fold behind their headings; both stay a count
-  // away and a message that is still queued or has failed keeps its list open.
+  // Pending and failed messages remain expanded in the details tab.
   const messagesOpen = economy.messages.some((m) =>
     ['queued', 'failed'].includes(m.status),
   )
@@ -302,280 +285,335 @@ export default async function SellerPortal({
       <SignOut d={all} next="/seller" />
       <div className="page-heading">
         <Link href="/seller?stores=1">{all.sellerAccess.stores}</Link>
-        <h1>
-          {account.storeName} · {d.title}
-        </h1>
-        <p>{ctx.user.email}</p>
+        <h1>{account.storeName}</h1>
       </div>
-      <section className="card">
-        <h2>
-          {d.available}: {amount(economy.balance.availableOre)}
-        </h2>
-        <p>
-          {d.reserved}: {amount(economy.balance.reservedOre)}
-        </p>
-      </section>
-      {identity.data?.sellerType === 'business' && (
-        <SellerBusinessSummary
-          d={all.sellerDetails.business}
-          business={business}
-        />
-      )}
-      <nav className="seller-portal-shortcuts" aria-label={d.title}>
-        {process.env.KOMISIO_SELLER_SUBMISSIONS_ENABLED === 'true' &&
-          submissionSettings.enabled && (
-            <Link
-              className="btn btn-secondary"
-              href={`/seller/submissions?seller=${account.sellerId}`}
-            >
-              {all.submissions.title}
-            </Link>
-          )}
-        {mine && (
-          <a className="btn btn-secondary" href="#portal-items">
-            {d.items}
-          </a>
-        )}
-        {(handovers.enabled || handovers.handovers.length > 0) && (
-          <a className="btn btn-secondary" href="#portal-handovers">
-            {handovers.enabled ? d.handovers : d.handoverHistory}
-          </a>
-        )}
-        <a className="btn btn-secondary" href="#portal-payout-request">
-          {d.request}
-        </a>
-        <a className="btn btn-secondary" href="#portal-statements">
-          {d.statements}
-        </a>
-      </nav>
-      {agreement.agreement && (
-        <section className="card" aria-label={all.sellerAgreement.title}>
-          <Link
-            className="text-link"
-            href={`/seller/agreement?seller=${account.sellerId}`}
-          >
-            {agreement.acceptance
-              ? all.sellerAgreement.view
-              : all.sellerAgreement.review}
-          </Link>
-          {agreement.acceptance && (
-            <p>
-              {agreement.acceptance.source === 'seller_portal'
-                ? all.sellerAgreement.accepted
-                : all.sellerAgreement.recorded}
-            </p>
-          )}
-        </section>
-      )}
-      <SellerEconomyForms
-        key={`economy:${account.tenantId}:${account.sellerId}`}
-        tenantId={account.tenantId}
-        sellerId={account.sellerId}
-        currency={currency}
-        availableOre={economy.balance.availableOre}
-        thresholdOre={economy.thresholdOre}
-        enabled={economy.automaticEmails}
-        d={d}
-        recovery={all.intake}
-      />
-      <StoreMailConsent
-        locale={ctx.locale}
-        key={`store-mail:${account.sellerId}:${mailConsent.id}`}
-        tenantId={account.tenantId}
-        sellerId={account.sellerId}
-        current={mailConsent}
-        d={all.storeMail}
-      />
-      <SellerBankEditor
-        key={`bank:${account.sellerId}:${bank?.id}`}
-        tenantId={account.tenantId}
-        sellerId={account.sellerId}
-        current={bank}
-        locale={ctx.locale}
-        d={all}
-      />
-      <SellerHandovers
-        key={`handovers:${account.tenantId}:${account.sellerId}`}
-        tenantId={account.tenantId}
-        sellerId={account.sellerId}
-        handovers={handovers}
-        locale={ctx.locale}
-        d={d}
-        recovery={all.intake}
-      />
-      {mine && (
-        <section
-          id="portal-items"
-          className="card"
-          aria-label={d.items}
-          tabIndex={-1}
-        >
-          <h2>{d.items}</h2>
-          {paged ? (
-            <>
-              <nav className="seller-item-tabs" aria-label={d.itemsStatus}>
-                {(['active', 'sold', 'ended'] as const).map((value) => (
-                  <Link
-                    key={value}
-                    href={pageHref(1, value)}
-                    aria-current={status === value ? 'page' : undefined}
-                  >
-                    {d.itemStatusTabs[value]}
-                    {paged.counts
-                      ? ` (${numbers.number(paged.counts[value])})`
-                      : ''}
-                  </Link>
-                ))}
-              </nav>
-              <WorkingForm
-                key={`${query}:${status}`}
-                action="/seller#portal-items"
-                role="search"
-                className="seller-items-search"
-              >
-                <input type="hidden" name="seller" value={account.sellerId} />
-                <input type="hidden" name="status" value={status} />
-                <div className="field">
-                  <label htmlFor="seller-items-q">{all.items.search}</label>
-                  <input
-                    id="seller-items-q"
-                    name="q"
-                    defaultValue={query}
-                    maxLength={120}
-                    placeholder={d.itemsSearchHint}
-                  />
-                </div>
-                <button className="btn btn-primary">
-                  {all.items.searchButton}
-                </button>
-                {(query || status !== 'active') && (
-                  <Link
-                    className="btn btn-secondary"
-                    href={base + '#portal-items'}
-                  >
-                    {all.items.clearFilters}
-                  </Link>
-                )}
-              </WorkingForm>
-              <p>
-                <small>
-                  {paged.total > 0
-                    ? all.items.showingRange
-                        .replace('{from}', numbers.number(paged.offset + 1))
-                        .replace(
-                          '{to}',
-                          numbers.number(paged.offset + paged.items.length),
-                        )
-                        .replace('{total}', numbers.number(paged.total))
-                    : all.items.showing
-                        .replace('{shown}', '0')
-                        .replace('{total}', '0')}
-                </small>
-              </p>
-            </>
-          ) : (
-            <p role="status">{d.itemsLimited}</p>
-          )}
-          {mine.items.length === 0 && (
-            <p>
-              {query && paged
-                ? all.items.noMatches
-                : paged
-                  ? d.itemFilterEmpty[status]
-                  : d.noItems}
-            </p>
-          )}
-          {itemPagination}
-          {mine.items.length > 0 && (
-            <SellerItems mine={mine} locale={ctx.locale} d={d} />
-          )}
-          {itemPagination}
-        </section>
-      )}
-      <p>{d.recent}</p>
-      <section className="card">
-        <h2>{d.payouts}</h2>
-        {economy.payouts.length === 0 && <p>{d.none}</p>}
-        {economy.payouts.map((p) => (
-          <p key={p.id}>
-            <EventTime value={p.requested_at} locale={ctx.locale} /> ·{' '}
-            {amount(p.amount_ore)} · {label(all.payouts.statuses, p.status)} ·{' '}
-            {d.source}: {d[p.request_source]}
-          </p>
-        ))}
-      </section>
-      <details className="card seller-portal-fold" data-testid="portal-ledger">
-        <summary>
-          <h2>
-            {d.ledger} · {economy.ledger.length}
-          </h2>
-        </summary>
-        {economy.ledger.length === 0 && <p>{d.none}</p>}
-        {economy.ledger.map((l) => (
-          <p key={l.id}>
-            <EventTime value={l.occurred_at} locale={ctx.locale} /> ·{' '}
-            {label(all.ledger.kinds, l.kind)} · {amount(l.amount_ore)}
-            {l.kind === 'credit_sale' && l.itemDetails && (
-              <LedgerItemSummary
-                details={l.itemDetails}
-                currency={currency}
-                d={all}
-              />
-            )}
-            {l.itemDetails && (
+      <WorkspaceTabs
+        id="seller-workspace"
+        label={all.sellerPortalWorkspace.navigation}
+        scrollAnchors
+        tabs={[
+          {
+            id: 'items',
+            label: d.items,
+            anchors: ['portal-items', 'portal-handovers'],
+            content: (
               <>
-                {' '}
-                · {l.itemDetails.title || l.itemDetails.reference} ·{' '}
-                {l.itemDetails.reference}
+                {mine && (
+                  <section
+                    id="portal-items"
+                    className="card"
+                    aria-label={d.items}
+                    tabIndex={-1}
+                  >
+                    <h2>{d.items}</h2>
+                    {paged ? (
+                      <>
+                        <nav
+                          className="seller-item-tabs"
+                          aria-label={d.itemsStatus}
+                        >
+                          {(['active', 'sold', 'ended'] as const).map(
+                            (value) => (
+                              <Link
+                                key={value}
+                                href={pageHref(1, value)}
+                                aria-current={
+                                  status === value ? 'page' : undefined
+                                }
+                              >
+                                {d.itemStatusTabs[value]}
+                                {paged.counts
+                                  ? ` (${numbers.number(paged.counts[value])})`
+                                  : ''}
+                              </Link>
+                            ),
+                          )}
+                        </nav>
+                        <WorkingForm
+                          key={`${query}:${status}`}
+                          action="/seller#portal-items"
+                          role="search"
+                          className="seller-items-search"
+                        >
+                          <input
+                            type="hidden"
+                            name="seller"
+                            value={account.sellerId}
+                          />
+                          <input type="hidden" name="status" value={status} />
+                          <div className="field">
+                            <label htmlFor="seller-items-q">
+                              {all.items.search}
+                            </label>
+                            <input
+                              id="seller-items-q"
+                              name="q"
+                              defaultValue={query}
+                              maxLength={120}
+                              placeholder={d.itemsSearchHint}
+                            />
+                          </div>
+                          <button className="btn btn-primary">
+                            {all.items.searchButton}
+                          </button>
+                          {(query || status !== 'active') && (
+                            <Link
+                              className="btn btn-secondary"
+                              href={base + '#portal-items'}
+                            >
+                              {all.items.clearFilters}
+                            </Link>
+                          )}
+                        </WorkingForm>
+                        <p>
+                          <small>
+                            {paged.total > 0
+                              ? all.items.showingRange
+                                  .replace(
+                                    '{from}',
+                                    numbers.number(paged.offset + 1),
+                                  )
+                                  .replace(
+                                    '{to}',
+                                    numbers.number(
+                                      paged.offset + paged.items.length,
+                                    ),
+                                  )
+                                  .replace(
+                                    '{total}',
+                                    numbers.number(paged.total),
+                                  )
+                              : all.items.showing
+                                  .replace('{shown}', '0')
+                                  .replace('{total}', '0')}
+                          </small>
+                        </p>
+                      </>
+                    ) : (
+                      <p role="status">{d.itemsLimited}</p>
+                    )}
+                    {mine.items.length === 0 && (
+                      <p>
+                        {query && paged
+                          ? all.items.noMatches
+                          : paged
+                            ? d.itemFilterEmpty[status]
+                            : d.noItems}
+                      </p>
+                    )}
+                    {itemPagination}
+                    {mine.items.length > 0 && (
+                      <SellerItems mine={mine} locale={ctx.locale} d={d} />
+                    )}
+                    {itemPagination}
+                  </section>
+                )}
+
+                {process.env.KOMISIO_SELLER_SUBMISSIONS_ENABLED === 'true' &&
+                  submissionSettings.enabled && (
+                    <Link
+                      className="btn btn-secondary"
+                      href={`/seller/submissions?seller=${account.sellerId}`}
+                    >
+                      {all.submissions.title}
+                    </Link>
+                  )}
+
+                <SellerHandovers
+                  key={`handovers:${account.tenantId}:${account.sellerId}`}
+                  tenantId={account.tenantId}
+                  sellerId={account.sellerId}
+                  handovers={handovers}
+                  locale={ctx.locale}
+                  d={d}
+                  recovery={all.intake}
+                />
               </>
-            )}
-          </p>
-        ))}
-      </details>
-      <ConsignmentFeeHistory
-        fees={fees}
-        tenantId={account.tenantId}
-        sellerId={account.sellerId}
-        d={all}
-        locale={ctx.locale}
-        page={feePage}
-        base={base}
+            ),
+          },
+          {
+            id: 'payouts',
+            label: d.payouts,
+            anchors: ['portal-payout-request', 'portal-statements'],
+            content: (
+              <>
+                <section className="card">
+                  <h2>
+                    {d.available}: {amount(economy.balance.availableOre)}
+                  </h2>
+                  <p>
+                    {d.reserved}: {amount(economy.balance.reservedOre)}
+                  </p>
+                </section>
+
+                <SellerEconomyForms
+                  view="payout"
+                  key={`economy:${account.tenantId}:${account.sellerId}`}
+                  tenantId={account.tenantId}
+                  sellerId={account.sellerId}
+                  currency={currency}
+                  availableOre={economy.balance.availableOre}
+                  thresholdOre={economy.thresholdOre}
+                  enabled={economy.automaticEmails}
+                  d={d}
+                  recovery={all.intake}
+                />
+
+                <SellerBankEditor
+                  key={`bank:${account.sellerId}:${bank?.id}`}
+                  tenantId={account.tenantId}
+                  sellerId={account.sellerId}
+                  current={bank}
+                  locale={ctx.locale}
+                  d={all}
+                />
+
+                <section className="card">
+                  <h2>{d.payouts}</h2>
+                  <p className="muted">{d.recent}</p>
+                  {economy.payouts.length === 0 && <p>{d.none}</p>}
+                  {economy.payouts.map((p) => (
+                    <p key={p.id}>
+                      <EventTime value={p.requested_at} locale={ctx.locale} /> ·{' '}
+                      {amount(p.amount_ore)} ·{' '}
+                      {label(all.payouts.statuses, p.status)} · {d.source}:{' '}
+                      {d[p.request_source]}
+                    </p>
+                  ))}
+                </section>
+
+                {economy.statements.some((s) => s.is_self_billing) && (
+                  <section
+                    id="portal-statements"
+                    className="card"
+                    tabIndex={-1}
+                  >
+                    <h2>{all.sellerPortalWorkspace.invoices}</h2>
+
+                    {economy.statements
+                      .filter((s) => s.is_self_billing)
+                      .map((s) => (
+                        <p key={s.id}>
+                          <Link href={`${base}&statement=${s.id}`}>
+                            {statementTitle(s, all.statements)} #{s.number}
+                          </Link>{' '}
+                          · {amount(s.closing_ore)}
+                        </p>
+                      ))}
+                  </section>
+                )}
+              </>
+            ),
+          },
+          {
+            id: 'details',
+            label: all.sellerPortalWorkspace.details,
+            anchors: ['portal-messages'],
+            content: (
+              <>
+                <section className="card">
+                  <h2>{all.sellerPortalWorkspace.details}</h2>
+                  <p>
+                    {all.email}: <span>{ctx.user.email}</span>
+                  </p>
+                  <Link href="/account">
+                    {all.sellerPortalWorkspace.account}
+                  </Link>
+                </section>
+                {identity.data?.sellerType === 'business' && (
+                  <SellerBusinessSummary
+                    d={all.sellerDetails.business}
+                    business={business}
+                  />
+                )}
+
+                <SellerEconomyForms
+                  view="notifications"
+                  key={`preferences:${account.tenantId}:${account.sellerId}`}
+                  tenantId={account.tenantId}
+                  sellerId={account.sellerId}
+                  currency={currency}
+                  availableOre={economy.balance.availableOre}
+                  thresholdOre={economy.thresholdOre}
+                  enabled={economy.automaticEmails}
+                  d={d}
+                  recovery={all.intake}
+                />
+
+                <StoreMailConsent
+                  locale={ctx.locale}
+                  key={`store-mail:${account.sellerId}:${mailConsent.id}`}
+                  tenantId={account.tenantId}
+                  sellerId={account.sellerId}
+                  current={mailConsent}
+                  d={all.storeMail}
+                />
+
+                <details
+                  className="card seller-portal-fold"
+                  id="portal-messages"
+                  data-testid="portal-messages"
+                  open={messagesOpen}
+                >
+                  <summary>
+                    <h2>
+                      {d.messages} · {economy.messages.length}
+                    </h2>
+                  </summary>
+                  <p className="muted">{d.recent}</p>
+                  {economy.messages.length === 0 && <p>{d.none}</p>}
+                  {economy.messages.map((m) => (
+                    <article key={m.id}>
+                      <h3>{m.subject}</h3>
+                      <p>
+                        <EventTime value={m.queued_at} locale={ctx.locale} /> ·{' '}
+                        {label(all.communications.outcomes, m.status)}
+                      </p>
+                      <p className="whitespace-pre-wrap">{m.body}</p>
+                    </article>
+                  ))}
+                </details>
+              </>
+            ),
+          },
+          {
+            id: 'agreement',
+            label: all.sellerPortalWorkspace.agreement,
+            content: (
+              <>
+                {agreement.agreement && (
+                  <section
+                    className="card"
+                    aria-label={all.sellerAgreement.title}
+                  >
+                    <Link
+                      className="text-link"
+                      href={`/seller/agreement?seller=${account.sellerId}`}
+                    >
+                      {agreement.acceptance
+                        ? all.sellerAgreement.view
+                        : all.sellerAgreement.review}
+                    </Link>
+                    {agreement.acceptance && (
+                      <p>
+                        {agreement.acceptance.source === 'seller_portal'
+                          ? all.sellerAgreement.accepted
+                          : all.sellerAgreement.recorded}
+                      </p>
+                    )}
+                  </section>
+                )}
+
+                {!agreement.agreement && (
+                  <section className="card">
+                    <p>{all.sellerPortalWorkspace.noAgreement}</p>
+                  </section>
+                )}
+              </>
+            ),
+          },
+        ]}
       />
-      <section id="portal-statements" className="card" tabIndex={-1}>
-        <h2>{d.statements}</h2>
-        {economy.statements.length === 0 && <p>{d.none}</p>}
-        {economy.statements.map((s) => (
-          <p key={s.id}>
-            <Link href={`${base}&statement=${s.id}`}>
-              {s.is_self_billing ? statementTitle(s, all.statements) : d.open} #
-              {s.number}
-            </Link>{' '}
-            · {amount(s.closing_ore)}
-          </p>
-        ))}
-      </section>
-      <details
-        className="card seller-portal-fold"
-        data-testid="portal-messages"
-        open={messagesOpen}
-      >
-        <summary>
-          <h2>
-            {d.messages} · {economy.messages.length}
-          </h2>
-        </summary>
-        {economy.messages.length === 0 && <p>{d.none}</p>}
-        {economy.messages.map((m) => (
-          <article key={m.id}>
-            <h3>{m.subject}</h3>
-            <p>
-              <EventTime value={m.queued_at} locale={ctx.locale} /> ·{' '}
-              {label(all.communications.outcomes, m.status)}
-            </p>
-            <p className="whitespace-pre-wrap">{m.body}</p>
-          </article>
-        ))}
-      </details>
     </main>
   )
 }

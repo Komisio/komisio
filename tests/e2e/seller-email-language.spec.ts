@@ -48,6 +48,14 @@ test('saved message language works without a public profile and ignores the staf
     })
     await expect(language).toBeVisible()
     await expect(language).toHaveValue('en')
+    const period = page.getByLabel(en.periodNotices.setting, { exact: true })
+    const ordinary = page.getByLabel(
+      en.storePolicy.automaticSellerNotifications,
+      { exact: true },
+    )
+    await expect(period).toBeChecked()
+    await expect(ordinary).not.toBeChecked()
+    await period.uncheck()
     await expect(language.locator('option')).toHaveCount(8)
     const publishLanguage = async (locale: 'sv' | 'dk') => {
       await language.selectOption(locale)
@@ -66,10 +74,15 @@ test('saved message language works without a public profile and ignores the staf
       await expect(language).toBeEnabled()
     }
     await publishLanguage('sv')
+    await expect(period).not.toBeChecked()
+    await expect(ordinary).not.toBeChecked()
+    await period.check()
     const swedish = await send()
     expect(swedish.locale).toBe('sv')
     expect(swedish.subject).toBe('Meddelande från P2 browser store')
     await publishLanguage('dk')
+    await expect(period).toBeChecked()
+    await expect(ordinary).not.toBeChecked()
     await page.setViewportSize({ width: 320, height: 800 })
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),

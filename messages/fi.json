@@ -1976,7 +1976,9 @@
       "item_sold": "Tuote myyty",
       "payout_approved": "Tilitys hyväksytty",
       "payout_paid": "Tilitys maksettu",
-      "statement_issued": "Tiliote annettu"
+      "statement_issued": "Tiliote annettu",
+      "period_ending": "Myyntiaika päättyy pian",
+      "period_ended": "Myyntiaika on päättynyt"
     },
     "outcomes": {
       "queued": "jonossa",
@@ -2047,6 +2049,14 @@
         "bodyNumber": "Itselaskutuksen hyvityslasku #{number}. Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
         "amount": "Loppusaldo: {amount}.",
         "note": "Voit avata asiakirjan ja ladata PDF-tiedoston myyjäportaalissa."
+      },
+      "period_ending": {
+        "subject": "{store}: myyntiaika päättyy pian",
+        "body": "Hei {seller},\n\nTuotteen {item} myyntiaika päättyy {date}. Ota yhteyttä liikkeeseen {store}, jos sinulla on kysyttävää jatkosta."
+      },
+      "period_ended": {
+        "subject": "{store}: myyntiaika on päättynyt",
+        "body": "Hei {seller},\n\nTuotteen {item} myyntiaika on päättynyt. Kysy tuotteen tilanteesta liikkeestä {store}."
       }
     },
     "invitation": {
@@ -5122,5 +5132,9 @@
       "changed": "Tuote muuttui esikatselun jälkeen"
     },
     "previewFailed": "Esikatselua ei voitu ladata. Tarkista kentät ja yritä uudelleen."
+  },
+  "periodNotices": {
+    "setting": "Automaattiset myyntiaikailmoitukset",
+    "hint": "Ilmoita myyjälle seitsemän päivää ennen myyntiajan päättymistä ja sen päättyessä. Menneistä tapahtumista ei lähetetä ilmoituksia jälkikäteen."
   }
 }

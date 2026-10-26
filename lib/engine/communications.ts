@@ -1,6 +1,9 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { communicationKind } from '../communications/templates'
+import {
+  communicationKind,
+  manualCommunicationKind,
+} from '../communications/templates'
 import { locales } from '../i18n'
 
 // Communication log (P2 S18). The route renders a versioned template, queues
@@ -10,7 +13,7 @@ export const sendSellerCommunicationCommand = z
     tenantId: z.uuid(),
     requestId: z.uuid(),
     sellerId: z.uuid(),
-    kind: communicationKind,
+    kind: manualCommunicationKind,
     referenceId: z.uuid().nullable().default(null),
     freeText: z.string().max(1000).default(''),
     welcome: z.literal(true).optional(),
@@ -31,20 +34,29 @@ export const communicationStatus = z.enum([
   'unconfirmed',
   'failed',
 ])
-const row = z.object({
-  id: z.uuid(),
-  kind: communicationKind,
-  locale: z.enum(locales),
-  recipient: z.string(),
-  subject: z.string(),
-  body: z.string(),
-  reference_kind: z.string(),
-  // Persisted PostgreSQL UUIDs may predate RFC-shaped derived identifiers.
-  reference_id: z.guid().nullable(),
-  status: communicationStatus,
-  queued_at: z.iso.datetime({ offset: true }),
-  delivered_at: z.iso.datetime({ offset: true }).nullable(),
-})
+const row = z
+  .object({
+    id: z.uuid(),
+    kind: communicationKind,
+    locale: z.enum(locales),
+    recipient: z.string(),
+    subject: z.string(),
+    body: z.string(),
+    reference_kind: z.string(),
+    // Persisted PostgreSQL UUIDs may predate RFC-shaped derived identifiers.
+    reference_id: z.guid().nullable(),
+    status: communicationStatus,
+    queued_at: z.iso.datetime({ offset: true }),
+    delivered_at: z.iso.datetime({ offset: true }).nullable(),
+  })
+  .transform((value) => ({
+    ...value,
+    status:
+      value.status === 'queued' &&
+      (value.kind === 'period_ending' || value.kind === 'period_ended')
+        ? ('unconfirmed' as const)
+        : value.status,
+  }))
 export type SellerCommunication = z.infer<typeof row>
 export async function readSellerWelcome(
   client: SupabaseClient,
@@ -145,4 +157,6 @@ export const referenceKindFor: Record<
   payout_paid: 'payout',
   statement_issued: 'statement',
   message: 'none',
+  period_ending: 'item',
+  period_ended: 'item',
 }

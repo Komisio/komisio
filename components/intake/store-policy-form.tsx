@@ -269,6 +269,8 @@ export function StorePolicyForm({
               communicationLanguage: f.get('communicationLanguage'),
               automaticSellerNotifications:
                 f.get('automaticSellerNotifications') === 'on',
+              automaticPeriodNotifications:
+                f.get('automaticPeriodNotifications') === 'on',
               automaticMarkdowns: f.get('automaticMarkdowns') === 'on',
               currency: f.get('currency') || undefined,
               assistanceMonthlyQuota:
@@ -846,6 +848,18 @@ export function StorePolicyForm({
                 />
                 {t.automaticSellerNotifications}
               </label>
+              <label className="intake-confirm">
+                <input
+                  type="checkbox"
+                  name="automaticPeriodNotifications"
+                  defaultChecked={
+                    base.policy.automaticPeriodNotifications !== false
+                  }
+                  aria-describedby="period-notices-hint"
+                />
+                {d.periodNotices.setting}
+              </label>
+              <small id="period-notices-hint">{d.periodNotices.hint}</small>
             </PolicySection>
           </fieldset>
           {editable && !saved && (

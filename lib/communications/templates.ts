@@ -7,7 +7,7 @@ import { emailTemplate } from './locale'
 // placeholders. Plain text only, so a store name, an item label or the free
 // text block can never inject links or markup. The model or staff may write
 // the free-text block; the template around it does not change.
-export const communicationKind = z.enum([
+export const manualCommunicationKind = z.enum([
   'item_accepted',
   'item_sold',
   'payout_approved',
@@ -15,7 +15,13 @@ export const communicationKind = z.enum([
   'statement_issued',
   'message',
 ])
+export const communicationKind = z.enum([
+  ...manualCommunicationKind.options,
+  'period_ending',
+  'period_ended',
+])
 export type CommunicationKind = z.infer<typeof communicationKind>
+export type ManualCommunicationKind = z.infer<typeof manualCommunicationKind>
 export const TEMPLATE_VERSION = 'v2'
 
 export const messageFacts = z.strictObject({

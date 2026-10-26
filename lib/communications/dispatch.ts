@@ -5,7 +5,10 @@ import { z } from 'zod'
 import { factCommunicationId } from './fact-id'
 export { factCommunicationId } from './fact-id'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { renderSellerMessage, type CommunicationKind } from './templates'
+import {
+  renderSellerMessage,
+  type ManualCommunicationKind as CommunicationKind,
+} from './templates'
 import { referenceKindFor } from '../engine/communications'
 import { sendSellerEmailWithId } from '../platform/seller-email'
 import { sendSellerActivation } from '../platform/seller-activation'

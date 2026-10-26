@@ -50,13 +50,23 @@ export const sellerEconomy = z.object({
     }),
   ),
   messages: z.array(
-    z.object({
-      id: z.uuid(),
-      subject: z.string(),
-      body: z.string(),
-      status: z.string(),
-      queued_at: z.string(),
-    }),
+    z
+      .object({
+        id: z.uuid(),
+        kind: z.string().optional(),
+        subject: z.string(),
+        body: z.string(),
+        status: z.string(),
+        queued_at: z.string(),
+      })
+      .transform((value) => ({
+        ...value,
+        status:
+          value.status === 'queued' &&
+          (value.kind === 'period_ending' || value.kind === 'period_ended')
+            ? 'unconfirmed'
+            : value.status,
+      })),
   ),
 })
 export const sellerStatement = z.object({

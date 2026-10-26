@@ -1976,7 +1976,9 @@
       "item_sold": "Vare solgt",
       "payout_approved": "Utbetaling godkjent",
       "payout_paid": "Utbetaling betalt",
-      "statement_issued": "Avregning utstedt"
+      "statement_issued": "Avregning utstedt",
+      "period_ending": "Salgsperioden utløper snart",
+      "period_ended": "Salgsperioden er avsluttet"
     },
     "outcomes": {
       "queued": "i kø",
@@ -2047,6 +2049,14 @@
         "bodyNumber": "Kreditnota for selvfaktura #{number}. Selvfakturaen gjelder selgerens tilgodehavende for varene. Utbetalinger og saldo vises separat i avregningen.",
         "amount": "Utgående saldo: {amount}.",
         "note": "Du kan åpne dokumentet og laste ned PDF i selgerportalen."
+      },
+      "period_ending": {
+        "subject": "{store}: salgsperioden utløper snart",
+        "body": "Hei {seller},\n\nSalgsperioden for {item} slutter {date}. Kontakt {store} hvis du har spørsmål om veien videre."
+      },
+      "period_ended": {
+        "subject": "{store}: salgsperioden er avsluttet",
+        "body": "Hei {seller},\n\nSalgsperioden for {item} er avsluttet. Kontakt {store} for informasjon om varen."
       }
     },
     "invitation": {
@@ -5116,5 +5126,9 @@
       "changed": "Varen ble endret etter forhåndsvisningen"
     },
     "previewFailed": "Kunne ikke hente forhåndsvisningen. Kontroller feltene og prøv igjen."
+  },
+  "periodNotices": {
+    "setting": "Automatiske meldinger om salgsperioder",
+    "hint": "Varsle selgeren sju dager før salgsperioden slutter og når den slutter. Tidligere hendelser sendes ikke i etterkant."
   }
 }

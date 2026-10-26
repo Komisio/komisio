@@ -65,6 +65,8 @@ export const storePolicyBody = z.strictObject({
     .optional(),
   // Automatic seller notifications (P2 S18): absent means off; every message is logged.
   automaticSellerNotifications: z.boolean().optional(),
+  // Period notices have their own default-on switch; seller opt-out still wins.
+  automaticPeriodNotifications: z.boolean().optional(),
   // Mail default when the seller and saved public store profile have no language.
   communicationLanguage: z.enum(locales).optional(),
   // Automatic markdowns (P3): absent means off; due steps are applied by the daily run as the policy's publisher.

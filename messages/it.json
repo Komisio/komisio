@@ -1976,7 +1976,9 @@
       "item_sold": "Articolo venduto",
       "payout_approved": "Pagamento approvato",
       "payout_paid": "Pagamento effettuato",
-      "statement_issued": "Rendiconto emesso"
+      "statement_issued": "Rendiconto emesso",
+      "period_ending": "Il periodo di vendita termina presto",
+      "period_ended": "Il periodo di vendita è terminato"
     },
     "outcomes": {
       "queued": "in coda",
@@ -2047,6 +2049,14 @@
         "bodyNumber": "Nota di credito per autofattura #{number}. L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
         "amount": "Saldo finale: {amount}.",
         "note": "Puoi aprire il documento e scaricare il PDF nel portale del venditore."
+      },
+      "period_ending": {
+        "subject": "{store}: il periodo di vendita termina presto",
+        "body": "Ciao {seller},\n\nIl periodo di vendita di {item} termina il {date}. Contatta {store} per domande sui prossimi passi."
+      },
+      "period_ended": {
+        "subject": "{store}: il periodo di vendita è terminato",
+        "body": "Ciao {seller},\n\nIl periodo di vendita di {item} è terminato. Contatta {store} per informazioni sull’articolo."
       }
     },
     "invitation": {
@@ -5116,5 +5126,9 @@
       "changed": "Articolo modificato dopo l’anteprima"
     },
     "previewFailed": "Impossibile caricare l’anteprima. Controlla i campi e riprova."
+  },
+  "periodNotices": {
+    "setting": "Messaggi automatici sui periodi di vendita",
+    "hint": "Avvisa il venditore sette giorni prima della fine del periodo di vendita e alla sua conclusione. Gli eventi passati non vengono inviati retroattivamente."
   }
 }

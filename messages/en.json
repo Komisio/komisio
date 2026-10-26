@@ -695,7 +695,9 @@
     "zettle.page_received": "PayPal POS · Receipt page · Receipt",
     "zettle.pull_enabled": "PayPal POS · Receipt retrieval · Activation",
     "zettle.window_abandoned": "PayPal POS · Sync window · Revocation",
-    "item.collection_recorded": "Collection status recorded"
+    "item.collection_recorded": "Collection status recorded",
+    "item.period_reopened": "Sale period reopened",
+    "item.period_end_corrected": "End action corrected"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -1398,7 +1400,9 @@
       "markdown_applied": "Markdown applied",
       "period_extended": "Sale period extended",
       "period_ended": "Sale period ended",
-      "collection_recorded": "Collection status recorded"
+      "collection_recorded": "Collection status recorded",
+      "period_reopened": "Sale period reopened",
+      "period_end_corrected": "End action corrected"
     },
     "clearFilters": "Clear filters",
     "showingRange": "Showing {from}–{to} of {total} items",
@@ -1429,7 +1433,9 @@
       "collection": "Collection status",
       "collected": "Collected",
       "notCollected": "Not collected",
-      "observedOn": "Observation date"
+      "observedOn": "Observation date",
+      "saleEndsOn": "For sale through",
+      "previousAction": "Previous end action"
     }
   },
   "sales": {
@@ -5072,5 +5078,21 @@
     "note": "Note (optional)",
     "save": "Save collection status",
     "saved": "Collection status saved"
+  },
+  "itemPeriod": {
+    "title": "Change period ending",
+    "description": "Reopen the item for sale or correct its end action. Earlier events are retained.",
+    "open": "Show change",
+    "operation": "Change",
+    "reopen": "Reopen for sale",
+    "correct": "Correct end action",
+    "saleEndsOn": "For sale through",
+    "noFee": "Reopening creates no fee or new fee period.",
+    "endAction": "New end action",
+    "choose": "Choose end action",
+    "reason": "Reason",
+    "confirm": "I have checked the item and want to save this change.",
+    "save": "Save change",
+    "saved": "Change saved"
   }
 }

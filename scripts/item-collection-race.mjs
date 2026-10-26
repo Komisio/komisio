@@ -140,6 +140,39 @@ export async function raceItemCollection({ setup, connectionString }) {
     console.log(
       'PASS: collection replay and stale-screen races serialize; exactly two immutable observations remain.',
     )
+    const reopened = randomUUID()
+    const reopen = (client) =>
+      client.query(
+        "select reopen_item_period($1,$2,$3,$4,(now() at time zone 'Europe/Stockholm')::date+14,'Synthetic reopening') id",
+        [tenant, reopened, item, end],
+      )
+    await a.query('begin')
+    await reopen(a)
+    const competingCorrection = b
+      .query(
+        "select correct_item_period_end($1,$2,$3,$4,'charity','Synthetic competing correction')",
+        [tenant, randomUUID(), item, end],
+      )
+      .then(
+        () => null,
+        (e) => e,
+      )
+    await waitForLock()
+    await a.query('commit')
+    assert.match((await competingCorrection).message, /ITEM_PERIOD_CHANGED/)
+    assert.equal((await reopen(b)).rows[0].id, reopened)
+    assert.equal(
+      (
+        await setup.query(
+          "select count(*)::int n from item_events where item_id=$1 and kind='period_reopened'",
+          [item],
+        )
+      ).rows[0].n,
+      1,
+    )
+    console.log(
+      'PASS: reopening and competing end correction serialize; the old end identity cannot change the reopened item.',
+    )
   } finally {
     await clients[0].query('rollback').catch(() => {})
     await Promise.all(clients.map((c) => c.end()))

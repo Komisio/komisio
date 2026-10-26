@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { readItem } from './items'
+import { currentItemEnd } from './item-period'
 
 export const recordItemCollectionCommand = z.strictObject({
   action: z.literal('recordItemCollection'),
@@ -25,7 +26,7 @@ export type ItemCollectionDetail = z.infer<typeof itemCollectionDetail>
 export function itemCollectionState(
   events: NonNullable<Awaited<ReturnType<typeof readItem>>>['events'],
 ) {
-  const end = events.findLast((event) => event.kind === 'period_ended')
+  const end = currentItemEnd(events)
   if (!end || end.detail.action !== 'return') return null
   const latest = events.findLast(
     (event) =>

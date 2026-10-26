@@ -1269,7 +1269,8 @@
     "communicationLanguage": "Lingua predefinita dei messaggi",
     "communicationLanguageHint": "Usata per le email ai venditori e come lingua predefinita degli inviti al personale quando il profilo del negozio non ha una lingua. Ha priorità la lingua del venditore, poi quella del profilo del negozio. La lingua del tuo menu non influisce sulle email.",
     "vatModeConsignmentBusiness": "IVA per aziende registrate",
-    "consignment_business": "IVA sull'intero prezzo di vendita"
+    "consignment_business": "IVA sull'intero prezzo di vendita",
+    "dayCollectionHelp": "Facoltativo per i periodi in giorni. Si applica ai nuovi articoli in conto vendita da restituire al venditore. Lasciare vuoto se non è prevista una scadenza fissa per il ritiro. Il termine decorre dalla fine del periodo di vendita; la proprietà non cambia automaticamente."
   },
   "sellerTerms": {
     "title": "Condizioni del conferente",

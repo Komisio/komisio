@@ -1976,7 +1976,9 @@
       "item_sold": "Artículo vendido",
       "payout_approved": "Pago aprobado",
       "payout_paid": "Pago pagado",
-      "statement_issued": "Liquidación emitida"
+      "statement_issued": "Liquidación emitida",
+      "period_ending": "El período de venta termina pronto",
+      "period_ended": "El período de venta ha terminado"
     },
     "outcomes": {
       "queued": "en cola",
@@ -2047,6 +2049,14 @@
         "bodyNumber": "Nota de crédito de autofactura #{number}. La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación.",
         "amount": "Saldo final: {amount}.",
         "note": "Puede abrir el documento y descargar el PDF en el portal del vendedor."
+      },
+      "period_ending": {
+        "subject": "{store}: el período de venta termina pronto",
+        "body": "Hola {seller}:\n\nEl período de venta de {item} termina el {date}. Contacte con {store} si tiene preguntas sobre los siguientes pasos."
+      },
+      "period_ended": {
+        "subject": "{store}: el período de venta ha terminado",
+        "body": "Hola {seller}:\n\nEl período de venta de {item} ha terminado. Contacte con {store} para obtener información sobre el artículo."
       }
     },
     "invitation": {
@@ -5122,5 +5132,9 @@
       "changed": "El artículo cambió después de la vista previa"
     },
     "previewFailed": "No se pudo cargar la vista previa. Revise los campos e inténtelo de nuevo."
+  },
+  "periodNotices": {
+    "setting": "Mensajes automáticos sobre períodos de venta",
+    "hint": "Avise al vendedor siete días antes de finalizar el período de venta y cuando termine. No se envían eventos pasados de forma retroactiva."
   }
 }

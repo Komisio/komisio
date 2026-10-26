@@ -6,7 +6,7 @@ import {
 } from '../../lib/communications/dispatch'
 import { notifySubmissionReview } from '../../lib/communications/submission-notification'
 import {
-  communicationKind,
+  manualCommunicationKind as communicationKind,
   renderSellerMessage,
 } from '../../lib/communications/templates'
 import { renderSellerWelcome } from '../../lib/communications/welcome'

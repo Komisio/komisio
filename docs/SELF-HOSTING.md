@@ -1,5 +1,43 @@
 # Running the platform yourself
 
+## Automatic sale-period notices
+
+Period notices use a separate store-policy switch, `automaticPeriodNotifications`,
+which defaults on when absent. The seller's automatic-email opt-out still wins.
+The older `automaticSellerNotifications` switch does not control these notices.
+No messages are sent until the operator configures the worker and mail transport.
+
+Create a dedicated verified Auth identity through normal account registration.
+Do not give it tenant membership or platform-host privileges. Set its server-only
+`KOMISIO_PERIOD_NOTICES_EMAIL` and `KOMISIO_PERIOD_NOTICES_PASSWORD`, the existing
+`CRON_SECRET`, and the seller-email transport/from/allowlist variables. Keep
+staging restricted to synthetic recipients. Once transport and cron are ready,
+the database operator registers the identity with
+`select komisio_private.configure_period_notice_worker('<auth-user-uuid>', true);`.
+This is an operator-only SQL capability, not an application RPC or service-role
+client. Registration establishes the cutover timestamp; do not backdate it.
+
+Vercel calls `/api/automation/period-notices` every ten minutes. Other hosts can
+call it with `Authorization: Bearer <CRON_SECRET>` on that schedule. Each run
+scans at most 4,000 items through a durable cursor and has a 180-second work
+budget. `catchingUp` means another run is needed. Larger inventories or cap
+pressure can delay delivery. The reminder becomes due at Stockholm midnight
+seven calendar dates before the deadline; the end notice is due at the deadline
+or an earlier recorded end. These notices do not end stock or remove POS products.
+
+Activation and re-enabling exclude past due events. Extensions invalidate stale
+unclaimed notices; an already claimed reminder is not repeated in the same cycle.
+Reopening starts a new notice cycle without creating a fee. Shared daily mail
+caps and language fallback apply. A claim freezes the exact communication and
+allows one send attempt; a lost claim/send/result response never causes an
+automatic resend. Staff history shows an unresolved claim as unconfirmed.
+
+To stop new claims, the operator calls the same configuration function with
+`false`. An already claimed transport call may still finish. Re-enabling or
+changing the worker identity creates a new cutover. Existing claims and message
+history remain intact. Check provider evidence for unknown outcomes; do not delete
+claims, resend them, or backdate activation to recover an uncertain delivery.
+
 ## Verified local setup
 
 The application runs without an AI key, paid API or hosted Supabase project.

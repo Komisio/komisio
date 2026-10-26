@@ -1976,7 +1976,9 @@
       "item_sold": "Artikel verkauft",
       "payout_approved": "Auszahlung genehmigt",
       "payout_paid": "Auszahlung bezahlt",
-      "statement_issued": "Abrechnung ausgestellt"
+      "statement_issued": "Abrechnung ausgestellt",
+      "period_ending": "Verkaufszeitraum endet bald",
+      "period_ended": "Verkaufszeitraum beendet"
     },
     "outcomes": {
       "queued": "eingereiht",
@@ -2047,6 +2049,14 @@
         "bodyNumber": "Korrektur der Selbstfakturierung #{number}. Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen.",
         "amount": "Endsaldo: {amount}.",
         "note": "Sie können das Dokument im Verkäuferportal öffnen und als PDF herunterladen."
+      },
+      "period_ending": {
+        "subject": "{store}: Verkaufszeitraum endet bald",
+        "body": "Hallo {seller},\n\nDer Verkaufszeitraum für {item} endet am {date}. Bei Fragen zu den nächsten Schritten wenden Sie sich an {store}."
+      },
+      "period_ended": {
+        "subject": "{store}: Verkaufszeitraum beendet",
+        "body": "Hallo {seller},\n\nDer Verkaufszeitraum für {item} ist beendet. Informationen zum Artikel erhalten Sie bei {store}."
       }
     },
     "invitation": {
@@ -5122,5 +5132,9 @@
       "changed": "Artikel wurde nach der Vorschau geändert"
     },
     "previewFailed": "Vorschau konnte nicht geladen werden. Prüfen Sie die Felder und versuchen Sie es erneut."
+  },
+  "periodNotices": {
+    "setting": "Automatische Nachrichten zu Verkaufszeiträumen",
+    "hint": "Verkäufer sieben Tage vor Ablauf und beim Ende des Verkaufszeitraums benachrichtigen. Vergangene Ereignisse werden nicht nachträglich versendet."
   }
 }

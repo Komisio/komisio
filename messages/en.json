@@ -1976,7 +1976,9 @@
       "item_sold": "Item sold",
       "payout_approved": "Payout approved",
       "payout_paid": "Payout paid",
-      "statement_issued": "Statement issued"
+      "statement_issued": "Statement issued",
+      "period_ending": "Sale period ending soon",
+      "period_ended": "Sale period ended"
     },
     "outcomes": {
       "queued": "queued",
@@ -2047,6 +2049,14 @@
         "bodyNumber": "Self-billing credit note #{number}. This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
         "amount": "Closing balance: {amount}.",
         "note": "You can open the document and download its PDF in the seller portal."
+      },
+      "period_ending": {
+        "subject": "{store}: sale period ending soon",
+        "body": "Hello {seller},\n\nThe sale period for {item} ends on {date}. Contact {store} if you have questions about the next steps."
+      },
+      "period_ended": {
+        "subject": "{store}: sale period ended",
+        "body": "Hello {seller},\n\nThe sale period for {item} has ended. Contact {store} for information about the item."
       }
     },
     "invitation": {
@@ -5116,5 +5126,9 @@
       "changed": "Item changed after preview"
     },
     "previewFailed": "Could not load the preview. Check the fields and try again."
+  },
+  "periodNotices": {
+    "setting": "Automatic sale-period messages",
+    "hint": "Notify the seller seven days before the sale period ends and when it ends. Past events are not sent retrospectively."
   }
 }

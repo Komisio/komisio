@@ -1976,7 +1976,9 @@
       "item_sold": "Vara såld",
       "payout_approved": "Utbetalning godkänd",
       "payout_paid": "Utbetalning gjord",
-      "statement_issued": "Avräkning utfärdad"
+      "statement_issued": "Avräkning utfärdad",
+      "period_ending": "Säljperioden går snart ut",
+      "period_ended": "Säljperioden har avslutats"
     },
     "outcomes": {
       "queued": "köad",
@@ -2047,6 +2049,14 @@
         "bodyNumber": "Kreditnota för självfaktura #{number}. Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
         "amount": "Utgående saldo: {amount}.",
         "note": "Du kan öppna underlaget och ladda ner PDF i säljarportalen."
+      },
+      "period_ending": {
+        "subject": "{store}: säljperioden går snart ut",
+        "body": "Hej {seller},\n\nSäljperioden för {item} slutar den {date}. Kontakta {store} om du har frågor om nästa steg."
+      },
+      "period_ended": {
+        "subject": "{store}: säljperioden har avslutats",
+        "body": "Hej {seller},\n\nSäljperioden för {item} har avslutats. Kontakta {store} för besked om varan."
       }
     },
     "invitation": {
@@ -5116,5 +5126,9 @@
       "changed": "Varan har ändrats efter förhandsvisningen"
     },
     "previewFailed": "Kunde inte hämta förhandsvisningen. Kontrollera fälten och försök igen."
+  },
+  "periodNotices": {
+    "setting": "Automatiska meddelanden om säljperioder",
+    "hint": "Meddela säljaren sju dagar före periodslut och när perioden avslutas. Tidigare händelser skickas inte i efterhand."
   }
 }

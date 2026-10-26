@@ -40,7 +40,7 @@ export async function raceItemCollection({ setup, connectionString }) {
     ).rows[0].id
     const seller = (
       await a.query(
-        "select register_seller($1,$2,'Synthetic seller','','123') id",
+        "select register_seller($1,$2,'Synthetic seller','collection-race@example.test','123') id",
         [tenant, randomUUID()],
       )
     ).rows[0].id
@@ -215,6 +215,60 @@ export async function raceItemCollection({ setup, connectionString }) {
     )
     console.log(
       'PASS: duplicate bulk requests replay one receipt; a new request with stale preview skips without a second extension.',
+    )
+    const worker = randomUUID()
+    await setup.query(
+      'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
+      [worker, `${worker}@example.test`],
+    )
+    await setup.query(
+      'select komisio_private.configure_period_notice_worker($1,true)',
+      [worker],
+    )
+    await a.query("select end_sale_period($1,$2,$3,'return')", [
+      tenant,
+      randomUUID(),
+      item,
+    ])
+    const facts = (
+      await setup.query(
+        "select komisio_private.period_notice_facts($1,'period_ended') value",
+        [item],
+      )
+    ).rows[0].value
+    assert.ok(facts)
+    for (const client of clients)
+      await client.query("select set_config('request.jwt.claims',$1,false)", [
+        JSON.stringify({ sub: worker, role: 'authenticated' }),
+      ])
+    const notice = randomUUID()
+    const claim = (client, id = notice) =>
+      client.query(
+        "select claim_period_notice($1,$2,'en','Synthetic period end','Synthetic body') id",
+        [id, facts],
+      )
+    await a.query('begin')
+    assert.equal((await claim(a)).rows[0].id, notice)
+    const competing = claim(b, randomUUID())
+    await waitForLock()
+    await a.query('commit')
+    assert.equal((await competing).rows[0].id, null)
+    assert.equal((await claim(b)).rows[0].id, null)
+    assert.equal(
+      (
+        await setup.query(
+          'select count(*)::int n from komisio_private.period_notice_claims where item_id=$1',
+          [item],
+        )
+      ).rows[0].n,
+      1,
+    )
+    await setup.query(
+      'select komisio_private.configure_period_notice_worker($1,false)',
+      [worker],
+    )
+    console.log(
+      'PASS: competing period notices serialize on the tenant; concurrent and lost-response retries grant only one send attempt.',
     )
   } finally {
     await clients[0].query('rollback').catch(() => {})

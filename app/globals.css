@@ -1232,6 +1232,10 @@ button.text-link:hover:not(:disabled) {
   width: 100%;
   max-width: 370px;
 }
+.registration-store-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
 .auth-form h1 {
   font-size: 28px;
 }

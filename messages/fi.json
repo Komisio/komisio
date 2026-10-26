@@ -4762,6 +4762,7 @@
     "previousCategory": "Aiempi kategoriateksti: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Rekisteröidy myyjäksi kauppaan {store}",
     "joinLogin": "Haluatko myydä liikkeen kautta? Luo henkilökohtainen tili tai kirjaudu sisään, jos sinulla on jo tili. Sen jälkeen palaat tänne lukemaan liikkeen ehdot ja lähettämään hakemuksesi.",
     "reviewTerms": "Myyjän hyväksymä sopimus",
     "title": "Myyjäksi rekisteröityminen",

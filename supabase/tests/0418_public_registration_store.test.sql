@@ -1,0 +1,48 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('d6370000-0000-4000-8000-000000000001','store-name-owner@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d6370000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Synthetic store <b>name</b>','public-registration-name',gen_random_uuid())::text,true);
+select publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Private agreement','Private terms','en',true);
+select set_config('test.setting',gen_random_uuid()::text,true);
+select set_seller_registration(current_setting('test.tenant')::uuid,current_setting('test.setting')::uuid,null,'enable');
+select set_config('test.token',seller_registration_settings(current_setting('test.tenant')::uuid)->>'token',true);
+select is(public_seller_registration_store(current_setting('test.token')),'Synthetic store <b>name</b>','authenticated lookup returns only the plain store name');
+set local role anon;
+set local "request.jwt.claims"='{}';
+select is(public_seller_registration_store(current_setting('test.token')),'Synthetic store <b>name</b>','anonymous visitor with valid capability sees only name');
+select is(public_seller_registration_store(repeat('f',64)),null::text,'unknown capability returns no name');
+select is(public_seller_registration_store(null),null::text,'null token has uniform result');
+select is(public_seller_registration_store('bad'),null::text,'malformed token has uniform result');
+select is(public_seller_registration_store(upper(current_setting('test.token'))),null::text,'token matching remains exact');
+select throws_like($$select * from seller_registration_links$$,'%permission denied%','anonymous callers cannot enumerate capabilities');
+select throws_like($$select seller_registration_entry(current_setting('test.token'),'sv')$$,'%permission denied%','name projection does not expose private entry');
+reset role;
+select ok(not exists(select 1 from pg_proc p, lateral aclexplode(p.proacl) a where p.oid='public.public_seller_registration_store(text)'::regprocedure and a.grantee=0 and a.privilege_type='EXECUTE'),'PUBLIC execution is revoked');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d6370000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('test.rotated',gen_random_uuid()::text,true);
+select set_seller_registration(current_setting('test.tenant')::uuid,current_setting('test.rotated')::uuid,current_setting('test.setting')::uuid,'rotate');
+select set_config('test.new_token',seller_registration_settings(current_setting('test.tenant')::uuid)->>'token',true);
+set local role anon;
+set local "request.jwt.claims"='{}';
+select is(public_seller_registration_store(current_setting('test.token')),null::text,'rotation immediately hides the old store name');
+select is(public_seller_registration_store(current_setting('test.new_token')),'Synthetic store <b>name</b>','only latest enabled capability resolves');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"d6370000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_seller_registration(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.rotated')::uuid,'disable');
+set local role anon;
+set local "request.jwt.claims"='{}';
+select is(public_seller_registration_store(current_setting('test.new_token')),null::text,'disabled capability has same result as nonexistent');
+reset role;
+-- Defensive legacy fixture: current enabled link without an agreement must not reveal a name.
+insert into public.tenants(id,slug,name,created_by) values('d6370000-0000-4000-8000-000000000002','legacy-public-name','Hidden store','d6370000-0000-4000-8000-000000000001');
+insert into public.seller_registration_links(id,tenant_id,version,action,enabled,token,created_by)
+values(gen_random_uuid(),'d6370000-0000-4000-8000-000000000002',1,'enable',true,repeat('a',64),'d6370000-0000-4000-8000-000000000001');
+set local role anon;
+select is(public_seller_registration_store(repeat('a',64)),null::text,'missing agreement hides name');
+select * from finish();
+rollback;

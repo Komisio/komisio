@@ -4756,6 +4756,7 @@
     "previousCategory": "Previous category text: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Register as a seller at {store}",
     "joinLogin": "Would you like to sell through the store? Create a personal account, or log in if you already have one. You will then return here to read the store’s terms and submit your application.",
     "reviewTerms": "The agreement accepted by the seller",
     "title": "Seller registration",

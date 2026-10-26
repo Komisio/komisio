@@ -4,6 +4,21 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Receipt copies (#655, raised 2026-10-26): the requested standalone PDF cannot
+yet be treated as an authorized cash-register copy. Skatteverket's
+[cash-register requirements](https://www4.skatteverket.se/download/18.566df4d617d171254ec3e41/1698824220274/SKVFS%202021_17.pdf)
+include fixed copy marking, control-system integration and a one-copy limit.
+Komisio has no evidence of how many copies the originating register issued.
+The PDF wording proposed in the issue does not establish compliance. Owner
+clarification requested: investigate the originating POS receipt first, or a
+separate sales-information document subject to accountant confirmation.
+No standalone receipt-copy issuance or email delivery is implemented.
+For VMB sales, the customer document must not expose the internal margin VAT
+as deductible item VAT; see Skatteverket's
+[VMB invoicing guidance](https://www.skatteverket.se/foretag/moms/sarskildamomsregler/vinstmarginalbeskattningavbegagnadevarormedmera.4.58d555751259e4d6616800010756.html).
+The final document scope, VAT presentation and shared PDF/email issuance rules
+remain open before implementation.
+
 Seller agreement name (#649, resolved 2026-10-26): the owner confirmed the
 report concerns the staff-oriented PDF button only. Remove it from the seller
 portal; preserve published agreement texts verbatim. Staff PDF access remains.

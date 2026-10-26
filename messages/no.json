@@ -697,7 +697,8 @@
     "zettle.window_abandoned": "PayPal POS · Synkperiode · Tilbakekalling",
     "item.collection_recorded": "Hentestatus registrert",
     "item.period_reopened": "Salgsperiode gjenåpnet",
-    "item.period_end_corrected": "Avslutningsårsak rettet"
+    "item.period_end_corrected": "Avslutningsårsak rettet",
+    "item.lifecycle_batch": "Masseendring av salgsperioder"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tillatelse til å gjøre dette.",
@@ -5094,5 +5095,26 @@
     "confirm": "Jeg har kontrollert varen og vil lagre endringen.",
     "save": "Lagre endring",
     "saved": "Endringen er lagret"
+  },
+  "itemLifecycleBatch": {
+    "title": "Endre salgsperioder",
+    "hint": "Se gjennom opptil 50 valgte varer. Varer som ikke kan endres, hoppes over med en begrunnelse.",
+    "preview": "Forhåndsvisning",
+    "apply": "Bekreft endringer",
+    "ready": "Kan endres",
+    "applied": "Endret",
+    "skipped": "Hoppet over",
+    "back": "Endre valg",
+    "results": "Resultater",
+    "markdown": "Bruk neste forfalte prisnedsettelse",
+    "reasons": {
+      "missing": "Varen ble ikke funnet",
+      "sold": "Varen er solgt",
+      "ended": "Varen er avsluttet",
+      "markdown_not_due": "Ingen prisnedsettelse er forfalt",
+      "collection_not_due": "Hentefristen har ikke utløpt",
+      "changed": "Varen ble endret etter forhåndsvisningen"
+    },
+    "previewFailed": "Kunne ikke hente forhåndsvisningen. Kontroller feltene og prøv igjen."
   }
 }

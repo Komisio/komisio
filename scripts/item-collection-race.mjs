@@ -173,6 +173,49 @@ export async function raceItemCollection({ setup, connectionString }) {
     console.log(
       'PASS: reopening and competing end correction serialize; the old end identity cannot change the reopened item.',
     )
+    const operation = {
+      kind: 'extend',
+      days: 3,
+      reason: 'Synthetic bulk extension',
+    }
+    const preview = (
+      await a.query('select preview_item_lifecycle_batch($1,$2,$3) value', [
+        tenant,
+        [item],
+        operation,
+      ])
+    ).rows[0].value
+    const batchId = randomUUID()
+    const apply = (client, id = batchId) =>
+      client.query('select apply_item_lifecycle_batch($1,$2,$3,$4) value', [
+        tenant,
+        id,
+        operation,
+        JSON.stringify(preview),
+      ])
+    await a.query('begin')
+    const firstBatch = (await apply(a)).rows[0].value
+    const duplicate = apply(b)
+    await waitForLock()
+    await a.query('commit')
+    assert.deepEqual((await duplicate).rows[0].value, firstBatch)
+    assert.equal(firstBatch.items[0].status, 'applied')
+    assert.equal(
+      (await apply(b, randomUUID())).rows[0].value.items[0].reason,
+      'changed',
+    )
+    assert.equal(
+      (
+        await setup.query(
+          "select count(*)::int n from item_events where item_id=$1 and kind='period_extended' and detail->>'reason'='Synthetic bulk extension'",
+          [item],
+        )
+      ).rows[0].n,
+      1,
+    )
+    console.log(
+      'PASS: duplicate bulk requests replay one receipt; a new request with stale preview skips without a second extension.',
+    )
   } finally {
     await clients[0].query('rollback').catch(() => {})
     await Promise.all(clients.map((c) => c.end()))

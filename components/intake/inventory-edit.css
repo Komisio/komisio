@@ -258,3 +258,17 @@
   padding: 24px 20px 16px;
   margin: 0;
 }
+.lifecycle-batch-preview {
+  list-style: none;
+  padding: 0;
+  text-align: start;
+  font-weight: normal;
+}
+.lifecycle-batch-preview li {
+  padding-block: 12px;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.lifecycle-batch-preview p {
+  margin-block: 4px;
+}

@@ -21,6 +21,14 @@ chooses no automatic fee on reopening. Reopening must not start a new fee
 period or change earlier charges. Existing fee handling for other active items
 and new physical receipts remains unchanged.
 
+Period-notice policy interaction (#636, pending 2026-10-26): the requested
+period reminders default on, but existing `automaticSellerNotifications` defaults
+off. Should period reminders have an independent default-on store switch, or
+should an existing store-level opt-out also suppress them? The seller's own
+automatic-email opt-out remains authoritative either way. Message templates and
+delivery safeguards can be prepared independently; dispatch policy awaits this
+clarification.
+
 Zebra setup illustrations (#592, resolved 2026-10-23): the owner approves
 clearly labeled original illustrations until current iPad screenshots are
 available. These explain the steps and do not establish hardware verification.

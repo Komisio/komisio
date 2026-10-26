@@ -697,7 +697,8 @@
     "zettle.window_abandoned": "PayPal POS · Periodo di sincronizzazione · Revoca",
     "item.collection_recorded": "Stato del ritiro registrato",
     "item.period_reopened": "Periodo di vendita riaperto",
-    "item.period_end_corrected": "Motivo della chiusura corretto"
+    "item.period_end_corrected": "Motivo della chiusura corretto",
+    "item.lifecycle_batch": "Modifica multipla dei periodi di vendita"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -5094,5 +5095,26 @@
     "confirm": "Ho controllato l’articolo e desidero salvare la modifica.",
     "save": "Salva modifica",
     "saved": "Modifica salvata"
+  },
+  "itemLifecycleBatch": {
+    "title": "Modifica periodi di vendita",
+    "hint": "Controlla fino a 50 articoli selezionati. Gli articoli non modificabili vengono saltati con una motivazione.",
+    "preview": "Anteprima",
+    "apply": "Conferma modifiche",
+    "ready": "Modifica possibile",
+    "applied": "Modificato",
+    "skipped": "Saltato",
+    "back": "Modifica selezione",
+    "results": "Risultati",
+    "markdown": "Applica il prossimo ribasso previsto",
+    "reasons": {
+      "missing": "Articolo non trovato",
+      "sold": "Articolo venduto",
+      "ended": "Vendita dell’articolo conclusa",
+      "markdown_not_due": "Nessun ribasso previsto al momento",
+      "collection_not_due": "Il termine di ritiro non è scaduto",
+      "changed": "Articolo modificato dopo l’anteprima"
+    },
+    "previewFailed": "Impossibile caricare l’anteprima. Controlla i campi e riprova."
   }
 }

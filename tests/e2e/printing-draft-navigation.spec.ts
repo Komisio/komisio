@@ -31,7 +31,9 @@ for (const kind of ['printer', 'dimensions'] as const) {
           .getByRole('radio', { name: d.printing.setup.windows, exact: false })
           .check()
       if (kind === 'dimensions')
-        await page.locator('.label-formats-fold > summary').click()
+        await page
+          .locator('.label-formats-fold:has(.label-formats) > summary')
+          .click()
       const field =
         kind === 'printer'
           ? page.locator('input[name="name"]').first()
@@ -96,7 +98,9 @@ test('saving one printing form preserves another draft and establishes the confi
     await page
       .getByRole('tab', { name: d.printing.tabs.labels, exact: true })
       .click()
-    await page.locator('.label-formats-fold > summary').click()
+    await page
+      .locator('.label-formats-fold:has(.label-formats) > summary')
+      .click()
     const row = page.locator('.label-format').first()
     const width = row.locator('input').first()
     await width.fill('62')

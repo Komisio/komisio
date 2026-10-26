@@ -112,7 +112,7 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
         // A distraction must not silently discard the partially entered item.
         const dialog = page.waitForEvent('dialog')
         const navigation = page
-          .getByRole('link', { name: d.intake.back, exact: true })
+          .getByRole('link', { name: d.returnNavigation.back, exact: true })
           .click()
         await (await dialog).dismiss()
         await navigation

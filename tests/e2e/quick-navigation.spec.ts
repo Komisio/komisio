@@ -243,7 +243,7 @@ test('bag intake keeps an unfinished item while staff inspect its navigation cho
     await expect(description).toHaveValue('Synthetic unfinished scarf')
     for (const control of [
       page.locator('.bag-inventory .inventory-open-item').first(),
-      page.getByRole('link', { name: d.intake.back, exact: true }),
+      page.getByRole('link', { name: d.returnNavigation.back, exact: true }),
     ]) {
       await leave(page, control, false)
       await expect(description).toHaveValue('Synthetic unfinished scarf')

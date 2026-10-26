@@ -48,7 +48,9 @@ test('the label template editor fits a 320px phone in every language and keeps t
         await expect(fold).not.toHaveAttribute('open', '')
         await expect(zpl).toBeHidden()
         await expect(page.locator('.label-format-kind').first()).toBeHidden()
-        const sizes = page.locator('.label-formats-fold > summary')
+        const sizes = page.locator(
+          '.label-formats-fold:has(.label-formats) > summary',
+        )
         await expect(sizes).toHaveText(d.printing.formatsHeading)
         await expect(sizes).toBeVisible()
         await expect(page.locator('#print-jobs')).toBeHidden()
@@ -122,7 +124,9 @@ test('the label template editor fits a 320px phone in every language and keeps t
           ).toBeVisible()
         // Every label size group (kind, both sizes with their labels, the
         // action) lies inside the viewport without any horizontal scrolling.
-        await page.locator('.label-formats-fold > summary').click()
+        await page
+          .locator('.label-formats-fold:has(.label-formats) > summary')
+          .click()
         const groups = await page.locator('.label-format').all()
         expect(groups.length, `${locale} groups`).toBe(5)
         for (const group of groups) {
@@ -201,7 +205,9 @@ test('the label template editor fits a 320px phone in every language and keeps t
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
-    await page.locator('.label-formats-fold > summary').click()
+    await page
+      .locator('.label-formats-fold:has(.label-formats) > summary')
+      .click()
     const sizeGroup = page.locator('.label-format').first()
     await expect(sizeGroup).toBeVisible()
     expect(

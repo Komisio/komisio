@@ -135,6 +135,7 @@ export function PurchaseForm({
         }}
       >
         <fieldset
+          data-draft-readiness={!ready ? '' : undefined}
           className="intake-fields"
           disabled={!ready || action.busy || action.locked}
         >

@@ -27,7 +27,9 @@ test('activity filters, stable pages and role restriction', async ({
     ).toBeVisible()
     await page.getByLabel(d.activity.from, { exact: true }).fill('2025-10-23')
     await page.getByLabel(d.activity.to, { exact: true }).fill('2025-10-23')
-    await page.getByLabel(d.activity.actor, { exact: true }).fill(f.actor)
+    await page
+      .getByRole('combobox', { name: d.activity.actor, exact: true })
+      .fill(f.actor)
     await page.getByRole('button', { name: d.activity.apply }).click()
     await expect(page).toHaveURL(/from=2025-10-23/)
     await expect(page.locator('.activity-list li')).toHaveCount(25)

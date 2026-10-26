@@ -1203,3 +1203,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-25: #626: Full-VAT business seller credit includes supplier VAT, extracted per sale line in öre (100 = 80 net + 20 VAT at 25%). Freeze supplier amounts; returns reverse original facts. Self-billing uses settlement numbering and immutable identity snapshots.
 
 - 2026-10-26: #632 selects optional category IDs in reception and type defaults. Only unique legacy matches backfill; original facts remain. Category reports and filters use IDs, with unlinked items grouped together. Existing financial and access rules are unchanged.
+
+- 2026-10-26: #631: PayPal item readiness uses existing sale facts and VAT mapping. Missing configuration shows attention and prevents automatic claims until corrected. No VAT choice is inferred; historic outcomes, export guards and lease/retry boundaries remain unchanged.

@@ -3088,7 +3088,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Denne kvitteringen må undersøkes i PayPal POS. Beløp eller rabatter som ikke støttes gjettes aldri.",
       "ITEM_NOT_FOUND": "Varen ble ikke funnet i denne butikken. Kontroller hele ID-en.",
       "ITEM_ALREADY_SOLD": "En vare er allerede solgt. Kontroller kvitteringen og koblingen.",
-      "VAT_MODE_NOT_SET": "Velg butikkens mva-modus i innstillingene før du registrerer salg.",
+      "VAT_MODE_NOT_SET": "Velg mva-modus for varens eiertype i butikkinnstillingene før varen eksporteres eller et salg registreres.",
       "INVALID_INPUT": "Kontroller at hver rad peker til en ulik vare med gyldig ID.",
       "REQUEST_CONFLICT": "Denne forespørselen samsvarer ikke lenger med det registrerte forsøket. Last inn på nytt og kontroller resultatet.",
       "FORBIDDEN": "Din nåværende rolle eller innlogging kan ikke utføre denne handlingen.",

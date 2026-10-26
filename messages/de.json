@@ -3088,7 +3088,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Dieser Beleg muss in PayPal POS untersucht werden. Nicht unterstützte Beträge oder Rabatte werden nie geraten.",
       "ITEM_NOT_FOUND": "Der Artikel wurde in diesem Store nicht gefunden. Prüfen Sie seine vollständige ID.",
       "ITEM_ALREADY_SOLD": "Ein Artikel wurde bereits verkauft. Prüfen Sie den Beleg und die Zuordnung.",
-      "VAT_MODE_NOT_SET": "Wählen Sie den MwSt.-Modus des Stores in den Einstellungen, bevor Sie Verkäufe erfassen.",
+      "VAT_MODE_NOT_SET": "Wählen Sie in den Shop-Einstellungen den MwSt.-Modus für die Eigentumsart des Artikels, bevor Sie den Artikel exportieren oder einen Verkauf erfassen.",
       "INVALID_INPUT": "Prüfen Sie, dass jede Zeile auf einen anderen Artikel mit gültiger ID verweist.",
       "REQUEST_CONFLICT": "Diese Anfrage entspricht nicht mehr dem erfassten Versuch. Laden Sie neu und prüfen Sie das Ergebnis.",
       "FORBIDDEN": "Ihre aktuelle Rolle oder Anmeldung kann diese Aktion nicht ausführen.",

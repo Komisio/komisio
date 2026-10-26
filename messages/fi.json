@@ -5176,5 +5176,9 @@
     "charity": "Myyntiajan jälkeen: myymättömät tuotteet lahjoitetaan hyväntekeväisyyteen.",
     "fullText": "Lue koko sopimus",
     "needsApproval": "Hyväksyntä tarvitaan"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Rekisteröitymisesi myymälään {store} on hyväksytty",
+    "body": "Hei {seller}!\n\n{store} on hyväksynyt rekisteröitymisesi. Voit nyt kirjautua myyjäportaaliin tilillä, jota käytit rekisteröityessäsi:\n{url}\n\nSiellä voit seurata tuotteitasi ja tilityksiäsi."
   }
 }

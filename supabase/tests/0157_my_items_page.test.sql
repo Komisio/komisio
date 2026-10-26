@@ -40,7 +40,8 @@ select is(jsonb_array_length(current_setting('test.page')::jsonb->'items'),25,'f
 select is((current_setting('test.page')::jsonb->>'offset')::int,0,'first offset');
 select is(current_setting('test.page')::jsonb->>'currency','SEK','currency preserved');
 select is((current_setting('test.page')::jsonb->>'automaticMarkdowns')::boolean,false,'manual markdown policy preserved');
-select is(current_setting('test.page')::jsonb->'items',(select jsonb_agg(e order by ord) from jsonb_array_elements(my_items(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->'items') with ordinality a(e,ord) where ord<=25),'all facts equal legacy first page including next steps');
+-- #647 adds endedAt; retain the exact legacy comparison for every original field.
+select is((select jsonb_agg(e-'endedAt' order by ord) from jsonb_array_elements(current_setting('test.page')::jsonb->'items') with ordinality a(e,ord)),(select jsonb_agg(e order by ord) from jsonb_array_elements(my_items(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid)->'items') with ordinality a(e,ord) where ord<=25),'all facts equal legacy first page including next steps');
 select is(jsonb_array_length(my_items_page(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,'',200)->'items'),3,'items after the legacy200 cap remain accessible');
 select is(jsonb_array_length(my_items_page(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,'',250)->'items'),0,'past end is empty');
 select is((my_items_page(current_setting('test.tenant')::uuid,current_setting('test.seller')::uuid,'',250)->>'total')::int,203,'past end retains total');

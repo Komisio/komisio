@@ -75,7 +75,7 @@ try {
   await setup.connect()
   await setup.query(`create schema extensions;
  create schema auth;
- create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,
+ create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,deleted_at timestamptz,
   encrypted_password text,raw_user_meta_data jsonb,raw_app_meta_data jsonb,recovery_token text,recovery_sent_at timestamptz);
  create table auth.mfa_factors(user_id uuid,status text);
  create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id));

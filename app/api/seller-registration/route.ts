@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server'
+import { after, NextResponse } from 'next/server'
+import { notifyRegistrationApproval } from '@/lib/communications/registration-approval'
 import { platformContext } from '@/lib/platform/context'
 import {
   registrationCommand,
@@ -35,8 +36,19 @@ export async function POST(request: Request) {
       !['owner', 'admin'].includes(ctx.active?.role ?? '')
     )
       return reply({ error: 'FORBIDDEN' }, 403)
-    const result = await executeRegistration(ctx.client, c)
+    const result = await executeRegistration(ctx.client, c, ctx.locale)
     if (result.error) throw new Error(result.error.message)
+    if (c.action === 'review' && c.approved) {
+      after(async () => {
+        try {
+          await notifyRegistrationApproval(ctx.client, c.tenantId, c.requestId)
+        } catch {
+          console.error('Registration approval notification did not complete', {
+            requestId: c.requestId,
+          })
+        }
+      })
+    }
     return reply({ data: result.data })
   } catch (e) {
     const message = e instanceof Error ? e.message : ''

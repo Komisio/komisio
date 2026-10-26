@@ -5176,5 +5176,9 @@
     "charity": "Nach der Verkaufsdauer: unverkaufte Artikel werden gespendet.",
     "fullText": "Vollständigen Vertrag lesen",
     "needsApproval": "Zustimmung erforderlich"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Deine Registrierung bei {store} wurde genehmigt",
+    "body": "Hallo {seller},\n\n{store} hat deine Registrierung genehmigt. Du kannst dich jetzt mit dem Konto, das du bei der Registrierung verwendet hast, im Verkäuferportal anmelden:\n{url}\n\nDort kannst du deine Artikel und Auszahlungen verfolgen."
   }
 }

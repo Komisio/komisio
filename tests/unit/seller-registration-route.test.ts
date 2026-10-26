@@ -1,6 +1,15 @@
+import { after } from 'next/server'
+import { notifyRegistrationApproval } from '../../lib/communications/registration-approval'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { platformContext } from '../../lib/platform/context'
 import { POST } from '../../app/api/seller-registration/route'
+vi.mock('next/server', async (original) => ({
+  ...(await original<typeof import('next/server')>()),
+  after: vi.fn(),
+}))
+vi.mock('../../lib/communications/registration-approval', () => ({
+  notifyRegistrationApproval: vi.fn(),
+}))
 vi.mock('../../lib/platform/context', () => ({ platformContext: vi.fn() }))
 const id = 'd3520000-0000-4000-8000-000000000001'
 const rpc = vi.fn()
@@ -23,6 +32,7 @@ beforeEach(() => {
   vi.mocked(platformContext).mockResolvedValue({
     client: { rpc },
     mfaRequired: false,
+    locale: 'dk',
     active: { id, role: 'owner' },
   } as unknown as NonNullable<Awaited<ReturnType<typeof platformContext>>>)
 })
@@ -91,3 +101,67 @@ it.each(['staff', 'viewer'])(
     expect(rpc).not.toHaveBeenCalled()
   },
 )
+
+const commandRequest = (body: object) =>
+  new Request('https://app.example.test/api/seller-registration', {
+    method: 'POST',
+    headers: { origin: 'https://app.example.test' },
+    body: JSON.stringify(body),
+  })
+it('schedules the approval reply only after a committed approval and keeps it out of the response', async () => {
+  rpc.mockResolvedValue({ data: id, error: null })
+  const response = await POST(
+    commandRequest({
+      action: 'review',
+      tenantId: id,
+      requestId: id,
+      registrationId: id,
+      approved: true,
+    }),
+  )
+  expect(response.status).toBe(200)
+  expect(after).toHaveBeenCalledTimes(1)
+  expect(notifyRegistrationApproval).not.toHaveBeenCalled()
+  await (vi.mocked(after).mock.calls[0][0] as () => Promise<void>)()
+  expect(notifyRegistrationApproval).toHaveBeenCalledWith({ rpc }, id, id)
+})
+it.each([false, true])(
+  'never schedules an approval reply for rejection or failed review (failure %s)',
+  async (failure) => {
+    rpc.mockResolvedValue({
+      data: id,
+      error: failure ? { message: 'REGISTRATION_REVIEWED' } : null,
+    })
+    await POST(
+      commandRequest({
+        action: 'review',
+        tenantId: id,
+        requestId: id,
+        registrationId: id,
+        approved: failure,
+      }),
+    )
+    expect(after).not.toHaveBeenCalled()
+  },
+)
+it('captures the application language from the verified server context', async () => {
+  rpc.mockResolvedValue({ data: { state: 'submitted' }, error: null })
+  const response = await POST(
+    commandRequest({
+      action: 'apply',
+      token: 'a'.repeat(64),
+      requestId: id,
+      name: 'Synthetic',
+      phone: '000',
+      agreementId: id,
+      translationId: null,
+      accepted: true,
+    }),
+  )
+  expect(response.status).toBe(200)
+  expect(rpc).toHaveBeenCalledWith(
+    'submit_seller_registration_in_language',
+    expect.objectContaining({ p_locale: 'dk' }),
+  )
+  expect(after).not.toHaveBeenCalled()
+})

@@ -52,7 +52,7 @@ for (const mode of ['bag', 'quick'] as const) {
           ? `/intake/bags/${bag}/inspect`
           : `/intake/reception/${session}`
       const back = page.getByRole('link', {
-        name: d.items.backToIntake,
+        name: d.returnNavigation.back,
         exact: true,
       })
       await expect(back).toBeVisible()
@@ -110,9 +110,14 @@ for (const mode of ['bag', 'quick'] as const) {
       )
       // A directly opened item still offers its intake beside the inventory link.
       await page.goto(itemPath)
-      await expect(back).toHaveAttribute('href', intake)
       await expect(
-        page.getByRole('link', { name: d.items.backToList, exact: true }),
+        page.getByRole('link', { name: d.items.backToIntake, exact: true }),
+      ).toHaveAttribute(
+        'href',
+        intake + '?' + new URLSearchParams({ returnTo: itemPath }),
+      )
+      await expect(
+        page.getByRole('link', { name: d.returnNavigation.back, exact: true }),
       ).toHaveAttribute('href', '/intake/items')
     } finally {
       await f.close()

@@ -59,7 +59,9 @@ test('directory registration and duplicate selection stay in the seller workspac
       await dialog.accept()
     })
     await duplicate.click()
-    await expect(page).toHaveURL(`/intake/sellers/${f.seller}`)
+    await expect
+      .poll(() => new URL(page.url()).pathname)
+      .toBe(`/intake/sellers/${f.seller}`)
     await page.goto('/intake/sellers/new')
     await page
       .getByLabel(d.intake.name, { exact: true })

@@ -59,7 +59,7 @@ test('purchase drafts survive history paging and cancelled item navigation; rest
       .first()
       .click()
     await expect(page.locator('.purchase-entry')).toHaveCount(20)
-    await page.locator(`a[href="/intake/items/${item}"]`).click()
+    await page.locator(`a[href^="/intake/items/${item}?"]`).click()
     await expect.poll(() => warnings).toBe(1)
     await expect(price).toHaveValue('125')
     await expect(evidence).toHaveValue('Synthetic draft receipt identifier')
@@ -67,8 +67,10 @@ test('purchase drafts survive history paging and cancelled item navigation; rest
     await price.fill('')
     await evidence.fill('')
     await page.getByRole('tab', { name: d.purchases.history }).click()
-    await page.locator(`a[href="/intake/items/${item}"]`).click()
-    await expect(page).toHaveURL(`/intake/items/${item}`)
+    await page.locator(`a[href^="/intake/items/${item}?"]`).click()
+    await expect
+      .poll(() => new URL(page.url()).pathname)
+      .toBe(`/intake/items/${item}`)
     expect(warnings).toBe(1)
     expect(
       (

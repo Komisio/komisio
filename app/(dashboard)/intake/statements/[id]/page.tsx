@@ -1,8 +1,9 @@
+import Link from '@/components/platform/working-link'
+import { BackLink } from '@/components/platform/back-link'
 import { SelfBillingDetails } from '@/components/intake/self-billing-details'
 import { statementTitle } from '@/lib/engine/self-billing'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { readStatementSellerContact } from '@/lib/engine/seller-profile'
-import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -48,9 +49,9 @@ export default async function Statement({
       <div className="page-heading no-print">
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
-        <Link className="text-link" href={`/intake/sellers/${s.seller_id}`}>
-          {all.sellerTerms.title}
-        </Link>
+        <BackLink className="text-link" href={`/intake/sellers/${s.seller_id}`}>
+          {all.returnNavigation.back}
+        </BackLink>
       </div>
       <article
         className="card intake-form statement"

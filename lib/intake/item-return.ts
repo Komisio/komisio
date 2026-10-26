@@ -1,32 +1,8 @@
-const fallback = '/intake/items'
-const base = 'https://komisio.invalid'
+import { staffReturnHref } from '@/lib/platform/return-navigation'
 
-/** Only inventory and intake destinations; never turn a query parameter into an open redirect. */
+/** Staff origins are validated centrally, including legacy inventory row anchors. */
 export function itemReturnHref(input: unknown): string {
-  if (
-    typeof input !== 'string' ||
-    input.length > 4096 ||
-    !input.startsWith('/') ||
-    input.startsWith('//') ||
-    /[\\\u0000-\u001f]/.test(input)
-  )
-    return fallback
-  try {
-    const url = new URL(input, base)
-    if (
-      url.origin !== base ||
-      !/^\/intake\/(items|bags\/[0-9a-f-]{36}\/inspect|reception\/[0-9a-f-]{36})$/.test(
-        url.pathname,
-      )
-    )
-      return fallback
-    const hash = /^#inventory-item-[0-9a-f-]{36}$/.test(url.hash)
-      ? url.hash
-      : ''
-    return url.pathname + url.search + hash
-  } catch {
-    return fallback
-  }
+  return staffReturnHref(input)
 }
 
 export function isIntakeReturn(href: string) {
@@ -37,6 +13,6 @@ export function itemFromListHref(itemId: string, listing: string, hash = '') {
   const destination = itemReturnHref(listing)
   const returnTo = destination.startsWith('/intake/reception/')
     ? destination
-    : itemReturnHref(destination + '#inventory-item-' + itemId)
+    : itemReturnHref(destination.split('#')[0] + '#inventory-item-' + itemId)
   return `/intake/items/${itemId}?${new URLSearchParams({ returnTo })}${hash}`
 }

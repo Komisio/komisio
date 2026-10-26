@@ -1525,11 +1525,11 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
     page.getByRole('heading', { name: 'Mottagningskö' }),
   ).toBeVisible()
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toContainText('Väntar på mottagande')
   // Seller approval never proves the garment is in the store: custody comes first.
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toContainText('Registrera mottagandet')
   await page.goto(`/intake/reception/${sessionId}`)
   await expect(page.getByText('Inget mottagande registrerat')).toBeVisible()
@@ -1548,17 +1548,17 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   ).toHaveCount(0)
   await page.goto('/intake/reception?stage=ready_to_accept')
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toContainText('Acceptera varan')
   await page.getByLabel('Visa läge').selectOption('declined')
   await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toHaveCount(0)
   await page.getByLabel('Visa läge').selectOption('ready_to_accept')
   await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toBeVisible()
   // Delegated pricing: the store accepts the garment under the terms in force.
   await page.goto(`/intake/reception/${sessionId}`)
@@ -1584,7 +1584,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(page.getByText('Ursprung dokumenterat')).toBeVisible()
   await page.goto('/intake/reception?stage=accepted')
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toContainText('Accepterad som vara')
   expect((await access(reviewId, accessId, false)).status()).toBe(200)
   expect((await mobile.request.get(photoUrl)).status()).toBe(404)

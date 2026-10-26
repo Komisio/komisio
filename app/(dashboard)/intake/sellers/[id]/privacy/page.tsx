@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
-import Link from '@/components/platform/working-link'
+import { BackLink } from '@/components/platform/back-link'
 import { requirePlatform } from '@/lib/platform/context'
 import { dictionary } from '@/lib/i18n'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -29,12 +29,12 @@ export default async function SellerPrivacyPage({
   const d = dictionary(ctx.locale).sellerPrivacy
   return (
     <div className="mx-auto grid w-full max-w-4xl gap-6">
-      <Link
+      <BackLink
         className="text-link"
         href={`/intake/sellers/${id.data}#seller-details`}
       >
-        {d.back}
-      </Link>
+        {dictionary(ctx.locale).returnNavigation.back}
+      </BackLink>
       <header>
         <h1>{d.title}</h1>
         <p>{preview.closedAt ? d.closedName : result.data.name}</p>

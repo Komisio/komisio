@@ -1,4 +1,5 @@
 'use client'
+import { ReturnScroll } from './return-scroll'
 import { useBusyState } from './work-activity'
 import { can } from '@/lib/platform/permissions'
 import { pageWidth } from '@/lib/platform/page-width'
@@ -206,6 +207,7 @@ export function Shell({
         </div>
         <div className="mobile-only">{picker(true)}</div>
       </header>
+      <ReturnScroll tenantId={active.id} />
       <main
         className={`main main--${pageWidth(pathname)}`}
         id="main-content"

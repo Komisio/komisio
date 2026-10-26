@@ -60,7 +60,7 @@ describe('item return navigation', () => {
     expect(itemReturnHref(`${intake}/other`)).toBe('/intake/items')
   })
   it.each(locales)('has a translated visible back label in %s', (locale) => {
-    expect(dictionary(locale).items.backToList.length).toBeGreaterThan(5)
+    expect(dictionary(locale).returnNavigation.back.length).toBeGreaterThan(2)
     expect(dictionary(locale).items.backToIntake.length).toBeGreaterThan(5)
   })
 })

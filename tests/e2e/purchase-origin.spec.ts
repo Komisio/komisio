@@ -55,7 +55,7 @@ test('a store-owned item opens its exact older purchase evidence and respects th
     })
     await expect(origin).toHaveAttribute(
       'href',
-      `/intake/purchases/${older.id}`,
+      new RegExp(`/intake/purchases/${older.id}\\?returnTo=`),
     )
     await origin.click()
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
@@ -77,7 +77,9 @@ test('a store-owned item opens its exact older purchase evidence and respects th
       fullPage: true,
     })
     await page.getByRole('link', { name: d.items.open, exact: true }).click()
-    await expect(page).toHaveURL(`/intake/items/${item}`)
+    await expect
+      .poll(() => new URL(page.url()).pathname)
+      .toBe(`/intake/items/${item}`)
     for (const id of [privateReceipt, randomUUID(), 'invalid-id']) {
       await page.goto(`/intake/purchases/${id}`)
       await expect(

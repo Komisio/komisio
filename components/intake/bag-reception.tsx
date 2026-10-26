@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import type { ItemSort } from '@/lib/engine/item-directory'
 import { readBagProcessing } from '@/lib/engine/bag-processing'
 import { BagWorkSummary } from './bag-work-summary'
@@ -84,9 +85,9 @@ export async function BagReception({
   ])
   return (
     <div className="bag-reception-page">
-      <Link className="text-link" href="/intake">
-        {d.intake.back}
-      </Link>
+      <BackLink className="text-link" href="/intake">
+        {d.returnNavigation.back}
+      </BackLink>
       <header className="page-heading">
         <p className="eyebrow">
           {d.intake.bag} K-{reference} · {seller.data.name}

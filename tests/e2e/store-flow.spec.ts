@@ -223,11 +223,13 @@ test('current flow counts actual work, refreshes without losing notes and opens 
     await expect(page).toHaveURL(/state=unstarted/)
     await expect(
       page.locator(
-        '#bag-queue a[href="/intake/bags/' + untouched + '/inspect"]',
+        '#bag-queue a[href^="/intake/bags/' + untouched + '/inspect?"]',
       ),
     ).toBeVisible()
     await expect(
-      page.locator('#bag-queue a[href="/intake/bags/' + started + '/inspect"]'),
+      page.locator(
+        '#bag-queue a[href^="/intake/bags/' + started + '/inspect?"]',
+      ),
     ).toHaveCount(0)
   } finally {
     await f.close()

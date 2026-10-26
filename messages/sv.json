@@ -5174,5 +5174,8 @@
   "registrationApprovalEmail": {
     "subject": "Din registrering hos {store} är godkänd",
     "body": "Hej {seller}!\n\n{store} har godkänt din registrering. Du kan nu logga in i säljarportalen med kontot du använde när du registrerade dig:\n{url}\n\nDär kan du följa dina varor och utbetalningar."
+  },
+  "returnNavigation": {
+    "back": "Tillbaka"
   }
 }

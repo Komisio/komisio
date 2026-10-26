@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
@@ -52,9 +53,9 @@ export default async function History({
     })}`
   return (
     <>
-      <Link className="text-link" href={root}>
-        {d.open}
-      </Link>
+      <BackLink className="text-link" href={root}>
+        {all.returnNavigation.back}
+      </BackLink>
       <div className="page-heading">
         <h1>{h.title}</h1>
         <p>{h.notice}</p>

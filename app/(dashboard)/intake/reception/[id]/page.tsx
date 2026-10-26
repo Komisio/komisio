@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { EventTime } from '@/components/ui/event-time'
@@ -246,12 +247,12 @@ export default async function Reception({
   )
   return (
     <div className="reception-workspace">
-      <Link
+      <BackLink
         className="text-link item-back-link"
         href={bagId ? intakeHref : '/intake/reception'}
       >
-        {bagId ? all.items.backToIntake : d.back}
-      </Link>
+        {all.returnNavigation.back}
+      </BackLink>
       <div className="page-heading">
         <h1>{accepted ? d.storeReview.registered : d.workspace.title}</h1>
         <p className="reception-seller-name">{seller.data.name}</p>

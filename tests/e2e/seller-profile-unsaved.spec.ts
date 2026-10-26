@@ -72,7 +72,9 @@ test('seller edits survive tabs and cancelled departure; restoring fields releas
       .getByRole('tabpanel')
       .getByRole('link', { name: 'Synthetic seller draft item', exact: true })
       .click()
-    await expect(page).toHaveURL(`/intake/items/${item}`)
+    await expect
+      .poll(() => new URL(page.url()).pathname)
+      .toBe(`/intake/items/${item}`)
     expect(unexpected).toBe(0)
     expect(
       (

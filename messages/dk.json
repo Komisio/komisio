@@ -698,7 +698,8 @@
     "item.collection_recorded": "Afhentningsstatus registreret",
     "item.period_reopened": "Salgsperiode genåbnet",
     "item.period_end_corrected": "Afslutningsårsag rettet",
-    "item.lifecycle_batch": "Masseændring af salgsperioder"
+    "item.lifecycle_batch": "Masseændring af salgsperioder",
+    "label_fields.set": "Etiketfelter · Gemt"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -5187,5 +5188,16 @@
     "none": "Intet felt",
     "save": "Gem mærkatfelter",
     "saved": "Mærkatfelterne er gemt."
+  },
+  "priceEdit": {
+    "title": "Rediger pris",
+    "reason": "Begrundelse (valgfri)",
+    "none": "Ingen begrundelse",
+    "store": "Butikkens beslutning",
+    "sale": "Udsalg",
+    "defect": "Fejl",
+    "other": "Andet",
+    "custom": "Egen begrundelse",
+    "saved": "Prisen er gemt."
   }
 }

@@ -698,7 +698,8 @@
     "item.collection_recorded": "Hämtstatus registrerad",
     "item.period_reopened": "Säljperiod återöppnad",
     "item.period_end_corrected": "Avslutsorsak rättad",
-    "item.lifecycle_batch": "Massändring av säljperioder"
+    "item.lifecycle_batch": "Massändring av säljperioder",
+    "label_fields.set": "Etikettfält · Sparade"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -5187,5 +5188,16 @@
     "none": "Inget fält",
     "save": "Spara etikettfält",
     "saved": "Etikettfälten har sparats."
+  },
+  "priceEdit": {
+    "title": "Ändra pris",
+    "reason": "Motivering (valfri)",
+    "none": "Ingen motivering",
+    "store": "Butiksbeslut",
+    "sale": "Rea",
+    "defect": "Defekt",
+    "other": "Annat",
+    "custom": "Egen motivering",
+    "saved": "Priset har sparats."
   }
 }

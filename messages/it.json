@@ -698,7 +698,8 @@
     "item.collection_recorded": "Stato del ritiro registrato",
     "item.period_reopened": "Periodo di vendita riaperto",
     "item.period_end_corrected": "Motivo della chiusura corretto",
-    "item.lifecycle_batch": "Modifica multipla dei periodi di vendita"
+    "item.lifecycle_batch": "Modifica multipla dei periodi di vendita",
+    "label_fields.set": "Campi etichetta · Salvati"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -5187,5 +5188,16 @@
     "none": "Nessun campo",
     "save": "Salva campi etichette",
     "saved": "Campi delle etichette salvati."
+  },
+  "priceEdit": {
+    "title": "Modifica prezzo",
+    "reason": "Motivo (facoltativo)",
+    "none": "Nessun motivo",
+    "store": "Decisione del negozio",
+    "sale": "Saldi",
+    "defect": "Difetto",
+    "other": "Altro",
+    "custom": "Motivo personalizzato",
+    "saved": "Il prezzo è stato salvato."
   }
 }

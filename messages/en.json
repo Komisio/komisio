@@ -698,7 +698,8 @@
     "item.collection_recorded": "Collection status recorded",
     "item.period_reopened": "Sale period reopened",
     "item.period_end_corrected": "End action corrected",
-    "item.lifecycle_batch": "Bulk sale-period change"
+    "item.lifecycle_batch": "Bulk sale-period change",
+    "label_fields.set": "Label fields · Saved"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -5187,5 +5188,16 @@
     "none": "No field",
     "save": "Save label fields",
     "saved": "Label fields saved."
+  },
+  "priceEdit": {
+    "title": "Edit price",
+    "reason": "Reason (optional)",
+    "none": "No reason",
+    "store": "Store decision",
+    "sale": "Sale",
+    "defect": "Defect",
+    "other": "Other",
+    "custom": "Custom reason",
+    "saved": "The price has been saved."
   }
 }

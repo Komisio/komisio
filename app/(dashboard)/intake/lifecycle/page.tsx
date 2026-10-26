@@ -388,6 +388,7 @@ export default async function Lifecycle({
                       endOfPeriodAction={r.end_of_period_action}
                       collectionDeadline={r.collection_deadline}
                       collectionDue={r.collection_due === true}
+                      priceEdit={all.priceEdit}
                       d={d}
                       intake={all.intake}
                     />

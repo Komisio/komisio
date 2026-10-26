@@ -698,7 +698,8 @@
     "item.collection_recorded": "Estado de recogida registrado",
     "item.period_reopened": "Periodo de venta reabierto",
     "item.period_end_corrected": "Motivo de finalización corregido",
-    "item.lifecycle_batch": "Cambio de períodos de venta en lote"
+    "item.lifecycle_batch": "Cambio de períodos de venta en lote",
+    "label_fields.set": "Campos de etiqueta · Guardados"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -5193,5 +5194,16 @@
     "none": "Ningún campo",
     "save": "Guardar campos",
     "saved": "Campos de las etiquetas guardados."
+  },
+  "priceEdit": {
+    "title": "Editar precio",
+    "reason": "Motivo (opcional)",
+    "none": "Sin motivo",
+    "store": "Decisión de la tienda",
+    "sale": "Rebajas",
+    "defect": "Defecto",
+    "other": "Otro",
+    "custom": "Motivo personalizado",
+    "saved": "El precio se ha guardado."
   }
 }

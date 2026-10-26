@@ -1,5 +1,6 @@
 'use client'
-import { useRef, useState } from 'react'
+import { PriceReason } from './price-reason'
+import { useRef, useState, useSyncExternalStore } from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { useIntakeAction } from './use-intake-action'
@@ -8,6 +9,10 @@ import { Button } from '@/components/ui/button'
 type D = Dictionary['lifecycle']
 
 /** The three lifecycle operations for one item; each submit is one replay-safe command. */
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
+
 export function LifecycleActions({
   tenantId,
   itemId,
@@ -17,6 +22,7 @@ export function LifecycleActions({
   collectionDue = false,
   d,
   intake,
+  priceEdit,
 }: {
   tenantId: string
   itemId: string
@@ -26,7 +32,9 @@ export function LifecycleActions({
   collectionDue?: boolean
   d: D
   intake: Dictionary['intake']
+  priceEdit: Dictionary['priceEdit']
 }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const action = useIntakeAction(intake)
   const router = useRouter()
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
@@ -36,7 +44,7 @@ export function LifecycleActions({
     label: string
   } | null>(null)
   const running = useRef(false)
-  const blocked = action.busy || action.locked || action.needsReload
+  const blocked = !ready || action.busy || action.locked || action.needsReload
   async function run(command: Record<string, unknown>, label: string) {
     if (running.current || action.needsReload) return
     // The hook replays its pending command. Keep the matching outcome label,
@@ -101,16 +109,7 @@ export function LifecycleActions({
             disabled={blocked}
           />
         </div>
-        <div className="field">
-          <label htmlFor={`price-reason-${itemId}`}>{d.priceReason}</label>
-          <input
-            id={`price-reason-${itemId}`}
-            name="priceReason"
-            required
-            maxLength={500}
-            disabled={blocked}
-          />
-        </div>
+        <PriceReason d={priceEdit} name="priceReason" disabled={blocked} />
         <Button type="submit" variant="secondary" disabled={blocked}>
           {d.setPrice}
         </Button>

@@ -1,4 +1,5 @@
 'use client'
+import { ItemPriceCell } from './item-price-cell'
 import { useEffect, type ReactNode } from 'react'
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react'
 import { InventoryItemLink } from './inventory-item-link'
@@ -13,6 +14,7 @@ import {
 export function InventoryEditableRow({
   item,
   tenantId,
+  currency,
   write,
   types,
   groups,
@@ -23,6 +25,7 @@ export function InventoryEditableRow({
 }: {
   item: DirectoryItem
   tenantId: string
+  currency: string
   write: boolean
   types: { id: string; name: string }[]
   groups: { id: string; name: string }[]
@@ -154,9 +157,25 @@ export function InventoryEditableRow({
           </button>
         )}
       </th>
-      <td>{indicators}</td>
       <td>{cell('category', d.quickIntake.category, categories)}</td>
       <td>{cell('itemType', d.quickIntake.itemType, types)}</td>
+      <td className="inventory-number inventory-price" data-row-control>
+        <ItemPriceCell
+          tenantId={tenantId}
+          itemId={item.id}
+          priceOre={
+            item.currentPriceOre === null ? null : String(item.currentPriceOre)
+          }
+          currency={currency}
+          title={current.title}
+          write={
+            write &&
+            ['on_sale', 'markdown_due', 'period_ending'].includes(item.stage)
+          }
+          d={d}
+        />
+      </td>
+      <td className="inventory-indicator-cell">{indicators}</td>
       <td>{cell('assortment', t.group, groups)}</td>
       {children}
     </tr>

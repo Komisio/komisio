@@ -1,4 +1,5 @@
 'use client'
+import { PriceReason } from './price-reason'
 import { useEffect, useId, useRef, useState } from 'react'
 import type { Dictionary, Locale } from '@/lib/i18n'
 import { intlLocale } from '@/lib/i18n'
@@ -280,7 +281,8 @@ function BatchDialog({
                 />
               </div>
             )}
-            {kind !== 'markdown' && (
+            {kind === 'setPrice' && <PriceReason d={d.priceEdit} />}
+            {kind !== 'markdown' && kind !== 'setPrice' && (
               <div className="field">
                 <label htmlFor={`${id}-reason`}>
                   {kind === 'end' ? l.note : l.reason}

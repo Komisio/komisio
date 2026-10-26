@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import {
   formatCreditPrice,
+  credits,
   type CreditPrice,
 } from '@/lib/platform/credit-prices'
-import { credits, type AiCredits } from '@/lib/engine/ai-credits'
+import type { AiCredits } from '@/lib/engine/ai-credits'
 
 /** AI credits under Settings: what is left this month, how to get more, and the store's own key. */
 export function AiCreditsPanel({

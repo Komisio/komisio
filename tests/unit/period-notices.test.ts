@@ -95,12 +95,10 @@ it('records a thrown transport as unconfirmed without retrying', async () => {
   )
 })
 it('caps scans even when every page reports more work', async () => {
-  const rpc = vi
-    .fn()
-    .mockResolvedValue({
-      data: { candidates: [], checked: 40, wrapped: false },
-      error: null,
-    })
+  const rpc = vi.fn().mockResolvedValue({
+    data: { candidates: [], checked: 40, wrapped: false },
+    error: null,
+  })
   const result = await runPeriodNotices(
     { rpc } as unknown as SupabaseClient,
     {},

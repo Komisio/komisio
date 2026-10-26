@@ -55,11 +55,7 @@ export function ReceptionAssistance({
   > | null>(null)
   const modeId = useId()
   const running = useRef(false)
-  const ready =
-    candidate?.attributes.some((a) => a.slug === 'description') &&
-    candidate.price &&
-    candidate.questions.length === 0 &&
-    terms
+  const ready = candidate?.price && candidate.questions.length === 0 && terms
   return (
     <section className="card intake-form reception-result">
       <h2>{d.aiTitle}</h2>

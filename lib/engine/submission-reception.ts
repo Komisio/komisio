@@ -6,7 +6,7 @@ import { exactPrice } from './manual-reception'
 export const prepareSubmissionCommand = z.strictObject({
   tenantId: z.uuid(),
   submissionId: z.uuid(),
-  description: z.string().trim().min(1).max(1000),
+  description: z.string().trim().max(1000),
   price: z.string().transform(exactPrice),
 })
 export async function prepareSubmissionReception(

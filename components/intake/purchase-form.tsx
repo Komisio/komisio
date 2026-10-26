@@ -1,4 +1,10 @@
 'use client'
+import { RegistrationFields } from './registration-fields'
+import {
+  questionsFor,
+  labelOf,
+  type AttributeVocabulary,
+} from '@/lib/engine/attributes'
 import { useRef, useState } from 'react'
 import { NavigationLink } from '@/components/platform/navigation-warning'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
@@ -11,23 +17,28 @@ import { Button } from '@/components/ui/button'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 
-const emptyFields = [
-  ['note', ''],
-  ['price', ''],
-  ['evidence', ''],
-] as const
-
 export function PurchaseForm({
   tenantId,
   d,
   intake,
   leaveUnsaved,
+  registration,
+  descriptionRequired = false,
+  vocabulary,
+  locale = 'sv',
+  itemTypeLabel,
 }: {
   tenantId: string
   d: Dictionary['purchases']
   intake: Dictionary['intake']
+  registration?: Dictionary['registration']
+  vocabulary?: AttributeVocabulary
+  locale?: string
+  itemTypeLabel?: string
+  descriptionRequired?: boolean
   leaveUnsaved: string
 }) {
+  const [itemType, setItemType] = useState('')
   const action = useIntakeAction(intake)
   const router = useRouter()
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
@@ -36,10 +47,7 @@ export function PurchaseForm({
   const priceRef = useRef<HTMLInputElement>(null)
   const submittedFields = useRef<FormData | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
-  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(
-    formRef,
-    emptyFields,
-  )
+  const { ready, dirty, checkDirty, resetDirty } = useFormDirty(formRef)
   useUnsavedChanges(
     !action.needsReload && (dirty || action.locked) ? leaveUnsaved : null,
   )
@@ -68,6 +76,22 @@ export function PurchaseForm({
       tenantId,
       requestId,
       supplierNote: String(fields.get('note') ?? ''),
+      internalNote: String(fields.get('internalNote') ?? ''),
+      ...(vocabulary
+        ? {
+            itemType: itemType || null,
+            facts: Object.fromEntries(
+              questionsFor(vocabulary, itemType || null)
+                .filter((q) => q.definition.slug !== 'description')
+                .flatMap(({ definition: a }) => {
+                  const value = String(
+                    fields.get(`attribute-${a.slug}`) ?? '',
+                  ).trim()
+                  return value ? [[a.slug, value]] : []
+                }),
+            ),
+          }
+        : {}),
       purchasePrice,
       evidenceReference: String(fields.get('evidence') ?? ''),
       marginEligible: fields.get('margin') === 'on',
@@ -77,8 +101,18 @@ export function PurchaseForm({
       setSaved(id)
       setRequestId(crypto.randomUUID())
       form.reset()
+      setItemType('')
       const cleared = new FormData()
-      for (const [name, value] of emptyFields) cleared.append(name, value)
+      cleared.append('note', '')
+      if (registration) cleared.append('internalNote', '')
+      if (vocabulary) {
+        cleared.append('itemType', '')
+        for (const { definition: a } of questionsFor(vocabulary, null))
+          if (a.slug !== 'description' && a.data_type !== 'boolean')
+            cleared.append(`attribute-${a.slug}`, '')
+      }
+      cleared.append('price', '')
+      cleared.append('evidence', '')
       resetDirty(cleared)
       router.refresh()
     }
@@ -106,8 +140,53 @@ export function PurchaseForm({
         >
           <div className="field">
             <label htmlFor="purchase-note">{d.note}</label>
-            <input id="purchase-note" name="note" maxLength={500} />
+            <input
+              id="purchase-note"
+              name="note"
+              maxLength={500}
+              required={descriptionRequired}
+            />
+            {registration && (
+              <>
+                <label htmlFor="purchase-internal-note">
+                  {registration.note}
+                </label>
+                <textarea
+                  id="purchase-internal-note"
+                  name="internalNote"
+                  maxLength={2000}
+                />
+                <small>{registration.noteHint}</small>
+              </>
+            )}
           </div>
+          {vocabulary && (
+            <>
+              <div className="field">
+                <label htmlFor="purchase-type">{itemTypeLabel}</label>
+                <select
+                  id="purchase-type"
+                  name="itemType"
+                  value={itemType}
+                  onChange={(e) => setItemType(e.target.value)}
+                >
+                  <option value="">—</option>
+                  {vocabulary.types
+                    .filter((t) => t.active)
+                    .map((t) => (
+                      <option key={t.slug} value={t.slug}>
+                        {labelOf(t, locale)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <RegistrationFields
+                vocabulary={vocabulary}
+                itemType={itemType || null}
+                locale={locale}
+              />
+            </>
+          )}
           <div className="field">
             <label htmlFor="purchase-price">{d.price}</label>
             <input

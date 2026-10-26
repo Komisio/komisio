@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "Fotot är för stort (högst 3 MB).",
       "INVALID_IMAGE": "Filen är inte en giltig JPEG- eller PNG-bild.",
       "REQUEST_FAILED": "Förfrågan misslyckades. Försök igen.",
-      "BAG_COMPLETED": "Inlämningen är färdigbehandlad. Återöppna den för att fortsätta."
+      "BAG_COMPLETED": "Inlämningen är färdigbehandlad. Återöppna den för att fortsätta.",
+      "DESCRIPTION_REQUIRED": "Ange en beskrivning."
     },
     "addPhoto": "Ta eller välj en bild",
     "sellerSearchHint": "Namn, e-post eller telefon",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Välj fält",
     "assortment": "Sortimentsgrupp",
     "noAssortment": "Utan sortimentsgrupp",
-    "noCategory": "Ingen kategori"
+    "noCategory": "Ingen kategori",
+    "internalNote": "Intern anteckning",
+    "internalNoteHint": "Endast för personal. Visas inte för säljaren och följer inte med till etiketter, försäljningsunderlag eller kassasystem."
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
@@ -4272,7 +4275,9 @@
       "INVALID_INPUT": "Importen kunde inte genomföras. Inga nya varor registrerades.",
       "REQUEST_CONFLICT": "Importen kunde inte genomföras. Inga nya varor registrerades.",
       "CURRENCY_MISMATCH": "Villkoren har ändrats. Förhandsgranska filen igen.",
-      "CUSTODY_REQUIRED": "Jag bekräftar att varorna finns i butiken."
+      "CUSTODY_REQUIRED": "Jag bekräftar att varorna finns i butiken.",
+      "DESCRIPTION_REQUIRED": "Ange en beskrivning.",
+      "NOTE_CHANGED": "Uppgifterna har ändrats eller åtkomst saknas. Ladda om sidan innan du fortsätter."
     },
     "fromFile": "Från fil",
     "fromPos": "Från kassa"
@@ -4660,7 +4665,8 @@
     "categoryExists": "Det finns redan en kategori med det namnet.",
     "translations": "Översättningar (valfritt)",
     "languages": "Språk",
-    "noCategories": "Inga kategorier ännu."
+    "noCategories": "Inga kategorier ännu.",
+    "inheritDefaults": "Använd butikens standardfält"
   },
   "settingsHelp": {
     "label": "Hjälp",
@@ -5212,5 +5218,22 @@
     "returnTotal": "Registrerade returer totalt",
     "currentDetails": "Butiks- och varubeskrivningar visas enligt nuvarande uppgifter. Beloppen kommer från den registrerade försäljningen och eventuella returer.",
     "generatedAt": "Sammanställd"
+  },
+  "registration": {
+    "title": "Varuregistrering",
+    "hint": "Standardfälten gäller för varutyper som ärver butikens inställningar.",
+    "descriptionRequired": "Kräv beskrivning vid registrering",
+    "template": "Titel när beskrivning saknas",
+    "templateHint": "Använd dessa platshållare. Saknade värden utelämnas; om titeln blir tom används varureferensen.",
+    "fields": "Butikens standardfält",
+    "inherit": "Använd butikens standardfält",
+    "note": "Intern anteckning",
+    "noteHint": "Endast för personal. Visas inte för säljaren och följer inte med till etiketter, försäljningsunderlag eller kassasystem.",
+    "save": "Spara",
+    "retry": "Försök igen",
+    "saved": "Sparat.",
+    "invalid": "Kontrollera fälten och titelns platshållare.",
+    "changed": "Uppgifterna har ändrats eller åtkomst saknas. Ladda om sidan innan du fortsätter.",
+    "uncertain": "Svaret kunde inte bekräftas. Försök igen med samma uppgifter."
   }
 }

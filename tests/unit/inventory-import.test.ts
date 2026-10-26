@@ -104,7 +104,6 @@ describe('inventory-file preflight', () => {
     expect(checked[0].issues).toEqual(['duplicate'])
     expect(checked[1].issues).toEqual([
       'duplicate',
-      'description',
       'price',
       'currency',
       'sellerReference',

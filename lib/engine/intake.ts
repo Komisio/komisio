@@ -161,6 +161,18 @@ export const intakeCommand = z.discriminatedUnion('action', [
   }),
   z.object({
     action: z.literal('registerPurchase'),
+    facts: z
+      .record(
+        z.string().regex(/^[a-z][a-z0-9_]{0,39}$/),
+        z.string().trim().min(1).max(1000),
+      )
+      .optional(),
+    itemType: z
+      .string()
+      .regex(/^[a-z][a-z0-9_]{0,39}$/)
+      .nullable()
+      .optional(),
+    internalNote: z.string().trim().max(2000).optional(),
     tenantId: z.uuid(),
     requestId: z.uuid(),
     supplierNote: z.string().trim().max(500),
@@ -545,14 +557,31 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_expires: c.expiresAt,
       })
     case 'registerPurchase':
-      return client.rpc('register_purchase', {
-        p_tenant: c.tenantId,
-        p_id: c.requestId,
-        p_note: c.supplierNote,
-        p_price_ore: oreFromDecimal(c.purchasePrice),
-        p_evidence: c.evidenceReference,
-        p_margin_eligible: c.marginEligible,
-      })
+      return client.rpc(
+        c.facts !== undefined || c.itemType !== undefined
+          ? 'register_purchase_described'
+          : c.internalNote !== undefined
+            ? 'register_purchase_noted'
+            : 'register_purchase',
+        {
+          ...(c.facts !== undefined || c.itemType !== undefined
+            ? {
+                p_facts: c.facts ?? {},
+                p_item_type: c.itemType ?? null,
+                p_internal_note: c.internalNote ?? '',
+              }
+            : {}),
+          ...(c.internalNote !== undefined
+            ? { p_internal_note: c.internalNote }
+            : {}),
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_note: c.supplierNote,
+          p_price_ore: oreFromDecimal(c.purchasePrice),
+          p_evidence: c.evidenceReference,
+          p_margin_eligible: c.marginEligible,
+        },
+      )
     case 'receiveGarment':
       return client.rpc('receive_garment', {
         p_tenant: c.tenantId,
@@ -571,13 +600,24 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         },
       )
     case 'saveReceptionSources':
-      return client.rpc('save_reception_sources', {
-        p_tenant: c.tenantId,
-        p_request: c.requestId,
-        p_session: c.sessionId,
-        p_expected: c.expectedRevision,
-        p_sources: c.sources,
-      })
+      return client.rpc(
+        c.internalNote
+          ? 'save_reception_sources_noted'
+          : 'save_reception_sources',
+        {
+          ...(c.internalNote
+            ? {
+                p_note: c.internalNote.note,
+                p_note_expected: c.internalNote.id,
+              }
+            : {}),
+          p_tenant: c.tenantId,
+          p_request: c.requestId,
+          p_session: c.sessionId,
+          p_expected: c.expectedRevision,
+          p_sources: c.sources,
+        },
+      )
     case 'saveSellerProfile':
       if (c.agreementApproval)
         return client.rpc(

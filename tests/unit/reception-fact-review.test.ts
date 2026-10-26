@@ -125,7 +125,7 @@ describe('explicit reception fact review', () => {
         },
         ['condition', 'price'],
       ).complete,
-    ).toBe(false)
+    ).toBe(true)
   })
   it('rejects absent, duplicate and authority selections', () => {
     for (const selection of [

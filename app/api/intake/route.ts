@@ -80,6 +80,8 @@ export async function POST(request: Request) {
           'ITEM_TRANSFER_TERMINAL',
           'SELLER_NOT_FOUND',
           'INVALID_INPUT',
+          'DESCRIPTION_REQUIRED',
+          'NOTE_CHANGED',
           'LABEL_TEMPLATE_FRAME',
           'LABEL_TEMPLATE_CONTROL',
           'LABEL_TEMPLATE_REFERENCE',

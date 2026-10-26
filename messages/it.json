@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "La foto è troppo grande (massimo 3 MB).",
       "INVALID_IMAGE": "Il file non è un’immagine JPEG o PNG valida.",
       "REQUEST_FAILED": "La richiesta non è riuscita. Riprova.",
-      "BAG_COMPLETED": "Questa consegna è completata. Riaprila per continuare."
+      "BAG_COMPLETED": "Questa consegna è completata. Riaprila per continuare.",
+      "DESCRIPTION_REQUIRED": "Inserisci una descrizione."
     },
     "addPhoto": "Scatta o scegli una foto",
     "sellerSearchHint": "Nome, email o telefono",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Scegli campi",
     "assortment": "Gruppo di assortimento",
     "noAssortment": "Nessun gruppo di assortimento",
-    "noCategory": "Nessuna categoria"
+    "noCategory": "Nessuna categoria",
+    "internalNote": "Nota interna",
+    "internalNoteHint": "Solo per il personale. Non viene mostrata al venditore né inclusa nelle etichette, nei riepiloghi di vendita o nei dati del POS."
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",
@@ -4272,7 +4275,9 @@
       "INVALID_INPUT": "Impossibile completare l’importazione. Nessun nuovo articolo registrato.",
       "REQUEST_CONFLICT": "Impossibile completare l’importazione. Nessun nuovo articolo registrato.",
       "CURRENCY_MISMATCH": "Le condizioni sono cambiate. Visualizza nuovamente l’anteprima.",
-      "CUSTODY_REQUIRED": "Confermo che gli articoli si trovano in negozio."
+      "CUSTODY_REQUIRED": "Confermo che gli articoli si trovano in negozio.",
+      "DESCRIPTION_REQUIRED": "Inserisci una descrizione.",
+      "NOTE_CHANGED": "I dati sono cambiati o manca l’accesso. Ricarica la pagina."
     },
     "fromFile": "Da file",
     "fromPos": "Dal POS"
@@ -4660,7 +4665,8 @@
     "categoryExists": "Esiste già una categoria con questo nome.",
     "translations": "Traduzioni (facoltative)",
     "languages": "Lingue",
-    "noCategories": "Nessuna categoria presente."
+    "noCategories": "Nessuna categoria presente.",
+    "inheritDefaults": "Usa i campi predefiniti del negozio"
   },
   "settingsHelp": {
     "label": "Aiuto",
@@ -5212,5 +5218,22 @@
     "returnTotal": "Totale dei resi registrati",
     "currentDetails": "Le descrizioni del negozio e degli articoli riflettono i dati attuali. Gli importi provengono dalla vendita registrata e dagli eventuali resi.",
     "generatedAt": "Generato"
+  },
+  "registration": {
+    "title": "Registrazione articoli",
+    "hint": "I campi predefiniti si applicano ai tipi che ereditano le impostazioni del negozio.",
+    "descriptionRequired": "Richiedi una descrizione alla registrazione",
+    "template": "Titolo quando manca la descrizione",
+    "templateHint": "Usa questi segnaposto. I valori mancanti vengono omessi; un titolo vuoto viene sostituito dal riferimento articolo.",
+    "fields": "Campi predefiniti del negozio",
+    "inherit": "Usa i campi predefiniti del negozio",
+    "note": "Nota interna",
+    "noteHint": "Solo per il personale. Non viene mostrata al venditore né inclusa nelle etichette, nei riepiloghi di vendita o nei dati del POS.",
+    "save": "Salva",
+    "retry": "Riprova",
+    "saved": "Salvato.",
+    "invalid": "Controlla i campi e i segnaposto del titolo.",
+    "changed": "I dati sono cambiati o manca l’accesso. Ricarica la pagina.",
+    "uncertain": "Impossibile confermare la risposta. Riprova con gli stessi dati."
   }
 }

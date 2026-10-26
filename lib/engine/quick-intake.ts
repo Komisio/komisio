@@ -14,15 +14,15 @@ import {
 /** Slug to value for any attribute the store's vocabulary defines, not a fixed
  * list of seven: that is what lets a lamp record its socket through the same
  * screen as a sweater records its size. The database refuses a slug nothing
- * defines, so the vocabulary cannot grow by typing. A description is always
- * required because it is what a person reads on the shelf. */
-export const quickFacts = z
-  .record(
-    z.string().regex(/^[a-z][a-z0-9_]{0,39}$/),
-    z.string().trim().max(1000),
-  )
-  .refine((f) => (f.description ?? '').trim().length > 0)
+ * defines, so the vocabulary cannot grow by typing. The store requirement is
+ * checked by the tenant-aware database operation. */
+export const quickFacts = z.record(
+  z.string().regex(/^[a-z][a-z0-9_]{0,39}$/),
+  z.string().trim().max(1000),
+)
+
 export const quickReceiveInput = z.strictObject({
+  internalNote: z.string().trim().max(2000).optional(),
   bagId: z.uuid().optional(),
   tenantId: z.uuid(),
   requestId: z.uuid(),
@@ -53,6 +53,7 @@ export { quickReceiveResult }
 export const quickErrorCodes = [
   'FORBIDDEN',
   'INVALID_INPUT',
+  'DESCRIPTION_REQUIRED',
   'INTAKE_PROFILE_FULL',
   'RECEPTION_NOT_FOUND',
   'RECEPTION_CHANGED',
@@ -89,25 +90,34 @@ export async function quickReceive(client: SupabaseClient, input: unknown) {
     sessionId = z.guid().parse(created.data)
   }
   const r = await client.rpc(
-    c.categoryId !== undefined
-      ? 'quick_receive_categorized'
-      : c.assortment !== undefined
-        ? 'quick_receive_classified'
-        : c.bagId
-          ? 'quick_receive_from_bag'
-          : 'quick_receive',
+    c.internalNote !== undefined
+      ? 'quick_receive_noted'
+      : c.categoryId !== undefined
+        ? 'quick_receive_categorized'
+        : c.assortment !== undefined
+          ? 'quick_receive_classified'
+          : c.bagId
+            ? 'quick_receive_from_bag'
+            : 'quick_receive',
     {
-      ...(c.categoryId !== undefined
+      ...(c.internalNote !== undefined
         ? {
-            p_category: c.categoryId,
+            p_note: c.internalNote,
+            p_category: c.categoryId ?? null,
             p_group: c.assortment ?? null,
             p_bag: c.bagId ?? null,
           }
-        : c.assortment !== undefined
-          ? { p_group: c.assortment, p_bag: c.bagId ?? null }
-          : c.bagId
-            ? { p_bag: c.bagId }
-            : {}),
+        : c.categoryId !== undefined
+          ? {
+              p_category: c.categoryId,
+              p_group: c.assortment ?? null,
+              p_bag: c.bagId ?? null,
+            }
+          : c.assortment !== undefined
+            ? { p_group: c.assortment, p_bag: c.bagId ?? null }
+            : c.bagId
+              ? { p_bag: c.bagId }
+              : {}),
       p_tenant: c.tenantId,
       p_request: c.requestId,
       p_session: sessionId,

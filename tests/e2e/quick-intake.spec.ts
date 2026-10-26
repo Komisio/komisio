@@ -79,7 +79,7 @@ test('quick reception turns a garment into an accepted item on one screen', asyn
     await expect(page.locator('.quick-item h2')).toBeInViewport()
     await expect(
       page.getByLabel(d.quickIntake.description, { exact: true }),
-    ).toHaveAttribute('required', '')
+    ).not.toHaveAttribute('required')
     await expect(
       page.getByLabel(d.quickIntake.price, { exact: true }),
     ).toHaveAttribute('required', '')

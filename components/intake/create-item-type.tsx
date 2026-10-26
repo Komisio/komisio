@@ -42,6 +42,7 @@ export function CreateItemType({
   const [open, setOpen] = useState(initiallyOpen)
   const [name, setName] = useState('')
   const [base, setBase] = useState('')
+  const [inherit, setInherit] = useState(true)
   const [fields, setFields] = useState<string[]>(() => [
     ...new Set(['description', ...initialFields]),
   ])
@@ -83,6 +84,7 @@ export function CreateItemType({
         name,
         locale: lang,
         attributes,
+        inheritAttributes: inherit,
       },
     )
     if (!parsed.success) {
@@ -207,7 +209,16 @@ export function CreateItemType({
           }}
         />
       </div>
-      {!compact && (
+      <label className="checkbox-label">
+        <input
+          type="checkbox"
+          checked={inherit}
+          disabled={busy || locked || disabled}
+          onChange={(e) => setInherit(e.target.checked)}
+        />
+        {settings.inheritDefaults}
+      </label>
+      {!inherit && (
         <>
           <div className="field">
             <label htmlFor="new-type-base">{d.typeFields}</label>
@@ -218,20 +229,19 @@ export function CreateItemType({
               disabled={busy || locked || disabled}
               onChange={(e) => {
                 setBase(e.target.value)
-                setFields(
-                  vocabulary.types
-                    .find((t) => t.slug === e.target.value)
-                    ?.attributes.map((a) => a.slug) ?? ['description'],
-                )
+                setFields([
+                  ...new Set([
+                    'description',
+                    ...(vocabulary.types
+                      .find((t) => t.slug === e.target.value)
+                      ?.attributes.map((a) => a.slug) ?? []),
+                  ]),
+                ])
               }}
             >
               <option value="">{d.typeBasic}</option>
               {vocabulary.types
-                .filter(
-                  (t) =>
-                    t.active &&
-                    t.attributes.some((a) => a.slug === 'description'),
-                )
+                .filter((t) => t.active)
                 .map((t) => (
                   <option key={t.slug} value={t.slug}>
                     {labelOf(t, lang)}

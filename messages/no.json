@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "Bildet er for stort (maks 3 MB).",
       "INVALID_IMAGE": "Filen er ikke et gyldig JPEG- eller PNG-bilde.",
       "REQUEST_FAILED": "Forespørselen mislyktes. Prøv igjen.",
-      "BAG_COMPLETED": "Innleveringen er ferdigbehandlet. Åpne den igjen for å fortsette."
+      "BAG_COMPLETED": "Innleveringen er ferdigbehandlet. Åpne den igjen for å fortsette.",
+      "DESCRIPTION_REQUIRED": "Skriv inn en beskrivelse."
     },
     "addPhoto": "Ta eller velg et bilde",
     "sellerSearchHint": "Navn, e-post eller telefon",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Velg felt",
     "assortment": "Sortimentsgruppe",
     "noAssortment": "Uten sortimentsgruppe",
-    "noCategory": "Ingen kategori"
+    "noCategory": "Ingen kategori",
+    "internalNote": "Internt notat",
+    "internalNoteHint": "Kun for ansatte. Vises ikke til selgeren og tas ikke med på etiketter, salgsoversikter eller i kassadata."
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",
@@ -4272,7 +4275,9 @@
       "INVALID_INPUT": "Importen kunne ikke fullføres. Ingen nye varer ble registrert.",
       "REQUEST_CONFLICT": "Importen kunne ikke fullføres. Ingen nye varer ble registrert.",
       "CURRENCY_MISMATCH": "Vilkårene er endret. Forhåndsvis filen igjen.",
-      "CUSTODY_REQUIRED": "Jeg bekrefter at varene er i butikken."
+      "CUSTODY_REQUIRED": "Jeg bekrefter at varene er i butikken.",
+      "DESCRIPTION_REQUIRED": "Skriv inn en beskrivelse.",
+      "NOTE_CHANGED": "Opplysningene er endret eller tilgang mangler. Last inn siden på nytt."
     },
     "fromFile": "Fra fil",
     "fromPos": "Fra kasse"
@@ -4660,7 +4665,8 @@
     "categoryExists": "En kategori med dette navnet finnes allerede.",
     "translations": "Oversettelser (valgfritt)",
     "languages": "Språk",
-    "noCategories": "Ingen kategorier ennå."
+    "noCategories": "Ingen kategorier ennå.",
+    "inheritDefaults": "Bruk butikkens standardfelt"
   },
   "settingsHelp": {
     "label": "Hjelp",
@@ -5212,5 +5218,22 @@
     "returnTotal": "Registrerte returer totalt",
     "currentDetails": "Butikk- og varebeskrivelser viser gjeldende opplysninger. Beløpene kommer fra det registrerte salget og eventuelle returer.",
     "generatedAt": "Opprettet"
+  },
+  "registration": {
+    "title": "Vareregistrering",
+    "hint": "Standardfeltene gjelder varetyper som arver butikkens innstillinger.",
+    "descriptionRequired": "Krev beskrivelse ved registrering",
+    "template": "Tittel når beskrivelsen mangler",
+    "templateHint": "Bruk disse plassholderne. Manglende verdier utelates; en tom tittel erstattes med varereferansen.",
+    "fields": "Butikkens standardfelt",
+    "inherit": "Bruk butikkens standardfelt",
+    "note": "Internt notat",
+    "noteHint": "Kun for ansatte. Vises ikke til selgeren og tas ikke med på etiketter, salgsoversikter eller i kassadata.",
+    "save": "Lagre",
+    "retry": "Prøv igjen",
+    "saved": "Lagret.",
+    "invalid": "Kontroller feltene og plassholderne i tittelen.",
+    "changed": "Opplysningene er endret eller tilgang mangler. Last inn siden på nytt.",
+    "uncertain": "Svaret kunne ikke bekreftes. Prøv igjen med de samme opplysningene."
   }
 }

@@ -5177,5 +5177,15 @@
   },
   "returnNavigation": {
     "back": "Back"
+  },
+  "labelFields": {
+    "title": "Item label fields",
+    "hint": "Choose up to four attributes in print order. Applies to item labels on Zebra, in the browser and on PDF sheets. Missing values are skipped. Price and barcode always remain.",
+    "custom": "Use the same fields across the store",
+    "default": "The existing item-type field order is used.",
+    "field": "Field {number}",
+    "none": "No field",
+    "save": "Save label fields",
+    "saved": "Label fields saved."
   }
 }

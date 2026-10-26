@@ -5183,5 +5183,15 @@
   },
   "returnNavigation": {
     "back": "Volver"
+  },
+  "labelFields": {
+    "title": "Campos de las etiquetas",
+    "hint": "Elige hasta cuatro atributos en el orden de impresión. Se aplica a las etiquetas Zebra, del navegador y de las hojas PDF. Se omiten los valores que faltan. El precio y el código de barras se mantienen siempre.",
+    "custom": "Usar los mismos campos en toda la tienda",
+    "default": "Se utiliza el orden de campos actual del tipo de artículo.",
+    "field": "Campo {number}",
+    "none": "Ningún campo",
+    "save": "Guardar campos",
+    "saved": "Campos de las etiquetas guardados."
   }
 }

@@ -104,6 +104,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
           'INVALID_INPUT',
           'AGREEMENT_CHANGED',
           'POLICY_CHANGED',
+          'LABEL_FIELDS_CHANGED',
           'PROFILE_CHANGED',
           'SELLER_TERMS_CHANGED',
           'MAP_CHANGED',
@@ -140,6 +141,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'BAG_PROCESSING_CHANGED',
             'BAG_COMPLETED',
             'POLICY_CHANGED',
+            'LABEL_FIELDS_CHANGED',
             'FEE_DECIDED',
             'FEE_NOT_FOUND',
             'PROFILE_CHANGED',
@@ -201,6 +203,7 @@ export function useIntakeAction(d: Dictionary['intake']) {
                                     : [
                                           'TENANT_CHANGED',
                                           'POLICY_CHANGED',
+                                          'LABEL_FIELDS_CHANGED',
                                         ].includes(result.error)
                                       ? d.changed
                                       : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(

@@ -1,0 +1,78 @@
+begin;
+\ir bag-reception-fixture.inc
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('f0000000-0000-4000-8000-000000000951','io-owner@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000952','io-readonly@example.test',now()),
+ ('f0000000-0000-4000-8000-000000000953','io-outsider@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000951","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Items overview test','items-overview-test',gen_random_uuid())::text,true);
+select set_config('test.s1',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Anna Andersson','anna@io.test','')::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Only a test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}'::jsonb);
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
+select set_config('test.d1',gen_random_uuid()::text,true);
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d1')::uuid,0,'Blue wool jacket','Jackets','Good');
+select set_config('test.i1',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i1')::uuid,'reception_review',current_setting('test.d1')::uuid,1,20000);
+select set_config('test.d2',gen_random_uuid()::text,true);
+select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.d2')::uuid,0,'Red coat','Coats','Good');
+select set_config('test.i2',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i2')::uuid,'reception_review',current_setting('test.d2')::uuid,1,30000);
+select set_config('test.p',gen_random_uuid()::text,true);
+select register_purchase(current_setting('test.tenant')::uuid,current_setting('test.p')::uuid,'Vintage lamp',15000,'Auction receipt 7',false);
+select set_config('test.i3',gen_random_uuid()::text,true);
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.i3')::uuid,'purchase',current_setting('test.p')::uuid,null,25000);
+
+
+select is(item_label_fields(current_setting('test.tenant')::uuid),' {"revision":0,"fields":null}'::jsonb,'type defaults apply before an owner choice');
+select set_config('test.session',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s1')::uuid)::text,true);
+select set_config('test.received',quick_receive_classified(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session')::uuid,current_setting('test.s1')::uuid,0,'{"description":".","brand":"Synthetic brand","color":"Blue","size":"M","material":"Wool"}',15000,null,'trousers',null)::text,true);
+select set_config('test.item',(current_setting('test.received')::jsonb->>'itemId'),true);
+select set_config('test.request',gen_random_uuid()::text,true);
+select is(set_item_label_fields(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,0,array['size','brand','material']),current_setting('test.request')::uuid,'owner saves one store-wide order');
+select is(item_label_fields(current_setting('test.tenant')::uuid),' {"revision":1,"fields":["size","brand","material"]}'::jsonb,'read exposes the current revision and order');
+select is((select jsonb_agg(a->>'slug' order by n) from jsonb_array_elements(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)->'attributes') with ordinality x(a,n)),'["size","brand","material"]'::jsonb,'label facts use selected order before limiting');
+select is(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)->>'priceOre','15000','price is independent of fields');
+select is(set_item_label_fields(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,0,array['size','brand','material']),current_setting('test.request')::uuid,'lost reply replays without another revision');
+select is((item_label_fields(current_setting('test.tenant')::uuid)->>'revision')::int,1,'retry does not append a second change');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,0,array['color'])$$,'P0001','REQUEST_CONFLICT','request cannot change payload');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),0,array['color'])$$,'P0001','LABEL_FIELDS_CHANGED','stale editors cannot overwrite settings');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),1,array['brand','brand'])$$,'P0001','INVALID_INPUT','duplicates are rejected');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),1,array['description'])$$,'P0001','INVALID_INPUT','description is not a selectable attribute');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),1,array['unknown_field'])$$,'P0001','INVALID_INPUT','missing attributes are rejected');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),1,array['brand',null])$$,'P0001','INVALID_INPUT','null fields are rejected');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),1,array['brand','color','size','material','condition'])$$,'P0001','INVALID_INPUT','four-field layout is bounded');
+select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),1,array['condition','brand']);
+select is(jsonb_array_length(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)->'attributes'),1,'missing values are skipped');
+select set_label_format(current_setting('test.tenant')::uuid,'item',50,30);
+select is(item_label_fields(current_setting('test.tenant')::uuid)->'fields','["condition","brand"]'::jsonb,'size edits preserve field selection');
+select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),2,array[]::text[]);
+select is(jsonb_array_length(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)->'attributes'),0,'an explicit empty selection prints no attributes');
+select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),3,null);
+select is(jsonb_array_length(item_label_facts(current_setting('test.tenant')::uuid,current_setting('test.item')::uuid)->'attributes'),4,'reset restores type defaults');
+select is(item_label_sheet_facts(current_setting('test.tenant')::uuid,current_setting('test.bag')::uuid,null)->>'sellerName','Anna Andersson','single-seller sheets identify their seller');
+select is(item_label_sheet_facts(current_setting('test.tenant')::uuid,null,array[current_setting('test.i1')::uuid,current_setting('test.i3')::uuid])->'sellerName','null'::jsonb,'a mixture of consignment and store stock has no seller heading');
+select is(item_label_sheet_facts(current_setting('test.tenant')::uuid,null,array[current_setting('test.i3')::uuid])->'sellerName','null'::jsonb,'store-owned labels have a neutral heading');
+select set_config('test.s2',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Anna Andersson','other@io.test','')::text,true);
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s2')::uuid,current_setting('test.agreement')::uuid,'Signed paper');
+select set_config('test.session2',create_reception_session(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.s2')::uuid)::text,true);
+select set_config('test.other',quick_receive_classified(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.session2')::uuid,current_setting('test.s2')::uuid,0,'{"description":"Second seller"}',15000,null,null,null)::text,true);
+select is(item_label_sheet_facts(current_setting('test.tenant')::uuid,null,array[current_setting('test.i1')::uuid,(current_setting('test.other')::jsonb->>'itemId')::uuid])->'sellerName','null'::jsonb,'equal names belonging to different sellers remain mixed');
+reset role;
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000952','staff');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000952","role":"authenticated"}';
+select lives_ok($$select item_label_fields(current_setting('test.tenant')::uuid)$$,'staff can read print fields');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),4,array['brand'])$$,'42501','FORBIDDEN','staff cannot change print settings');
+select throws_ok($$update label_formats set attribute_order=array['brand'] where tenant_id=current_setting('test.tenant')::uuid$$,'42501',null,'direct setting writes remain denied');
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000953","role":"authenticated"}';
+select throws_ok($$select item_label_fields(current_setting('test.tenant')::uuid)$$,'42501','FORBIDDEN','outsider cannot read settings');
+select throws_ok($$select set_item_label_fields(current_setting('test.tenant')::uuid,gen_random_uuid(),4,array['brand'])$$,'42501','FORBIDDEN','outsider cannot alter settings');
+reset role;
+select ok(not has_function_privilege('anon','public.set_item_label_fields(uuid,uuid,integer,text[])','execute'),'anonymous writes denied');
+select * from finish();
+rollback;

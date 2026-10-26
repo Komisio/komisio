@@ -1,6 +1,7 @@
 import { platformContext } from '@/lib/platform/context'
 import { labelSheetQuery, readLabelSheet } from '@/lib/engine/label-sheets'
 import { renderLabelSheetPdf } from '@/lib/documents/label-sheet-pdf'
+import { labelSheetDisposition } from '@/lib/documents/label-sheet-name'
 export const runtime = 'nodejs'
 export async function GET(request: Request) {
   const fail = (status: number) =>
@@ -26,12 +27,16 @@ export async function GET(request: Request) {
       ...parsed.data,
       items: sheet.items,
       storeName: ctx.active.name,
+      sellerName: sheet.sellerName,
       locale: ctx.locale,
     })
     return new Response(Buffer.from(bytes), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `${parsed.data.download ? 'attachment' : 'inline'}; filename="komisio-labels.pdf"`,
+        'Content-Disposition': labelSheetDisposition(
+          sheet.sellerName,
+          Boolean(parsed.data.download),
+        ),
         'Cache-Control': 'private, no-store',
         'X-Content-Type-Options': 'nosniff',
         'X-Robots-Tag': 'noindex, nofollow',

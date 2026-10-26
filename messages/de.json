@@ -5183,5 +5183,15 @@
   },
   "returnNavigation": {
     "back": "Zurück"
+  },
+  "labelFields": {
+    "title": "Felder auf Artikeletiketten",
+    "hint": "Wählen Sie bis zu vier Merkmale in Druckreihenfolge. Gilt für Artikeletiketten auf Zebra, im Browser und auf PDF-Bögen. Fehlende Werte werden übersprungen. Preis und Barcode bleiben immer erhalten.",
+    "custom": "Dieselben Felder im gesamten Geschäft verwenden",
+    "default": "Die bestehende Feldreihenfolge des Artikeltyps wird verwendet.",
+    "field": "Feld {number}",
+    "none": "Kein Feld",
+    "save": "Etikettenfelder speichern",
+    "saved": "Etikettenfelder gespeichert."
   }
 }

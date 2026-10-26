@@ -1,3 +1,5 @@
+import { LabelFieldsForm } from '@/components/intake/label-fields-form'
+import { readItemLabelFields } from '@/lib/engine/label-fields'
 import {
   PrintingSetupProvider,
   PrintingTrack,
@@ -131,7 +133,7 @@ export default async function Settings({
           : 'policy'
   const manages = ['owner', 'admin'].includes(active.role)
   const [vocabulary, assortmentGroups, categories] =
-    intake && tab === 'vocabulary'
+    intake && (tab === 'vocabulary' || tab === 'printing')
       ? await Promise.all([
           readAttributeVocabulary(ctx.client, active.id),
           readAssortmentGroups(ctx.client, active.id),
@@ -174,6 +176,10 @@ export default async function Settings({
   const printerNames = new Map(
     printers.map((printer) => [printer.id, printer.name]),
   )
+  const labelFields =
+    intake && tab === 'printing'
+      ? await readItemLabelFields(ctx.client, active.id)
+      : null
   const previewDpi = (printers.find((p) => p.active)?.dpi ?? 203) as
     203 | 300 | 600
   const plan =
@@ -480,6 +486,26 @@ export default async function Settings({
                           {helpArticle(ctx.locale, 'labels')!.title}
                         </Link>
                       </p>
+                      {labelFields && vocabulary && (
+                        <LabelFieldsForm
+                          key={active.id}
+                          tenantId={active.id}
+                          settings={labelFields}
+                          choices={vocabulary.definitions
+                            .filter(
+                              (a) =>
+                                a.active &&
+                                !['description', 'category'].includes(a.slug),
+                            )
+                            .map((a) => ({
+                              value: a.slug,
+                              label:
+                                a.labels[ctx.locale] ?? a.labels.en ?? a.slug,
+                            }))}
+                          canEdit={manages}
+                          d={d}
+                        />
+                      )}
                       {formats && (
                         <LabelFormatsForm
                           key={`formats-${active.id}`}

@@ -1,3 +1,4 @@
+import { labelHeading } from '../labels/label-heading'
 import { readItemLabel } from './item-label'
 import { labelAttributeLines } from '../labels/item-attributes'
 import type { Locale } from '../i18n'
@@ -316,7 +317,7 @@ export async function queueRenderedLabel(
     facts.line2 = ''
     const label = await readItemLabel(client, tenantId, command.referenceId)
     if (label) {
-      facts.line1 = (label.title || String(facts.line1)).slice(0, 60)
+      facts.line1 = labelHeading(label.title).slice(0, 60)
       facts.attributes = labelAttributeLines(label.attributes, locale)
     }
   } else {

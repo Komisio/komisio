@@ -5183,5 +5183,15 @@
   },
   "returnNavigation": {
     "back": "Takaisin"
+  },
+  "labelFields": {
+    "title": "Tuote-etikettien kentät",
+    "hint": "Valitse enintään neljä ominaisuutta tulostusjärjestyksessä. Valinta koskee Zebraa, selainta ja PDF-arkkeja. Puuttuvat arvot ohitetaan. Hinta ja viivakoodi säilyvät aina.",
+    "custom": "Käytä samoja kenttiä koko myymälässä",
+    "default": "Käytetään tuotetyypin nykyistä kenttäjärjestystä.",
+    "field": "Kenttä {number}",
+    "none": "Ei kenttää",
+    "save": "Tallenna etikettikentät",
+    "saved": "Etikettikentät tallennettu."
   }
 }

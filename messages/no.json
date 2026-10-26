@@ -5177,5 +5177,15 @@
   },
   "returnNavigation": {
     "back": "Tilbake"
+  },
+  "labelFields": {
+    "title": "Felt på vareetiketter",
+    "hint": "Velg opptil fire egenskaper i ønsket rekkefølge. Gjelder vareetiketter på Zebra, i nettleseren og på PDF-ark. Manglende verdier hoppes over. Pris og strekkode beholdes alltid.",
+    "custom": "Bruk de samme feltene i hele butikken",
+    "default": "Varetypens eksisterende feltrekkefølge brukes.",
+    "field": "Felt {number}",
+    "none": "Ingen felt",
+    "save": "Lagre etikettfelt",
+    "saved": "Etikettfeltene er lagret."
   }
 }

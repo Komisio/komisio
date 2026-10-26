@@ -5177,5 +5177,15 @@
   },
   "returnNavigation": {
     "back": "Tillbaka"
+  },
+  "labelFields": {
+    "title": "Fält på varuetiketter",
+    "hint": "Välj upp till fyra attribut i önskad ordning. Gäller varuetiketter i Zebra, webbläsaren och PDF-ark. Saknade värden hoppas över. Pris och streckkod finns alltid kvar.",
+    "custom": "Använd samma fält för hela butiken",
+    "default": "Varutypens befintliga fältordning används.",
+    "field": "Fält {number}",
+    "none": "Inget fält",
+    "save": "Spara etikettfält",
+    "saved": "Etikettfälten har sparats."
   }
 }

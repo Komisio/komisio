@@ -1,3 +1,4 @@
+import { setItemLabelFieldsCommand } from './label-fields'
 import { businessDetails, sellerType } from './seller-business'
 import { recordItemCollectionCommand } from './item-collection'
 import {
@@ -71,6 +72,7 @@ import {
 import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
+  setItemLabelFieldsCommand,
   recordItemCollectionCommand,
   reopenItemPeriodCommand,
   correctItemPeriodEndCommand,
@@ -469,6 +471,13 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_model: c.model,
         p_dpi: c.dpi,
         p_active: c.active,
+      })
+    case 'setItemLabelFields':
+      return client.rpc('set_item_label_fields', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_expected: c.expectedRevision,
+        p_fields: c.fields,
       })
     case 'setLabelFormat':
       return client.rpc('set_label_format', {

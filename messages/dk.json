@@ -5177,5 +5177,15 @@
   },
   "returnNavigation": {
     "back": "Tilbage"
+  },
+  "labelFields": {
+    "title": "Felter på varemærkater",
+    "hint": "Vælg op til fire egenskaber i den ønskede rækkefølge. Gælder varemærkater på Zebra, i browseren og på PDF-ark. Manglende værdier springes over. Pris og stregkode vises altid.",
+    "custom": "Brug de samme felter i hele butikken",
+    "default": "Varetypens eksisterende feltrækkefølge bruges.",
+    "field": "Felt {number}",
+    "none": "Intet felt",
+    "save": "Gem mærkatfelter",
+    "saved": "Mærkatfelterne er gemt."
   }
 }

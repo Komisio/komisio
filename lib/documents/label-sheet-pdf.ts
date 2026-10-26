@@ -1,4 +1,5 @@
 import PDFDocument from 'pdfkit'
+import { labelHeading } from '../labels/label-heading'
 import { labelAttributeLines } from '../labels/item-attributes'
 import type { Locale } from '../i18n'
 import { join } from 'node:path'
@@ -46,6 +47,7 @@ function barcode(
 
 export async function renderLabelSheetPdf(input: {
   storeName: string
+  sellerName?: string | null
   items: z.infer<typeof itemLabel>[]
   size: keyof typeof sheetSizes
   copies: number
@@ -85,6 +87,23 @@ export async function renderLabelSheetPdf(input: {
   labels.forEach((item, index) => {
     if (index && index % perPage === 0) doc.addPage()
     const slot = index % perPage
+    if (slot === 0 && input.sellerName?.trim()) {
+      doc
+        .font('regular')
+        .fontSize(8)
+        .fillColor('#333333')
+        .text(
+          input.sellerName.replace(/[\r\n\t]+/g, ' ').trim(),
+          left,
+          top - mm(7),
+          {
+            width: mm(size.width * size.columns),
+            height: mm(5),
+            ellipsis: true,
+            lineBreak: false,
+          },
+        )
+    }
     const x = left + mm((slot % size.columns) * size.width)
     const y = top + mm(Math.floor(slot / size.columns) * size.height)
     const width = mm(size.width),
@@ -108,15 +127,17 @@ export async function renderLabelSheetPdf(input: {
       })
     const attributes = labelAttributeLines(item.attributes, input.locale)
     const compact = size.height === 32 && attributes.length > 0
-    doc
-      .font('bold')
-      .fontSize(size.height === 32 ? 7 : 8)
-      .text(item.title || item.reference, x + inset, y + mm(5.5), {
-        width: textWidth,
-        height: compact ? 10 : size.height === 32 ? 19 : 25,
-        ellipsis: true,
-        align: 'center',
-      })
+    const heading = labelHeading(item.title)
+    if (heading)
+      doc
+        .font('bold')
+        .fontSize(size.height === 32 ? 7 : 8)
+        .text(heading, x + inset, y + mm(5.5), {
+          width: textWidth,
+          height: compact ? 10 : size.height === 32 ? 19 : 25,
+          ellipsis: true,
+          align: 'center',
+        })
     attributes.forEach((line, index) => {
       const cellWidth = (textWidth - mm(2)) / 2
       doc.font('regular').fontSize(6)
@@ -133,7 +154,11 @@ export async function renderLabelSheetPdf(input: {
       doc.text(
         fitted,
         x + inset + (index % 2) * (cellWidth + mm(2)),
-        y + mm((compact ? 9 : 16) + Math.floor(index / 2) * (compact ? 3 : 4)),
+        y +
+          mm(
+            (heading ? (compact ? 9 : 16) : 6) +
+              Math.floor(index / 2) * (compact ? 3 : 4),
+          ),
         { width: cellWidth, height: 9, ellipsis: true, lineBreak: false },
       )
     })

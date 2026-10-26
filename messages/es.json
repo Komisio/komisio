@@ -697,7 +697,8 @@
     "zettle.window_abandoned": "PayPal POS · Periodo de sincronización · Revocación",
     "item.collection_recorded": "Estado de recogida registrado",
     "item.period_reopened": "Periodo de venta reabierto",
-    "item.period_end_corrected": "Motivo de finalización corregido"
+    "item.period_end_corrected": "Motivo de finalización corregido",
+    "item.lifecycle_batch": "Cambio de períodos de venta en lote"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -5100,5 +5101,26 @@
     "confirm": "He comprobado el artículo y quiero guardar el cambio.",
     "save": "Guardar cambio",
     "saved": "Cambio guardado"
+  },
+  "itemLifecycleBatch": {
+    "title": "Cambiar períodos de venta",
+    "hint": "Revise hasta 50 artículos seleccionados. Los que no puedan modificarse se omitirán indicando el motivo.",
+    "preview": "Vista previa",
+    "apply": "Confirmar cambios",
+    "ready": "Se puede cambiar",
+    "applied": "Modificado",
+    "skipped": "Omitido",
+    "back": "Editar selección",
+    "results": "Resultados",
+    "markdown": "Aplicar la siguiente rebaja pendiente",
+    "reasons": {
+      "missing": "Artículo no encontrado",
+      "sold": "El artículo está vendido",
+      "ended": "La venta del artículo ha finalizado",
+      "markdown_not_due": "No hay rebajas pendientes",
+      "collection_not_due": "El plazo de recogida no ha vencido",
+      "changed": "El artículo cambió después de la vista previa"
+    },
+    "previewFailed": "No se pudo cargar la vista previa. Revise los campos e inténtelo de nuevo."
   }
 }

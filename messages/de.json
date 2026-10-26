@@ -697,7 +697,8 @@
     "zettle.window_abandoned": "PayPal POS · Synchronisierungszeitraum · Widerruf",
     "item.collection_recorded": "Abholstatus erfasst",
     "item.period_reopened": "Verkaufszeitraum wieder eröffnet",
-    "item.period_end_corrected": "Abschlussgrund korrigiert"
+    "item.period_end_corrected": "Abschlussgrund korrigiert",
+    "item.lifecycle_batch": "Sammeländerung der Verkaufszeiträume"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -5100,5 +5101,26 @@
     "confirm": "Ich habe den Artikel geprüft und möchte die Änderung speichern.",
     "save": "Änderung speichern",
     "saved": "Änderung gespeichert"
+  },
+  "itemLifecycleBatch": {
+    "title": "Verkaufszeiträume ändern",
+    "hint": "Prüfen Sie bis zu 50 ausgewählte Artikel. Nicht änderbare Artikel werden mit Begründung übersprungen.",
+    "preview": "Vorschau",
+    "apply": "Änderungen bestätigen",
+    "ready": "Änderung möglich",
+    "applied": "Geändert",
+    "skipped": "Übersprungen",
+    "back": "Auswahl bearbeiten",
+    "results": "Ergebnisse",
+    "markdown": "Nächste fällige Preisreduzierung anwenden",
+    "reasons": {
+      "missing": "Artikel nicht gefunden",
+      "sold": "Artikel ist verkauft",
+      "ended": "Verkauf des Artikels ist beendet",
+      "markdown_not_due": "Keine Preisreduzierung fällig",
+      "collection_not_due": "Abholfrist ist noch nicht abgelaufen",
+      "changed": "Artikel wurde nach der Vorschau geändert"
+    },
+    "previewFailed": "Vorschau konnte nicht geladen werden. Prüfen Sie die Felder und versuchen Sie es erneut."
   }
 }

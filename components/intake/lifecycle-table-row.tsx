@@ -9,6 +9,7 @@ export function LifecycleTableRow({
   cells,
   children,
   initiallyOpen,
+  selection,
 }: {
   id: string
   title: string
@@ -16,11 +17,13 @@ export function LifecycleTableRow({
   cells: ReactNode
   children: ReactNode
   initiallyOpen: boolean
+  selection?: ReactNode
 }) {
   const [open, setOpen] = useState(initiallyOpen)
   return (
     <>
       <tr id={`lifecycle-${id}`} className="lifecycle-row" data-open={open}>
+        {selection && <td>{selection}</td>}
         <th scope="row">
           <div className="lifecycle-table-title">
             <button
@@ -47,7 +50,7 @@ export function LifecycleTableRow({
         className="lifecycle-detail-row"
         hidden={!open}
       >
-        <td colSpan={8}>
+        <td colSpan={selection ? 9 : 8}>
           <div className="lifecycle-detail">{children}</div>
         </td>
       </tr>

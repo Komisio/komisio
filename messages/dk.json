@@ -697,7 +697,8 @@
     "zettle.window_abandoned": "PayPal POS · Synkperiode · Tilbagekaldelse",
     "item.collection_recorded": "Afhentningsstatus registreret",
     "item.period_reopened": "Salgsperiode genåbnet",
-    "item.period_end_corrected": "Afslutningsårsag rettet"
+    "item.period_end_corrected": "Afslutningsårsag rettet",
+    "item.lifecycle_batch": "Masseændring af salgsperioder"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -5094,5 +5095,26 @@
     "confirm": "Jeg har kontrolleret varen og vil gemme ændringen.",
     "save": "Gem ændring",
     "saved": "Ændringen er gemt"
+  },
+  "itemLifecycleBatch": {
+    "title": "Rediger salgsperioder",
+    "hint": "Gennemgå op til 50 valgte varer. Varer, der ikke kan ændres, springes over med en forklaring.",
+    "preview": "Forhåndsvisning",
+    "apply": "Bekræft ændringer",
+    "ready": "Kan ændres",
+    "applied": "Ændret",
+    "skipped": "Sprunget over",
+    "back": "Rediger valg",
+    "results": "Resultater",
+    "markdown": "Anvend næste forfaldne prisnedsættelse",
+    "reasons": {
+      "missing": "Varen blev ikke fundet",
+      "sold": "Varen er solgt",
+      "ended": "Varen er afsluttet",
+      "markdown_not_due": "Ingen prisnedsættelse er forfalden",
+      "collection_not_due": "Afhentningsfristen er ikke udløbet",
+      "changed": "Varen er ændret efter forhåndsvisningen"
+    },
+    "previewFailed": "Forhåndsvisningen kunne ikke hentes. Kontrollér felterne, og prøv igen."
   }
 }

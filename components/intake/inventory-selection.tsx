@@ -6,9 +6,13 @@ import {
   useRef,
   useState,
   useCallback,
+  useSyncExternalStore,
   type ReactNode,
 } from 'react'
 import type { DirectoryItem } from '@/lib/engine/item-directory'
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 type ItemUpdate = Pick<
   DirectoryItem,
   'id' | 'title' | 'category' | 'classification'
@@ -52,6 +56,7 @@ export function InventorySelection({
   )
 }
 export function InventorySelectAll({ label }: { label: string }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const { ids, selected, setSelected } = useContext(Selection),
     ref = useRef<HTMLInputElement>(null)
   const count = ids.filter((id) => selected.includes(id)).length
@@ -65,7 +70,7 @@ export function InventorySelectAll({ label }: { label: string }) {
       type="checkbox"
       aria-label={label}
       checked={ids.length > 0 && count === ids.length}
-      disabled={!ids.length}
+      disabled={!ready || !ids.length}
       onChange={(e) => setSelected(e.target.checked ? ids : [])}
     />
   )
@@ -80,16 +85,16 @@ export function InventorySelectItem({
   id: string
   label: string
 }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const { ids, selected, setSelected } = useContext(Selection)
   return (
     <input
       className="inventory-checkbox"
       type="checkbox"
       name="item"
-      form="label-selection"
       value={id}
       aria-label={label}
-      disabled={!ids.includes(id)}
+      disabled={!ready || !ids.includes(id)}
       checked={selected.includes(id)}
       onChange={(e) =>
         setSelected(

@@ -697,7 +697,8 @@
     "zettle.window_abandoned": "PayPal POS · Synkronointijakso · Peruutus",
     "item.collection_recorded": "Noutotila kirjattu",
     "item.period_reopened": "Myyntijakso avattu uudelleen",
-    "item.period_end_corrected": "Päättämistoimi korjattu"
+    "item.period_end_corrected": "Päättämistoimi korjattu",
+    "item.lifecycle_batch": "Myyntiaikojen joukkomuutos"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -5100,5 +5101,26 @@
     "confirm": "Olen tarkistanut tavaran ja haluan tallentaa muutoksen.",
     "save": "Tallenna muutos",
     "saved": "Muutos tallennettu"
+  },
+  "itemLifecycleBatch": {
+    "title": "Muuta myyntiaikoja",
+    "hint": "Tarkista enintään 50 valittua tuotetta. Tuotteet, joita ei voi muuttaa, ohitetaan ja syy näytetään.",
+    "preview": "Esikatsele",
+    "apply": "Vahvista muutokset",
+    "ready": "Voidaan muuttaa",
+    "applied": "Muutettu",
+    "skipped": "Ohitettu",
+    "back": "Muokkaa valintaa",
+    "results": "Tulokset",
+    "markdown": "Toteuta seuraava ajankohtainen hinnanalennus",
+    "reasons": {
+      "missing": "Tuotetta ei löytynyt",
+      "sold": "Tuote on myyty",
+      "ended": "Tuotteen myynti on päätetty",
+      "markdown_not_due": "Hinnanalennus ei ole ajankohtainen",
+      "collection_not_due": "Noutoaika ei ole päättynyt",
+      "changed": "Tuote muuttui esikatselun jälkeen"
+    },
+    "previewFailed": "Esikatselua ei voitu ladata. Tarkista kentät ja yritä uudelleen."
   }
 }

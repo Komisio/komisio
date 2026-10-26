@@ -12,11 +12,13 @@ import type { ItemTypeProfile } from '@/lib/engine/attributes'
 import type { Dictionary, Locale } from '@/lib/i18n'
 import { useInventorySelection } from './inventory-selection'
 import { ItemClassificationEditor } from './item-classification-editor'
+import { LifecycleBatch } from './lifecycle-batch'
 
 type SelectedItem = { id: string; version: number; title: string }
 export function InventoryActions({
   items,
   tenantId,
+  currency,
   groups,
   types,
   locale,
@@ -26,6 +28,7 @@ export function InventoryActions({
 }: {
   items: DirectoryItem[]
   tenantId: string
+  currency: string
   groups: { id: string; name: string }[]
   types: ItemTypeProfile[]
   locale: Locale
@@ -45,6 +48,9 @@ export function InventoryActions({
     })
     .filter((item) => ids.includes(item.id) && selected.includes(item.id))
   const [batch, setBatch] = useState<SelectedItem[] | null>(null)
+  const active = chosen.filter((item) =>
+    ['on_sale', 'markdown_due', 'period_ending'].includes(item.stage),
+  )
   const confirm = useConfirmNavigation('inventory-table')
   const editButton = useRef<HTMLButtonElement>(null)
   const single = chosen.length === 1 ? chosen[0] : null
@@ -73,14 +79,18 @@ export function InventoryActions({
             action="/intake/items/labels"
             className="inventory-selection-tools"
           >
+            {active.map((item) => (
+              <input key={item.id} type="hidden" name="item" value={item.id} />
+            ))}
             {write && (
               <button
                 ref={editButton}
                 type="button"
+                disabled={!active.length}
                 onClick={() => {
                   if (!confirm()) return
                   setBatch(
-                    chosen.map((item) => ({
+                    active.map((item) => ({
                       id: item.id,
                       title: item.title || d.items.item,
                       version: item.classification?.version ?? 0,
@@ -92,7 +102,7 @@ export function InventoryActions({
                 {d.inventoryWorkspace.editSelected}
               </button>
             )}
-            <button type="submit">
+            <button type="submit" disabled={!active.length}>
               <Printer size={15} aria-hidden="true" />
               {d.labelSheets.title}
             </button>
@@ -113,6 +123,14 @@ export function InventoryActions({
               </>
             )}
           </WorkingForm>
+          {write && (
+            <LifecycleBatch
+              tenantId={tenantId}
+              currency={currency}
+              locale={locale}
+              d={d}
+            />
+          )}
           <button
             type="button"
             className="inventory-clear-selection"

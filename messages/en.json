@@ -697,7 +697,8 @@
     "zettle.window_abandoned": "PayPal POS · Sync window · Revocation",
     "item.collection_recorded": "Collection status recorded",
     "item.period_reopened": "Sale period reopened",
-    "item.period_end_corrected": "End action corrected"
+    "item.period_end_corrected": "End action corrected",
+    "item.lifecycle_batch": "Bulk sale-period change"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -5094,5 +5095,26 @@
     "confirm": "I have checked the item and want to save this change.",
     "save": "Save change",
     "saved": "Change saved"
+  },
+  "itemLifecycleBatch": {
+    "title": "Change sale periods",
+    "hint": "Review up to 50 selected items. Items that cannot be changed are skipped with a reason.",
+    "preview": "Preview",
+    "apply": "Confirm changes",
+    "ready": "Ready to change",
+    "applied": "Changed",
+    "skipped": "Skipped",
+    "back": "Edit selection",
+    "results": "Results",
+    "markdown": "Apply next due markdown",
+    "reasons": {
+      "missing": "Item not found",
+      "sold": "Item is sold",
+      "ended": "Item has ended",
+      "markdown_not_due": "No markdown is due",
+      "collection_not_due": "Collection deadline has not passed",
+      "changed": "Item changed after preview"
+    },
+    "previewFailed": "Could not load the preview. Check the fields and try again."
   }
 }

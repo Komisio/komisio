@@ -697,7 +697,8 @@
     "zettle.window_abandoned": "PayPal POS · Synkperiod · Återkallelse",
     "item.collection_recorded": "Hämtstatus registrerad",
     "item.period_reopened": "Säljperiod återöppnad",
-    "item.period_end_corrected": "Avslutsorsak rättad"
+    "item.period_end_corrected": "Avslutsorsak rättad",
+    "item.lifecycle_batch": "Massändring av säljperioder"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -5094,5 +5095,26 @@
     "confirm": "Jag har kontrollerat varan och vill spara ändringen.",
     "save": "Spara ändring",
     "saved": "Ändringen sparad"
+  },
+  "itemLifecycleBatch": {
+    "title": "Ändra säljperioder",
+    "hint": "Granska högst 50 markerade varor. Varor som inte kan ändras hoppas över med en förklaring.",
+    "preview": "Förhandsgranska",
+    "apply": "Bekräfta ändringarna",
+    "ready": "Kan ändras",
+    "applied": "Ändrad",
+    "skipped": "Överhoppad",
+    "back": "Ändra val",
+    "results": "Resultat",
+    "markdown": "Tillämpa nästa förfallna prissänkning",
+    "reasons": {
+      "missing": "Varan hittades inte",
+      "sold": "Varan är såld",
+      "ended": "Varan är avslutad",
+      "markdown_not_due": "Ingen prissänkning är dags",
+      "collection_not_due": "Sista hämtdagen har inte passerat",
+      "changed": "Varan har ändrats efter förhandsvisningen"
+    },
+    "previewFailed": "Kunde inte hämta förhandsvisningen. Kontrollera fälten och försök igen."
   }
 }

@@ -84,19 +84,13 @@ export function InventoryTable({
   }
 
   return (
-    <InventorySelection
-      key={selectionKey}
-      ids={items
-        .filter((i) =>
-          ['on_sale', 'markdown_due', 'period_ending'].includes(i.stage),
-        )
-        .map((i) => i.id)}
-    >
+    <InventorySelection key={selectionKey} ids={items.map((i) => i.id)}>
       <InventoryTableShell label={d.list}>
         <thead>
           <InventoryActions
             items={items}
             tenantId={tenantId}
+            currency={currency}
             groups={groups}
             types={types}
             locale={locale}

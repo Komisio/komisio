@@ -68,7 +68,7 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
       .getByRole('status')
       .locator('a[href^="/intake/bags/"]')
       .getAttribute('href')
-    const bagId = bagHref!.split('/')[3]
+    const bagId = new URL(bagHref!, page.url()).pathname.split('/')[3]
     const bags = (
       await f.db.query(
         'select id,seller_id from bag_receipts where tenant_id=$1',

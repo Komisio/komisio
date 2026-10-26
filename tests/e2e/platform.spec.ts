@@ -1010,7 +1010,9 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
     queue
       .locator('.intake-bag a[href*="/inspect"]')
       .evaluateAll((links) =>
-        links.map((a) => a.getAttribute('href')!.split('/')[3]),
+        links.map(
+          (a) => new URL((a as HTMLAnchorElement).href).pathname.split('/')[3],
+        ),
       )
   const first = await ids()
   await queue

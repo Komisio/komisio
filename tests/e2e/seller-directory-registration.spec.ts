@@ -77,7 +77,7 @@ test('directory registration and duplicate selection stay in the seller workspac
         exact: true,
       }),
     ).toBeVisible()
-    const sellerId = page.url().split('/').at(-1)!
+    const sellerId = new URL(page.url()).pathname.split('/').at(-1)!
     const countWelcome = async () =>
       (
         await f.db.query(

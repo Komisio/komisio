@@ -695,7 +695,9 @@
     "zettle.page_received": "PayPal POS · Kuittisivu · Vastaanotto",
     "zettle.pull_enabled": "PayPal POS · Kuittien haku · Aktivointi",
     "zettle.window_abandoned": "PayPal POS · Synkronointijakso · Peruutus",
-    "item.collection_recorded": "Noutotila kirjattu"
+    "item.collection_recorded": "Noutotila kirjattu",
+    "item.period_reopened": "Myyntijakso avattu uudelleen",
+    "item.period_end_corrected": "Päättämistoimi korjattu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -1398,7 +1400,9 @@
       "markdown_applied": "Hinnanalennus tehty",
       "period_extended": "Myyntiaikaa pidennetty",
       "period_ended": "Myyntiaika päättynyt",
-      "collection_recorded": "Noutotila kirjattu"
+      "collection_recorded": "Noutotila kirjattu",
+      "period_reopened": "Myyntijakso avattu uudelleen",
+      "period_end_corrected": "Päättämistoimi korjattu"
     },
     "clearFilters": "Tyhjennä suodattimet",
     "showingRange": "Näytetään {from}–{to} / {total} tuotetta",
@@ -1429,7 +1433,9 @@
       "collection": "Noutotila",
       "collected": "Noudettu",
       "notCollected": "Ei noudettu",
-      "observedOn": "Tarkistuspäivä"
+      "observedOn": "Tarkistuspäivä",
+      "saleEndsOn": "Myynnissä tähän päivään asti",
+      "previousAction": "Aiempi päättämistoimi"
     }
   },
   "sales": {
@@ -5078,5 +5084,21 @@
     "note": "Huomautus (valinnainen)",
     "save": "Tallenna noutotila",
     "saved": "Noutotila tallennettu"
+  },
+  "itemPeriod": {
+    "title": "Muuta päättämistä",
+    "description": "Avaa tavara uudelleen myyntiin tai korjaa päättämistoimi. Aiemmat tapahtumat säilyvät.",
+    "open": "Näytä muutos",
+    "operation": "Muutos",
+    "reopen": "Avaa uudelleen myyntiin",
+    "correct": "Korjaa päättämistoimi",
+    "saleEndsOn": "Myynnissä tähän päivään asti",
+    "noFee": "Uudelleenavaaminen ei luo maksua tai uutta maksukautta.",
+    "endAction": "Uusi päättämistoimi",
+    "choose": "Valitse päättämistoimi",
+    "reason": "Syy",
+    "confirm": "Olen tarkistanut tavaran ja haluan tallentaa muutoksen.",
+    "save": "Tallenna muutos",
+    "saved": "Muutos tallennettu"
   }
 }

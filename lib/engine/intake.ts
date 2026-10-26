@@ -1,6 +1,10 @@
 import { businessDetails, sellerType } from './seller-business'
 import { recordItemCollectionCommand } from './item-collection'
 import {
+  reopenItemPeriodCommand,
+  correctItemPeriodEndCommand,
+} from './item-period'
+import {
   startStocktakeCommand,
   scanStocktakeCommand,
   recordStocktakeFindingCommand,
@@ -68,6 +72,8 @@ import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
   recordItemCollectionCommand,
+  reopenItemPeriodCommand,
+  correctItemPeriodEndCommand,
   recordConsignmentFeePaymentCommand,
   reverseConsignmentFeeCommand,
   accrueSellerConsignmentFeesCommand,
@@ -398,6 +404,24 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_collected: c.collected,
         p_observed_on: c.observedOn,
         p_note: c.note,
+      })
+    case 'reopenItemPeriod':
+      return client.rpc('reopen_item_period', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_expected_end: c.expectedEndEventId,
+        p_sale_ends_on: c.saleEndsOn,
+        p_reason: c.reason,
+      })
+    case 'correctItemPeriodEnd':
+      return client.rpc('correct_item_period_end', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_expected_end: c.expectedEndEventId,
+        p_action: c.endAction,
+        p_reason: c.reason,
       })
     case 'applyDueMarkdowns':
       return client.rpc('apply_due_markdowns', {

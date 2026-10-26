@@ -695,7 +695,9 @@
     "zettle.page_received": "PayPal POS · Belegseite · Empfang",
     "zettle.pull_enabled": "PayPal POS · Belegabruf · Aktivierung",
     "zettle.window_abandoned": "PayPal POS · Synchronisierungszeitraum · Widerruf",
-    "item.collection_recorded": "Abholstatus erfasst"
+    "item.collection_recorded": "Abholstatus erfasst",
+    "item.period_reopened": "Verkaufszeitraum wieder eröffnet",
+    "item.period_end_corrected": "Abschlussgrund korrigiert"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -1398,7 +1400,9 @@
       "markdown_applied": "Preisreduzierung angewendet",
       "period_extended": "Verkaufszeitraum verlängert",
       "period_ended": "Verkaufszeitraum beendet",
-      "collection_recorded": "Abholstatus erfasst"
+      "collection_recorded": "Abholstatus erfasst",
+      "period_reopened": "Verkaufszeitraum wieder eröffnet",
+      "period_end_corrected": "Abschlussgrund korrigiert"
     },
     "clearFilters": "Filter zurücksetzen",
     "showingRange": "Artikel {from}–{to} von {total}",
@@ -1429,7 +1433,9 @@
       "collection": "Abholstatus",
       "collected": "Abgeholt",
       "notCollected": "Nicht abgeholt",
-      "observedOn": "Prüfdatum"
+      "observedOn": "Prüfdatum",
+      "saleEndsOn": "Zum Verkauf bis einschließlich",
+      "previousAction": "Vorheriger Abschlussgrund"
     }
   },
   "sales": {
@@ -5078,5 +5084,21 @@
     "note": "Notiz (optional)",
     "save": "Abholstatus speichern",
     "saved": "Abholstatus gespeichert"
+  },
+  "itemPeriod": {
+    "title": "Abschluss ändern",
+    "description": "Artikel erneut zum Verkauf freigeben oder den Abschlussgrund korrigieren. Frühere Ereignisse bleiben erhalten.",
+    "open": "Änderung anzeigen",
+    "operation": "Änderung",
+    "reopen": "Erneut zum Verkauf freigeben",
+    "correct": "Abschlussgrund korrigieren",
+    "saleEndsOn": "Zum Verkauf bis einschließlich",
+    "noFee": "Die Wiedereröffnung erzeugt keine Gebühr und keinen neuen Gebührenzeitraum.",
+    "endAction": "Neuer Abschlussgrund",
+    "choose": "Abschlussgrund wählen",
+    "reason": "Begründung",
+    "confirm": "Ich habe den Artikel geprüft und möchte die Änderung speichern.",
+    "save": "Änderung speichern",
+    "saved": "Änderung gespeichert"
   }
 }

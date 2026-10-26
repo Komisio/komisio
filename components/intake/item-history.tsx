@@ -4,6 +4,7 @@ import { ActorSignature } from './actor-signature'
 import { EventTime } from '@/components/ui/event-time'
 import { economyFormat } from '@/lib/intake/economy-format'
 import { itemCollectionDetail } from '@/lib/engine/item-collection'
+import { z } from 'zod'
 
 type Detail = NonNullable<Awaited<ReturnType<typeof readItem>>>
 export function ItemHistory({
@@ -98,11 +99,25 @@ function EventDetails({
         ? detail.note
         : null
   if (
-    kind === 'period_ended' &&
+    (kind === 'period_ended' || kind === 'period_end_corrected') &&
     typeof detail.action === 'string' &&
     Object.hasOwn(t.actions, detail.action)
   )
     facts.push([t.action, t.actions[detail.action as keyof typeof t.actions]])
+  if (
+    kind === 'period_end_corrected' &&
+    typeof detail.previousAction === 'string' &&
+    Object.hasOwn(t.actions, detail.previousAction)
+  )
+    facts.push([
+      t.previousAction,
+      t.actions[detail.previousAction as keyof typeof t.actions],
+    ])
+  if (kind === 'period_reopened') {
+    const day = z.iso.date().safeParse(detail.saleEndsOn)
+    if (day.success)
+      facts.push([t.saleEndsOn, economyFormat(locale).date(day.data)])
+  }
   if (
     kind === 'period_extended' &&
     Number.isSafeInteger(detail.days) &&
@@ -138,6 +153,8 @@ function EventDetails({
       'markdown_applied',
       'returned',
       'collection_recorded',
+      'period_reopened',
+      'period_end_corrected',
     ].includes(kind)
   ) {
     const recordedReason =

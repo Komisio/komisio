@@ -695,7 +695,9 @@
     "zettle.page_received": "PayPal POS · Página de recibos · Recepción",
     "zettle.pull_enabled": "PayPal POS · Obtención de recibos · Activación",
     "zettle.window_abandoned": "PayPal POS · Periodo de sincronización · Revocación",
-    "item.collection_recorded": "Estado de recogida registrado"
+    "item.collection_recorded": "Estado de recogida registrado",
+    "item.period_reopened": "Periodo de venta reabierto",
+    "item.period_end_corrected": "Motivo de finalización corregido"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -1398,7 +1400,9 @@
       "markdown_applied": "Rebaja aplicada",
       "period_extended": "Periodo de venta ampliado",
       "period_ended": "Periodo de venta finalizado",
-      "collection_recorded": "Estado de recogida registrado"
+      "collection_recorded": "Estado de recogida registrado",
+      "period_reopened": "Periodo de venta reabierto",
+      "period_end_corrected": "Motivo de finalización corregido"
     },
     "clearFilters": "Borrar filtros",
     "showingRange": "Mostrando {from}–{to} de {total} artículos",
@@ -1429,7 +1433,9 @@
       "collection": "Estado de recogida",
       "collected": "Recogido",
       "notCollected": "No recogido",
-      "observedOn": "Fecha de comprobación"
+      "observedOn": "Fecha de comprobación",
+      "saleEndsOn": "A la venta hasta el día inclusive",
+      "previousAction": "Motivo de finalización anterior"
     }
   },
   "sales": {
@@ -5078,5 +5084,21 @@
     "note": "Nota (opcional)",
     "save": "Guardar estado de recogida",
     "saved": "Estado de recogida guardado"
+  },
+  "itemPeriod": {
+    "title": "Cambiar finalización",
+    "description": "Vuelve a poner el artículo a la venta o corrige el motivo de finalización. Se conserva el historial anterior.",
+    "open": "Mostrar cambio",
+    "operation": "Cambio",
+    "reopen": "Volver a poner a la venta",
+    "correct": "Corregir motivo de finalización",
+    "saleEndsOn": "A la venta hasta el día inclusive",
+    "noFee": "La reapertura no genera cargos ni un nuevo periodo de cuotas.",
+    "endAction": "Nuevo motivo de finalización",
+    "choose": "Elegir motivo de finalización",
+    "reason": "Motivo",
+    "confirm": "He comprobado el artículo y quiero guardar el cambio.",
+    "save": "Guardar cambio",
+    "saved": "Cambio guardado"
   }
 }

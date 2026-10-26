@@ -695,7 +695,9 @@
     "zettle.page_received": "PayPal POS · Pagina scontrini · Ricezione",
     "zettle.pull_enabled": "PayPal POS · Recupero scontrini · Attivazione",
     "zettle.window_abandoned": "PayPal POS · Periodo di sincronizzazione · Revoca",
-    "item.collection_recorded": "Stato del ritiro registrato"
+    "item.collection_recorded": "Stato del ritiro registrato",
+    "item.period_reopened": "Periodo di vendita riaperto",
+    "item.period_end_corrected": "Motivo della chiusura corretto"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -1398,7 +1400,9 @@
       "markdown_applied": "Ribasso applicato",
       "period_extended": "Periodo di vendita prolungato",
       "period_ended": "Periodo di vendita concluso",
-      "collection_recorded": "Stato del ritiro registrato"
+      "collection_recorded": "Stato del ritiro registrato",
+      "period_reopened": "Periodo di vendita riaperto",
+      "period_end_corrected": "Motivo della chiusura corretto"
     },
     "clearFilters": "Cancella filtri",
     "showingRange": "Articoli {from}–{to} di {total}",
@@ -1429,7 +1433,9 @@
       "collection": "Stato del ritiro",
       "collected": "Ritirato",
       "notCollected": "Non ritirato",
-      "observedOn": "Data della verifica"
+      "observedOn": "Data della verifica",
+      "saleEndsOn": "In vendita fino al giorno incluso",
+      "previousAction": "Motivo della chiusura precedente"
     }
   },
   "sales": {
@@ -5072,5 +5078,21 @@
     "note": "Nota (facoltativa)",
     "save": "Salva stato del ritiro",
     "saved": "Stato del ritiro salvato"
+  },
+  "itemPeriod": {
+    "title": "Modifica chiusura",
+    "description": "Rimetti in vendita l’articolo o correggi il motivo della chiusura. Gli eventi precedenti vengono conservati.",
+    "open": "Mostra modifica",
+    "operation": "Modifica",
+    "reopen": "Rimetti in vendita",
+    "correct": "Correggi motivo della chiusura",
+    "saleEndsOn": "In vendita fino al giorno incluso",
+    "noFee": "La riapertura non genera costi né un nuovo periodo di addebito.",
+    "endAction": "Nuovo motivo della chiusura",
+    "choose": "Scegli motivo della chiusura",
+    "reason": "Motivo",
+    "confirm": "Ho controllato l’articolo e desidero salvare la modifica.",
+    "save": "Salva modifica",
+    "saved": "Modifica salvata"
   }
 }

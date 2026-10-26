@@ -695,7 +695,9 @@
     "zettle.page_received": "PayPal POS · Kvittosida · Mottagning",
     "zettle.pull_enabled": "PayPal POS · Kvittohämtning · Aktivering",
     "zettle.window_abandoned": "PayPal POS · Synkperiod · Återkallelse",
-    "item.collection_recorded": "Hämtstatus registrerad"
+    "item.collection_recorded": "Hämtstatus registrerad",
+    "item.period_reopened": "Säljperiod återöppnad",
+    "item.period_end_corrected": "Avslutsorsak rättad"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -1398,7 +1400,9 @@
       "markdown_applied": "Prissänkning genomförd",
       "period_extended": "Säljperiod förlängd",
       "period_ended": "Säljperiod avslutad",
-      "collection_recorded": "Hämtstatus registrerad"
+      "collection_recorded": "Hämtstatus registrerad",
+      "period_reopened": "Säljperiod återöppnad",
+      "period_end_corrected": "Avslutsorsak rättad"
     },
     "clearFilters": "Rensa filter",
     "showingRange": "Visar {from}–{to} av {total} varor",
@@ -1429,7 +1433,9 @@
       "collection": "Hämtstatus",
       "collected": "Hämtad",
       "notCollected": "Inte hämtad",
-      "observedOn": "Kontrolldatum"
+      "observedOn": "Kontrolldatum",
+      "saleEndsOn": "Säljbar till och med",
+      "previousAction": "Tidigare avslutsorsak"
     }
   },
   "sales": {
@@ -5072,5 +5078,21 @@
     "note": "Anteckning (valfri)",
     "save": "Spara hämtstatus",
     "saved": "Hämtstatus sparad"
+  },
+  "itemPeriod": {
+    "title": "Ändra avslut",
+    "description": "Återöppna varan för försäljning eller rätta avslutsorsaken. Tidigare händelser behålls.",
+    "open": "Visa ändring",
+    "operation": "Ändring",
+    "reopen": "Återöppna för försäljning",
+    "correct": "Rätta avslutsorsak",
+    "saleEndsOn": "Säljbar till och med",
+    "noFee": "Återöppningen skapar ingen avgift eller ny avgiftsperiod.",
+    "endAction": "Ny avslutsorsak",
+    "choose": "Välj avslutsorsak",
+    "reason": "Anledning",
+    "confirm": "Jag har kontrollerat varan och vill spara ändringen.",
+    "save": "Spara ändring",
+    "saved": "Ändringen sparad"
   }
 }

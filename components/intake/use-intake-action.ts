@@ -129,6 +129,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'TENANT_CHANGED',
             'ITEM_COLLECTION_CHANGED',
             'ITEM_COLLECTION_UNAVAILABLE',
+            'ITEM_PERIOD_CHANGED',
+            'ITEM_TRANSFER_TERMINAL',
             'STOCKTAKE_OPEN',
             'STOCKTAKE_CHANGED',
             'STOCKTAKE_CLOSED',
@@ -167,6 +169,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
                         'STOCKTAKE_NOT_FOUND',
                         'ITEM_COLLECTION_CHANGED',
                         'ITEM_COLLECTION_UNAVAILABLE',
+                        'ITEM_PERIOD_CHANGED',
+                        'ITEM_TRANSFER_TERMINAL',
                       ].includes(result.error)
                     ? d.recordChanged
                     : result.error === 'PAYOUT_BANK_REVIEW_REQUIRED'

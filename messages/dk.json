@@ -695,7 +695,9 @@
     "zettle.page_received": "PayPal POS · Kvitteringsside · Modtagelse",
     "zettle.pull_enabled": "PayPal POS · Kvitteringshentning · Aktivering",
     "zettle.window_abandoned": "PayPal POS · Synkperiode · Tilbagekaldelse",
-    "item.collection_recorded": "Afhentningsstatus registreret"
+    "item.collection_recorded": "Afhentningsstatus registreret",
+    "item.period_reopened": "Salgsperiode genåbnet",
+    "item.period_end_corrected": "Afslutningsårsag rettet"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -1398,7 +1400,9 @@
       "markdown_applied": "Prisnedsættelse gennemført",
       "period_extended": "Salgsperiode forlænget",
       "period_ended": "Salgsperiode afsluttet",
-      "collection_recorded": "Afhentningsstatus registreret"
+      "collection_recorded": "Afhentningsstatus registreret",
+      "period_reopened": "Salgsperiode genåbnet",
+      "period_end_corrected": "Afslutningsårsag rettet"
     },
     "clearFilters": "Ryd filtre",
     "showingRange": "Viser {from}–{to} af {total} varer",
@@ -1429,7 +1433,9 @@
       "collection": "Afhentningsstatus",
       "collected": "Afhentet",
       "notCollected": "Ikke afhentet",
-      "observedOn": "Kontroldato"
+      "observedOn": "Kontroldato",
+      "saleEndsOn": "Til salg til og med",
+      "previousAction": "Tidligere afslutningsårsag"
     }
   },
   "sales": {
@@ -5072,5 +5078,21 @@
     "note": "Bemærkning (valgfri)",
     "save": "Gem afhentningsstatus",
     "saved": "Afhentningsstatus gemt"
+  },
+  "itemPeriod": {
+    "title": "Ret afslutning",
+    "description": "Genåbn varen til salg, eller ret afslutningsårsagen. Tidligere hændelser bevares.",
+    "open": "Vis ændring",
+    "operation": "Ændring",
+    "reopen": "Genåbn til salg",
+    "correct": "Ret afslutningsårsag",
+    "saleEndsOn": "Til salg til og med",
+    "noFee": "Genåbning opretter intet gebyr eller ny gebyrperiode.",
+    "endAction": "Ny afslutningsårsag",
+    "choose": "Vælg afslutningsårsag",
+    "reason": "Begrundelse",
+    "confirm": "Jeg har kontrolleret varen og vil gemme ændringen.",
+    "save": "Gem ændring",
+    "saved": "Ændringen er gemt"
   }
 }

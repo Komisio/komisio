@@ -695,7 +695,9 @@
     "zettle.page_received": "PayPal POS · Kvitteringsside · Mottak",
     "zettle.pull_enabled": "PayPal POS · Kvitteringshenting · Aktivering",
     "zettle.window_abandoned": "PayPal POS · Synkperiode · Tilbakekalling",
-    "item.collection_recorded": "Hentestatus registrert"
+    "item.collection_recorded": "Hentestatus registrert",
+    "item.period_reopened": "Salgsperiode gjenåpnet",
+    "item.period_end_corrected": "Avslutningsårsak rettet"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tillatelse til å gjøre dette.",
@@ -1398,7 +1400,9 @@
       "markdown_applied": "Prisnedsettelse gjennomført",
       "period_extended": "Salgsperiode forlenget",
       "period_ended": "Salgsperiode avsluttet",
-      "collection_recorded": "Hentestatus registrert"
+      "collection_recorded": "Hentestatus registrert",
+      "period_reopened": "Salgsperiode gjenåpnet",
+      "period_end_corrected": "Avslutningsårsak rettet"
     },
     "clearFilters": "Nullstill filtre",
     "showingRange": "Viser {from}–{to} av {total} varer",
@@ -1429,7 +1433,9 @@
       "collection": "Hentestatus",
       "collected": "Hentet",
       "notCollected": "Ikke hentet",
-      "observedOn": "Kontrolldato"
+      "observedOn": "Kontrolldato",
+      "saleEndsOn": "Til salgs til og med",
+      "previousAction": "Tidligere avslutningsårsak"
     }
   },
   "sales": {
@@ -5072,5 +5078,21 @@
     "note": "Merknad (valgfri)",
     "save": "Lagre hentestatus",
     "saved": "Hentestatus lagret"
+  },
+  "itemPeriod": {
+    "title": "Endre avslutning",
+    "description": "Åpne varen for salg igjen eller rett avslutningsårsaken. Tidligere hendelser beholdes.",
+    "open": "Vis endring",
+    "operation": "Endring",
+    "reopen": "Åpne for salg igjen",
+    "correct": "Rett avslutningsårsak",
+    "saleEndsOn": "Til salgs til og med",
+    "noFee": "Gjenåpning oppretter ingen avgift eller ny avgiftsperiode.",
+    "endAction": "Ny avslutningsårsak",
+    "choose": "Velg avslutningsårsak",
+    "reason": "Begrunnelse",
+    "confirm": "Jeg har kontrollert varen og vil lagre endringen.",
+    "save": "Lagre endring",
+    "saved": "Endringen er lagret"
   }
 }

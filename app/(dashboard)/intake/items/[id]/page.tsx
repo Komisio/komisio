@@ -2,6 +2,8 @@ import { ItemHistory } from '@/components/intake/item-history'
 import { ItemCollection } from '@/components/intake/item-collection'
 import { itemCollectionState } from '@/lib/engine/item-collection'
 import { localToday } from '@/lib/engine/overview'
+import { currentItemEnd } from '@/lib/engine/item-period'
+import { ItemPeriodCorrection } from '@/components/intake/item-period-correction'
 import { searchSaleItems } from '@/lib/engine/sale-search'
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
 import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
@@ -107,7 +109,13 @@ export default async function Item({
     chain?.stores.filter(
       (s) => s.id !== active.id && (s.role === 'owner' || s.role === 'admin'),
     ) ?? []
-  const ended = events.some((e) => e.kind === 'period_ended')
+  const currentEnd = currentItemEnd(events)
+  const ended = currentEnd !== null
+  const transferred = events.some(
+    (e) => e.kind === 'period_ended' && e.detail.action === 'transfer',
+  )
+  const tomorrow = new Date(`${localToday()}T00:00:00Z`)
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1)
   const t = item.terms
   const originHref =
     item.origin_kind === 'reception_review'
@@ -176,6 +184,20 @@ export default async function Item({
         }
         metadata={
           <>
+            {currentEnd &&
+              snapshot.stage === 'ended' &&
+              !transferred &&
+              ['owner', 'admin', 'staff'].includes(active.role) && (
+                <ItemPeriodCorrection
+                  tenantId={active.id}
+                  itemId={item.id}
+                  endEventId={currentEnd.id}
+                  tomorrow={tomorrow.toISOString().slice(0, 10)}
+                  d={all.itemPeriod}
+                  intake={all.intake}
+                  actions={d.eventDetails.actions}
+                />
+              )}
             {collection && (
               <ItemCollection
                 tenantId={active.id}

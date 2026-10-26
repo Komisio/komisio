@@ -109,6 +109,20 @@ it.each(locales)(
       },
       { id: 'return', kind: 'returned' as const, detail: {} },
       {
+        id: 'correction',
+        kind: 'period_end_corrected' as const,
+        detail: {
+          action: 'return',
+          previousAction: 'charity',
+          reason: 'Synthetic end correction',
+        },
+      },
+      {
+        id: 'reopen',
+        kind: 'period_reopened' as const,
+        detail: { saleEndsOn: '2027-04-01', reason: 'Synthetic reopening' },
+      },
+      {
         id: 'collection',
         kind: 'collection_recorded' as const,
         detail: {
@@ -142,6 +156,10 @@ it.each(locales)(
     expect(html).toContain(d.eventDetails.notCollected)
     expect(html).toContain(economyFormat(locale).date('2026-10-26'))
     expect(html).toContain('Synthetic collection check')
+    expect(html).toContain(d.eventDetails.previousAction)
+    expect(html).toContain('Synthetic end correction')
+    expect(html).toContain(economyFormat(locale).date('2027-04-01'))
+    expect(html).toContain('Synthetic reopening')
   },
 )
 

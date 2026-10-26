@@ -3,6 +3,7 @@ import { formatOre, type readItem } from '@/lib/engine/items'
 import { ActorSignature } from './actor-signature'
 import { EventTime } from '@/components/ui/event-time'
 import { economyFormat } from '@/lib/intake/economy-format'
+import { itemCollectionDetail } from '@/lib/engine/item-collection'
 
 type Detail = NonNullable<Awaited<ReturnType<typeof readItem>>>
 export function ItemHistory({
@@ -77,6 +78,19 @@ function EventDetails({
   const { kind, detail } = event
   const t = d.eventDetails
   const facts: [string, string][] = []
+  if (kind === 'collection_recorded') {
+    const collection = itemCollectionDetail.safeParse(detail)
+    if (collection.success) {
+      facts.push([
+        t.collection,
+        collection.data.collected ? t.collected : t.notCollected,
+      ])
+      facts.push([
+        t.observedOn,
+        economyFormat(locale).date(collection.data.observedOn),
+      ])
+    }
+  }
   const reason =
     typeof detail.reason === 'string'
       ? detail.reason
@@ -123,6 +137,7 @@ function EventDetails({
       'price_set',
       'markdown_applied',
       'returned',
+      'collection_recorded',
     ].includes(kind)
   ) {
     const recordedReason =

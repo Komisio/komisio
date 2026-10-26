@@ -694,7 +694,8 @@
     "zettle.line_resolved": "PayPal POS · Kuittirivi · Manuaalinen ratkaisu",
     "zettle.page_received": "PayPal POS · Kuittisivu · Vastaanotto",
     "zettle.pull_enabled": "PayPal POS · Kuittien haku · Aktivointi",
-    "zettle.window_abandoned": "PayPal POS · Synkronointijakso · Peruutus"
+    "zettle.window_abandoned": "PayPal POS · Synkronointijakso · Peruutus",
+    "item.collection_recorded": "Noutotila kirjattu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -1396,7 +1397,8 @@
       "returned": "Asiakaspalautus",
       "markdown_applied": "Hinnanalennus tehty",
       "period_extended": "Myyntiaikaa pidennetty",
-      "period_ended": "Myyntiaika päättynyt"
+      "period_ended": "Myyntiaika päättynyt",
+      "collection_recorded": "Noutotila kirjattu"
     },
     "clearFilters": "Tyhjennä suodattimet",
     "showingRange": "Näytetään {from}–{to} / {total} tuotetta",
@@ -1423,7 +1425,11 @@
         "return": "Palautus myyjälle",
         "recycle": "Kierrätys",
         "transfer": "Siirto toiseen kauppaan"
-      }
+      },
+      "collection": "Noutotila",
+      "collected": "Noudettu",
+      "notCollected": "Ei noudettu",
+      "observedOn": "Tarkistuspäivä"
     }
   },
   "sales": {
@@ -5058,5 +5064,19 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Skannaa / kirjoita"
+  "scanFocus": "Skannaa / kirjoita",
+  "itemCollection": {
+    "title": "Tavaran nouto",
+    "description": "Myyntijakson päättäminen palautusta varten ei vahvista noutoa. Kirjaa tarkistettu tilanne.",
+    "collected": "Noudettu",
+    "notCollected": "Ei noudettu",
+    "unrecorded": "Noutotilaa ei ole kirjattu",
+    "record": "Kirjaa noutotila",
+    "status": "Noutotila",
+    "choose": "Valitse tila",
+    "date": "Tarkistuspäivä",
+    "note": "Huomautus (valinnainen)",
+    "save": "Tallenna noutotila",
+    "saved": "Noutotila tallennettu"
+  }
 }

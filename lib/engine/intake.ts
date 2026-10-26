@@ -1,4 +1,5 @@
 import { businessDetails, sellerType } from './seller-business'
+import { recordItemCollectionCommand } from './item-collection'
 import {
   startStocktakeCommand,
   scanStocktakeCommand,
@@ -66,6 +67,7 @@ import {
 import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
+  recordItemCollectionCommand,
   recordConsignmentFeePaymentCommand,
   reverseConsignmentFeeCommand,
   accrueSellerConsignmentFeesCommand,
@@ -385,6 +387,17 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_item: c.itemId,
         p_price_ore: c.priceOre,
         p_reason: c.reason,
+      })
+    case 'recordItemCollection':
+      return client.rpc('record_item_collection', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_end_event: c.endEventId,
+        p_expected_current: c.expectedCurrentId,
+        p_collected: c.collected,
+        p_observed_on: c.observedOn,
+        p_note: c.note,
       })
     case 'applyDueMarkdowns':
       return client.rpc('apply_due_markdowns', {

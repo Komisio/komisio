@@ -1,6 +1,7 @@
 import { raceSalePayment } from './sale-payment-race.mjs'
 import { raceRegistrationCategory } from './registration-category-race.mjs'
 import { raceCatalogReadiness } from './catalog-readiness-race.mjs'
+import { raceItemCollection } from './item-collection-race.mjs'
 import {
   prepareRegistrationCategories,
   verifyRegistrationCategories,
@@ -112,6 +113,7 @@ try {
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceRegistrationCategory({ setup, connectionString: parsed.toString() })
   await raceCatalogReadiness({ setup, connectionString: parsed.toString() })
+  await raceItemCollection({ setup, connectionString: parsed.toString() })
   await raceWeblinkQueue({ setup, connectionString: parsed.toString() })
   await raceStoreWorkflow({ setup, connectionString: parsed.toString() })
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })

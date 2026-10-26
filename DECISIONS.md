@@ -1210,3 +1210,5 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-26: #636 history displays recorded end actions, reasons, extension days and price changes. Future markdown events retain the previous price; old events are not rewritten or guessed. Customer returns have a distinct label from returns to sellers. Financial calculations stay unchanged.
 - 2026-10-26: #636: reopening requires a new future sale-end date and a reason. Period notices cover new events only, seven days before end and at end. Pause/resume is deferred until safe automatic POS handling is verified; manual POS handling is not an interim release.
+- 2026-10-26: #636: staff record seller collection as immutable item events tied to the current return-to-seller end event. Each record states collected/not collected and an observed date, not a future plan. Stale edits require reload; replay creates no duplicate or financial entries.
+- 2026-10-26: #636: reopening creates no automatic fee and starts no new monthly fee period. Previous fees stay unchanged; other active items and new receipts retain the existing fee rules.

@@ -694,7 +694,8 @@
     "zettle.line_resolved": "PayPal POS · Kvitteringslinje · Manuell løsning",
     "zettle.page_received": "PayPal POS · Kvitteringsside · Mottak",
     "zettle.pull_enabled": "PayPal POS · Kvitteringshenting · Aktivering",
-    "zettle.window_abandoned": "PayPal POS · Synkperiode · Tilbakekalling"
+    "zettle.window_abandoned": "PayPal POS · Synkperiode · Tilbakekalling",
+    "item.collection_recorded": "Hentestatus registrert"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tillatelse til å gjøre dette.",
@@ -1396,7 +1397,8 @@
       "returned": "Kunderetur",
       "markdown_applied": "Prisnedsettelse gjennomført",
       "period_extended": "Salgsperiode forlenget",
-      "period_ended": "Salgsperiode avsluttet"
+      "period_ended": "Salgsperiode avsluttet",
+      "collection_recorded": "Hentestatus registrert"
     },
     "clearFilters": "Nullstill filtre",
     "showingRange": "Viser {from}–{to} av {total} varer",
@@ -1423,7 +1425,11 @@
         "return": "Tilbake til selger",
         "recycle": "Gjenvinning",
         "transfer": "Flytting til en annen butikk"
-      }
+      },
+      "collection": "Hentestatus",
+      "collected": "Hentet",
+      "notCollected": "Ikke hentet",
+      "observedOn": "Kontrolldato"
     }
   },
   "sales": {
@@ -5052,5 +5058,19 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Skann / skriv"
+  "scanFocus": "Skann / skriv",
+  "itemCollection": {
+    "title": "Henting av vare",
+    "description": "Avslutning for retur betyr ikke at varen er hentet. Registrer det som er kontrollert.",
+    "collected": "Hentet",
+    "notCollected": "Ikke hentet",
+    "unrecorded": "Hentestatus ikke registrert",
+    "record": "Registrer hentestatus",
+    "status": "Hentestatus",
+    "choose": "Velg status",
+    "date": "Kontrolldato",
+    "note": "Merknad (valgfri)",
+    "save": "Lagre hentestatus",
+    "saved": "Hentestatus lagret"
+  }
 }

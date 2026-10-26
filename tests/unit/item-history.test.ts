@@ -108,6 +108,16 @@ it.each(locales)(
         detail: { priceOre: 18000 },
       },
       { id: 'return', kind: 'returned' as const, detail: {} },
+      {
+        id: 'collection',
+        kind: 'collection_recorded' as const,
+        detail: {
+          endEventId: '11111111-1111-4111-8111-111111111111',
+          collected: false,
+          observedOn: '2026-10-26',
+          note: 'Synthetic collection check',
+        },
+      },
     ].map((e) => ({ ...e, occurred_at: '2026-10-26T09:00:00Z' }))
     const html = renderToStaticMarkup(
       createElement(ItemHistory, {
@@ -129,6 +139,9 @@ it.each(locales)(
     expect(html.match(/→/g)).toHaveLength(1)
     expect(html).toContain(`<strong>${d.eventKinds.returned}</strong>`)
     expect(html).not.toContain('DO_NOT_RENDER')
+    expect(html).toContain(d.eventDetails.notCollected)
+    expect(html).toContain(economyFormat(locale).date('2026-10-26'))
+    expect(html).toContain('Synthetic collection check')
   },
 )
 

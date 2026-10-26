@@ -694,7 +694,8 @@
     "zettle.line_resolved": "PayPal POS · Línea de recibo · Resolución manual",
     "zettle.page_received": "PayPal POS · Página de recibos · Recepción",
     "zettle.pull_enabled": "PayPal POS · Obtención de recibos · Activación",
-    "zettle.window_abandoned": "PayPal POS · Periodo de sincronización · Revocación"
+    "zettle.window_abandoned": "PayPal POS · Periodo de sincronización · Revocación",
+    "item.collection_recorded": "Estado de recogida registrado"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -1396,7 +1397,8 @@
       "returned": "Devolución del cliente",
       "markdown_applied": "Rebaja aplicada",
       "period_extended": "Periodo de venta ampliado",
-      "period_ended": "Periodo de venta finalizado"
+      "period_ended": "Periodo de venta finalizado",
+      "collection_recorded": "Estado de recogida registrado"
     },
     "clearFilters": "Borrar filtros",
     "showingRange": "Mostrando {from}–{to} de {total} artículos",
@@ -1423,7 +1425,11 @@
         "return": "Devolución al vendedor",
         "recycle": "Reciclaje",
         "transfer": "Traslado a otra tienda"
-      }
+      },
+      "collection": "Estado de recogida",
+      "collected": "Recogido",
+      "notCollected": "No recogido",
+      "observedOn": "Fecha de comprobación"
     }
   },
   "sales": {
@@ -5058,5 +5064,19 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Escanear / escribir"
+  "scanFocus": "Escanear / escribir",
+  "itemCollection": {
+    "title": "Recogida por el vendedor",
+    "description": "Finalizar el periodo para devolver el artículo no confirma su recogida. Registra lo que se ha comprobado.",
+    "collected": "Recogido",
+    "notCollected": "No recogido",
+    "unrecorded": "Estado de recogida sin registrar",
+    "record": "Registrar estado de recogida",
+    "status": "Estado de recogida",
+    "choose": "Seleccionar estado",
+    "date": "Fecha de comprobación",
+    "note": "Nota (opcional)",
+    "save": "Guardar estado de recogida",
+    "saved": "Estado de recogida guardado"
+  }
 }

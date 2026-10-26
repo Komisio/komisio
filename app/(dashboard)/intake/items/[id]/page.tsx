@@ -1,4 +1,7 @@
 import { ItemHistory } from '@/components/intake/item-history'
+import { ItemCollection } from '@/components/intake/item-collection'
+import { itemCollectionState } from '@/lib/engine/item-collection'
+import { localToday } from '@/lib/engine/overview'
 import { searchSaleItems } from '@/lib/engine/sale-search'
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
 import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
@@ -113,6 +116,10 @@ export default async function Item({
         ? `/intake/bags/${String(t.origin.bagId ?? '')}/inspect`
         : `/intake/purchases/${item.origin_id}`
   const snapshot = directory?.items.find((row) => row.id === item.id)
+  const collection =
+    item.ownership === 'consignment' && snapshot?.stage === 'ended'
+      ? itemCollectionState(events)
+      : null
   // Use one consistent directory snapshot for the optimistic edit preconditions.
   if (!snapshot)
     return (
@@ -169,6 +176,18 @@ export default async function Item({
         }
         metadata={
           <>
+            {collection && (
+              <ItemCollection
+                tenantId={active.id}
+                itemId={item.id}
+                state={collection}
+                write={['owner', 'admin', 'staff'].includes(active.role)}
+                today={localToday()}
+                locale={ctx.locale}
+                d={all.itemCollection}
+                intake={all.intake}
+              />
+            )}
             <div className="item-actor-line">
               <span>
                 {d.acceptedAt}:{' '}

@@ -4,6 +4,13 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Uncollected ownership (#654, raised 2026-10-26): the issue explicitly leaves
+VAT and accounting for goods acquired after collection expiry to an accountant.
+Existing consignment terms and ownership evidence cannot silently be replaced.
+Proposed split awaiting owner response: collection deadlines in all period modes
+first; automatic ownership changes and later sales wait for confirmed acquisition,
+VAT and reversal rules. General database approval does not decide these rules.
+
 Seller login (#646, resolved 2026-10-26): the owner rejects skipping email
 verification for invited sellers. Keep identity/MFA checks, make confirmation
 and resending clear, and continue directly into the correct seller workspace.

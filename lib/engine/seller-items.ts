@@ -31,6 +31,7 @@ export const myItems = z.object({
         collectionDeadline: z.string().nullable().optional(),
         endOfPeriodAction: z.enum(['charity', 'return']).nullable(),
         endedAs: z.string().nullable(),
+        endedAt: z.string().nullable().optional(),
         soldAt: z.string().nullable(),
         soldPriceOre: ore.nullable(),
         // The next frozen markdown step not yet applied, from the engine's
@@ -98,6 +99,13 @@ const myItemsPage = myItems
   .extend({
     total: z.number().int().nonnegative(),
     offset: z.number().int().nonnegative(),
+    counts: z
+      .object({
+        active: z.number().int().nonnegative(),
+        sold: z.number().int().nonnegative(),
+        ended: z.number().int().nonnegative(),
+      })
+      .optional(),
   })
   .refine((value) => value.items.length <= 25)
 

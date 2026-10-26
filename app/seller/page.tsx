@@ -236,13 +236,19 @@ export default async function SellerPortal({
   const query =
     typeof params.q === 'string' ? params.q.trim().slice(0, 120) : ''
   const parsedStatus = sellerItemFilter.safeParse(params.status ?? 'active')
-  const status = parsedStatus.success ? parsedStatus.data : 'active'
+  const status =
+    parsedStatus.success && parsedStatus.data !== 'all'
+      ? parsedStatus.data
+      : 'active'
   const requestedPage =
     typeof params.page === 'string' && /^[1-9]\d{0,6}$/.test(params.page)
       ? Number(params.page)
       : 1
-  const pageHref = (page: number) => {
-    const search = new URLSearchParams({ seller: account.sellerId, status })
+  const pageHref = (page: number, selectedStatus = status) => {
+    const search = new URLSearchParams({
+      seller: account.sellerId,
+      status: selectedStatus,
+    })
     if (query) search.set('q', query)
     if (page > 1) search.set('page', String(page))
     return '/seller?' + search.toString() + '#portal-items'
@@ -407,6 +413,20 @@ export default async function SellerPortal({
           <h2>{d.items}</h2>
           {paged ? (
             <>
+              <nav className="seller-item-tabs" aria-label={d.itemsStatus}>
+                {(['active', 'sold', 'ended'] as const).map((value) => (
+                  <Link
+                    key={value}
+                    href={pageHref(1, value)}
+                    aria-current={status === value ? 'page' : undefined}
+                  >
+                    {d.itemStatusTabs[value]}
+                    {paged.counts
+                      ? ` (${numbers.number(paged.counts[value])})`
+                      : ''}
+                  </Link>
+                ))}
+              </nav>
               <WorkingForm
                 key={`${query}:${status}`}
                 action="/seller#portal-items"
@@ -414,6 +434,7 @@ export default async function SellerPortal({
                 className="seller-items-search"
               >
                 <input type="hidden" name="seller" value={account.sellerId} />
+                <input type="hidden" name="status" value={status} />
                 <div className="field">
                   <label htmlFor="seller-items-q">{all.items.search}</label>
                   <input
@@ -423,20 +444,6 @@ export default async function SellerPortal({
                     maxLength={120}
                     placeholder={d.itemsSearchHint}
                   />
-                </div>
-                <div className="field seller-items-status">
-                  <label htmlFor="seller-items-status">{d.itemsStatus}</label>
-                  <select
-                    id="seller-items-status"
-                    name="status"
-                    defaultValue={status}
-                  >
-                    {sellerItemFilter.options.map((value) => (
-                      <option key={value} value={value}>
-                        {d.itemFilters[value]}
-                      </option>
-                    ))}
-                  </select>
                 </div>
                 <button className="btn btn-primary">
                   {all.items.searchButton}

@@ -289,3 +289,24 @@
     margin-bottom: 0.25rem;
   }
 }
+.seller-item-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block: 16px;
+}
+.seller-item-tabs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.seller-item-tabs a[aria-current='page'] {
+  background: var(--mint);
+  border-color: var(--ink);
+  font-weight: 700;
+}

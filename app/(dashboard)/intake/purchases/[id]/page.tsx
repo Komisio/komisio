@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { z } from 'zod'
 import { notFound } from 'next/navigation'
 import Link from '@/components/platform/working-link'
@@ -34,9 +35,12 @@ export default async function PurchaseReceipt({
         <h1>
           {d.reference} P-{receipt.reference}
         </h1>
-        <Link className="text-link" href="/intake/purchases#purchases-history">
-          {d.history}
-        </Link>
+        <BackLink
+          className="text-link"
+          href="/intake/purchases#purchases-history"
+        >
+          {all.returnNavigation.back}
+        </BackLink>
       </div>
       <section className="card intake-form purchase-receipt">
         {receipt.supplier_note && <p>{receipt.supplier_note}</p>}

@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { statementTitle } from '@/lib/engine/self-billing'
 import { SellerBusinessSummary } from '@/components/intake/seller-business-summary'
 import { readStaffMailStatus } from '@/lib/engine/store-mail'
@@ -108,9 +109,9 @@ export default async function Seller({
     const privacy = all.sellerPrivacy
     return (
       <div className="grid max-w-3xl gap-5">
-        <Link className="text-link" href="/intake/sellers">
-          {all.sellersList.title}
-        </Link>
+        <BackLink className="text-link" href="/intake/sellers">
+          {all.returnNavigation.back}
+        </BackLink>
         <h1>{privacy.closedName}</h1>
         <p>{privacy.closed}</p>
         <p>{privacy.remaining}</p>
@@ -328,9 +329,9 @@ export default async function Seller({
     })
   return (
     <div className="seller-profile">
-      <Link className="text-link" href="/intake/sellers">
-        ← {all.sellersList.title}
-      </Link>
+      <BackLink className="text-link" href="/intake/sellers">
+        {all.returnNavigation.back}
+      </BackLink>
       <div className="page-heading">
         <h1>{seller.data.name}</h1>
         <p>{w.intro}</p>

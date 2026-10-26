@@ -43,7 +43,9 @@ test('sales and receipt details remain readable while returns require an explici
       caret: 'initial',
     })
     await row.click()
-    await expect(page).toHaveURL(`/intake/sales/${sale}`)
+    await expect
+      .poll(() => new URL(page.url()).pathname)
+      .toBe(`/intake/sales/${sale}`)
     await expect(page.getByText(reference, { exact: true })).toBeHidden()
     await expect(
       page.getByLabel(d.returns.reason, { exact: true }),

@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { ItemHistory } from '@/components/intake/item-history'
 import { ItemCollection } from '@/components/intake/item-collection'
 import { itemCollectionState } from '@/lib/engine/item-collection'
@@ -69,10 +70,10 @@ export default async function Item({
   const backToIntake = isIntakeReturn(backHref)
   const backLink = (
     <div className="row wrap item-return-links">
-      <Link className="btn btn-secondary item-back-link" href={backHref}>
+      <BackLink className="btn btn-secondary item-back-link" href={backHref}>
         <ArrowLeft size={18} aria-hidden="true" />
-        {backToIntake ? d.backToIntake : d.backToList}
-      </Link>
+        {all.returnNavigation.back}
+      </BackLink>
       {intakeHref && !backToIntake && (
         <Link className="text-link item-back-link" href={intakeHref}>
           {d.backToIntake}

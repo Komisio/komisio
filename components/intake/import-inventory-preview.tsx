@@ -2,7 +2,7 @@
 import { useBusyState } from '@/components/platform/work-activity'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { Dictionary } from '@/lib/i18n'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { Button } from '@/components/ui/button'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import {

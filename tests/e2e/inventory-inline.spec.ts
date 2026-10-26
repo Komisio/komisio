@@ -42,7 +42,7 @@ test('blank row space opens the item while row controls keep their own actions',
     const seller = row.locator('.inventory-seller')
     const sellerHref = await seller.getAttribute('href')
     await seller.click()
-    await expect(page).toHaveURL(new RegExp(`${sellerHref}$`))
+    await expect(page).toHaveURL(new URL(sellerHref!, page.url()).href)
     await page.goBack()
     await row.locator('.inventory-open-item').focus()
     await page.keyboard.press('Enter')
@@ -81,7 +81,12 @@ test('inventory workspace selects page items and saves cells with safe retry and
     await expect(toolbar).toHaveCount(0)
     await expect
       .poll(async () => (await rows.first().boundingBox())?.height ?? Infinity)
-      .toBeLessThanOrEqual(50)
+      // Touch controls keep their 44px hit area plus table-cell padding.
+      .toBeLessThanOrEqual(
+        (await page.evaluate(() => matchMedia('(pointer: coarse)').matches))
+          ? 60
+          : 50,
+      )
     await rows.first().getByRole('checkbox').check()
     await expect(toolbar).toContainText(d.inventoryWorkspace.selectedOne)
     await expect(

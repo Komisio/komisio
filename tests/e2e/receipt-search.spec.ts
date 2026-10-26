@@ -51,7 +51,7 @@ test('receipt search finds older sales beyond the latest fifty and preserves the
     await row.click()
     await expect(page).toHaveURL(new RegExp(`/intake/sales/${old}\\?`))
     await page
-      .getByRole('link', { name: d.sales.backToList, exact: true })
+      .getByRole('link', { name: d.returnNavigation.back, exact: true })
       .click()
     await expect(page).toHaveURL(filtered)
     await expect(

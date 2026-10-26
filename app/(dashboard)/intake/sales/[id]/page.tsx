@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
 import {
@@ -50,9 +51,9 @@ export default async function Sale({
     })
   return (
     <div className="sale-detail">
-      <Link className="text-link" href={back}>
-        {d.backToList}
-      </Link>
+      <BackLink className="text-link" href={back}>
+        {all.returnNavigation.back}
+      </BackLink>
       <div className="page-heading">
         <h1>
           {d.receipt} {formatOre(sale.total_ore)} {currency}

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import type { ReactNode } from 'react'
 import { EventTime } from '@/components/ui/event-time'
 import { formatOre } from '@/lib/engine/items'

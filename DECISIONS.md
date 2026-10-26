@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-26: #650 carries allowlisted internal origins in detail links, retaining list queries and tabs. Back uses the origin or a safe default, never history depth. Tab-local bounded scroll memory restores position; saves retain the origin and existing unsaved-work warnings.
+
 - 2026-10-26: #643 freezes the application UI language. Approval replies ignore routine notification opt-outs, use application/store/English fallback and retain communication history. A tenant-locked claim permits one send attempt per approval; unknown outcomes never resend automatically.
 
 - 2026-10-26: #654 adds optional collection days to new day-period consignment return terms; calendar snapshots and historic items remain unchanged. Grace follows extensions and reopening in Stockholm time. Ownership transfer, acquisition VAT and reversal rules remain deferred.

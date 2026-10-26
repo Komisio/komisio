@@ -5174,5 +5174,8 @@
   "registrationApprovalEmail": {
     "subject": "Your registration at {store} is approved",
     "body": "Hello {seller},\n\n{store} has approved your registration. You can now sign in to the Seller Portal using the account you registered with:\n{url}\n\nYou can follow your items and payouts there."
+  },
+  "returnNavigation": {
+    "back": "Back"
   }
 }

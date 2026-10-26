@@ -5174,5 +5174,8 @@
   "registrationApprovalEmail": {
     "subject": "La tua registrazione presso {store} è stata approvata",
     "body": "Ciao {seller}!\n\n{store} ha approvato la tua registrazione. Ora puoi accedere al portale venditori con lo stesso account usato per registrarti:\n{url}\n\nNel portale puoi seguire i tuoi articoli e i pagamenti."
+  },
+  "returnNavigation": {
+    "back": "Indietro"
   }
 }

@@ -5170,5 +5170,9 @@
     "charity": "After the sale period: unsold items are donated to charity.",
     "fullText": "Read the full agreement",
     "needsApproval": "Approval needed"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Your registration at {store} is approved",
+    "body": "Hello {seller},\n\n{store} has approved your registration. You can now sign in to the Seller Portal using the account you registered with:\n{url}\n\nYou can follow your items and payouts there."
   }
 }

@@ -228,10 +228,50 @@ for (const automatic of [false, true])
       await expect(
         application.getByText(/^Synthetic translated text/),
       ).toBeVisible()
+      const approvalRequest = page.waitForRequest(
+        (r) =>
+          r.url().endsWith('/api/seller-registration') &&
+          r.postDataJSON()?.action === 'review',
+      )
       await application
         .getByRole('button', { name: d.approve, exact: true })
         .click()
       await expect(page.getByText(d.empty, { exact: true })).toBeVisible()
+      const approvedCommand = (await approvalRequest).postDataJSON()
+      await expect
+        .poll(
+          async () =>
+            (
+              await f.db.query(
+                'select status from seller_communications where tenant_id=$1 and registration_review_id=$2',
+                [f.tenant, approvedCommand.requestId],
+              )
+            ).rows[0]?.status,
+        )
+        .toBe('manual')
+      const replay = await page.request.post('/api/seller-registration', {
+        headers: { origin: new URL(page.url()).origin },
+        data: approvedCommand,
+      })
+      expect(replay.status()).toBe(200)
+      const notices = (
+        await f.db.query(
+          'select c.*, a.application_locale from seller_communications c join seller_registration_reviews r on r.id=c.registration_review_id join seller_registrations a on a.id=r.registration_id where c.tenant_id=$1',
+          [f.tenant],
+        )
+      ).rows
+      expect(notices).toHaveLength(1)
+      expect(notices[0].application_locale).toBe('sv')
+      expect(notices[0].locale).toBe('sv')
+      expect(notices[0].subject).toBe(
+        all.registrationApprovalEmail.subject.replace(
+          '{store}',
+          'P2 browser store',
+        ),
+      )
+      expect(notices[0].body).toContain('/login?next=%2Fseller&locale=sv')
+      expect(notices[0].body).not.toContain(sellerEmail)
+      expect(notices[0].body).not.toContain('0700000000')
       const rows = await f.db.query(
         'select id from sellers where tenant_id=$1 and email=$2',
         [f.tenant, sellerEmail],
@@ -270,6 +310,12 @@ for (const automatic of [false, true])
         [f.tenant, rows.rows[0].id],
       )
       expect(consent.rows[0].n).toBe(automatic ? 1 : 0)
+      await sellerPage
+        .getByRole('tab', {
+          name: all.sellerPortalWorkspace.details,
+          exact: true,
+        })
+        .click()
       await sellerPage.locator('#store-mail-consent summary').click()
       await expect(
         sellerPage.getByText(

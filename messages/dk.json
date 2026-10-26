@@ -5170,5 +5170,9 @@
     "charity": "Efter salgsperioden: usolgte varer doneres til velgørenhed.",
     "fullText": "Læs hele aftalen",
     "needsApproval": "Godkendelse mangler"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Din registrering hos {store} er godkendt",
+    "body": "Hej {seller}!\n\n{store} har godkendt din registrering. Du kan nu logge ind på sælgerportalen med den konto, du brugte ved registreringen:\n{url}\n\nHer kan du følge dine varer og udbetalinger."
   }
 }

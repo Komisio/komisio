@@ -166,6 +166,7 @@ export async function readStoreRegistrations(
 export async function executeRegistration(
   client: SupabaseClient,
   input: RegistrationCommand,
+  applicationLocale?: Locale,
 ) {
   const c = registrationCommand.parse(input)
   if (c.action === 'mailSettings')
@@ -183,7 +184,7 @@ export async function executeRegistration(
       p_action: c.change,
     })
   if (c.action === 'apply')
-    return client.rpc('submit_seller_registration', {
+    return client.rpc('submit_seller_registration_in_language', {
       p_token: c.token,
       p_id: c.requestId,
       p_name: c.name,
@@ -192,6 +193,7 @@ export async function executeRegistration(
       p_translation: c.translationId,
       p_accepted: c.accepted,
       p_mail_setting: c.mailSettingId,
+      p_locale: applicationLocale ?? null,
     })
   return client.rpc('review_seller_registration', {
     p_tenant: c.tenantId,

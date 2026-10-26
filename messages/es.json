@@ -4097,7 +4097,7 @@
     "review": "Leer y aceptar el acuerdo",
     "accepted": "Acuerdo aceptado",
     "recorded": "La tienda ha registrado tu acuerdo",
-    "accept": "Acepto el acuerdo",
+    "accept": "Aprobar el acuerdo",
     "failed": "No se pudo confirmar la respuesta. Inténtalo de nuevo.",
     "changed": "El acuerdo ha cambiado. Lee la nueva versión antes de aceptarlo.",
     "acceptedBy": "Aceptado por",
@@ -5163,5 +5163,17 @@
     "invoices": "Autofacturas",
     "account": "Ajustes de la cuenta",
     "noAgreement": "La tienda aún no ha publicado un acuerdo."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Resumen de las condiciones",
+    "currentSettings": "Se muestran los ajustes actuales de la tienda. Los artículos conservan las condiciones guardadas para ellos. Lea el acuerdo completo a continuación.",
+    "commission": "Comisión de la tienda: {rate} % {basis}.",
+    "days": "Periodo de venta: {days} días.",
+    "months": "Periodo de venta: {months} meses naturales desde la recepción física.",
+    "collection": "Recoja los artículos no vendidos en los {days} días siguientes al fin del periodo de venta.",
+    "return": "Al finalizar el periodo de venta: se devuelven los artículos no vendidos.",
+    "charity": "Al finalizar el periodo de venta: se donan los artículos no vendidos a una entidad benéfica.",
+    "fullText": "Leer el acuerdo completo",
+    "needsApproval": "Se requiere aprobación"
   }
 }

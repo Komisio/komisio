@@ -1,3 +1,5 @@
+import { z } from 'zod'
+import { SellerAgreementWorkspace } from '@/components/seller/agreement-workspace'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { SelfBillingDetails } from '@/components/intake/self-billing-details'
 import { statementTitle } from '@/lib/engine/self-billing'
@@ -37,7 +39,11 @@ import { readStoreCurrency } from '@/lib/engine/money'
 import { SignOut } from '@/components/platform/sign-out'
 import { SellerHeader } from '@/components/seller/header'
 import { EventTime } from '@/components/ui/event-time'
-import { readMySellerAgreement } from '@/lib/engine/seller-agreement'
+import {
+  readMySellerAgreement,
+  readMySellerAgreementArchive,
+  readMySellerTermsSummary,
+} from '@/lib/engine/seller-agreement'
 export const generateMetadata = () =>
   platformPageMetadata((d) => d.sellerPortal.title, {
     robots: { index: false, follow: false },
@@ -53,6 +59,9 @@ export default async function SellerPortal({
     q?: string
     status?: string
     page?: string
+    agreementVersion?: string
+    agreementText?: string
+    agreementPage?: string
     stores?: string
   }>
 }) {
@@ -130,6 +139,33 @@ export default async function SellerPortal({
     account.tenantId,
     account.sellerId,
   )
+  for (const value of [params.agreementVersion, params.agreementText])
+    if (value !== undefined && !z.uuid().safeParse(value).success) notFound()
+  const agreementPage = /^[1-9]\d{0,5}$/.test(params.agreementPage ?? '')
+    ? Math.min(100000, Number(params.agreementPage))
+    : 1
+  const [agreementArchive, agreementSummary] = await Promise.all([
+    readMySellerAgreementArchive(
+      ctx.client,
+      account.tenantId,
+      account.sellerId,
+      params.agreementVersion ?? null,
+      agreementPage,
+      params.agreementText ?? null,
+    ),
+    readMySellerTermsSummary(ctx.client, account.tenantId, account.sellerId),
+  ])
+  if (params.agreementVersion && !agreementArchive.agreement) notFound()
+  const agreementPages = Math.max(1, Math.ceil(agreementArchive.total / 20))
+  if (agreementPage > agreementPages) {
+    const q = new URLSearchParams(
+      Object.entries(params).filter(
+        (entry): entry is [string, string] => typeof entry[1] === 'string',
+      ),
+    )
+    q.set('agreementPage', String(agreementPages))
+    redirect('/seller?' + q + '#seller-workspace-agreement')
+  }
   const currency = await readStoreCurrency(ctx.client, account.tenantId)
   const bank = await readSellerBank(
     ctx.client,
@@ -579,37 +615,21 @@ export default async function SellerPortal({
           {
             id: 'agreement',
             label: all.sellerPortalWorkspace.agreement,
+            notice:
+              agreement.agreement && !agreement.acceptance
+                ? all.sellerAgreementSummary.needsApproval
+                : undefined,
             content: (
-              <>
-                {agreement.agreement && (
-                  <section
-                    className="card"
-                    aria-label={all.sellerAgreement.title}
-                  >
-                    <Link
-                      className="text-link"
-                      href={`/seller/agreement?seller=${account.sellerId}`}
-                    >
-                      {agreement.acceptance
-                        ? all.sellerAgreement.view
-                        : all.sellerAgreement.review}
-                    </Link>
-                    {agreement.acceptance && (
-                      <p>
-                        {agreement.acceptance.source === 'seller_portal'
-                          ? all.sellerAgreement.accepted
-                          : all.sellerAgreement.recorded}
-                      </p>
-                    )}
-                  </section>
-                )}
-
-                {!agreement.agreement && (
-                  <section className="card">
-                    <p>{all.sellerPortalWorkspace.noAgreement}</p>
-                  </section>
-                )}
-              </>
+              <SellerAgreementWorkspace
+                tenantId={account.tenantId}
+                sellerId={account.sellerId}
+                storeName={account.storeName}
+                locale={ctx.locale}
+                state={agreementArchive}
+                summary={agreementSummary}
+                page={agreementPage}
+                base={base}
+              />
             ),
           },
         ]}

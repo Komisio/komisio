@@ -4,6 +4,12 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Seller agreement name (#649, raised 2026-10-26): the reported wrong name in
+agreement text is not reproduced. Published bodies are literal, shared store
+texts; they must not be silently rewritten. Await the affected store and whether
+the report concerns body text or the staff-oriented PDF button. The portal will
+identify the actual linked seller separately and remove that button.
+
 Uncollected ownership (#654, raised 2026-10-26): the issue explicitly leaves
 VAT and accounting for goods acquired after collection expiry to an accountant.
 Existing consignment terms and ownership evidence cannot silently be replaced.

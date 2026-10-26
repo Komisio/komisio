@@ -4097,7 +4097,7 @@
     "review": "Lue ja hyväksy sopimus",
     "accepted": "Sopimus hyväksytty",
     "recorded": "Myymälä on kirjannut sopimuksesi",
-    "accept": "Hyväksyn sopimuksen",
+    "accept": "Hyväksy sopimus",
     "failed": "Vastausta ei voitu vahvistaa. Yritä uudelleen.",
     "changed": "Sopimus on muuttunut. Lue uusi versio ennen hyväksymistä.",
     "acceptedBy": "Hyväksyjä",
@@ -5163,5 +5163,17 @@
     "invoices": "Itselaskutuslaskut",
     "account": "Tilin asetukset",
     "noAgreement": "Liike ei ole vielä julkaissut sopimusta."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Ehdot lyhyesti",
+    "currentSettings": "Tässä näkyvät myymälän nykyiset asetukset. Tuotteille tallennetut ehdot säilyvät. Lue koko sopimus alta.",
+    "commission": "Myymälän provisio: {rate} % {basis}.",
+    "days": "Myyntiaika: {days} päivää.",
+    "months": "Myyntiaika: {months} kalenterikuukautta tuotteiden vastaanottamisesta.",
+    "collection": "Nouda myymättömät tuotteet {days} päivän kuluessa myyntiajan päättymisestä.",
+    "return": "Myyntiajan jälkeen: myymättömät tuotteet palautetaan.",
+    "charity": "Myyntiajan jälkeen: myymättömät tuotteet lahjoitetaan hyväntekeväisyyteen.",
+    "fullText": "Lue koko sopimus",
+    "needsApproval": "Hyväksyntä tarvitaan"
   }
 }

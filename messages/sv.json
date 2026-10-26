@@ -4091,7 +4091,7 @@
     "review": "Läs och acceptera avtalet",
     "accepted": "Avtalet är accepterat",
     "recorded": "Butiken har registrerat ditt avtal",
-    "accept": "Jag accepterar avtalet",
+    "accept": "Godkänn avtal",
     "failed": "Svaret kunde inte bekräftas. Försök igen.",
     "changed": "Avtalet har ändrats. Läs den nya versionen innan du accepterar.",
     "acceptedBy": "Accepterat av",
@@ -5157,5 +5157,17 @@
     "invoices": "Självfakturor",
     "account": "Kontoinställningar",
     "noAgreement": "Butiken har inte publicerat något avtal ännu."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Kort om villkoren",
+    "currentSettings": "Butikens nuvarande inställningar visas här. Varor behåller de villkor som sparats för dem. Läs hela avtalet nedan.",
+    "commission": "Butikens provision: {rate} % {basis}.",
+    "days": "Säljperiod: {days} dagar.",
+    "months": "Säljperiod: {months} kalendermånader från fysisk inlämning.",
+    "collection": "Hämta osålda varor inom {days} dagar efter säljperiodens slut.",
+    "return": "Efter säljperioden: osålda varor återlämnas.",
+    "charity": "Efter säljperioden: osålda varor skänks till välgörenhet.",
+    "fullText": "Läs hela avtalet",
+    "needsApproval": "Godkännande behövs"
   }
 }

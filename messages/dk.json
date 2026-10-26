@@ -4091,7 +4091,7 @@
     "review": "Læs og accepter aftalen",
     "accepted": "Aftalen er accepteret",
     "recorded": "Butikken har registreret din aftale",
-    "accept": "Jeg accepterer aftalen",
+    "accept": "Godkend aftalen",
     "failed": "Svaret kunne ikke bekræftes. Prøv igen.",
     "changed": "Aftalen er ændret. Læs den nye version, før du accepterer.",
     "acceptedBy": "Accepteret af",
@@ -5157,5 +5157,17 @@
     "invoices": "Selvfakturaer",
     "account": "Kontoindstillinger",
     "noAgreement": "Butikken har endnu ikke offentliggjort en aftale."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Vilkårene kort fortalt",
+    "currentSettings": "Her vises butikkens aktuelle indstillinger. Varer beholder de vilkår, der er gemt for dem. Læs hele aftalen nedenfor.",
+    "commission": "Butikkens provision: {rate} % {basis}.",
+    "days": "Salgsperiode: {days} dage.",
+    "months": "Salgsperiode: {months} kalendermåneder fra fysisk indlevering.",
+    "collection": "Hent usolgte varer senest {days} dage efter salgsperiodens udløb.",
+    "return": "Efter salgsperioden: usolgte varer returneres.",
+    "charity": "Efter salgsperioden: usolgte varer doneres til velgørenhed.",
+    "fullText": "Læs hele aftalen",
+    "needsApproval": "Godkendelse mangler"
   }
 }

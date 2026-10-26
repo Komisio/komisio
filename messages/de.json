@@ -4097,7 +4097,7 @@
     "review": "Vertrag lesen und akzeptieren",
     "accepted": "Vertrag akzeptiert",
     "recorded": "Das Geschäft hat Ihren Vertrag erfasst",
-    "accept": "Ich akzeptiere den Vertrag",
+    "accept": "Vertrag akzeptieren",
     "failed": "Die Antwort konnte nicht bestätigt werden. Bitte erneut versuchen.",
     "changed": "Der Vertrag wurde geändert. Lesen Sie vor der Zustimmung die neue Version.",
     "acceptedBy": "Akzeptiert von",
@@ -5163,5 +5163,17 @@
     "invoices": "Gutschriften zur Selbstfakturierung",
     "account": "Kontoeinstellungen",
     "noAgreement": "Das Geschäft hat noch keine Vereinbarung veröffentlicht."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Bedingungen im Überblick",
+    "currentSettings": "Hier stehen die aktuellen Einstellungen des Geschäfts. Artikel behalten die für sie gespeicherten Bedingungen. Lesen Sie unten den vollständigen Vertrag.",
+    "commission": "Provision des Geschäfts: {rate} % {basis}.",
+    "days": "Verkaufsdauer: {days} Tage.",
+    "months": "Verkaufsdauer: {months} Kalendermonate ab tatsächlicher Annahme.",
+    "collection": "Holen Sie unverkaufte Artikel innerhalb von {days} Tagen nach Ende der Verkaufsdauer ab.",
+    "return": "Nach der Verkaufsdauer: unverkaufte Artikel werden zurückgegeben.",
+    "charity": "Nach der Verkaufsdauer: unverkaufte Artikel werden gespendet.",
+    "fullText": "Vollständigen Vertrag lesen",
+    "needsApproval": "Zustimmung erforderlich"
   }
 }

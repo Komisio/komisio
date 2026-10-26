@@ -4091,7 +4091,7 @@
     "review": "Les og godta avtalen",
     "accepted": "Avtalen er godtatt",
     "recorded": "Butikken har registrert avtalen din",
-    "accept": "Jeg godtar avtalen",
+    "accept": "Godkjenn avtalen",
     "failed": "Svaret kunne ikke bekreftes. Prøv igjen.",
     "changed": "Avtalen er endret. Les den nye versjonen før du godtar.",
     "acceptedBy": "Godtatt av",
@@ -5157,5 +5157,17 @@
     "invoices": "Selvfakturaer",
     "account": "Kontoinnstillinger",
     "noAgreement": "Butikken har ikke publisert en avtale ennå."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Vilkårene kort fortalt",
+    "currentSettings": "Her vises butikkens gjeldende innstillinger. Varene beholder vilkårene som er lagret for dem. Les hele avtalen nedenfor.",
+    "commission": "Butikkens provisjon: {rate} % {basis}.",
+    "days": "Salgsperiode: {days} dager.",
+    "months": "Salgsperiode: {months} kalendermåneder fra fysisk innlevering.",
+    "collection": "Hent usolgte varer innen {days} dager etter at salgsperioden er slutt.",
+    "return": "Etter salgsperioden: usolgte varer returneres.",
+    "charity": "Etter salgsperioden: usolgte varer gis til veldedighet.",
+    "fullText": "Les hele avtalen",
+    "needsApproval": "Godkjenning mangler"
   }
 }

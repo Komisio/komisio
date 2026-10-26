@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-26: #649 puts seller approval in the Agreement tab. A seller-scoped summary shows current effective commission and period settings separately from literal published terms. Acceptance stays version-bound and append-only; staff PDF access and historical evidence remain available.
+
 - 2026-10-21: e-conomic sends only the signed change from the last confirmed export for a store/date. Freeze its baseline and full target; serialize across versions. Unknown sends, ambiguous legacy history, stale baselines and changed posting context block sending. Existing records stay immutable.
 - 2026-10-21: An unverified e-conomic response after dispatch is a held provider outcome, never invalid user input. Show explicit verification guidance for new and historical holds; do not resend or infer success from a visible voucher number alone.
 

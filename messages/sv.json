@@ -2506,7 +2506,7 @@
     "noItems": "Inga varor ännu.",
     "item": "Vara",
     "price": "Pris",
-    "itemDate": "Såld / till salu till",
+    "itemDate": "Datum",
     "wasPrice": "var",
     "until": "till",
     "then": "sedan",
@@ -2613,7 +2613,15 @@
       "sold": "Inga sålda varor ännu.",
       "ended": "Inga avslutade varor ännu.",
       "all": "Inga varor ännu."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "Till försäljning",
+      "sold": "Sålda",
+      "ended": "Avslutade"
+    },
+    "forSaleUntil": "Till försäljning till",
+    "soldOn": "Såld",
+    "endedOn": "Avslutad"
   },
   "plans": {
     "heading": "Plan",

@@ -2524,7 +2524,7 @@
     "noItems": "No items yet.",
     "item": "Item",
     "price": "Price",
-    "itemDate": "Sold on / for sale until",
+    "itemDate": "Date",
     "wasPrice": "was",
     "until": "until",
     "then": "then",
@@ -2613,7 +2613,15 @@
       "sold": "No sold items yet.",
       "ended": "No ended items yet.",
       "all": "No items yet."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "For sale",
+      "sold": "Sold",
+      "ended": "Ended"
+    },
+    "forSaleUntil": "For sale until",
+    "soldOn": "Sold",
+    "endedOn": "Ended"
   },
   "plans": {
     "heading": "Plan",

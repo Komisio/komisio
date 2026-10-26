@@ -2524,7 +2524,7 @@
     "noItems": "Ei vielä tuotteita.",
     "item": "Tuote",
     "price": "Hinta",
-    "itemDate": "Myyty / myynnissä asti",
+    "itemDate": "Päivämäärä",
     "wasPrice": "oli",
     "until": "asti",
     "then": "sitten",
@@ -2613,7 +2613,15 @@
       "sold": "Ei vielä myytyjä tuotteita.",
       "ended": "Ei vielä päättyneitä tuotteita.",
       "all": "Ei vielä tuotteita."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "Myynnissä",
+      "sold": "Myydyt",
+      "ended": "Päättyneet"
+    },
+    "forSaleUntil": "Myynnissä asti",
+    "soldOn": "Myyty",
+    "endedOn": "Päättynyt"
   },
   "plans": {
     "heading": "Tilaus",

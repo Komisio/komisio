@@ -2524,7 +2524,7 @@
     "noItems": "Nessun articolo finora.",
     "item": "Articolo",
     "price": "Prezzo",
-    "itemDate": "Venduto il / in vendita fino al",
+    "itemDate": "Data",
     "wasPrice": "era",
     "until": "fino al",
     "then": "poi",
@@ -2613,7 +2613,15 @@
       "sold": "Nessun articolo venduto per ora.",
       "ended": "Nessun articolo concluso per ora.",
       "all": "Nessun articolo per ora."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "In vendita",
+      "sold": "Venduti",
+      "ended": "Terminati"
+    },
+    "forSaleUntil": "In vendita fino al",
+    "soldOn": "Venduto il",
+    "endedOn": "Terminato il"
   },
   "plans": {
     "heading": "Piano",

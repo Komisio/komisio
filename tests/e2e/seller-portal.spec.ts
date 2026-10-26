@@ -78,8 +78,13 @@ test('seller reads own economy, requests payout and opts out without becoming st
       exact: true,
     })
     await expect(
-      items.getByRole('combobox', { name: d.sellerPortal.itemsStatus }),
-    ).toHaveValue('active')
+      items
+        .getByRole('navigation', { name: d.sellerPortal.itemsStatus })
+        .getByRole('link', {
+          name: `${d.sellerPortal.itemStatusTabs.active} (0)`,
+          exact: true,
+        }),
+    ).toHaveAttribute('aria-current', 'page')
     await expect(
       items.getByText(d.sellerPortal.itemFilterEmpty.active, { exact: true }),
     ).toBeVisible()

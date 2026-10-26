@@ -2524,7 +2524,7 @@
     "noItems": "Aún no hay artículos.",
     "item": "Artículo",
     "price": "Precio",
-    "itemDate": "Vendido el / en venta hasta",
+    "itemDate": "Fecha",
     "wasPrice": "antes",
     "until": "hasta",
     "then": "después",
@@ -2613,7 +2613,15 @@
       "sold": "Aún no hay artículos vendidos.",
       "ended": "Aún no hay artículos finalizados.",
       "all": "Aún no hay artículos."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "En venta",
+      "sold": "Vendidos",
+      "ended": "Finalizados"
+    },
+    "forSaleUntil": "En venta hasta",
+    "soldOn": "Vendido el",
+    "endedOn": "Finalizado el"
   },
   "plans": {
     "heading": "Plan",

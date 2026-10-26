@@ -2524,7 +2524,7 @@
     "noItems": "Noch keine Artikel.",
     "item": "Artikel",
     "price": "Preis",
-    "itemDate": "Verkauft am / im Verkauf bis",
+    "itemDate": "Datum",
     "wasPrice": "vorher",
     "until": "bis",
     "then": "danach",
@@ -2613,7 +2613,15 @@
       "sold": "Noch keine verkauften Artikel.",
       "ended": "Noch keine beendeten Artikel.",
       "all": "Noch keine Artikel."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "Im Verkauf",
+      "sold": "Verkauft",
+      "ended": "Beendet"
+    },
+    "forSaleUntil": "Im Verkauf bis",
+    "soldOn": "Verkauft am",
+    "endedOn": "Beendet am"
   },
   "plans": {
     "heading": "Plan",

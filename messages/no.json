@@ -2524,7 +2524,7 @@
     "noItems": "Ingen varer ennå.",
     "item": "Vare",
     "price": "Pris",
-    "itemDate": "Solgt den / til salgs til",
+    "itemDate": "Dato",
     "wasPrice": "var",
     "until": "til",
     "then": "deretter",
@@ -2613,7 +2613,15 @@
       "sold": "Ingen solgte varer ennå.",
       "ended": "Ingen avsluttede varer ennå.",
       "all": "Ingen varer ennå."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "Til salgs",
+      "sold": "Solgt",
+      "ended": "Avsluttet"
+    },
+    "forSaleUntil": "Til salgs til",
+    "soldOn": "Solgt",
+    "endedOn": "Avsluttet"
   },
   "plans": {
     "heading": "Abonnement",

@@ -679,13 +679,15 @@ export default async function Agreements({
           ...(manage
             ? {
                 publish: (
-                  <AgreementPublisher
-                    tenantId={active.id}
-                    current={current}
-                    draft={draft}
-                    locale={ctx.locale}
-                    d={d}
-                  />
+                  <div className="page-reading-width">
+                    <AgreementPublisher
+                      tenantId={active.id}
+                      current={current}
+                      draft={draft}
+                      locale={ctx.locale}
+                      d={d}
+                    />
+                  </div>
                 ),
               }
             : {}),

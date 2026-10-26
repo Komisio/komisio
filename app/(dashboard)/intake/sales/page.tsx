@@ -167,7 +167,7 @@ export default async function Sales({
                   id: 'manual',
                   label: d.manualTab,
                   content: (
-                    <div className="sale-manual">
+                    <div className="sale-manual page-reading-width">
                       <p className="intake-notice">{d.notice}</p>
                       <SaleForm
                         key={`${active.id}:${search.item ?? ''}`}

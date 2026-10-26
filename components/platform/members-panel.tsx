@@ -87,7 +87,7 @@ export function MembersPanel({
   return (
     <div className="stack members-panel">
       {manage ? (
-        <section className="card">
+        <section className="card page-reading-width">
           <div className="row" style={{ marginBottom: 16 }}>
             <span className="feature-icon">
               <UserPlus size={20} />

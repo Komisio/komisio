@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-26: #656 explicitly opts list/report routes into a wide main-container variant. Detail/settings routes keep the reading width; entry forms inside mixed workspaces use a shared reading-width wrapper. Existing mobile padding and table scrolling remain intact.
+
 - 2026-10-26: #649 puts seller approval in the Agreement tab. A seller-scoped summary shows current effective commission and period settings separately from literal published terms. Acceptance stays version-bound and append-only; staff PDF access and historical evidence remain available.
 
 - 2026-10-21: e-conomic sends only the signed change from the last confirmed export for a store/date. Freeze its baseline and full target; serialize across versions. Unknown sends, ambiguous legacy history, stale baselines and changed posting context block sending. Existing records stay immutable.

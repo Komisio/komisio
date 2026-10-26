@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
@@ -340,7 +341,11 @@ test('seller submits photos, receives a request and sends a new immutable versio
     await staff
       .getByRole('link', { name: 'Fortsätt mottagning', exact: true })
       .click()
-    await expect(staff).toHaveURL(linkedUrl)
+    await expect(staff).toHaveURL(
+      (url) =>
+        url.pathname === new URL(linkedUrl).pathname &&
+        url.searchParams.get('returnTo') === '/intake/submissions',
+    )
     await page.setViewportSize({ width: 390, height: 844 })
     await expect
       .poll(() =>
@@ -436,12 +441,13 @@ test('seller submits photos, receives a request and sends a new immutable versio
       .getByRole('button', { name: d.submissions.queueFind, exact: true })
       .click()
     await expect(staff.locator('article.submission-record')).toHaveCount(1)
-    await expect(
+    await expectDetailTarget(
       staff.getByRole('link', {
         name: d.submissions.continueReception,
         exact: true,
       }),
-    ).toHaveAttribute('href', new URL(linkedUrl).pathname)
+      new URL(linkedUrl).pathname,
+    )
     await expect(
       staff.getByRole('link', {
         name: d.submissions.queueViewItem,
@@ -528,13 +534,11 @@ test('seller submits photos, receives a request and sends a new immutable versio
           exact: true,
         }),
       ).toHaveCount(state === 'new' ? 1 : 0)
-      await expect(
+      await expectDetailTarget(
         card.getByRole('link', {
           name: d.sellerWorkspace.communication,
           exact: true,
         }),
-      ).toHaveAttribute(
-        'href',
         `/intake/sellers/${sellerId}#seller-communication`,
       )
     }

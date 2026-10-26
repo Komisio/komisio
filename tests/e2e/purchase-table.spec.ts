@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -59,9 +60,10 @@ test('purchase table searches and sorts the complete list and creates an item in
     await apply.click()
     await expect(rows).toHaveCount(1)
     await expect(rows.first()).toContainText(d.purchases.statusRegistered)
-    await expect(
+    await expectDetailTarget(
       rows.first().getByRole('link', { name: d.items.open, exact: true }),
-    ).toHaveAttribute('href', `/intake/items/${item}`)
+      `/intake/items/${item}`,
+    )
     await expect(rows.first().locator('.purchase-item-link')).toContainText(
       '55.00',
     )

@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -106,13 +107,10 @@ test('statement defaults are closed and selected days use Stockholm despite the 
       name: d.statements.open,
       exact: true,
     })
-    await expect(issuedLink).toHaveAttribute(
-      'href',
-      `/intake/statements/${statement.id}`,
-    )
+    await expectDetailTarget(issuedLink, `/intake/statements/${statement.id}`)
     await issuedLink.click()
     await expect(page).toHaveURL(
-      new RegExp(`/intake/statements/${statement.id}$`),
+      (url) => url.pathname === `/intake/statements/${statement.id}`,
     )
     await expect(
       page.getByRole('heading', { name: d.statements.title, exact: false }),

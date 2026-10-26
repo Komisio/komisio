@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -130,9 +131,10 @@ for (const failureCode of ['REQUEST_FAILED', 'INVALID_INPUT', 'POLICY_CHANGED'])
             },
           ])
         } else {
-          await expect(
+          await expectDetailTarget(
             page.getByRole('link', { name: new RegExp(d.items.open) }),
-          ).toHaveAttribute('href', `/intake/items/${committedId}`)
+            `/intake/items/${committedId}`,
+          )
           expect(
             (
               await f.db.query(
@@ -304,9 +306,10 @@ for (const action of ['registerPurchase', 'acceptItem'] as const)
           )
           .toBe(2)
       } else {
-        await expect(
+        await expectDetailTarget(
           page.getByRole('link', { name: new RegExp(d.items.open) }),
-        ).toHaveAttribute('href', `/intake/items/${requests[1].requestId}`)
+          `/intake/items/${requests[1].requestId}`,
+        )
         expect(
           (
             await f.db.query(

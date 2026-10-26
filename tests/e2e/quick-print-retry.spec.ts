@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect, type Page } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -90,8 +91,8 @@ for (const variant of [
         await expect(queuePage.locator('#selected-print-job')).toBeInViewport()
         const job = queuePage.locator(`#print-job-${commands[0].requestId}`)
         await expect(job).toContainText('Synthetic quick printer')
-        await expect(job.getByRole('link')).toHaveAttribute(
-          'href',
+        await expectDetailTarget(
+          job.getByRole('link'),
           `/intake/items/${commands[0].referenceId}`,
         )
         await queuePage.close()

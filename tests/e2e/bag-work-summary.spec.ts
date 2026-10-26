@@ -100,7 +100,11 @@ test('handover progress includes registered items and opens unfinished work', as
     await summary
       .getByRole('link', { name: d.bagProgress.resumeReception, exact: false })
       .click()
-    await expect(page).toHaveURL(new RegExp(`/intake/reception/${pending}$`))
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname === `/intake/reception/${pending}` &&
+        url.searchParams.get('returnTo') === `/intake/bags/${bag}/inspect`,
+    )
     await f.asActor(f.actor, async () => {
       await f.db.query(
         'select quick_receive_from_bag($1,$2,$3,$4,0,$5,10000,$6)',

@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -161,10 +162,7 @@ test('seller account table shows sale shares and related payout events on deskto
     await expect(sale).toContainText(/180,00\s+SEK/)
     await expect(sale).toContainText(/120,00\s+SEK/)
     await expect(sale).toContainText(/\+120,00\s+SEK/)
-    await expect(sale.getByRole('link')).toHaveAttribute(
-      'href',
-      `/intake/items/${item}`,
-    )
+    await expectDetailTarget(sale.getByRole('link'), `/intake/items/${item}`)
     for (const kind of [
       'payout_reserved',
       'payout_paid',

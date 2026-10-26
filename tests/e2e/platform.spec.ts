@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { register, confirmEmail } from '../helpers/account'
 import { test, expect, type Page } from '@playwright/test'
 import { randomBytes, createHmac } from 'node:crypto'
@@ -1016,9 +1017,10 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
     .click()
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
   await expect(page).toHaveURL(new RegExp(`seller=${sellerId}`))
-  await expect(
+  await expectDetailTarget(
     queue.locator('.intake-bag a[href$="/inspect"]').first(),
-  ).toHaveAttribute('href', '/intake/bags/' + expected[30] + '/inspect')
+    '/intake/bags/' + expected[30] + '/inspect',
+  )
   const second = await ids()
   await queue
     .getByRole('link', { name: 'Äldre inlämningar', exact: true })
@@ -1035,9 +1037,10 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
     .getByRole('link', { name: 'Nyare inlämningar', exact: true })
     .click()
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
-  await expect(
+  await expectDetailTarget(
     queue.locator('.intake-bag a[href$="/inspect"]').first(),
-  ).toHaveAttribute('href', '/intake/bags/' + expected[30] + '/inspect')
+    '/intake/bags/' + expected[30] + '/inspect',
+  )
   expect(await ids()).toEqual(second)
   await queue.getByLabel('Sök på inlämningsnummer').fill(`K-${oldestNumber}`)
   await queue.getByRole('button', { name: 'Hitta inlämning' }).click()

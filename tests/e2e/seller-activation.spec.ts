@@ -178,12 +178,20 @@ test('registration creates an unconfirmed account, activation works in another b
     await sellerPage
       .getByRole('link', { name: d.sellerActivation.continue })
       .click()
-    await expect(sellerPage).toHaveURL(/\/seller$/)
+    await expect(sellerPage).toHaveURL(
+      new RegExp(`/seller\\?seller=${command.requestId}$`),
+    )
     await sellerPage.reload()
-    await expect(sellerPage).toHaveURL(/\/seller$/)
+    await expect(sellerPage).toHaveURL(
+      new RegExp(`/seller\\?seller=${command.requestId}$`),
+    )
     await expect(
-      sellerPage.getByRole('heading', { name: d.sellerPortal.title }),
+      sellerPage.getByRole('heading', {
+        name: `P2 browser store · ${d.sellerPortal.title}`,
+      }),
     ).toBeVisible()
+    await sellerPage.getByRole('link', { name: d.sellerAccess.stores }).click()
+    await expect(sellerPage).toHaveURL(/\/seller\?stores=1$/)
     await sellerPage.getByRole('link', { name: 'P2 browser store' }).click()
     await expect(sellerPage).toHaveURL(
       new RegExp(`/seller\\?seller=${command.requestId}$`),
@@ -195,9 +203,13 @@ test('registration creates an unconfirmed account, activation works in another b
     await expect(sellerPage.locator('a[href="/onboarding"]')).toHaveCount(0)
     for (const route of ['/', '/onboarding', '/intake']) {
       await sellerPage.goto(route)
-      await expect(sellerPage).toHaveURL(/\/seller$/)
+      await expect(sellerPage).toHaveURL(
+        new RegExp(`/seller\\?seller=${command.requestId}$`),
+      )
       await expect(
-        sellerPage.getByRole('heading', { name: d.sellerPortal.title }),
+        sellerPage.getByRole('heading', {
+          name: `P2 browser store · ${d.sellerPortal.title}`,
+        }),
       ).toBeVisible()
     }
     await sellerPage.goto('/account')
@@ -206,7 +218,9 @@ test('registration creates an unconfirmed account, activation works in another b
     ).toBeVisible()
     await expect(sellerPage.locator('a[href="/onboarding"]')).toHaveCount(0)
     await sellerPage.getByRole('link', { name: 'Komisio', exact: true }).click()
-    await expect(sellerPage).toHaveURL(/\/seller$/)
+    await expect(sellerPage).toHaveURL(
+      new RegExp(`/seller\\?seller=${command.requestId}$`),
+    )
     expect(
       Number(
         (
@@ -268,7 +282,9 @@ test('registration creates an unconfirmed account, activation works in another b
     await sellerPage
       .getByRole('link', { name: d.sellerActivation.continue })
       .click()
-    await expect(sellerPage).toHaveURL(/\/seller$/)
+    await expect(sellerPage).toHaveURL(
+      new RegExp(`/seller\\?seller=${command.requestId}$`),
+    )
     expect(
       (
         await f.db.query(
@@ -289,9 +305,13 @@ test('registration creates an unconfirmed account, activation works in another b
       await loginPage
         .getByRole('button', { name: d.login, exact: true })
         .click()
-      await expect(loginPage).toHaveURL(/\/seller$/)
+      await expect(loginPage).toHaveURL(
+        new RegExp(`/seller\\?seller=${command.requestId}$`),
+      )
       await loginPage.reload()
-      await expect(loginPage).toHaveURL(/\/seller$/)
+      await expect(loginPage).toHaveURL(
+        new RegExp(`/seller\\?seller=${command.requestId}$`),
+      )
       // Losing the session on refresh must retain the seller return path.
       await passwordContext.clearCookies()
       await loginPage.reload()

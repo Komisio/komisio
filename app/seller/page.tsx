@@ -55,6 +55,7 @@ export default async function SellerPortal({
     status?: string
     page?: string
     feePage?: string
+    stores?: string
   }>
 }) {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
@@ -67,6 +68,13 @@ export default async function SellerPortal({
     labels[key] ?? d.kind
   const params = await searchParams
   const accounts = await readMySellerAccounts(ctx.client)
+  if (!params.seller && params.stores !== '1' && accounts.length === 1) {
+    const next = new URLSearchParams()
+    for (const [key, value] of Object.entries(params))
+      if (value && key !== 'stores') next.set(key, value)
+    next.set('seller', accounts[0].sellerId)
+    redirect(`/seller?${next}`)
+  }
   const registrations = !params.seller
     ? await readMyRegistrations(ctx.client)
     : []
@@ -287,7 +295,7 @@ export default async function SellerPortal({
       <SellerHeader locale={ctx.locale} />
       <SignOut d={all} next="/seller" />
       <div className="page-heading">
-        <Link href="/seller">{d.back}</Link>
+        <Link href="/seller?stores=1">{all.sellerAccess.stores}</Link>
         <h1>
           {account.storeName} · {d.title}
         </h1>

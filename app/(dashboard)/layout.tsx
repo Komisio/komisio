@@ -6,7 +6,11 @@ import { supportConfig, supportVersion } from '@/lib/help/support'
 import { version } from '../../package.json'
 import { LoadingMessageProvider } from '@/components/platform/loading-message'
 import { NavigationWarningProvider } from '@/components/platform/navigation-warning'
-import { isSellerOnly, requirePlatform } from '@/lib/platform/context'
+import {
+  isSellerOnly,
+  hasSellerAccount,
+  requirePlatform,
+} from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { Shell } from '@/components/platform/shell'
 import { Brand } from '@/components/platform/brand'
@@ -50,9 +54,10 @@ export default async function DashboardLayout({
     )
   }
   const d = dictionary(ctx.locale)
-  const [plan, host] = await Promise.all([
+  const [plan, host, sellerAccess] = await Promise.all([
     readPlanStatus(ctx.client, ctx.active.id),
     isPlatformHost(ctx.client),
+    hasSellerAccount(ctx),
   ])
   return (
     <LoadingMessageProvider message={d.loading}>
@@ -77,6 +82,7 @@ export default async function DashboardLayout({
             }}
           >
             <Shell
+              sellerAccess={sellerAccess}
               intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
               host={host}
               d={d}

@@ -8,6 +8,7 @@ const config: NextConfig = {
   outputFileTracingIncludes: {
     '/api/items/labels': ['./assets/fonts/*'],
     '/api/statements/pdf': ['./assets/fonts/*'],
+    '/api/sales/summary': ['./assets/fonts/*'],
     '/api/seller/statement/pdf': ['./assets/fonts/*'],
     '/api/agreements/pdf': ['./assets/fonts/*'],
     '/api/seller/agreement/pdf': ['./assets/fonts/*'],

@@ -5205,5 +5205,18 @@
     "other": "Sonstiges",
     "custom": "Eigener Grund",
     "saved": "Der Preis wurde gespeichert."
+  },
+  "saleSummary": {
+    "title": "Verkaufsübersicht",
+    "download": "Verkaufsübersicht herunterladen (PDF)",
+    "saleDate": "Verkaufsdatum",
+    "reference": "Verkaufsreferenz",
+    "notice": "Übersicht der in Komisio erfassten Angaben. Den Kassenbeleg stellt das Kassensystem aus.",
+    "reversed": "Der Verkauf wurde rückgängig gemacht",
+    "returned": "Erfasste Rückgabe",
+    "originalTotal": "Ursprünglicher Gesamtverkauf",
+    "returnTotal": "Erfasste Rückgaben insgesamt",
+    "currentDetails": "Geschäfts- und Artikelbeschreibungen entsprechen dem aktuellen Stand. Die Beträge stammen aus dem erfassten Verkauf und etwaigen Rückgaben.",
+    "generatedAt": "Erstellt"
   }
 }

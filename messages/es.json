@@ -5205,5 +5205,18 @@
     "other": "Otro",
     "custom": "Motivo personalizado",
     "saved": "El precio se ha guardado."
+  },
+  "saleSummary": {
+    "title": "Resumen de venta",
+    "download": "Descargar resumen de venta (PDF)",
+    "saleDate": "Fecha de venta",
+    "reference": "Referencia de venta",
+    "notice": "Resumen de los datos registrados en Komisio. El sistema de caja emite el recibo.",
+    "reversed": "La venta se ha anulado",
+    "returned": "Devolución registrada",
+    "originalTotal": "Total de la venta original",
+    "returnTotal": "Total de devoluciones registradas",
+    "currentDetails": "Las descripciones de la tienda y los artículos reflejan los datos actuales. Los importes proceden de la venta registrada y de las posibles devoluciones.",
+    "generatedAt": "Generado"
   }
 }

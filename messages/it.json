@@ -3088,7 +3088,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Questo scontrino richiede una verifica in PayPal POS. Importi o sconti non supportati non vengono mai indovinati.",
       "ITEM_NOT_FOUND": "L'articolo non è stato trovato in questo negozio. Controlla il suo ID completo.",
       "ITEM_ALREADY_SOLD": "Un articolo è già stato venduto. Controlla lo scontrino e l'abbinamento.",
-      "VAT_MODE_NOT_SET": "Scegli la modalità IVA del negozio nelle impostazioni prima di registrare vendite.",
+      "VAT_MODE_NOT_SET": "Scegli nelle impostazioni del negozio il regime IVA relativo alla proprietà dell’articolo prima di esportarlo o registrare una vendita.",
       "INVALID_INPUT": "Controlla che ogni riga punti a un articolo diverso con un ID valido.",
       "REQUEST_CONFLICT": "Questa richiesta non corrisponde più al tentativo registrato. Ricarica e controlla il risultato.",
       "FORBIDDEN": "Il tuo ruolo o accesso attuale non può eseguire questa azione.",

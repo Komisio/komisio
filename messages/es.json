@@ -3088,7 +3088,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Este recibo necesita investigación en PayPal POS. Los importes o descuentos no admitidos nunca se adivinan.",
       "ITEM_NOT_FOUND": "No se encontró el artículo en esta tienda. Comprueba su ID completo.",
       "ITEM_ALREADY_SOLD": "Un artículo ya se ha vendido. Comprueba el recibo y la asignación.",
-      "VAT_MODE_NOT_SET": "Elige el modo de IVA de la tienda en los ajustes antes de registrar ventas.",
+      "VAT_MODE_NOT_SET": "Elige en los ajustes de la tienda el modo de IVA correspondiente a la titularidad del artículo antes de exportarlo o registrar una venta.",
       "INVALID_INPUT": "Comprueba que cada fila apunta a un artículo distinto con un ID válido.",
       "REQUEST_CONFLICT": "Esta solicitud ya no coincide con el intento registrado. Recarga y comprueba el resultado.",
       "FORBIDDEN": "Tu rol actual o tu inicio de sesión no permiten esta acción.",

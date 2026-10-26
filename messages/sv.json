@@ -3088,7 +3088,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Kvittot behöver utredas i PayPal POS. Belopp eller rabatter som saknar stöd gissas aldrig.",
       "ITEM_NOT_FOUND": "Varan hittades inte i denna butik. Kontrollera dess fullständiga ID.",
       "ITEM_ALREADY_SOLD": "En vara är redan såld. Kontrollera kvittot och matchningen.",
-      "VAT_MODE_NOT_SET": "Välj butikens momsläge i inställningarna innan försäljning registreras.",
+      "VAT_MODE_NOT_SET": "Välj momsläge för varans ägartyp i butiksinställningarna innan varan exporteras eller försäljning registreras.",
       "INVALID_INPUT": "Kontrollera att varje rad pekar på en egen vara med ett giltigt ID.",
       "REQUEST_CONFLICT": "Begäran stämmer inte med det sparade försöket. Ladda om och kontrollera resultatet.",
       "FORBIDDEN": "Din roll eller inloggning tillåter inte denna åtgärd.",

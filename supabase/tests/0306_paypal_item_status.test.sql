@@ -24,7 +24,7 @@ select accept_item(current_setting('test.tenant')::uuid,current_setting('test.it
 create temp view lines as select jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item1'),'priceOre',25000),jsonb_build_object('itemId',current_setting('test.item2'),'priceOre',25000)) as l;
 
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
-select is(paypal_item_status(current_setting('test.tenant')::uuid,array[current_setting('test.item1')::uuid])->0->>'status','not_sent','unexported item is not synced');
+select is(paypal_item_status(current_setting('test.tenant')::uuid,array[current_setting('test.item1')::uuid])->0->>'status','attention','missing mapping needs attention before any export');
 select is(jsonb_array_length(paypal_item_status(current_setting('test.tenant')::uuid,array[gen_random_uuid()])),0,'unknown item omitted');
 select set_config('test.config',gen_random_uuid()::text,true);
 select publish_zettle_catalog_config(current_setting('test.tenant')::uuid,current_setting('test.config')::uuid,null,'{"consignment_margin":0,"store_full":25}');

@@ -3088,7 +3088,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Tämä kuitti vaatii tutkintaa PayPal POSsä. Tukemattomia summia tai alennuksia ei koskaan arvata.",
       "ITEM_NOT_FOUND": "Tuotetta ei löytynyt tästä kaupasta. Tarkista sen koko tunnus.",
       "ITEM_ALREADY_SOLD": "Jokin tuote on jo myyty. Tarkista kuitti ja täsmäytys.",
-      "VAT_MODE_NOT_SET": "Valitse kaupan alv-tila asetuksissa ennen myyntien kirjaamista.",
+      "VAT_MODE_NOT_SET": "Valitse tuotteen omistustyypin alv-tila kaupan asetuksissa ennen tuotteen vientiä tai myynnin kirjaamista.",
       "INVALID_INPUT": "Tarkista, että jokainen rivi osoittaa eri tuotteeseen kelvollisella tunnuksella.",
       "REQUEST_CONFLICT": "Tämä pyyntö ei enää vastaa kirjattua yritystä. Lataa sivu uudelleen ja tarkista tulos.",
       "FORBIDDEN": "Nykyinen roolisi tai kirjautumisesi ei voi suorittaa tätä toimintoa.",

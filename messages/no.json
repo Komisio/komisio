@@ -278,7 +278,8 @@
     "typeFieldsHint": "Velg en lignende varetype for å få de samme spørsmålene, for eksempel størrelse og materiale.",
     "typeFieldsLegend": "Velg felt",
     "assortment": "Sortimentsgruppe",
-    "noAssortment": "Uten sortimentsgruppe"
+    "noAssortment": "Uten sortimentsgruppe",
+    "noCategory": "Ingen kategori"
   },
   "intake": {
     "quickLink": "Hurtigmottak: én skjerm per plagg",
@@ -1316,7 +1317,7 @@
       "quickFilters": "Hurtigfiltre",
       "endsWithinWeek": "Salgsperioden slutter senest om 7 dager",
       "periodWindow": "Salgsperiode",
-      "categoryChoiceHint": "Velg en kategori eller skriv en annen."
+      "categoryChoiceHint": "Velg en kategori fra butikkens liste."
     },
     "title": "Varer",
     "item": "Vare",
@@ -4651,12 +4652,13 @@
     "categories": [
       "Lag brede kategorier, som Klær, Hjem og interiør eller Bøker, for å organisere varene.",
       "Skriv inn kategorinavnet. Legg til oversettelser hvis dere bruker flere språk; egne navn oversettes ikke automatisk.",
-      "Kategorien velges på varen. En ny kategori endrer ikke eksisterende varer."
+      "Velg en valgfri kategori i Hurtigmottak eller når du registrerer en vare fra en innlevering. Varetypens standardvalg kan endres for hver vare."
     ],
     "types": [
       "Lag varetyper som Jakke eller Bukse. Varetypen styrer hvilke opplysninger personalet fyller inn ved mottak.",
       "Gi varetypen et navn og velg attributter, som Størrelse og Materiale. Du kan kopiere spørsmål fra en lignende varetype.",
-      "Mangler et attributt? Opprett det under Attributter først, og velg det når du oppretter varetypen."
+      "Mangler et attributt? Opprett det under Attributter først, og velg det når du oppretter varetypen.",
+      "Rediger varetypen for å velge en foreslått kategori fra butikkens liste. Kategorien er et eget valg, ikke et attributtspørsmål."
     ],
     "attributes": [
       "Attributter er spørsmål om varen, som Størrelse, Farge, Merke, Materiale og Tilstand. Svaret, som M eller blå, fylles inn på varen.",
@@ -4750,7 +4752,8 @@
     "changed": "Opplysningene er endret. Lukk redigeringen og last inn siden på nytt før du prøver igjen.",
     "duplicate": "Navnet er allerede i bruk. Velg et annet navn.",
     "suggestedCategory": "Foreslått kategori",
-    "showInactive": "Vis inaktive varetyper"
+    "showInactive": "Vis inaktive varetyper",
+    "previousCategory": "Tidligere kategoritekst: {name}"
   },
   "selfRegistration": {
     "joinLogin": "Vil du selge gjennom butikken? Opprett en personlig konto, eller logg inn hvis du allerede har en. Deretter kommer du tilbake hit for å lese butikkens vilkår og sende søknaden din.",

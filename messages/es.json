@@ -278,7 +278,8 @@
     "typeFieldsHint": "Elige un tipo de artículo similar para usar las mismas preguntas, como talla y material.",
     "typeFieldsLegend": "Elegir campos",
     "assortment": "Grupo de surtido",
-    "noAssortment": "Sin grupo de surtido"
+    "noAssortment": "Sin grupo de surtido",
+    "noCategory": "Sin categoría"
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",
@@ -1316,7 +1317,7 @@
       "quickFilters": "Filtros rápidos",
       "endsWithinWeek": "Periodo finaliza como máximo en 7 días",
       "periodWindow": "Periodo de venta",
-      "categoryChoiceHint": "Elige una categoría o escribe otra."
+      "categoryChoiceHint": "Elige una categoría de la lista de la tienda."
     },
     "title": "Artículos",
     "item": "Artículo",
@@ -4657,12 +4658,13 @@
     "categories": [
       "Crea categorías amplias, como Ropa, Hogar y decoración o Libros, para organizar los artículos.",
       "Introduce el nombre de la categoría. Añade traducciones si usáis varios idiomas; los nombres propios no se traducen automáticamente.",
-      "La categoría se elige en el artículo. Crear una categoría no modifica los artículos existentes."
+      "Elige una categoría opcional en la recepción rápida o al registrar un artículo de una entrega. Puedes cambiar la categoría predeterminada del tipo para cada artículo."
     ],
     "types": [
       "Crea tipos como Chaqueta o Pantalones. El tipo determina qué datos rellena el personal al recibir el artículo.",
       "Pon un nombre al tipo y elige atributos como Talla y Material. Puedes copiar preguntas de un tipo similar.",
-      "¿Falta un atributo? Créalo primero en Atributos y selecciónalo al crear el tipo."
+      "¿Falta un atributo? Créalo primero en Atributos y selecciónalo al crear el tipo.",
+      "Edita el tipo de artículo para elegir una categoría sugerida de la lista de la tienda. La categoría es una selección independiente, no una pregunta de atributo."
     ],
     "attributes": [
       "Los atributos son preguntas sobre el artículo, como Talla, Color, Marca, Material y Estado. La respuesta, como M o azul, se introduce en el artículo.",
@@ -4756,7 +4758,8 @@
     "changed": "Los datos han cambiado. Cierra el editor y recarga la página antes de volver a intentarlo.",
     "duplicate": "Este nombre ya está en uso. Elige otro nombre.",
     "suggestedCategory": "Categoría sugerida",
-    "showInactive": "Mostrar tipos de producto inactivos"
+    "showInactive": "Mostrar tipos de producto inactivos",
+    "previousCategory": "Texto de categoría anterior: {name}"
   },
   "selfRegistration": {
     "joinLogin": "¿Quieres vender a través de la tienda? Crea una cuenta personal o inicia sesión si ya tienes una. Después volverás aquí para leer las condiciones de la tienda y enviar tu solicitud.",

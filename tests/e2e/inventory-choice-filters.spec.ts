@@ -4,7 +4,7 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('seller IDs and editable category choices stay tenant-scoped and compose across pages', async ({
+test('seller and category ID choices stay tenant-scoped and compose across pages', async ({
   page,
 }) => {
   const email = `choice-filters-${randomUUID()}@example.test`
@@ -15,7 +15,7 @@ test('seller IDs and editable category choices stay tenant-scoped and compose ac
     release = resolve
   })
   try {
-    for (let n = 0; n < 27; n++) await f.item(`Coat ${n}`)
+    const categoryId = randomUUID()
     await f.db.query("select register_seller($1,$2,$3,$4,'')", [
       f.tenant,
       randomUUID(),
@@ -24,10 +24,11 @@ test('seller IDs and editable category choices stay tenant-scoped and compose ac
     ])
     await f.db.query('select create_item_category($1,$2,$3,$4)', [
       f.tenant,
-      randomUUID(),
+      categoryId,
       'Jackets',
       '{"en":"Jackets","sv":"Jackor"}',
     ])
+    for (let n = 0; n < 27; n++) await f.item(`Coat ${n}`)
     const foreign = (
       await f.db.query('select create_tenant($1,$2,$3) id', [
         'Other test store',
@@ -70,39 +71,39 @@ test('seller IDs and editable category choices stay tenant-scoped and compose ac
     await expect(seller.locator('option')).toHaveCount(3)
     await expect(seller).not.toContainText('Other store seller')
     await seller.selectOption(f.seller)
-    await category.fill('Jackets')
+    await category.selectOption(categoryId)
     await expect(page.locator('.inventory-row')).toHaveCount(25)
     await expect
-      .poll(() => new URL(page.url()).searchParams.get('category'))
-      .toBe('Jackets')
+      .poll(() => new URL(page.url()).searchParams.get('categoryId'))
+      .toBe(categoryId)
     expect(new URL(page.url()).searchParams.get('seller')).toBe(f.seller)
     await expect(
-      page.locator('#items-category-choices option[value="Jackets"]'),
+      page.locator(`#items-category option[value="${categoryId}"]`),
     ).toHaveCount(1)
     await expect(
-      page.locator('#items-category-choices option[value="Other category"]'),
+      category.locator('option').filter({ hasText: 'Other category' }),
     ).toHaveCount(0)
     await page
       .getByRole('link', { name: d.items.nextPage, exact: true })
       .click()
     await expect(page.locator('.inventory-row')).toHaveCount(2)
     await expect(seller).toHaveValue(f.seller)
-    await expect(category).toHaveValue('Jackets')
+    await expect(category).toHaveValue(categoryId)
     const removeSeller = d.items.directory.removeFilter.replace(
       '{filter}',
       `${d.quickIntake.seller}: Synthetic P2 seller`,
     )
     await page.getByRole('link', { name: removeSeller, exact: true }).click()
     await expect(seller).toHaveValue('')
-    await expect(category).toHaveValue('Jackets')
+    await expect(category).toHaveValue(categoryId)
     expect(new URL(page.url()).searchParams.get('stage')).toBe('active')
-    await category.fill('Jacket') // Free-text fallback preserves partial matching.
+    await category.selectOption('none')
     await expect
-      .poll(() => new URL(page.url()).searchParams.get('category'))
-      .toBe('Jacket')
-    await expect(page.locator('.inventory-row')).toHaveCount(25)
+      .poll(() => new URL(page.url()).searchParams.get('categoryId'))
+      .toBe('none')
+    await expect(page.locator('.inventory-row')).toHaveCount(0)
     await page.reload()
-    await expect(category).toHaveValue('Jacket')
+    await expect(category).toHaveValue('none')
   } finally {
     release()
     await f.close()

@@ -1,4 +1,8 @@
 import { itemFilterHref } from '@/lib/engine/item-filter-navigation'
+import {
+  readItemCategories,
+  categoryChoices,
+} from '@/lib/engine/item-categories'
 import { WorkingForm } from '@/components/platform/working-form'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -29,6 +33,12 @@ export default async function Stock({
     d = all.stock,
     e = all.economy
   const params = await searchParams
+  const categoryLabels = new Map(
+    categoryChoices(
+      await readItemCategories(ctx.client, active.id),
+      ctx.locale,
+    ).map((c) => [c.id, c.label]),
+  )
   const requested = economyPeriod.safeParse({
     from: params.from,
     to: params.to,
@@ -307,14 +317,17 @@ export default async function Stock({
                       </thead>
                       <tbody>
                         {report.categories.map((c) => (
-                          <tr key={c.category || '-'}>
+                          <tr key={c.categoryId || '-'}>
                             <th scope="row">
                               {c.category ? (
                                 <Link
                                   className="text-link"
-                                  href={itemsHref({ category: c.category })}
+                                  href={itemsHref({
+                                    categoryId: c.categoryId ?? 'none',
+                                  })}
                                 >
-                                  {c.category}
+                                  {categoryLabels.get(c.categoryId!) ??
+                                    c.category}
                                 </Link>
                               ) : (
                                 d.uncategorised
@@ -469,9 +482,12 @@ export default async function Stock({
                           </thead>
                           <tbody>
                             {report.categories.map((c) => (
-                              <tr key={c.category || '-'}>
+                              <tr key={c.categoryId || '-'}>
                                 <th scope="row">
-                                  {c.category || d.uncategorised}
+                                  {(c.categoryId &&
+                                    categoryLabels.get(c.categoryId)) ||
+                                    c.category ||
+                                    d.uncategorised}
                                 </th>
                                 <td data-label={d.sold}>
                                   {format.number(c.soldCount)}

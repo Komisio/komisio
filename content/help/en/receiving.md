@@ -30,3 +30,5 @@ Start with the correct store and consignor\. Record what has physically arrived,
 4. Check the confirmation and registered\-item list before labelling\. If a save response is missing, keep the form open and use its retry action\. Do not create the same item again to obtain confirmation\.
 
 > Registered\-item counts describe saved records, not completion of the entire drop\-off\. Check the physical goods too\. Help changes no records; ask authorized staff to perform actions you cannot access\.
+
+Choose an optional category in Quick reception or when registering an item from a drop-off. You can override the item type default for each item. Edit the item type to select a suggested category from the store list. Category is a separate choice, not an attribute question.

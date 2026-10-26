@@ -12,6 +12,13 @@ test('stock links and removable filter chips retain context across pages and qui
   await register(page, email, `K!${randomUUID()}`)
   const f = await p2Fixture(email)
   try {
+    const categoryId = randomUUID()
+    await f.db.query('select create_item_category($1,$2,$3,$4)', [
+      f.tenant,
+      categoryId,
+      'Jackets',
+      { en: 'Jackets' },
+    ])
     for (let n = 0; n < 27; n++)
       await f.item(`Coat ${String(n).padStart(2, '0')}`)
     await f.commit()
@@ -94,7 +101,9 @@ test('stock links and removable filter chips retain context across pages and qui
     await expect(page.locator('.inventory-row')).toHaveCount(25)
     await page.goto('/intake/stock?ownership=consignment#stock-categories')
     await page.getByRole('link', { name: 'Jackets', exact: true }).click()
-    await expect(page).toHaveURL(/category=Jackets/)
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('categoryId'))
+      .toBe(categoryId)
     expect(new URL(page.url()).searchParams.get('ownership')).toBe(
       'consignment',
     )

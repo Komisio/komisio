@@ -30,3 +30,5 @@ Start med den rigtige butik og indleverer\. Registrér det, der fysisk er ankomm
 4. Kontrollér bekræftelsen og listen over registrerede varer før mærkning\. Hvis svaret på en lagring mangler, hold formularen åben og brug dens mulighed for at prøve igen\. Opret ikke samme vare igen for at få en bekræftelse\.
 
 > Antallet af registrerede varer viser gemte oplysninger, ikke at hele indleveringen er færdigbehandlet\. Kontrollér også de fysiske varer\. Hjælpen ændrer ingen oplysninger; bed autoriseret personale udføre handlinger, du ikke har adgang til\.
+
+Vælg en valgfri kategori i Hurtig modtagelse eller ved registrering af en vare fra en indlevering. Varetypens standardvalg kan ændres for hver vare. Rediger varetypen for at vælge en foreslået kategori fra butikkens liste. Kategorien er et separat valg, ikke et attributspørgsmål.

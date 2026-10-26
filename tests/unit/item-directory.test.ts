@@ -6,6 +6,17 @@ import {
 import { expect, it } from 'vitest'
 import { itemFilters } from '../../lib/engine/item-directory'
 
+it('validates linked category filters while retaining legacy text bookmarks', () => {
+  expect(
+    itemFilters.safeParse({
+      categoryId: '40000000-0000-4000-8000-000000000001',
+    }).success,
+  ).toBe(true)
+  expect(itemFilters.safeParse({ categoryId: 'none' }).success).toBe(true)
+  expect(itemFilters.safeParse({ categoryId: 'Books' }).success).toBe(false)
+  expect(itemFilters.safeParse({ category: 'Books' }).success).toBe(true)
+})
+
 it('rejects malformed URL prices without throwing and compares whole minor units', () => {
   for (const minPrice of [
     'wrong',

@@ -278,7 +278,8 @@
     "typeFieldsHint": "Choose a similar item type to use the same questions, such as size and material.",
     "typeFieldsLegend": "Choose fields",
     "assortment": "Assortment group",
-    "noAssortment": "No assortment group"
+    "noAssortment": "No assortment group",
+    "noCategory": "No category"
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",
@@ -1316,7 +1317,7 @@
       "quickFilters": "Quick filters",
       "endsWithinWeek": "Period ends by 7 days from today",
       "periodWindow": "Sale period",
-      "categoryChoiceHint": "Choose a category or type another."
+      "categoryChoiceHint": "Choose a category from the store list."
     },
     "title": "Items",
     "item": "Item",
@@ -4651,12 +4652,13 @@
     "categories": [
       "Create broad categories, such as Clothing, Home & décor or Books, to organise your items.",
       "Enter the category name. Add translations if you use several languages; custom names are not translated automatically.",
-      "Choose the category on the item. Creating a category does not change existing items."
+      "Choose an optional category in Quick reception or when registering an item from a drop-off. You can override the item type default for each item."
     ],
     "types": [
       "Create item types such as Jacket or Trousers. The type determines which details staff fill in when receiving an item.",
       "Name the type and choose the attributes it needs, such as Size and Material. You can copy questions from a similar type.",
-      "Missing an attribute? Create it in the Attributes tab first, then select it when creating the type."
+      "Missing an attribute? Create it in the Attributes tab first, then select it when creating the type.",
+      "Edit the item type to select a suggested category from the store list. Category is a separate choice, not an attribute question."
     ],
     "attributes": [
       "Attributes are questions about an item, such as Size, Colour, Brand, Material and Condition. The answer, such as M or blue, is entered on the item.",
@@ -4750,7 +4752,8 @@
     "changed": "These details have changed. Close the editor and reload the page before trying again.",
     "duplicate": "This name is already used. Choose another name.",
     "suggestedCategory": "Suggested category",
-    "showInactive": "Show inactive product types"
+    "showInactive": "Show inactive product types",
+    "previousCategory": "Previous category text: {name}"
   },
   "selfRegistration": {
     "joinLogin": "Would you like to sell through the store? Create a personal account, or log in if you already have one. You will then return here to read the store’s terms and submit your application.",

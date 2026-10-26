@@ -278,7 +278,8 @@
     "typeFieldsHint": "Wählen Sie einen ähnlichen Artikeltyp, um dieselben Fragen zu verwenden, etwa zu Größe und Material.",
     "typeFieldsLegend": "Felder auswählen",
     "assortment": "Sortimentsgruppe",
-    "noAssortment": "Ohne Sortimentsgruppe"
+    "noAssortment": "Ohne Sortimentsgruppe",
+    "noCategory": "Keine Kategorie"
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
@@ -1316,7 +1317,7 @@
       "quickFilters": "Schnellfilter",
       "endsWithinWeek": "Verkaufszeitraum endet spätestens in 7 Tagen",
       "periodWindow": "Verkaufszeitraum",
-      "categoryChoiceHint": "Wähle eine Kategorie oder gib eine andere ein."
+      "categoryChoiceHint": "Wählen Sie eine Kategorie aus der Liste des Geschäfts."
     },
     "title": "Artikel",
     "item": "Artikel",
@@ -4657,12 +4658,13 @@
     "categories": [
       "Erstellen Sie grobe Kategorien wie Kleidung, Wohnen oder Bücher, um Artikel zu ordnen.",
       "Geben Sie den Kategorienamen ein. Ergänzen Sie bei Bedarf Übersetzungen; eigene Namen werden nicht automatisch übersetzt.",
-      "Die Kategorie wird am Artikel gewählt. Eine neue Kategorie verändert keine bestehenden Artikel."
+      "Wählen Sie bei der Schnellannahme oder beim Erfassen eines Artikels aus einer Abgabe optional eine Kategorie. Die Vorgabe des Artikeltyps lässt sich für jeden Artikel ändern."
     ],
     "types": [
       "Erstellen Sie Artikeltypen wie Jacke oder Hose. Der Typ bestimmt, welche Angaben bei der Annahme ausgefüllt werden.",
       "Benennen Sie den Typ und wählen Sie Attribute wie Größe und Material. Fragen können von einem ähnlichen Typ kopiert werden.",
-      "Fehlt ein Attribut? Erstellen Sie es zuerst im Tab Attribute und wählen Sie es beim Erstellen des Artikeltyps aus."
+      "Fehlt ein Attribut? Erstellen Sie es zuerst im Tab Attribute und wählen Sie es beim Erstellen des Artikeltyps aus.",
+      "Bearbeiten Sie den Artikeltyp, um eine vorgeschlagene Kategorie aus der Geschäftsliste auszuwählen. Die Kategorie ist eine separate Auswahl, keine Attributfrage."
     ],
     "attributes": [
       "Attribute sind Fragen zum Artikel, etwa Größe, Farbe, Marke, Material und Zustand. Die Antwort, etwa M oder blau, wird am Artikel eingetragen.",
@@ -4756,7 +4758,8 @@
     "changed": "Die Angaben wurden geändert. Schließen Sie die Bearbeitung und laden Sie die Seite neu, bevor Sie es erneut versuchen.",
     "duplicate": "Dieser Name wird bereits verwendet. Wählen Sie einen anderen Namen.",
     "suggestedCategory": "Vorgeschlagene Kategorie",
-    "showInactive": "Inaktive Produkttypen anzeigen"
+    "showInactive": "Inaktive Produkttypen anzeigen",
+    "previousCategory": "Bisheriger Kategorietext: {name}"
   },
   "selfRegistration": {
     "joinLogin": "Möchtest du über das Geschäft verkaufen? Erstelle ein persönliches Konto oder melde dich an, wenn du bereits eines hast. Danach kehrst du hierher zurück, um die Bedingungen des Geschäfts zu lesen und deinen Antrag zu senden.",

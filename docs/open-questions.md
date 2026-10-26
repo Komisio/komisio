@@ -16,6 +16,11 @@ PayPal POS currently documents deletion without an explicit reversible pause
 state; local inactive status must not imply confirmed external removal.
 Source: [Product Library API](https://developer.zettle.com/docs/api/product-library/reference).
 
+Reopening after monthly fees expire (#636, resolved 2026-10-26): the owner
+chooses no automatic fee on reopening. Reopening must not start a new fee
+period or change earlier charges. Existing fee handling for other active items
+and new physical receipts remains unchanged.
+
 Zebra setup illustrations (#592, resolved 2026-10-23): the owner approves
 clearly labeled original illustrations until current iPad screenshots are
 available. These explain the steps and do not establish hardware verification.

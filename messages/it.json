@@ -694,7 +694,8 @@
     "zettle.line_resolved": "PayPal POS · Riga scontrino · Risoluzione manuale",
     "zettle.page_received": "PayPal POS · Pagina scontrini · Ricezione",
     "zettle.pull_enabled": "PayPal POS · Recupero scontrini · Attivazione",
-    "zettle.window_abandoned": "PayPal POS · Periodo di sincronizzazione · Revoca"
+    "zettle.window_abandoned": "PayPal POS · Periodo di sincronizzazione · Revoca",
+    "item.collection_recorded": "Stato del ritiro registrato"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -1396,7 +1397,8 @@
       "returned": "Reso del cliente",
       "markdown_applied": "Ribasso applicato",
       "period_extended": "Periodo di vendita prolungato",
-      "period_ended": "Periodo di vendita concluso"
+      "period_ended": "Periodo di vendita concluso",
+      "collection_recorded": "Stato del ritiro registrato"
     },
     "clearFilters": "Cancella filtri",
     "showingRange": "Articoli {from}–{to} di {total}",
@@ -1423,7 +1425,11 @@
         "return": "Restituzione al venditore",
         "recycle": "Riciclo",
         "transfer": "Trasferimento a un altro negozio"
-      }
+      },
+      "collection": "Stato del ritiro",
+      "collected": "Ritirato",
+      "notCollected": "Non ritirato",
+      "observedOn": "Data della verifica"
     }
   },
   "sales": {
@@ -5052,5 +5058,19 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Scansiona / scrivi"
+  "scanFocus": "Scansiona / scrivi",
+  "itemCollection": {
+    "title": "Ritiro da parte del venditore",
+    "description": "La fine del periodo per la restituzione non conferma il ritiro. Registra quanto è stato verificato.",
+    "collected": "Ritirato",
+    "notCollected": "Non ritirato",
+    "unrecorded": "Stato del ritiro non registrato",
+    "record": "Registra stato del ritiro",
+    "status": "Stato del ritiro",
+    "choose": "Scegli stato",
+    "date": "Data della verifica",
+    "note": "Nota (facoltativa)",
+    "save": "Salva stato del ritiro",
+    "saved": "Stato del ritiro salvato"
+  }
 }

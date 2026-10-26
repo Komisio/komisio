@@ -694,7 +694,8 @@
     "zettle.line_resolved": "PayPal POS · Receipt line · Manual resolution",
     "zettle.page_received": "PayPal POS · Receipt page · Receipt",
     "zettle.pull_enabled": "PayPal POS · Receipt retrieval · Activation",
-    "zettle.window_abandoned": "PayPal POS · Sync window · Revocation"
+    "zettle.window_abandoned": "PayPal POS · Sync window · Revocation",
+    "item.collection_recorded": "Collection status recorded"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -1396,7 +1397,8 @@
       "returned": "Customer return",
       "markdown_applied": "Markdown applied",
       "period_extended": "Sale period extended",
-      "period_ended": "Sale period ended"
+      "period_ended": "Sale period ended",
+      "collection_recorded": "Collection status recorded"
     },
     "clearFilters": "Clear filters",
     "showingRange": "Showing {from}–{to} of {total} items",
@@ -1423,7 +1425,11 @@
         "return": "Return to seller",
         "recycle": "Recycling",
         "transfer": "Transfer to another store"
-      }
+      },
+      "collection": "Collection status",
+      "collected": "Collected",
+      "notCollected": "Not collected",
+      "observedOn": "Observation date"
     }
   },
   "sales": {
@@ -5052,5 +5058,19 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Scan / type"
+  "scanFocus": "Scan / type",
+  "itemCollection": {
+    "title": "Seller collection",
+    "description": "Ending the sale period for return does not confirm collection. Record what has been checked.",
+    "collected": "Collected",
+    "notCollected": "Not collected",
+    "unrecorded": "Collection status not recorded",
+    "record": "Record collection status",
+    "status": "Collection status",
+    "choose": "Choose status",
+    "date": "Observation date",
+    "note": "Note (optional)",
+    "save": "Save collection status",
+    "saved": "Collection status saved"
+  }
 }

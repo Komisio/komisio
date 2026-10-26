@@ -74,6 +74,8 @@ export async function POST(request: Request) {
           'FORBIDDEN',
           'AUTH_REQUIRED',
           'REQUEST_CONFLICT',
+          'ITEM_COLLECTION_CHANGED',
+          'ITEM_COLLECTION_UNAVAILABLE',
           'SELLER_NOT_FOUND',
           'INVALID_INPUT',
           'LABEL_TEMPLATE_FRAME',
@@ -155,6 +157,8 @@ export async function POST(request: Request) {
           ? 403
           : [
                 'REQUEST_CONFLICT',
+                'ITEM_COLLECTION_CHANGED',
+                'ITEM_COLLECTION_UNAVAILABLE',
                 'AGREEMENT_CHANGED',
                 'POLICY_CHANGED',
                 'AGREEMENT_REQUIRED',

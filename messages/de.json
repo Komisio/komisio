@@ -694,7 +694,8 @@
     "zettle.line_resolved": "PayPal POS · Belegzeile · Manuelle Klärung",
     "zettle.page_received": "PayPal POS · Belegseite · Empfang",
     "zettle.pull_enabled": "PayPal POS · Belegabruf · Aktivierung",
-    "zettle.window_abandoned": "PayPal POS · Synchronisierungszeitraum · Widerruf"
+    "zettle.window_abandoned": "PayPal POS · Synchronisierungszeitraum · Widerruf",
+    "item.collection_recorded": "Abholstatus erfasst"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -1396,7 +1397,8 @@
       "returned": "Kundenretoure",
       "markdown_applied": "Preisreduzierung angewendet",
       "period_extended": "Verkaufszeitraum verlängert",
-      "period_ended": "Verkaufszeitraum beendet"
+      "period_ended": "Verkaufszeitraum beendet",
+      "collection_recorded": "Abholstatus erfasst"
     },
     "clearFilters": "Filter zurücksetzen",
     "showingRange": "Artikel {from}–{to} von {total}",
@@ -1423,7 +1425,11 @@
         "return": "Rückgabe an Verkäufer",
         "recycle": "Recycling",
         "transfer": "Übertragung an anderen Shop"
-      }
+      },
+      "collection": "Abholstatus",
+      "collected": "Abgeholt",
+      "notCollected": "Nicht abgeholt",
+      "observedOn": "Prüfdatum"
     }
   },
   "sales": {
@@ -5058,5 +5064,19 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Scannen / eingeben"
+  "scanFocus": "Scannen / eingeben",
+  "itemCollection": {
+    "title": "Abholung durch Verkäufer",
+    "description": "Das Ende des Verkaufszeitraums zur Rückgabe bestätigt keine Abholung. Erfassen Sie den geprüften Stand.",
+    "collected": "Abgeholt",
+    "notCollected": "Nicht abgeholt",
+    "unrecorded": "Abholstatus nicht erfasst",
+    "record": "Abholstatus erfassen",
+    "status": "Abholstatus",
+    "choose": "Status wählen",
+    "date": "Prüfdatum",
+    "note": "Notiz (optional)",
+    "save": "Abholstatus speichern",
+    "saved": "Abholstatus gespeichert"
+  }
 }

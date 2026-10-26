@@ -694,7 +694,8 @@
     "zettle.line_resolved": "PayPal POS · Kvittorad · Manuell lösning",
     "zettle.page_received": "PayPal POS · Kvittosida · Mottagning",
     "zettle.pull_enabled": "PayPal POS · Kvittohämtning · Aktivering",
-    "zettle.window_abandoned": "PayPal POS · Synkperiod · Återkallelse"
+    "zettle.window_abandoned": "PayPal POS · Synkperiod · Återkallelse",
+    "item.collection_recorded": "Hämtstatus registrerad"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -1396,7 +1397,8 @@
       "returned": "Kundretur",
       "markdown_applied": "Prissänkning genomförd",
       "period_extended": "Säljperiod förlängd",
-      "period_ended": "Säljperiod avslutad"
+      "period_ended": "Säljperiod avslutad",
+      "collection_recorded": "Hämtstatus registrerad"
     },
     "clearFilters": "Rensa filter",
     "showingRange": "Visar {from}–{to} av {total} varor",
@@ -1423,7 +1425,11 @@
         "return": "Åter till säljaren",
         "recycle": "Återvinning",
         "transfer": "Flytt till annan butik"
-      }
+      },
+      "collection": "Hämtstatus",
+      "collected": "Hämtad",
+      "notCollected": "Inte hämtad",
+      "observedOn": "Kontrolldatum"
     }
   },
   "sales": {
@@ -5052,5 +5058,19 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Skanna / skriv"
+  "scanFocus": "Skanna / skriv",
+  "itemCollection": {
+    "title": "Hämtning av vara",
+    "description": "Avslut för återlämning innebär inte att varan har hämtats. Registrera vad som har kontrollerats.",
+    "collected": "Hämtad",
+    "notCollected": "Inte hämtad",
+    "unrecorded": "Hämtstatus inte registrerad",
+    "record": "Registrera hämtstatus",
+    "status": "Hämtstatus",
+    "choose": "Välj status",
+    "date": "Kontrolldatum",
+    "note": "Anteckning (valfri)",
+    "save": "Spara hämtstatus",
+    "saved": "Hämtstatus sparad"
+  }
 }

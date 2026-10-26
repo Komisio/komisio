@@ -19,6 +19,7 @@ import { SignOut } from '@/components/platform/sign-out'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { PlanBanner } from '@/components/platform/plan-banner'
 import { isPlatformHost, readPlanStatus } from '@/lib/engine/plans'
+import { readPendingRegistrationCount } from '@/lib/engine/seller-registration'
 import {
   SIDEBAR_COOKIE,
   readSidebarCollapsed,
@@ -54,10 +55,14 @@ export default async function DashboardLayout({
     )
   }
   const d = dictionary(ctx.locale)
-  const [plan, host, sellerAccess] = await Promise.all([
+  const [plan, host, sellerAccess, pendingRegistrations] = await Promise.all([
     readPlanStatus(ctx.client, ctx.active.id),
     isPlatformHost(ctx.client),
     hasSellerAccount(ctx),
+    process.env.KOMISIO_INTAKE_ENABLED === 'true' &&
+    ctx.active.role !== 'readonly'
+      ? readPendingRegistrationCount(ctx.client, ctx.active.id)
+      : undefined,
   ])
   return (
     <LoadingMessageProvider message={d.loading}>
@@ -82,6 +87,7 @@ export default async function DashboardLayout({
             }}
           >
             <Shell
+              pendingRegistrations={pendingRegistrations}
               sellerAccess={sellerAccess}
               intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
               host={host}

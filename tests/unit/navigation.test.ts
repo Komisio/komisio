@@ -9,6 +9,33 @@ import {
 } from '../../lib/platform/navigation'
 
 describe('navigation', () => {
+  it('shows pending registrations only when a scoped count was supplied', () => {
+    const d = dictionary('sv')
+    const navigation = (pendingRegistrations?: number) =>
+      buildNavigation(d, {
+        intakeEnabled: true,
+        host: false,
+        pendingRegistrations,
+      }).flatMap((g) => g.links)
+    expect(
+      navigation().some((l) => l.path === '/intake/sellers/registrations'),
+    ).toBe(false)
+    expect(
+      navigation(7).find((l) => l.path === '/intake/sellers/registrations'),
+    ).toMatchObject({ label: d.selfRegistration.queue, badge: 7 })
+    expect(
+      navigation(0).find((l) => l.path === '/intake/sellers/registrations'),
+    ).toHaveProperty('badge', 0)
+    expect(
+      isActivePath('/intake/sellers/registrations', '/intake/sellers'),
+    ).toBe(false)
+    expect(
+      isActivePath(
+        '/intake/sellers/registrations',
+        '/intake/sellers/registrations',
+      ),
+    ).toBe(true)
+  })
   it('lists every store page once, with the host page only for hosts', () => {
     const d = dictionary('sv')
     const groups = buildNavigation(d, { intakeEnabled: true, host: false })

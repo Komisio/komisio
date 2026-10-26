@@ -19,6 +19,7 @@ import { guideCopy } from '@/lib/guide-copy'
 import { can } from '@/lib/platform/permissions'
 import { readOnboarding } from '@/lib/engine/onboarding'
 import { readOverview } from '@/lib/engine/overview'
+import { readPendingRegistrationCount } from '@/lib/engine/seller-registration'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 export default async function Home() {
   const ctx = await requirePlatform()
@@ -47,6 +48,10 @@ export default async function Home() {
     ? await readOverview(ctx.client, active.id)
     : null
   const o = d.overview
+  const pendingRegistrations =
+    intakeEnabled && active.role !== 'readonly'
+      ? await readPendingRegistrationCount(ctx.client, active.id)
+      : null
   const money = (ore: number, currency: string) =>
     `${formatSignedOre(ore)} ${currency}`
   const steps = (
@@ -101,6 +106,17 @@ export default async function Home() {
   ]
   const followUp = overview
     ? [
+        ...(pendingRegistrations !== null
+          ? [
+              {
+                title: d.selfRegistration.queue,
+                count: pendingRegistrations,
+                href: '/intake/sellers/registrations',
+                action: o.openQueue,
+                icon: Users,
+              },
+            ]
+          : []),
         {
           title: o.openProposals,
           count: overview.openProposals,

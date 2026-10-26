@@ -163,6 +163,16 @@ export async function readStoreRegistrations(
   if (r.error) throw new Error('REQUEST_FAILED')
   return storeRegistrations.parse(r.data)
 }
+export async function readPendingRegistrationCount(
+  client: SupabaseClient,
+  tenantId: string,
+) {
+  const r = await client.rpc('pending_seller_registration_count', {
+    p_tenant: z.uuid().parse(tenantId),
+  })
+  if (r.error) throw new Error('REQUEST_FAILED')
+  return z.number().int().nonnegative().parse(r.data)
+}
 export async function executeRegistration(
   client: SupabaseClient,
   input: RegistrationCommand,

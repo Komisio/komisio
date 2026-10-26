@@ -47,7 +47,9 @@ function RailTooltip({
       left: Math.min(rect.right + 12, window.innerWidth - 24),
     })
   }
-  useEffect(() => {
+  // Install dismissal before the visible tooltip can receive an Escape key.
+  // A passive effect can miss the first key between paint and effect setup.
+  useLayoutEffect(() => {
     if (!box) return
     const dismiss = () => setBox(null)
     const onKeyDown = (event: KeyboardEvent) => {

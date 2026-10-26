@@ -287,13 +287,15 @@ export default async function Purchases({
                   id: 'new',
                   label: d.newPurchase,
                   content: (
-                    <PurchaseForm
-                      key={active.id}
-                      tenantId={active.id}
-                      d={d}
-                      intake={all.intake}
-                      leaveUnsaved={all.leaveUnsaved}
-                    />
+                    <div className="page-reading-width">
+                      <PurchaseForm
+                        key={active.id}
+                        tenantId={active.id}
+                        d={d}
+                        intake={all.intake}
+                        leaveUnsaved={all.leaveUnsaved}
+                      />
+                    </div>
                   ),
                 },
               ]

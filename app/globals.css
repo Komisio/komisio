@@ -1671,6 +1671,19 @@ button.text-link:hover:not(:disabled) {
   margin: auto;
   padding: 40px 43px 64px;
 }
+/* List routes opt in centrally; nested details retain the default reading width. */
+@media (min-width: 1001px) {
+  .main--wide {
+    max-width: none;
+    padding-inline: 24px;
+  }
+}
+/* Entry forms inside a wide tabbed workspace keep the old content width. */
+.page-reading-width {
+  width: 100%;
+  max-width: 1034px;
+  margin-inline: auto;
+}
 .home-grid {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
@@ -6509,9 +6522,6 @@ button.text-link:hover:not(:disabled) {
 }
 
 /* Inventory: compact rows; secondary facts open only on interaction. */
-.inventory-directory.items-directory {
-  max-width: 1440px;
-}
 .inventory-panel {
   background: var(--white);
   border: 1px solid var(--line);
@@ -6876,12 +6886,10 @@ button.text-link:hover:not(:disabled) {
   }
 }
 .items-directory {
-  max-width: 1120px;
   margin-inline: auto;
 }
 /* Lifecycle workbench shares the item directory's reading order and density. */
 .lifecycle-page {
-  max-width: 1120px;
   margin-inline: auto;
 }
 .lifecycle-page .lifecycle-automation {

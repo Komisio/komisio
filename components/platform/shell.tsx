@@ -1,6 +1,7 @@
 'use client'
 import { useBusyState } from './work-activity'
 import { can } from '@/lib/platform/permissions'
+import { pageWidth } from '@/lib/platform/page-width'
 import { usePathname } from 'next/navigation'
 import { useRouter } from '@/components/platform/use-working-router'
 import {
@@ -206,7 +207,7 @@ export function Shell({
         <div className="mobile-only">{picker(true)}</div>
       </header>
       <main
-        className="main"
+        className={`main main--${pageWidth(pathname)}`}
         id="main-content"
         tabIndex={-1}
         onFocusCapture={revealFocusedControl}

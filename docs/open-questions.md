@@ -4,6 +4,12 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Seller login (#646, resolved 2026-10-26): the owner rejects skipping email
+verification for invited sellers. Keep identity/MFA checks, make confirmation
+and resending clear, and continue directly into the correct seller workspace.
+Password recovery requires choosing a new password; this is separate from
+ordinary passwordless activation and does not grant membership or seller access.
+
 Item lifecycle (#636, resolved 2026-10-26): reopening requires a new future
 sale-end date and a mandatory reason. Automatic seller notices occur seven days
 before period end and when the period ends; activation does not send notices

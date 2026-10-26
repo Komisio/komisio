@@ -81,7 +81,9 @@ export function MfaForm({
                 setDone(true)
                 router.refresh()
               } else {
-                router.push(safeNext(next))
+                router.push(
+                  `/auth/landing?next=${encodeURIComponent(safeNext(next))}`,
+                )
                 router.refresh()
               }
             } catch {

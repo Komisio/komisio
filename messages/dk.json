@@ -5130,5 +5130,16 @@
   "periodNotices": {
     "setting": "Automatiske beskeder om salgsperioder",
     "hint": "Giv sælgeren besked syv dage før salgsperioden slutter, og når den slutter. Tidligere hændelser sendes ikke efterfølgende."
+  },
+  "sellerAccess": {
+    "choosePassword": "Vælg en ny adgangskode",
+    "confirmEmail": "Bekræft din e-mailadresse",
+    "confirmHint": "Åbn bekræftelseslinket i din e-mail. Hvis du ikke kan finde mailen, kan du sende et nyt link her.",
+    "passwordHint": "Vælg en ny adgangskode for at afslutte nulstillingen og fortsætte.",
+    "switchView": "Vælg visning",
+    "store": "Butik",
+    "seller": "Sælger",
+    "stores": "Mine butikker",
+    "rateLimited": "For mange forsøg på kort tid. Vent lidt, og prøv igen. Tjek også, om mailen allerede er kommet."
   }
 }

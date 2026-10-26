@@ -16,6 +16,7 @@ import {
 } from '@/lib/platform/navigation'
 import { Brand } from './brand'
 import { Sidebar } from './sidebar'
+import { RoleSwitch } from './role-switch'
 import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
 import { LanguagePicker } from './language-picker'
 import type { Tenant } from '@/lib/platform/types'
@@ -38,6 +39,7 @@ export function Shell({
   intakeEnabled = false,
   host = false,
   sidebarCollapsed = false,
+  sellerAccess = false,
 }: {
   children: React.ReactNode
   d: Dictionary
@@ -49,6 +51,7 @@ export function Shell({
   intakeEnabled?: boolean
   host?: boolean
   sidebarCollapsed?: boolean
+  sellerAccess?: boolean
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const pathname = usePathname()
@@ -180,6 +183,7 @@ export function Shell({
           </form>
         )}
         <div className="topbar-tools">
+          {sellerAccess && <RoleSwitch current="store" d={d} />}
           {intakeEnabled && (
             <Suspense
               fallback={

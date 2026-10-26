@@ -5136,5 +5136,16 @@
   "periodNotices": {
     "setting": "Automaattiset myyntiaikailmoitukset",
     "hint": "Ilmoita myyjälle seitsemän päivää ennen myyntiajan päättymistä ja sen päättyessä. Menneistä tapahtumista ei lähetetä ilmoituksia jälkikäteen."
+  },
+  "sellerAccess": {
+    "choosePassword": "Valitse uusi salasana",
+    "confirmEmail": "Vahvista sähköpostiosoitteesi",
+    "confirmHint": "Avaa sähköpostin vahvistuslinkki. Jos et löydä viestiä, voit lähettää uuden linkin tästä.",
+    "passwordHint": "Valitse uusi salasana, jotta voit viimeistellä palautuksen ja jatkaa.",
+    "switchView": "Valitse näkymä",
+    "store": "Liike",
+    "seller": "Myyjä",
+    "stores": "Omat liikkeet",
+    "rateLimited": "Liian monta yritystä lyhyessä ajassa. Odota hetki ja yritä uudelleen. Tarkista myös, onko sähköposti jo saapunut."
   }
 }

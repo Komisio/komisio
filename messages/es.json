@@ -5136,5 +5136,16 @@
   "periodNotices": {
     "setting": "Mensajes automáticos sobre períodos de venta",
     "hint": "Avise al vendedor siete días antes de finalizar el período de venta y cuando termine. No se envían eventos pasados de forma retroactiva."
+  },
+  "sellerAccess": {
+    "choosePassword": "Elija una nueva contraseña",
+    "confirmEmail": "Confirme su dirección de correo",
+    "confirmHint": "Abra el enlace de confirmación de su correo. Si no encuentra el mensaje, puede enviar un nuevo enlace aquí.",
+    "passwordHint": "Elija una nueva contraseña para completar el restablecimiento y continuar.",
+    "switchView": "Elegir vista",
+    "store": "Tienda",
+    "seller": "Vendedor",
+    "stores": "Mis tiendas",
+    "rateLimited": "Demasiados intentos en poco tiempo. Espere un poco y vuelva a intentarlo. Compruebe también si el correo ya ha llegado."
   }
 }

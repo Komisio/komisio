@@ -5130,5 +5130,16 @@
   "periodNotices": {
     "setting": "Automatiske meldinger om salgsperioder",
     "hint": "Varsle selgeren sju dager før salgsperioden slutter og når den slutter. Tidligere hendelser sendes ikke i etterkant."
+  },
+  "sellerAccess": {
+    "choosePassword": "Velg et nytt passord",
+    "confirmEmail": "Bekreft e-postadressen din",
+    "confirmHint": "Åpne bekreftelseslenken i e-posten. Hvis du ikke finner e-posten, kan du sende en ny lenke her.",
+    "passwordHint": "Velg et nytt passord for å fullføre tilbakestillingen og fortsette.",
+    "switchView": "Velg visning",
+    "store": "Butikk",
+    "seller": "Selger",
+    "stores": "Mine butikker",
+    "rateLimited": "For mange forsøk på kort tid. Vent litt og prøv igjen. Sjekk også om e-posten allerede har kommet."
   }
 }

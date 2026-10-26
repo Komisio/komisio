@@ -5130,5 +5130,16 @@
   "periodNotices": {
     "setting": "Automatiska meddelanden om säljperioder",
     "hint": "Meddela säljaren sju dagar före periodslut och när perioden avslutas. Tidigare händelser skickas inte i efterhand."
+  },
+  "sellerAccess": {
+    "choosePassword": "Välj ett nytt lösenord",
+    "confirmEmail": "Bekräfta din e-postadress",
+    "confirmHint": "Öppna bekräftelselänken i ditt mail. Om du inte hittar mailet kan du skicka en ny länk här.",
+    "passwordHint": "Välj ett nytt lösenord för att slutföra återställningen och fortsätta.",
+    "switchView": "Välj vy",
+    "store": "Butik",
+    "seller": "Säljare",
+    "stores": "Mina butiker",
+    "rateLimited": "För många försök på kort tid. Vänta en stund och försök igen. Kontrollera även om mailet redan har kommit."
   }
 }

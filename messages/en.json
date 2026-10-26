@@ -5130,5 +5130,16 @@
   "periodNotices": {
     "setting": "Automatic sale-period messages",
     "hint": "Notify the seller seven days before the sale period ends and when it ends. Past events are not sent retrospectively."
+  },
+  "sellerAccess": {
+    "choosePassword": "Choose a new password",
+    "confirmEmail": "Confirm your email address",
+    "confirmHint": "Open the confirmation link in your email. If you cannot find the email, send a new link here.",
+    "passwordHint": "Choose a new password to finish the reset and continue.",
+    "switchView": "Choose workspace",
+    "store": "Store",
+    "seller": "Seller",
+    "stores": "My stores",
+    "rateLimited": "Too many attempts in a short time. Wait a little and try again. Also check whether the email has already arrived."
   }
 }

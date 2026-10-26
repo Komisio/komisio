@@ -58,7 +58,25 @@ export async function platformContext() {
 }
 // Share one snapshot only within a server render. API handlers keep the raw
 // reader above; React invalidates this memoization for every server request.
-export const renderPlatformContext = cache(platformContext)
+export const renderPlatformContext = cache(async () => {
+  const context = await platformContext()
+  if (context && !context.user.email_confirmed_at) redirect('/confirm-email')
+  if (context?.user.app_metadata.komisio_password_recovery_pending === true)
+    redirect('/update-password')
+  return context
+})
+
+export const hasSellerAccount = cache(
+  async (context: NonNullable<Awaited<ReturnType<typeof platformContext>>>) => {
+    if (
+      !context.user.email_confirmed_at ||
+      context.mfaRequired ||
+      process.env.KOMISIO_INTAKE_ENABLED !== 'true'
+    )
+      return false
+    return (await readMySellerAccounts(context.client)).length > 0
+  },
+)
 
 // Routing only. Seller access remains enforced by the engine's identity checks.
 export const isSellerOnly = cache(
@@ -71,7 +89,7 @@ export const isSellerOnly = cache(
     )
       return false
     return (
-      (await readMySellerAccounts(context.client)).length > 0 ||
+      (await hasSellerAccount(context)) ||
       (await readMyRegistrations(context.client)).length > 0
     )
   },

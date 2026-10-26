@@ -5136,5 +5136,16 @@
   "periodNotices": {
     "setting": "Automatische Nachrichten zu Verkaufszeiträumen",
     "hint": "Verkäufer sieben Tage vor Ablauf und beim Ende des Verkaufszeitraums benachrichtigen. Vergangene Ereignisse werden nicht nachträglich versendet."
+  },
+  "sellerAccess": {
+    "choosePassword": "Neues Passwort wählen",
+    "confirmEmail": "E-Mail-Adresse bestätigen",
+    "confirmHint": "Öffnen Sie den Bestätigungslink in Ihrer E-Mail. Wenn Sie die Nachricht nicht finden, können Sie hier einen neuen Link senden.",
+    "passwordHint": "Wählen Sie ein neues Passwort, um die Zurücksetzung abzuschließen und fortzufahren.",
+    "switchView": "Ansicht wählen",
+    "store": "Geschäft",
+    "seller": "Verkäufer",
+    "stores": "Meine Geschäfte",
+    "rateLimited": "Zu viele Versuche in kurzer Zeit. Warten Sie kurz und versuchen Sie es erneut. Prüfen Sie auch, ob die E-Mail bereits angekommen ist."
   }
 }

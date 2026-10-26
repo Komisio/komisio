@@ -4,7 +4,7 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('store configures fee VAT, seller months cover multiple deliveries, and payments remain visible to sellers', async ({
+test('store configures fee VAT and payment history while the seller portal hides fee details', async ({
   page,
 }) => {
   const email = `monthly-fees-${randomUUID()}@example.test`

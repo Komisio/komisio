@@ -159,7 +159,7 @@ for (const locale of locales) {
         .locator('.directory-primary-link')
         .getAttribute('href')
       await rows.first().locator('td').nth(2).click()
-      await expect(page).toHaveURL(new RegExp(expected!))
+      await expect(page).toHaveURL(new URL(expected!, page.url()).href)
 
       await page.goto('/intake/agreements#agreements-sellers')
       await expect(
@@ -180,6 +180,9 @@ for (const locale of locales) {
       ).toContainText('Synthetic P2 seller')
       await page.getByLabel(d.directory.sortBy).selectOption('status:desc')
       await page.locator('.directory-filters').getByRole('button').click()
+      await expect(page).toHaveURL(
+        (url) => url.searchParams.get('order') === 'status:desc',
+      )
       const approvals = page.locator(
         '.compact-directory-table:visible tbody tr',
       )

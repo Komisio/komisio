@@ -946,6 +946,7 @@ test('password recovery and MFA protect the authenticated platform', async ({
 
 test('bag queue finds older receipts and keeps seller filters while paging', async ({
   page,
+  baseURL,
 }) => {
   const run = Date.now().toString(36)
   await register(
@@ -959,7 +960,7 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
   const tenantId = await page.getByLabel('Aktiv butik').first().inputValue()
   const post = async (data: object) => {
     const r = await page.request.post('/api/intake', {
-      headers: { Origin: 'http://127.0.0.1:3000' },
+      headers: { Origin: baseURL! },
       data,
     })
     expect(r.status()).toBe(200)
@@ -1007,7 +1008,7 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
   await expect(queue).not.toContainText('Queue Beta')
   const ids = async () =>
     queue
-      .locator('.intake-bag a[href$="/inspect"]')
+      .locator('.intake-bag a[href*="/inspect"]')
       .evaluateAll((links) =>
         links.map((a) => a.getAttribute('href')!.split('/')[3]),
       )
@@ -1018,7 +1019,7 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
   await expect(page).toHaveURL(new RegExp(`seller=${sellerId}`))
   await expectDetailTarget(
-    queue.locator('.intake-bag a[href$="/inspect"]').first(),
+    queue.locator('.intake-bag a[href*="/inspect"]').first(),
     '/intake/bags/' + expected[30] + '/inspect',
   )
   const second = await ids()
@@ -1038,7 +1039,7 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
     .click()
   await expect(queue.locator('.intake-bag')).toHaveCount(20)
   await expectDetailTarget(
-    queue.locator('.intake-bag a[href$="/inspect"]').first(),
+    queue.locator('.intake-bag a[href*="/inspect"]').first(),
     '/intake/bags/' + expected[30] + '/inspect',
   )
   expect(await ids()).toEqual(second)

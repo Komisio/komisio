@@ -26,6 +26,13 @@ import { readStorePolicy } from '@/lib/engine/store-policy'
 import { ApplyDueMarkdowns } from '@/components/intake/apply-due-markdowns'
 import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { LifecycleActions } from '@/components/intake/lifecycle-actions'
+import { LifecycleBatch } from '@/components/intake/lifecycle-batch'
+import {
+  InventorySelection,
+  InventorySelectAll,
+  InventorySelectItem,
+} from '@/components/intake/inventory-selection'
+import '@/components/intake/inventory-edit.css'
 
 export default async function Lifecycle({
   searchParams,
@@ -237,128 +244,160 @@ export default async function Lifecycle({
             )}
           </div>
         </WorkingForm>
-        <InventoryTableShell label={d.title}>
-          <thead>
-            <tr>
-              {header('title', all.items.item)}
-              <th scope="col">{all.quickIntake.category}</th>
-              {header('seller', all.quickIntake.seller)}
-              {header('price', all.quickIntake.price, true)}
-              {header('stage', all.items.stage)}
-              {header('accepted', all.items.directory.registered)}
-              {header('periodEnd', all.items.directory.periodEnd)}
-              <th scope="col">{all.items.ownership}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visible.map((r) => (
-              <LifecycleTableRow
-                id={r.item_id}
-                key={`${r.item_id}-${query}-${page}-${sort}-${direction}`}
-                title={r.title || all.items.item}
-                initiallyOpen={query !== '' && total === 1}
-                photo={
-                  photos.get(r.item_id)?.defaultPhotoId ? (
-                    <ItemPhotoPreview
+        <InventorySelection
+          key={`${query}-${page}-${sort}-${direction}-${stage.success ? stage.data : ''}`}
+          ids={visible.map((r) => r.item_id)}
+        >
+          {write && (
+            <div className="inventory-selection-toolbar">
+              <LifecycleBatch
+                tenantId={active.id}
+                currency={currency}
+                locale={ctx.locale}
+                d={all}
+              />
+            </div>
+          )}
+          <InventoryTableShell label={d.title}>
+            <thead>
+              <tr>
+                {write && (
+                  <th scope="col">
+                    <InventorySelectAll label={all.itemWorkflow.selectAll} />
+                  </th>
+                )}
+                {header('title', all.items.item)}
+                <th scope="col">{all.quickIntake.category}</th>
+                {header('seller', all.quickIntake.seller)}
+                {header('price', all.quickIntake.price, true)}
+                {header('stage', all.items.stage)}
+                {header('accepted', all.items.directory.registered)}
+                {header('periodEnd', all.items.directory.periodEnd)}
+                <th scope="col">{all.items.ownership}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visible.map((r) => (
+                <LifecycleTableRow
+                  id={r.item_id}
+                  key={`${r.item_id}-${query}-${page}-${sort}-${direction}`}
+                  title={r.title || all.items.item}
+                  selection={
+                    write ? (
+                      <InventorySelectItem
+                        id={r.item_id}
+                        label={r.title || all.items.item}
+                      />
+                    ) : undefined
+                  }
+                  initiallyOpen={query !== '' && total === 1}
+                  photo={
+                    photos.get(r.item_id)?.defaultPhotoId ? (
+                      <ItemPhotoPreview
+                        tenantId={active.id}
+                        itemId={r.item_id}
+                        photoId={photos.get(r.item_id)!.defaultPhotoId!}
+                        count={photos.get(r.item_id)!.photos.length}
+                        title={r.title || all.items.item}
+                        d={all.itemPhotos}
+                      />
+                    ) : null
+                  }
+                  cells={
+                    <>
+                      <td>
+                        <span
+                          className="inventory-cell-text"
+                          title={r.category ?? undefined}
+                        >
+                          {r.category || '—'}
+                        </span>
+                      </td>
+                      <td>
+                        {r.seller_id ? (
+                          <Link
+                            className="inventory-seller"
+                            href={`/intake/sellers/${r.seller_id}`}
+                            title={r.seller_name ?? undefined}
+                          >
+                            {r.seller_name || '—'}
+                          </Link>
+                        ) : (
+                          '—'
+                        )}
+                      </td>
+                      <td className="inventory-number inventory-price">
+                        {r.current_price_ore === null
+                          ? '—'
+                          : `${formatSignedOre(r.current_price_ore)} ${currency}`}
+                      </td>
+                      <td className="inventory-state">
+                        <span
+                          className={`lifecycle-status lifecycle-status-${r.stage}`}
+                        >
+                          {stageLabel(r.stage)}
+                        </span>
+                      </td>
+                      <td className="inventory-date">{when(r.accepted_at)}</td>
+                      <td className="inventory-date">{when(r.period_end)}</td>
+                      <td>
+                        <span
+                          className="lifecycle-ownership"
+                          title={all.items.ownershipKinds[r.ownership]}
+                        >
+                          {r.ownership === 'store' ? (
+                            <Store size={16} aria-hidden="true" />
+                          ) : (
+                            <Handshake size={16} aria-hidden="true" />
+                          )}
+                          <span className="sr-only">
+                            {all.items.ownershipKinds[r.ownership]}
+                          </span>
+                        </span>
+                      </td>
+                    </>
+                  }
+                >
+                  <small className="lifecycle-reference">
+                    {'I-' + r.item_id.slice(0, 8).toUpperCase()}
+                  </small>
+                  <Link
+                    className="text-link"
+                    href={`/intake/items/${r.item_id}`}
+                  >
+                    {all.items.open} →
+                  </Link>
+                  <p>
+                    {d.accepted} {when(r.accepted_at)}
+                    {r.due_step !== null
+                      ? ` · ${d.due.replace('{step}', String(r.due_step)).replace('{percent}', String(r.due_percent))}`
+                      : ''}
+                  </p>
+                  {r.collection_deadline &&
+                    !['sold', 'ended'].includes(r.stage) && (
+                      <p>
+                        {d.collectionDeadline} {when(r.collection_deadline)}
+                      </p>
+                    )}
+                  {write && !['sold', 'ended'].includes(r.stage) && (
+                    <LifecycleActions
+                      key={`${r.item_id}-${r.stage}-${r.due_step ?? 0}`}
                       tenantId={active.id}
                       itemId={r.item_id}
-                      photoId={photos.get(r.item_id)!.defaultPhotoId!}
-                      count={photos.get(r.item_id)!.photos.length}
-                      title={r.title || all.items.item}
-                      d={all.itemPhotos}
+                      dueStep={r.due_step}
+                      endOfPeriodAction={r.end_of_period_action}
+                      collectionDeadline={r.collection_deadline}
+                      collectionDue={r.collection_due === true}
+                      priceEdit={all.priceEdit}
+                      d={d}
+                      intake={all.intake}
                     />
-                  ) : null
-                }
-                cells={
-                  <>
-                    <td>
-                      <span
-                        className="inventory-cell-text"
-                        title={r.category ?? undefined}
-                      >
-                        {r.category || '—'}
-                      </span>
-                    </td>
-                    <td>
-                      {r.seller_id ? (
-                        <Link
-                          className="inventory-seller"
-                          href={`/intake/sellers/${r.seller_id}`}
-                          title={r.seller_name ?? undefined}
-                        >
-                          {r.seller_name || '—'}
-                        </Link>
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                    <td className="inventory-number inventory-price">
-                      {r.current_price_ore === null
-                        ? '—'
-                        : `${formatSignedOre(r.current_price_ore)} ${currency}`}
-                    </td>
-                    <td className="inventory-state">
-                      <span
-                        className={`lifecycle-status lifecycle-status-${r.stage}`}
-                      >
-                        {stageLabel(r.stage)}
-                      </span>
-                    </td>
-                    <td className="inventory-date">{when(r.accepted_at)}</td>
-                    <td className="inventory-date">{when(r.period_end)}</td>
-                    <td>
-                      <span
-                        className="lifecycle-ownership"
-                        title={all.items.ownershipKinds[r.ownership]}
-                      >
-                        {r.ownership === 'store' ? (
-                          <Store size={16} aria-hidden="true" />
-                        ) : (
-                          <Handshake size={16} aria-hidden="true" />
-                        )}
-                        <span className="sr-only">
-                          {all.items.ownershipKinds[r.ownership]}
-                        </span>
-                      </span>
-                    </td>
-                  </>
-                }
-              >
-                <small className="lifecycle-reference">
-                  {'I-' + r.item_id.slice(0, 8).toUpperCase()}
-                </small>
-                <Link className="text-link" href={`/intake/items/${r.item_id}`}>
-                  {all.items.open} →
-                </Link>
-                <p>
-                  {d.accepted} {when(r.accepted_at)}
-                  {r.due_step !== null
-                    ? ` · ${d.due.replace('{step}', String(r.due_step)).replace('{percent}', String(r.due_percent))}`
-                    : ''}
-                </p>
-                {r.collection_deadline &&
-                  !['sold', 'ended'].includes(r.stage) && (
-                    <p>
-                      {d.collectionDeadline} {when(r.collection_deadline)}
-                    </p>
                   )}
-                {write && !['sold', 'ended'].includes(r.stage) && (
-                  <LifecycleActions
-                    key={`${r.item_id}-${r.stage}-${r.due_step ?? 0}`}
-                    tenantId={active.id}
-                    itemId={r.item_id}
-                    dueStep={r.due_step}
-                    endOfPeriodAction={r.end_of_period_action}
-                    collectionDeadline={r.collection_deadline}
-                    collectionDue={r.collection_due === true}
-                    d={d}
-                    intake={all.intake}
-                  />
-                )}
-              </LifecycleTableRow>
-            ))}
-          </tbody>
-        </InventoryTableShell>
+                </LifecycleTableRow>
+              ))}
+            </tbody>
+          </InventoryTableShell>
+        </InventorySelection>
         {total === 0 && (
           <p className="inventory-message">{query ? d.noMatches : d.empty}</p>
         )}

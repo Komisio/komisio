@@ -50,7 +50,7 @@ test('manual cart keeps edited prices when leaving is cancelled and releases nav
   const { f, item, sale } = await fixture(page)
   try {
     const receipt = page.locator(
-      `.sales-register-row[href="/intake/sales/${sale}"]`,
+      `.sales-register-row[href^="/intake/sales/${sale}?"]`,
     )
     await page
       .getByRole('tab', { name: d.sales.receiptsTab, exact: true })
@@ -73,7 +73,9 @@ test('manual cart keeps edited prices when leaving is cancelled and releases nav
       .getByRole('tab', { name: d.sales.receiptsTab, exact: true })
       .click()
     await receipt.click()
-    await expect(page).toHaveURL(`/intake/sales/${sale}`)
+    await expect
+      .poll(() => new URL(page.url()).pathname)
+      .toBe(`/intake/sales/${sale}`)
     expect(warnings).toBe(0)
   } finally {
     await f.close()
@@ -116,7 +118,9 @@ test('unconfirmed sale retains cart protection until its exact retry is confirme
       .locator('.sale-workspace')
       .getByRole('link', { name: d.sales.open, exact: true })
       .click()
-    await expect(page).toHaveURL(`/intake/sales/${commands[0].requestId}`)
+    await expect
+      .poll(() => new URL(page.url()).pathname)
+      .toBe(`/intake/sales/${commands[0].requestId}`)
     expect(warnings).toBe(0)
     expect(
       (

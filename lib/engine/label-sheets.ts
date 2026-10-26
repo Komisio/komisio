@@ -34,6 +34,7 @@ export async function readLabelSheet(
   return z
     .object({
       items: z.array(itemLabel).max(200),
+      sellerName: z.string().nullable().optional(),
       skipped: z.number().int().nonnegative(),
     })
     .parse(data)

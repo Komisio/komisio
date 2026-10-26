@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { createRequire } from 'node:module'
+import { localTestUrl } from '../helpers/local-services'
 import { register } from '../helpers/account'
 
 test('seller accepts the displayed agreement with safe retries and sees new versions', async ({
@@ -10,7 +11,10 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
   await register(page, email, `K!${randomBytes(16).toString('hex')}`, '/seller')
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
-    connectionString: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    connectionString: localTestUrl(
+      'TEST_DATABASE_URL',
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+    ),
   })
   await db.connect()
   const owner = randomUUID(),
@@ -44,8 +48,30 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
       "select publish_seller_agreement($1,$2,null,'TEST seller agreement','Fictional terms for browser testing only.','en',false)",
       [tenant, version],
     )
-    await page.goto(`/seller?seller=${seller}`)
-    await page.getByRole('link', { name: 'Läs och acceptera avtalet' }).click()
+    await page.goto(`/seller?seller=${seller}#seller-workspace-agreement`)
+    await expect(
+      page.getByRole('tab', {
+        name: 'Avtal — Godkännande behövs',
+        exact: true,
+      }),
+    ).toHaveAttribute('aria-selected', 'true')
+    await expect(
+      page.getByRole('region', { name: 'Kort om villkoren' }),
+    ).toContainText('60 %')
+    await expect(
+      page.getByRole('region', { name: 'Kort om villkoren' }),
+    ).toContainText('42 dagar')
+    await expect(page.locator('.seller-agreement-workspace')).toContainText(
+      'Synthetic seller',
+    )
+    await expect(
+      page.getByRole('link', { name: 'Ladda ner PDF med säljarens namn' }),
+    ).toHaveCount(0)
+    await expect(page.getByTestId('seller-agreement-full')).not.toHaveAttribute(
+      'open',
+      '',
+    )
+    await page.getByTestId('seller-agreement-full').locator('summary').click()
     await expect(
       page.getByRole('heading', { name: 'TEST seller agreement' }),
     ).toBeVisible()
@@ -67,17 +93,17 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
       },
       { times: 1 },
     )
-    await page.getByRole('button', { name: 'Jag accepterar avtalet' }).click()
+    await page.getByRole('button', { name: 'Godkänn avtal' }).click()
     await expect(page.locator('article').getByRole('alert')).toContainText(
       'Försök igen',
     )
-    await page.getByRole('button', { name: 'Jag accepterar avtalet' }).click()
+    await page.getByRole('button', { name: 'Godkänn avtal' }).click()
     await expect(page.getByRole('status')).toContainText(
       'Avtalet är accepterat',
     )
     await page.reload()
     await expect(
-      page.getByRole('button', { name: 'Jag accepterar avtalet' }),
+      page.getByRole('button', { name: 'Godkänn avtal' }),
     ).toHaveCount(0)
     expect(
       (
@@ -87,6 +113,13 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
         )
       ).rows[0].n,
     ).toBe(1)
+    await expect(
+      page.getByRole('tab', { name: 'Avtal', exact: true }),
+    ).toHaveAttribute('aria-selected', 'true')
+    await expect(page.getByRole('status').locator('time')).toHaveAttribute(
+      'datetime',
+      /T/,
+    )
     await page.screenshot({
       path: test.info().outputPath('seller-agreement-accepted-mobile.png'),
       fullPage: true,
@@ -99,13 +132,13 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
     )
     await page.reload()
     await expect(
-      page.getByRole('button', { name: 'Jag accepterar avtalet' }),
+      page.getByRole('button', { name: 'Godkänn avtal' }),
     ).toBeVisible()
     await db.query(
       "select publish_seller_agreement($1,$2,$3,'Latest TEST agreement','Latest fictional terms','en',false)",
       [tenant, v3, v2],
     )
-    await page.getByRole('button', { name: 'Jag accepterar avtalet' }).click()
+    await page.getByRole('button', { name: 'Godkänn avtal' }).click()
     await expect(page.locator('article').getByRole('alert')).toContainText(
       'Avtalet har ändrats',
     )
@@ -115,7 +148,7 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
     await expect(
       page.getByRole('heading', { name: 'Latest TEST agreement' }),
     ).toBeVisible()
-    await page.getByRole('button', { name: 'Jag accepterar avtalet' }).click()
+    await page.getByRole('button', { name: 'Godkänn avtal' }).click()
     await expect(page.getByRole('status')).toContainText(
       'Avtalet är accepterat',
     )
@@ -134,16 +167,17 @@ test('seller accepts the displayed agreement with safe retries and sees new vers
       page.getByText('Tidigare version', { exact: false }),
     ).toBeVisible()
     await expect(
-      page.getByRole('button', { name: 'Jag accepterar avtalet' }),
+      page.getByRole('button', { name: 'Godkänn avtal' }),
     ).toHaveCount(0)
     await expect(page.getByRole('status')).toContainText(
       'Avtalet är accepterat',
     )
+    await page.getByTestId('seller-agreement-full').locator('summary').click()
     await page.emulateMedia({ media: 'print' })
     await expect(
       page.getByText('Fictional terms for browser testing only.'),
     ).toBeVisible()
-    await expect(page.locator('details')).toBeHidden()
+    await expect(page.getByTestId('seller-agreement-history')).toBeHidden()
     await page.emulateMedia({ media: 'screen' })
     await page.screenshot({
       path: test.info().outputPath('seller-agreement-history-mobile.png'),

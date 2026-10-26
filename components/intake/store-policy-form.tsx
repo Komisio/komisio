@@ -235,6 +235,11 @@ export function StorePolicyForm({
             const rate = String(f.get('vatRatePercent') ?? '')
             const candidate = storePolicyBody.safeParse({
               ...input,
+              collectionDays:
+                !calendarPeriod &&
+                String(f.get('dayCollectionDays') ?? '').trim() !== ''
+                  ? Number(f.get('dayCollectionDays'))
+                  : undefined,
               consignmentPeriod: calendarPeriod
                 ? {
                     months: Number(f.get('consignmentMonths')),
@@ -269,6 +274,8 @@ export function StorePolicyForm({
               communicationLanguage: f.get('communicationLanguage'),
               automaticSellerNotifications:
                 f.get('automaticSellerNotifications') === 'on',
+              automaticPeriodNotifications:
+                f.get('automaticPeriodNotifications') === 'on',
               automaticMarkdowns: f.get('automaticMarkdowns') === 'on',
               currency: f.get('currency') || undefined,
               assistanceMonthlyQuota:
@@ -288,6 +295,7 @@ export function StorePolicyForm({
               const fields: Record<string, string> = {
                 'consignmentPeriod.months': 'consignmentMonths',
                 'consignmentPeriod.collectionDays': 'collectionDays',
+                collectionDays: 'dayCollectionDays',
                 'consignmentPeriod.monthlyFee.amountOre': 'feeAmount',
                 'consignmentPeriod.monthlyFee.vatBasis': 'feeVatBasis',
                 'consignmentPeriod.monthlyFee.vatRatePercent': 'feeVatRate',
@@ -499,6 +507,24 @@ export function StorePolicyForm({
                   {t.consignmentCalendarEnabled}
                 </label>
                 <p>{t.consignmentCalendarHelp}</p>
+                {!calendarPeriod && (
+                  <div className="field">
+                    <label htmlFor="day-collection-days">
+                      {t.collectionDays}
+                    </label>
+                    <input
+                      id="day-collection-days"
+                      name="dayCollectionDays"
+                      type="number"
+                      min={0}
+                      max={365}
+                      step={1}
+                      defaultValue={base.policy.collectionDays ?? ''}
+                      aria-describedby="day-collection-help"
+                    />
+                    <p id="day-collection-help">{t.dayCollectionHelp}</p>
+                  </div>
+                )}
                 {calendarPeriod && (
                   <div className="policy-grid">
                     <div className="field">
@@ -846,6 +872,18 @@ export function StorePolicyForm({
                 />
                 {t.automaticSellerNotifications}
               </label>
+              <label className="intake-confirm">
+                <input
+                  type="checkbox"
+                  name="automaticPeriodNotifications"
+                  defaultChecked={
+                    base.policy.automaticPeriodNotifications !== false
+                  }
+                  aria-describedby="period-notices-hint"
+                />
+                {d.periodNotices.setting}
+              </label>
+              <small id="period-notices-hint">{d.periodNotices.hint}</small>
             </PolicySection>
           </fieldset>
           {editable && !saved && (

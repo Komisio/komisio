@@ -289,7 +289,7 @@ export default async function Payouts({
                   label: d.tabs.request,
                   content: (
                     <section
-                      className="card intake-form"
+                      className="card intake-form page-reading-width"
                       data-testid="payout-request"
                     >
                       <h2>{d.requestHeading}</h2>

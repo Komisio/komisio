@@ -1,3 +1,4 @@
+import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
@@ -69,6 +70,7 @@ export default async function Purchases({
   const pages = Math.max(1, Math.ceil(result.total / pageSize))
   if (requestedPage > pages) redirect(href(pages))
   const common = all.sellersList
+  const vocabulary = await readAttributeVocabulary(ctx.client, active.id)
   const sortHeading = (key: PurchaseSort, label: string, numeric = false) => (
     <th
       scope="col"
@@ -287,13 +289,22 @@ export default async function Purchases({
                   id: 'new',
                   label: d.newPurchase,
                   content: (
-                    <PurchaseForm
-                      key={active.id}
-                      tenantId={active.id}
-                      d={d}
-                      intake={all.intake}
-                      leaveUnsaved={all.leaveUnsaved}
-                    />
+                    <div className="page-reading-width">
+                      <PurchaseForm
+                        key={active.id}
+                        tenantId={active.id}
+                        d={d}
+                        intake={all.intake}
+                        vocabulary={vocabulary}
+                        locale={ctx.locale}
+                        itemTypeLabel={all.quickIntake.itemType}
+                        registration={all.registration}
+                        descriptionRequired={
+                          vocabulary.registration?.settings.descriptionRequired
+                        }
+                        leaveUnsaved={all.leaveUnsaved}
+                      />
+                    </div>
                   ),
                 },
               ]

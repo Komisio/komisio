@@ -127,21 +127,27 @@ export function SellerItems({
               </td>
               <td className="seller-item-date" data-label={d.itemDate}>
                 {state === 'sold' && item.soldAt ? (
-                  date(item.soldAt)
-                ) : state === 'ended' ? (
-                  '—'
+                  <span>
+                    {d.soldOn} {date(item.soldAt)}
+                  </span>
+                ) : state === 'ended' || state === 'periodEnded' ? (
+                  <span>
+                    {d.endedOn} {item.endedAt ? date(item.endedAt) : '—'}
+                  </span>
                 ) : (
                   <>
                     <span>
-                      {d.until} {date(item.periodEnd)}
+                      {d.forSaleUntil} {date(item.periodEnd)}
                     </span>
-                    {item.collectionDeadline && (
-                      <small>
-                        {d.collectionDeadline} {date(item.collectionDeadline)}
-                      </small>
-                    )}
                   </>
                 )}
+                {state !== 'sold' &&
+                  state !== 'ended' &&
+                  item.collectionDeadline && (
+                    <small>
+                      {d.collectionDeadline} {date(item.collectionDeadline)}
+                    </small>
+                  )}
               </td>
             </tr>
           )

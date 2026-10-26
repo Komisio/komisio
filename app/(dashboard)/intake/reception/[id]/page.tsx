@@ -1,3 +1,6 @@
+import { InternalNote } from '@/components/intake/internal-note'
+import { readInternalNote } from '@/lib/engine/registration-store'
+import { BackLink } from '@/components/platform/back-link'
 import { readAttributeVocabulary, labelOf } from '@/lib/engine/attributes'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { EventTime } from '@/components/ui/event-time'
@@ -48,6 +51,12 @@ export default async function Reception({
   const reception = await readReceptionSession(ctx.client, tenant.id, id.data)
   if (!reception) notFound()
   const bagId = await readReceptionBagId(ctx.client, tenant.id, id.data)
+  const privateNote = await readInternalNote(
+    ctx.client,
+    tenant.id,
+    'reception',
+    id.data,
+  )
   const intakeHref = bagId
     ? `/intake/bags/${bagId}/inspect`
     : `/intake/reception/${id.data}`
@@ -164,6 +173,7 @@ export default async function Reception({
           sources={sources}
           initial={prepared?.input ?? null}
           vocabulary={vocabulary}
+          initialNote={privateNote}
           typeLabels={all.quickIntake}
           typeSettings={all.vocabularySettings}
           canManageTypes={['owner', 'admin'].includes(tenant.role)}
@@ -246,12 +256,22 @@ export default async function Reception({
   )
   return (
     <div className="reception-workspace">
-      <Link
+      {accepted && (
+        <InternalNote
+          tenantId={tenant.id}
+          kind="reception"
+          subjectId={id.data}
+          initial={privateNote}
+          editable={tenant.role !== 'readonly'}
+          d={all}
+        />
+      )}
+      <BackLink
         className="text-link item-back-link"
         href={bagId ? intakeHref : '/intake/reception'}
       >
-        {bagId ? all.items.backToIntake : d.back}
-      </Link>
+        {all.returnNavigation.back}
+      </BackLink>
       <div className="page-heading">
         <h1>{accepted ? d.storeReview.registered : d.workspace.title}</h1>
         <p className="reception-seller-name">{seller.data.name}</p>

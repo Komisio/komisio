@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
 import {
@@ -50,9 +51,9 @@ export default async function Sale({
     })
   return (
     <div className="sale-detail">
-      <Link className="text-link" href={back}>
-        {d.backToList}
-      </Link>
+      <BackLink className="text-link" href={back}>
+        {all.returnNavigation.back}
+      </BackLink>
       <div className="page-heading">
         <h1>
           {d.receipt} {formatOre(sale.total_ore)} {currency}
@@ -70,6 +71,12 @@ export default async function Sale({
           <summary>{d.reference}</summary>
           <p>{sale.external_id}</p>
         </details>
+        <a
+          className="button-secondary"
+          href={`/api/sales/summary?tenant=${active.id}&sale=${sale.id}`}
+        >
+          {all.saleSummary.download}
+        </a>
       </div>
       <section className="card sales-register">
         <h2>{d.lines}</h2>

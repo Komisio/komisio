@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "Das Foto ist zu groß (höchstens 3 MB).",
       "INVALID_IMAGE": "Die Datei ist kein gültiges JPEG- oder PNG-Bild.",
       "REQUEST_FAILED": "Die Anfrage ist fehlgeschlagen. Versuchen Sie es erneut.",
-      "BAG_COMPLETED": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren."
+      "BAG_COMPLETED": "Diese Einlieferung ist abgeschlossen. Öffnen Sie sie erneut, um fortzufahren.",
+      "DESCRIPTION_REQUIRED": "Geben Sie eine Beschreibung ein."
     },
     "addPhoto": "Foto aufnehmen oder auswählen",
     "sellerSearchHint": "Name, E-Mail oder Telefon",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Felder auswählen",
     "assortment": "Sortimentsgruppe",
     "noAssortment": "Ohne Sortimentsgruppe",
-    "noCategory": "Keine Kategorie"
+    "noCategory": "Keine Kategorie",
+    "internalNote": "Interne Notiz",
+    "internalNoteHint": "Nur für Mitarbeitende. Wird Verkäufern nicht angezeigt und nicht auf Etiketten, Verkaufsübersichten oder in Kassendaten ausgegeben."
   },
   "intake": {
     "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
@@ -694,7 +697,12 @@
     "zettle.line_resolved": "PayPal POS · Belegzeile · Manuelle Klärung",
     "zettle.page_received": "PayPal POS · Belegseite · Empfang",
     "zettle.pull_enabled": "PayPal POS · Belegabruf · Aktivierung",
-    "zettle.window_abandoned": "PayPal POS · Synchronisierungszeitraum · Widerruf"
+    "zettle.window_abandoned": "PayPal POS · Synchronisierungszeitraum · Widerruf",
+    "item.collection_recorded": "Abholstatus erfasst",
+    "item.period_reopened": "Verkaufszeitraum wieder eröffnet",
+    "item.period_end_corrected": "Abschlussgrund korrigiert",
+    "item.lifecycle_batch": "Sammeländerung der Verkaufszeiträume",
+    "label_fields.set": "Etikettenfelder · Gespeichert"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -1265,7 +1273,8 @@
     "communicationLanguage": "Standardsprache für Nachrichten",
     "communicationLanguageHint": "Wird für E-Mails an Verkäufer und als Vorgabe für Mitarbeitereinladungen verwendet, wenn im Ladenprofil keine Sprache festgelegt ist. Die Sprache des Verkäufers hat Vorrang, danach die Sprache des Ladenprofils. Ihre eigene Menüsprache beeinflusst die E-Mails nicht.",
     "vatModeConsignmentBusiness": "Umsatzsteuer für registrierte Unternehmen",
-    "consignment_business": "MwSt. auf den gesamten Verkaufspreis"
+    "consignment_business": "MwSt. auf den gesamten Verkaufspreis",
+    "dayCollectionHelp": "Optional bei Zeiträumen in Tagen. Gilt für neue Kommissionsware, die an den Verkäufer zurückgegeben werden soll. Leer lassen, wenn keine feste Abholfrist gilt. Die Frist beginnt mit dem Ende des Verkaufszeitraums; das Eigentum wechselt nicht automatisch."
   },
   "sellerTerms": {
     "title": "Einlieferer-Bedingungen",
@@ -1393,10 +1402,13 @@
       "price_set": "Preis festgelegt",
       "provenance": "Herkunft erfasst",
       "sold": "Verkauft",
-      "returned": "Zurückgegeben",
+      "returned": "Kundenretoure",
       "markdown_applied": "Preisreduzierung angewendet",
       "period_extended": "Verkaufszeitraum verlängert",
-      "period_ended": "Verkaufszeitraum beendet"
+      "period_ended": "Verkaufszeitraum beendet",
+      "collection_recorded": "Abholstatus erfasst",
+      "period_reopened": "Verkaufszeitraum wieder eröffnet",
+      "period_end_corrected": "Abschlussgrund korrigiert"
     },
     "clearFilters": "Filter zurücksetzen",
     "showingRange": "Artikel {from}–{to} von {total}",
@@ -1411,7 +1423,26 @@
     "markdownWaiting": "Preissenkung ausstehend",
     "allOwnerships": "Alle Artikel",
     "ownership": "Eigentum",
-    "createPurchasedItem": "Artikel erstellen"
+    "createPurchasedItem": "Artikel erstellen",
+    "eventDetails": {
+      "action": "Aktion",
+      "reason": "Grund",
+      "days": "Verlängerung (Tage)",
+      "priceChange": "Preisänderung",
+      "price": "Preis",
+      "actions": {
+        "charity": "Für wohltätige Zwecke",
+        "return": "Rückgabe an Verkäufer",
+        "recycle": "Recycling",
+        "transfer": "Übertragung an anderen Shop"
+      },
+      "collection": "Abholstatus",
+      "collected": "Abgeholt",
+      "notCollected": "Nicht abgeholt",
+      "observedOn": "Prüfdatum",
+      "saleEndsOn": "Zum Verkauf bis einschließlich",
+      "previousAction": "Vorheriger Abschlussgrund"
+    }
   },
   "sales": {
     "title": "Verkäufe",
@@ -1950,7 +1981,9 @@
       "item_sold": "Artikel verkauft",
       "payout_approved": "Auszahlung genehmigt",
       "payout_paid": "Auszahlung bezahlt",
-      "statement_issued": "Abrechnung ausgestellt"
+      "statement_issued": "Abrechnung ausgestellt",
+      "period_ending": "Verkaufszeitraum endet bald",
+      "period_ended": "Verkaufszeitraum beendet"
     },
     "outcomes": {
       "queued": "eingereiht",
@@ -2021,6 +2054,14 @@
         "bodyNumber": "Korrektur der Selbstfakturierung #{number}. Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen.",
         "amount": "Endsaldo: {amount}.",
         "note": "Sie können das Dokument im Verkäuferportal öffnen und als PDF herunterladen."
+      },
+      "period_ending": {
+        "subject": "{store}: Verkaufszeitraum endet bald",
+        "body": "Hallo {seller},\n\nDer Verkaufszeitraum für {item} endet am {date}. Bei Fragen zu den nächsten Schritten wenden Sie sich an {store}."
+      },
+      "period_ended": {
+        "subject": "{store}: Verkaufszeitraum beendet",
+        "body": "Hallo {seller},\n\nDer Verkaufszeitraum für {item} ist beendet. Informationen zum Artikel erhalten Sie bei {store}."
       }
     },
     "invitation": {
@@ -2488,7 +2529,7 @@
     "noItems": "Noch keine Artikel.",
     "item": "Artikel",
     "price": "Preis",
-    "itemDate": "Verkauft am / im Verkauf bis",
+    "itemDate": "Datum",
     "wasPrice": "vorher",
     "until": "bis",
     "then": "danach",
@@ -2577,7 +2618,15 @@
       "sold": "Noch keine verkauften Artikel.",
       "ended": "Noch keine beendeten Artikel.",
       "all": "Noch keine Artikel."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "Im Verkauf",
+      "sold": "Verkauft",
+      "ended": "Beendet"
+    },
+    "forSaleUntil": "Im Verkauf bis",
+    "soldOn": "Verkauft am",
+    "endedOn": "Beendet am"
   },
   "plans": {
     "heading": "Plan",
@@ -3088,7 +3137,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Dieser Beleg muss in PayPal POS untersucht werden. Nicht unterstützte Beträge oder Rabatte werden nie geraten.",
       "ITEM_NOT_FOUND": "Der Artikel wurde in diesem Store nicht gefunden. Prüfen Sie seine vollständige ID.",
       "ITEM_ALREADY_SOLD": "Ein Artikel wurde bereits verkauft. Prüfen Sie den Beleg und die Zuordnung.",
-      "VAT_MODE_NOT_SET": "Wählen Sie den MwSt.-Modus des Stores in den Einstellungen, bevor Sie Verkäufe erfassen.",
+      "VAT_MODE_NOT_SET": "Wählen Sie in den Shop-Einstellungen den MwSt.-Modus für die Eigentumsart des Artikels, bevor Sie den Artikel exportieren oder einen Verkauf erfassen.",
       "INVALID_INPUT": "Prüfen Sie, dass jede Zeile auf einen anderen Artikel mit gültiger ID verweist.",
       "REQUEST_CONFLICT": "Diese Anfrage entspricht nicht mehr dem erfassten Versuch. Laden Sie neu und prüfen Sie das Ergebnis.",
       "FORBIDDEN": "Ihre aktuelle Rolle oder Anmeldung kann diese Aktion nicht ausführen.",
@@ -4053,7 +4102,7 @@
     "review": "Vertrag lesen und akzeptieren",
     "accepted": "Vertrag akzeptiert",
     "recorded": "Das Geschäft hat Ihren Vertrag erfasst",
-    "accept": "Ich akzeptiere den Vertrag",
+    "accept": "Vertrag akzeptieren",
     "failed": "Die Antwort konnte nicht bestätigt werden. Bitte erneut versuchen.",
     "changed": "Der Vertrag wurde geändert. Lesen Sie vor der Zustimmung die neue Version.",
     "acceptedBy": "Akzeptiert von",
@@ -4232,7 +4281,9 @@
       "INVALID_INPUT": "Der Import konnte nicht abgeschlossen werden. Keine neuen Artikel wurden erfasst.",
       "REQUEST_CONFLICT": "Der Import konnte nicht abgeschlossen werden. Keine neuen Artikel wurden erfasst.",
       "CURRENCY_MISMATCH": "Die Bedingungen haben sich geändert. Öffnen Sie die Vorschau erneut.",
-      "CUSTODY_REQUIRED": "Ich bestätige, dass die Artikel im Geschäft sind."
+      "CUSTODY_REQUIRED": "Ich bestätige, dass die Artikel im Geschäft sind.",
+      "DESCRIPTION_REQUIRED": "Geben Sie eine Beschreibung ein.",
+      "NOTE_CHANGED": "Die Daten wurden geändert oder der Zugriff fehlt. Seite neu laden."
     },
     "fromFile": "Aus Datei",
     "fromPos": "Aus Kassensystem"
@@ -4620,7 +4671,8 @@
     "categoryExists": "Eine Kategorie mit diesem Namen existiert bereits.",
     "translations": "Übersetzungen (optional)",
     "languages": "Sprachen",
-    "noCategories": "Noch keine Kategorien."
+    "noCategories": "Noch keine Kategorien.",
+    "inheritDefaults": "Standardfelder des Ladens verwenden"
   },
   "settingsHelp": {
     "label": "Hilfe",
@@ -4762,6 +4814,7 @@
     "previousCategory": "Bisheriger Kategorietext: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Als Verkäufer bei {store} registrieren",
     "joinLogin": "Möchtest du über das Geschäft verkaufen? Erstelle ein persönliches Konto oder melde dich an, wenn du bereits eines hast. Danach kehrst du hierher zurück, um die Bedingungen des Geschäfts zu lesen und deinen Antrag zu senden.",
     "reviewTerms": "Die vom Verkäufer akzeptierte Vereinbarung",
     "title": "Verkäuferregistrierung",
@@ -5044,5 +5097,149 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Scannen / eingeben"
+  "scanFocus": "Scannen / eingeben",
+  "itemCollection": {
+    "title": "Abholung durch Verkäufer",
+    "description": "Das Ende des Verkaufszeitraums zur Rückgabe bestätigt keine Abholung. Erfassen Sie den geprüften Stand.",
+    "collected": "Abgeholt",
+    "notCollected": "Nicht abgeholt",
+    "unrecorded": "Abholstatus nicht erfasst",
+    "record": "Abholstatus erfassen",
+    "status": "Abholstatus",
+    "choose": "Status wählen",
+    "date": "Prüfdatum",
+    "note": "Notiz (optional)",
+    "save": "Abholstatus speichern",
+    "saved": "Abholstatus gespeichert"
+  },
+  "itemPeriod": {
+    "title": "Abschluss ändern",
+    "description": "Artikel erneut zum Verkauf freigeben oder den Abschlussgrund korrigieren. Frühere Ereignisse bleiben erhalten.",
+    "open": "Änderung anzeigen",
+    "operation": "Änderung",
+    "reopen": "Erneut zum Verkauf freigeben",
+    "correct": "Abschlussgrund korrigieren",
+    "saleEndsOn": "Zum Verkauf bis einschließlich",
+    "noFee": "Die Wiedereröffnung erzeugt keine Gebühr und keinen neuen Gebührenzeitraum.",
+    "endAction": "Neuer Abschlussgrund",
+    "choose": "Abschlussgrund wählen",
+    "reason": "Begründung",
+    "confirm": "Ich habe den Artikel geprüft und möchte die Änderung speichern.",
+    "save": "Änderung speichern",
+    "saved": "Änderung gespeichert"
+  },
+  "itemLifecycleBatch": {
+    "title": "Verkaufszeiträume ändern",
+    "hint": "Prüfen Sie bis zu 50 ausgewählte Artikel. Nicht änderbare Artikel werden mit Begründung übersprungen.",
+    "preview": "Vorschau",
+    "apply": "Änderungen bestätigen",
+    "ready": "Änderung möglich",
+    "applied": "Geändert",
+    "skipped": "Übersprungen",
+    "back": "Auswahl bearbeiten",
+    "results": "Ergebnisse",
+    "markdown": "Nächste fällige Preisreduzierung anwenden",
+    "reasons": {
+      "missing": "Artikel nicht gefunden",
+      "sold": "Artikel ist verkauft",
+      "ended": "Verkauf des Artikels ist beendet",
+      "markdown_not_due": "Keine Preisreduzierung fällig",
+      "collection_not_due": "Abholfrist ist noch nicht abgelaufen",
+      "changed": "Artikel wurde nach der Vorschau geändert"
+    },
+    "previewFailed": "Vorschau konnte nicht geladen werden. Prüfen Sie die Felder und versuchen Sie es erneut."
+  },
+  "periodNotices": {
+    "setting": "Automatische Nachrichten zu Verkaufszeiträumen",
+    "hint": "Verkäufer sieben Tage vor Ablauf und beim Ende des Verkaufszeitraums benachrichtigen. Vergangene Ereignisse werden nicht nachträglich versendet."
+  },
+  "sellerAccess": {
+    "choosePassword": "Neues Passwort wählen",
+    "confirmEmail": "E-Mail-Adresse bestätigen",
+    "confirmHint": "Öffnen Sie den Bestätigungslink in Ihrer E-Mail. Wenn Sie die Nachricht nicht finden, können Sie hier einen neuen Link senden.",
+    "passwordHint": "Wählen Sie ein neues Passwort, um die Zurücksetzung abzuschließen und fortzufahren.",
+    "switchView": "Ansicht wählen",
+    "store": "Geschäft",
+    "seller": "Verkäufer",
+    "stores": "Meine Geschäfte",
+    "rateLimited": "Zu viele Versuche in kurzer Zeit. Warten Sie kurz und versuchen Sie es erneut. Prüfen Sie auch, ob die E-Mail bereits angekommen ist."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Verkäuferportal",
+    "details": "Meine Daten",
+    "agreement": "Vereinbarung",
+    "invoices": "Gutschriften zur Selbstfakturierung",
+    "account": "Kontoeinstellungen",
+    "noAgreement": "Das Geschäft hat noch keine Vereinbarung veröffentlicht."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Bedingungen im Überblick",
+    "currentSettings": "Hier stehen die aktuellen Einstellungen des Geschäfts. Artikel behalten die für sie gespeicherten Bedingungen. Lesen Sie unten den vollständigen Vertrag.",
+    "commission": "Provision des Geschäfts: {rate} % {basis}.",
+    "days": "Verkaufsdauer: {days} Tage.",
+    "months": "Verkaufsdauer: {months} Kalendermonate ab tatsächlicher Annahme.",
+    "collection": "Holen Sie unverkaufte Artikel innerhalb von {days} Tagen nach Ende der Verkaufsdauer ab.",
+    "return": "Nach der Verkaufsdauer: unverkaufte Artikel werden zurückgegeben.",
+    "charity": "Nach der Verkaufsdauer: unverkaufte Artikel werden gespendet.",
+    "fullText": "Vollständigen Vertrag lesen",
+    "needsApproval": "Zustimmung erforderlich"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Deine Registrierung bei {store} wurde genehmigt",
+    "body": "Hallo {seller},\n\n{store} hat deine Registrierung genehmigt. Du kannst dich jetzt mit dem Konto, das du bei der Registrierung verwendet hast, im Verkäuferportal anmelden:\n{url}\n\nDort kannst du deine Artikel und Auszahlungen verfolgen."
+  },
+  "returnNavigation": {
+    "back": "Zurück"
+  },
+  "labelFields": {
+    "title": "Felder auf Artikeletiketten",
+    "hint": "Wählen Sie bis zu vier Merkmale in Druckreihenfolge. Gilt für Artikeletiketten auf Zebra, im Browser und auf PDF-Bögen. Fehlende Werte werden übersprungen. Preis und Barcode bleiben immer erhalten.",
+    "custom": "Dieselben Felder im gesamten Geschäft verwenden",
+    "default": "Die bestehende Feldreihenfolge des Artikeltyps wird verwendet.",
+    "field": "Feld {number}",
+    "none": "Kein Feld",
+    "save": "Etikettenfelder speichern",
+    "saved": "Etikettenfelder gespeichert."
+  },
+  "priceEdit": {
+    "title": "Preis ändern",
+    "reason": "Grund (optional)",
+    "none": "Kein Grund",
+    "store": "Entscheidung des Geschäfts",
+    "sale": "Ausverkauf",
+    "defect": "Mangel",
+    "other": "Sonstiges",
+    "custom": "Eigener Grund",
+    "saved": "Der Preis wurde gespeichert."
+  },
+  "saleSummary": {
+    "title": "Verkaufsübersicht",
+    "download": "Verkaufsübersicht herunterladen (PDF)",
+    "saleDate": "Verkaufsdatum",
+    "reference": "Verkaufsreferenz",
+    "notice": "Übersicht der in Komisio erfassten Angaben. Den Kassenbeleg stellt das Kassensystem aus.",
+    "reversed": "Der Verkauf wurde rückgängig gemacht",
+    "returned": "Erfasste Rückgabe",
+    "originalTotal": "Ursprünglicher Gesamtverkauf",
+    "returnTotal": "Erfasste Rückgaben insgesamt",
+    "currentDetails": "Geschäfts- und Artikelbeschreibungen entsprechen dem aktuellen Stand. Die Beträge stammen aus dem erfassten Verkauf und etwaigen Rückgaben.",
+    "generatedAt": "Erstellt"
+  },
+  "registration": {
+    "title": "Artikelerfassung",
+    "hint": "Standardfelder gelten für Artikeltypen, die die Ladeneinstellungen übernehmen.",
+    "descriptionRequired": "Beschreibung bei der Erfassung verlangen",
+    "template": "Titel bei fehlender Beschreibung",
+    "templateHint": "Diese Platzhalter verwenden. Fehlende Werte werden ausgelassen; ein leerer Titel wird durch die Artikelreferenz ersetzt.",
+    "fields": "Standardfelder des Ladens",
+    "inherit": "Standardfelder des Ladens verwenden",
+    "note": "Interne Notiz",
+    "noteHint": "Nur für Mitarbeitende. Wird Verkäufern nicht angezeigt und nicht auf Etiketten, Verkaufsübersichten oder in Kassendaten ausgegeben.",
+    "save": "Speichern",
+    "retry": "Erneut versuchen",
+    "saved": "Gespeichert.",
+    "invalid": "Felder und Platzhalter im Titel prüfen.",
+    "changed": "Die Daten wurden geändert oder der Zugriff fehlt. Seite neu laden.",
+    "uncertain": "Die Antwort konnte nicht bestätigt werden. Mit denselben Angaben erneut versuchen."
+  }
 }

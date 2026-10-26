@@ -63,23 +63,25 @@ test('seller reads own economy, requests payout and opts out without becoming st
       20000,
       'PRIVATE staff reason',
     ])
-    await db.query(
+    const statement = await db.query(
       "select issue_statement($1,$2,$3,'2000-01-01',clock_timestamp())",
       [tenant, randomUUID(), sellerId],
     )
     await db.query('commit')
     await page.goto(`/seller?seller=${sellerId}`)
-    await expect(
-      page.getByRole('heading', { name: /Tillg.*200/ }),
-    ).toBeVisible()
     await expect(page.getByText('PRIVATE staff reason')).toHaveCount(0)
     const items = page.getByRole('region', {
       name: d.sellerPortal.items,
       exact: true,
     })
     await expect(
-      items.getByRole('combobox', { name: d.sellerPortal.itemsStatus }),
-    ).toHaveValue('active')
+      items
+        .getByRole('navigation', { name: d.sellerPortal.itemsStatus })
+        .getByRole('link', {
+          name: `${d.sellerPortal.itemStatusTabs.active} (0)`,
+          exact: true,
+        }),
+    ).toHaveAttribute('aria-current', 'page')
     await expect(
       items.getByText(d.sellerPortal.itemFilterEmpty.active, { exact: true }),
     ).toBeVisible()
@@ -87,6 +89,12 @@ test('seller reads own economy, requests payout and opts out without becoming st
       path: test.info().outputPath('seller-portal.png'),
       fullPage: true,
     })
+    await page
+      .getByRole('tab', { name: d.sellerPortal.payouts, exact: true })
+      .click()
+    await expect(
+      page.getByRole('heading', { name: /Tillg.*200/ }),
+    ).toBeVisible()
     await page.getByLabel('Belopp i SEK').fill('100,00')
     await page
       .getByRole('button', { name: 'Begär utbetalning', exact: true })
@@ -107,6 +115,9 @@ test('seller reads own economy, requests payout and opts out without becoming st
     expect(row.request_source).toBe('seller')
     expect(row.status).toBe('requested')
     expect(row.requested_by).not.toBe(owner)
+    await page
+      .getByRole('tab', { name: d.sellerPortalWorkspace.details, exact: true })
+      .click()
     await page.getByRole('checkbox').uncheck()
     // Wait for persistence before reloading; the checkbox changes immediately.
     const savedPreference = page.waitForResponse(
@@ -125,7 +136,13 @@ test('seller reads own economy, requests payout and opts out without becoming st
     )
     await page.reload()
     await expect(page.getByRole('checkbox')).not.toBeChecked()
-    await page.getByRole('link', { name: 'Visa avräkning #1' }).click()
+    await expect(
+      page.getByRole('link', { name: 'Visa avräkning #1' }),
+    ).toHaveCount(0)
+    // Retained documents remain reachable through existing private bookmarks.
+    await page.goto(
+      `/seller?seller=${sellerId}&statement=${statement.rows[0].issue_statement}`,
+    )
     await expect(
       page.getByRole('heading', { name: 'Avräkningar #1' }),
     ).toBeVisible()
@@ -163,8 +180,8 @@ test('seller reads own economy, requests payout and opts out without becoming st
     await page
       .getByRole('link', { name: 'Portal journey', exact: true })
       .click()
-    await expect(page).toHaveURL(/#portal-statements$/)
-    await expect(page.locator('#portal-statements h2')).toBeInViewport()
+    await expect(page).toHaveURL(/#seller-workspace-payouts$/)
+    await expect(page.locator('#portal-payout-request h2')).toBeVisible()
     expect(
       (
         await db.query(

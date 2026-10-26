@@ -111,31 +111,15 @@ test('seller sees the next price step, days left and what happens at period end'
       if (request.method() === 'POST' && request.url().includes('/api/seller/'))
         writes.push(request.url())
     })
-    const shortcuts = page.locator('.seller-portal-shortcuts')
-    for (const target of [
-      'portal-items',
-      'portal-payout-request',
-      'portal-statements',
-    ]) {
-      const link = shortcuts.locator('a[href="#' + target + '"]')
-      expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44)
-      await link.click()
-      await expect(page.locator('#' + target + ' h2').first()).toBeInViewport()
-      await expect(page).toHaveURL(
-        new RegExp('seller=' + sellerId + '#' + target + '$'),
-      )
+    for (const tab of await page.getByRole('tab').all()) {
+      expect((await tab.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+      await tab.click()
+      await expect(tab).toHaveAttribute('aria-selected', 'true')
     }
     expect(writes).toEqual([])
     await page.goBack()
-    await expect(page).toHaveURL(/#portal-payout-request$/)
-    await page.goto('/seller?seller=' + sellerId)
-    await page.screenshot({
-      path: test.info().outputPath('seller-shortcuts-mobile.png'),
-      caret: 'initial',
-    })
-    await shortcuts.locator('a[href="#portal-items"]').click()
-    await expect(items.locator('h2')).toBeInViewport()
-    await details.locator('summary').click()
+    await expect(page).toHaveURL(/#seller-workspace-details$/)
+    await page.getByRole('tab', { name: 'Mina varor', exact: true }).click()
     await expect(items.getByText(plan)).toBeVisible()
     // Mobile cards keep the key information visible without horizontal scrolling.
     expect(

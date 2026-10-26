@@ -41,7 +41,7 @@ test('store opt-in, recipient review, individual log and public unsubscribe', as
       },
     ])
     await f.commit()
-    await page.goto(`/seller?seller=${seller}`)
+    await page.goto(`/seller?seller=${seller}#seller-workspace-details`)
     const consent = page.locator('#store-mail-consent')
     await consent.locator('summary').click()
     await expect(consent.getByRole('checkbox')).not.toBeChecked()

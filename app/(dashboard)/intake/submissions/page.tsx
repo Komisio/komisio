@@ -1,3 +1,4 @@
+import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import { SubmissionReception } from '@/components/intake/submission-reception'
 import { SubmissionNotification } from '@/components/intake/submission-notification'
 import { factCommunicationId } from '@/lib/communications/dispatch'
@@ -25,6 +26,7 @@ export default async function Submissions({
   const ctx = await requirePlatform(),
     active = ctx.active!,
     d = dictionary(ctx.locale).submissions
+  const vocabulary = await readAttributeVocabulary(ctx.client, active.id)
   const params = await searchParams
   const page =
     params.page && /^[1-9]\d{0,4}$/.test(params.page) ? Number(params.page) : 1
@@ -166,6 +168,9 @@ export default async function Submissions({
                     </Link>
                   ) : (
                     <SubmissionReception
+                      descriptionRequired={
+                        vocabulary.registration?.settings.descriptionRequired
+                      }
                       leaveWarning={dictionary(ctx.locale).leaveUnsaved}
                       tenantId={active.id}
                       submissionId={row.id}

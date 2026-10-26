@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
+import Link from '@/components/platform/working-link'
 import { ChevronDown, ChevronUp, Check, SkipForward } from 'lucide-react'
 import { z } from 'zod'
 import type { Dictionary } from '@/lib/i18n'

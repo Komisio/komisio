@@ -1,8 +1,29 @@
-import { describe, it, expect } from 'vitest'
-import { registrationCommand } from '../../lib/engine/seller-registration'
+import { describe, it, expect, vi } from 'vitest'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import {
+  registrationCommand,
+  registrationTokenFromNext,
+  readPublicRegistrationStore,
+  readPendingRegistrationCount,
+} from '../../lib/engine/seller-registration'
 import { safeNext } from '../../lib/platform/validation'
 
 describe('seller registration boundary', () => {
+  it('reads only the aggregate and never silently turns failures into zero', async () => {
+    const tenant = 'f4300000-0000-4000-8000-000000000001'
+    const rpc = vi.fn().mockResolvedValue({ data: 3, error: null })
+    const client = { rpc } as unknown as SupabaseClient
+    expect(await readPendingRegistrationCount(client, tenant)).toBe(3)
+    expect(rpc).toHaveBeenCalledWith('pending_seller_registration_count', {
+      p_tenant: tenant,
+    })
+    rpc.mockResolvedValueOnce({ data: null, error: { message: 'FORBIDDEN' } })
+    await expect(readPendingRegistrationCount(client, tenant)).rejects.toThrow(
+      'REQUEST_FAILED',
+    )
+    rpc.mockResolvedValueOnce({ data: -1, error: null })
+    await expect(readPendingRegistrationCount(client, tenant)).rejects.toThrow()
+  })
   const valid = {
     action: 'apply',
     token: 'a'.repeat(64),
@@ -50,5 +71,41 @@ describe('seller registration boundary', () => {
       '/join/' + 'A'.repeat(64),
     ])
       expect(safeNext(value)).toBe('/')
+  })
+  it('resolves only exact registration destinations, never URL-supplied names or external paths', () => {
+    const token = 'a'.repeat(64)
+    expect(registrationTokenFromNext(`/join/${token}`)).toBe(token)
+    for (const value of [
+      undefined,
+      ['/join/' + token],
+      '/join/' + token + '?store=Fake',
+      '/join/' + token + '#x',
+      'https://evil.test/join/' + token,
+      '/join/' + token.toUpperCase(),
+    ])
+      expect(registrationTokenFromNext(value)).toBeNull()
+  })
+  it('reads only the name projection and does not turn unexpected errors into invalid-link claims', async () => {
+    const rpc = vi
+      .fn()
+      .mockResolvedValue({ data: 'Store <b>$&</b>', error: null })
+    const client = { rpc } as unknown as SupabaseClient
+    expect(await readPublicRegistrationStore(client, 'a'.repeat(64))).toBe(
+      'Store <b>$&</b>',
+    )
+    expect(rpc).toHaveBeenCalledWith('public_seller_registration_store', {
+      p_token: 'a'.repeat(64),
+    })
+    expect(await readPublicRegistrationStore(client, 'bad')).toBeNull()
+    expect(rpc).toHaveBeenCalledTimes(1)
+    rpc.mockResolvedValueOnce({ data: null, error: null })
+    expect(await readPublicRegistrationStore(client, 'a'.repeat(64))).toBeNull()
+    rpc.mockResolvedValueOnce({
+      data: null,
+      error: { message: 'private details' },
+    })
+    await expect(
+      readPublicRegistrationStore(client, 'a'.repeat(64)),
+    ).rejects.toThrow('REQUEST_FAILED')
   })
 })

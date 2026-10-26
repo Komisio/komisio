@@ -103,6 +103,58 @@ export async function raceSellerRegistration({ setup, connectionString }) {
       ).rows[0].created_seller,
       false,
     )
+    const reviewId = (
+      await setup.query(
+        'select id from seller_registration_reviews where registration_id=$1',
+        [application],
+      )
+    ).rows[0].id
+    const facts = (
+      await clients[0].query(
+        'select registration_approval_notice($1,$2) facts',
+        [tenant, reviewId],
+      )
+    ).rows[0].facts
+    const messageIds = [randomUUID(), randomUUID()]
+    await setup.query('begin')
+    await setup.query('select 1 from tenants where id=$1 for update', [tenant])
+    const claims = clients.map((c, index) =>
+      c.query(
+        "select claim_registration_approval_notice($1,$2,'en','Synthetic approval','Synthetic body') id",
+        [messageIds[index], facts],
+      ),
+    )
+    await pause(100)
+    await setup.query('commit')
+    const results = await Promise.all(claims)
+    assert.equal(
+      results.filter((r) => r.rows[0].id !== null).length,
+      1,
+      'only one concurrent caller receives send permission',
+    )
+    assert.equal(
+      (
+        await setup.query(
+          'select count(*)::int n from seller_communications where registration_review_id=$1',
+          [reviewId],
+        )
+      ).rows[0].n,
+      1,
+    )
+    for (const [index, c] of clients.entries())
+      assert.equal(
+        (
+          await c.query(
+            "select claim_registration_approval_notice($1,$2,'en','Synthetic approval','Synthetic body') id",
+            [messageIds[index], facts],
+          )
+        ).rows[0].id,
+        null,
+        'even the successful caller cannot recover send permission on replay',
+      )
+    console.log(
+      'PASS: concurrent approval notices grant exactly one durable send attempt; retries never resend.',
+    )
     // A different applicant exercises competing approval/rejection and link revocation.
     const second = randomUUID()
     await setup.query(

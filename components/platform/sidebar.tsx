@@ -47,7 +47,9 @@ function RailTooltip({
       left: Math.min(rect.right + 12, window.innerWidth - 24),
     })
   }
-  useEffect(() => {
+  // Install dismissal before the visible tooltip can receive an Escape key.
+  // A passive effect can miss the first key between paint and effect setup.
+  useLayoutEffect(() => {
     if (!box) return
     const dismiss = () => setBox(null)
     const onKeyDown = (event: KeyboardEvent) => {
@@ -119,6 +121,7 @@ export function Sidebar({
   name,
   intakeEnabled,
   host,
+  pendingRegistrations,
   collapsed: initialCollapsed,
   ready,
   busy,
@@ -133,6 +136,7 @@ export function Sidebar({
   name: string
   intakeEnabled: boolean
   host: boolean
+  pendingRegistrations?: number
   collapsed: boolean
   ready: boolean
   busy: boolean
@@ -152,6 +156,7 @@ export function Sidebar({
   const storeAnchor = useRef<{ top: number; left: number } | null>(null)
   const storePanelId = useId()
   const groups = buildNavigation(d, {
+    pendingRegistrations,
     intakeEnabled,
     host,
     audit: active.role === 'owner' || active.role === 'admin',
@@ -389,14 +394,20 @@ export function Sidebar({
             {group.label ? (
               <div className="nav-label eyebrow">{group.label}</div>
             ) : null}
-            {group.links.map(({ path, label, icon }) => {
+            {group.links.map(({ path, label, icon, badge }) => {
               const current = isActivePath(pathname, path)
+              const accessibleLabel = badge ? `${label} (${badge})` : label
               return (
-                <RailTooltip key={path} enabled={collapsed} label={label}>
+                <RailTooltip
+                  key={path}
+                  enabled={collapsed}
+                  label={accessibleLabel}
+                >
                   <Link
                     href={path}
                     className={`nav-link ${current ? 'active' : ''}`}
                     aria-current={current ? 'page' : undefined}
+                    aria-label={accessibleLabel}
                   >
                     <NavIcon
                       name={icon}
@@ -405,6 +416,11 @@ export function Sidebar({
                       aria-hidden="true"
                     />
                     <span className="nav-text">{label}</span>
+                    {!!badge && (
+                      <span className="nav-count" aria-hidden="true">
+                        {badge > 99 ? '99+' : badge}
+                      </span>
+                    )}
                   </Link>
                 </RailTooltip>
               )

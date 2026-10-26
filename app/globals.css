@@ -1232,6 +1232,10 @@ button.text-link:hover:not(:disabled) {
   width: 100%;
   max-width: 370px;
 }
+.registration-store-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
 .auth-form h1 {
   font-size: 28px;
 }
@@ -1526,6 +1530,23 @@ button.text-link:hover:not(:disabled) {
   color: #294e36;
   font-weight: 600;
 }
+.nav-count {
+  margin-inline-start: auto;
+  border-radius: 999px;
+  padding: 1px 6px;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.sidebar-collapsed .nav-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 4px;
+  font-size: 10px;
+}
 .nav-link:hover {
   background: #e5ecde;
 }
@@ -1666,6 +1687,19 @@ button.text-link:hover:not(:disabled) {
   max-width: 1120px;
   margin: auto;
   padding: 40px 43px 64px;
+}
+/* List routes opt in centrally; nested details retain the default reading width. */
+@media (min-width: 1001px) {
+  .main--wide {
+    max-width: none;
+    padding-inline: 24px;
+  }
+}
+/* Entry forms inside a wide tabbed workspace keep the old content width. */
+.page-reading-width {
+  width: 100%;
+  max-width: 1034px;
+  margin-inline: auto;
 }
 .home-grid {
   display: grid;
@@ -5094,6 +5128,24 @@ button.text-link:hover:not(:disabled) {
   color: var(--muted);
   font-size: 0.875rem;
 }
+.item-event-details {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0;
+}
+.item-event-details > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+.item-event-details dt {
+  color: var(--muted);
+}
+.item-event-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
 .item-actor-line {
   display: flex;
   align-items: center;
@@ -6487,9 +6539,6 @@ button.text-link:hover:not(:disabled) {
 }
 
 /* Inventory: compact rows; secondary facts open only on interaction. */
-.inventory-directory.items-directory {
-  max-width: 1440px;
-}
 .inventory-panel {
   background: var(--white);
   border: 1px solid var(--line);
@@ -6854,12 +6903,10 @@ button.text-link:hover:not(:disabled) {
   }
 }
 .items-directory {
-  max-width: 1120px;
   margin-inline: auto;
 }
 /* Lifecycle workbench shares the item directory's reading order and density. */
 .lifecycle-page {
-  max-width: 1120px;
   margin-inline: auto;
 }
 .lifecycle-page .lifecycle-automation {

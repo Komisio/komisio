@@ -34,13 +34,9 @@ export function reviewReceptionFacts(input: unknown, selectedInput: unknown) {
       certainty: certainty(a.slug),
     })),
   })
-  const hasDescription = candidate.attributes.some(
-    (a) => a.slug === 'description',
-  )
   return {
     suggestions,
     complete:
-      hasDescription &&
       !!candidate.price &&
       !candidate.questions.length &&
       required.every((field) => selected.includes(field)),

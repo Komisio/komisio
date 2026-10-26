@@ -4,6 +4,69 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Sales summary (#655, scope clarified 2026-10-26): the owner selected a separate
+sales-information document and then explicitly requested a simple summary of
+one sale. Implement a downloadable PDF with recorded prices and currency,
+separate registered returns and current store/item descriptions. Exclude
+internal VAT, commission, seller identity and staff notes. This is a read-only
+summary; it does not issue a cash receipt or assert a new payment. Direct
+customer-email delivery and its retention/send-log model are not in this slice.
+
+Receipt-copy issuance (outside this scope): the originally requested PDF cannot
+yet be treated as an authorized cash-register copy. Skatteverket's
+[cash-register requirements](https://www4.skatteverket.se/download/18.566df4d617d171254ec3e41/1698824220274/SKVFS%202021_17.pdf)
+include fixed copy marking, control-system integration and a one-copy limit.
+Komisio has no evidence of how many copies the originating register issued.
+The PDF wording proposed in the issue does not establish compliance. Owner
+decision now selects the separate sales summary above instead.
+No standalone receipt-copy issuance or email delivery is implemented.
+For VMB sales, the customer document must not expose the internal margin VAT
+as deductible item VAT; see Skatteverket's
+[VMB invoicing guidance](https://www.skatteverket.se/foretag/moms/sarskildamomsregler/vinstmarginalbeskattningavbegagnadevarormedmera.4.58d555751259e4d6616800010756.html).
+Any future receipt-copy issuance or customer VAT document remains separate
+from the owner-approved sales summary.
+
+Seller agreement name (#649, resolved 2026-10-26): the owner confirmed the
+report concerns the staff-oriented PDF button only. Remove it from the seller
+portal; preserve published agreement texts verbatim. Staff PDF access remains.
+
+Uncollected ownership (#654, raised 2026-10-26): the issue explicitly leaves
+VAT and accounting for goods acquired after collection expiry to an accountant.
+Existing consignment terms and ownership evidence cannot silently be replaced.
+Owner-approved split (2026-10-26): implement collection deadlines in all period
+modes first. Automatic ownership changes and later sales remain deferred until
+acquisition, VAT and reversal rules are confirmed with the accountant.
+
+Seller login (#646, resolved 2026-10-26): the owner rejects skipping email
+verification for invited sellers. Keep identity/MFA checks, make confirmation
+and resending clear, and continue directly into the correct seller workspace.
+Password recovery requires choosing a new password; this is separate from
+ordinary passwordless activation and does not grant membership or seller access.
+
+Item lifecycle (#636, resolved 2026-10-26): reopening requires a new future
+sale-end date and a mandatory reason. Automatic seller notices occur seven days
+before period end and when the period ends; activation does not send notices
+for already passed events. Pause/resume is deferred until automatic external
+POS handling is verified; manual PayPal POS handling is not the chosen interim
+solution. Direct staff bulk actions, append-only corrections, richer history
+and collection evidence remain in scope. Paused days would extend the sale
+period and monthly fees would continue when pause is implemented.
+PayPal POS currently documents deletion without an explicit reversible pause
+state; local inactive status must not imply confirmed external removal.
+Source: [Product Library API](https://developer.zettle.com/docs/api/product-library/reference).
+
+Reopening after monthly fees expire (#636, resolved 2026-10-26): the owner
+chooses no automatic fee on reopening. Reopening must not start a new fee
+period or change earlier charges. Existing fee handling for other active items
+and new physical receipts remains unchanged.
+
+Period-notice policy interaction (#636, resolved 2026-10-26): the owner chooses
+an independent default-on store setting for period notices, regardless of the
+older `automaticSellerNotifications` switch. The seller's own automatic-email
+opt-out remains authoritative. Activation and re-enabling do not backfill past
+due events. Production worker registration and delivery configuration remain
+release work; a saved default alone does not establish active delivery.
+
 Zebra setup illustrations (#592, resolved 2026-10-23): the owner approves
 clearly labeled original illustrations until current iPad screenshots are
 available. These explain the steps and do not establish hardware verification.

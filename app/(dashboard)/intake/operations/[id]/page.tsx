@@ -1,5 +1,5 @@
+import { BackLink } from '@/components/platform/back-link'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -35,9 +35,9 @@ export default async function OperationDetail({
     <>
       <div className="page-heading">
         <h1>{d.reviewProposal}</h1>
-        <Link className="text-link" href="/intake/operations">
-          {d.title}
-        </Link>
+        <BackLink className="text-link" href="/intake/operations">
+          {all.returnNavigation.back}
+        </BackLink>
       </div>
       <p className="intake-notice">{d.notice}</p>
       <OperationQueue

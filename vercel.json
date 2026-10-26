@@ -9,6 +9,7 @@
   },
   "regions": ["arn1"],
   "crons": [
+    { "path": "/api/automation/period-notices", "schedule": "*/10 * * * *" },
     { "path": "/api/automation/catalog-export", "schedule": "*/5 * * * *" },
     {
       "path": "/api/automation/day-closes",

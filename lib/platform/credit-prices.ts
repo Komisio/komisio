@@ -30,3 +30,8 @@ export function formatCreditPrice(price: CreditPrice, locale: string) {
     maximumFractionDigits: 2,
   }).format(price.amountMinor / 100)
 }
+
+/** Whole credits for display; safe to import in browser components. */
+export function credits(ore: number) {
+  return Math.floor(ore / 100)
+}

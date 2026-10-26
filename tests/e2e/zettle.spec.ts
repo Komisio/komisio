@@ -326,13 +326,19 @@ for (const currency of storeCurrencies) {
           exact: true,
         })
         .click()
+      const integrationOrigin = new URL(page.url())
       await page.getByRole('link', { name: new RegExp(d.zettle.open) }).click()
       await expect(
         page.getByText(d.zettle.recorded, { exact: true }),
       ).toBeVisible()
       await expect(
-        page.getByRole('link', { name: d.zettle.back, exact: true }),
-      ).toHaveAttribute('href', '/intake/integrations?provider=paypal')
+        page.getByRole('link', { name: d.returnNavigation.back, exact: true }),
+      ).toHaveAttribute(
+        'href',
+        integrationOrigin.pathname +
+          integrationOrigin.search +
+          integrationOrigin.hash,
+      )
       await expect(page.locator('.sale-reference')).not.toHaveAttribute(
         'open',
         '',

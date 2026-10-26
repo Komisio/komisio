@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "La foto è troppo grande (massimo 3 MB).",
       "INVALID_IMAGE": "Il file non è un’immagine JPEG o PNG valida.",
       "REQUEST_FAILED": "La richiesta non è riuscita. Riprova.",
-      "BAG_COMPLETED": "Questa consegna è completata. Riaprila per continuare."
+      "BAG_COMPLETED": "Questa consegna è completata. Riaprila per continuare.",
+      "DESCRIPTION_REQUIRED": "Inserisci una descrizione."
     },
     "addPhoto": "Scatta o scegli una foto",
     "sellerSearchHint": "Nome, email o telefono",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Scegli campi",
     "assortment": "Gruppo di assortimento",
     "noAssortment": "Nessun gruppo di assortimento",
-    "noCategory": "Nessuna categoria"
+    "noCategory": "Nessuna categoria",
+    "internalNote": "Nota interna",
+    "internalNoteHint": "Solo per il personale. Non viene mostrata al venditore né inclusa nelle etichette, nei riepiloghi di vendita o nei dati del POS."
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",
@@ -694,7 +697,12 @@
     "zettle.line_resolved": "PayPal POS · Riga scontrino · Risoluzione manuale",
     "zettle.page_received": "PayPal POS · Pagina scontrini · Ricezione",
     "zettle.pull_enabled": "PayPal POS · Recupero scontrini · Attivazione",
-    "zettle.window_abandoned": "PayPal POS · Periodo di sincronizzazione · Revoca"
+    "zettle.window_abandoned": "PayPal POS · Periodo di sincronizzazione · Revoca",
+    "item.collection_recorded": "Stato del ritiro registrato",
+    "item.period_reopened": "Periodo di vendita riaperto",
+    "item.period_end_corrected": "Motivo della chiusura corretto",
+    "item.lifecycle_batch": "Modifica multipla dei periodi di vendita",
+    "label_fields.set": "Campi etichetta · Salvati"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -1265,7 +1273,8 @@
     "communicationLanguage": "Lingua predefinita dei messaggi",
     "communicationLanguageHint": "Usata per le email ai venditori e come lingua predefinita degli inviti al personale quando il profilo del negozio non ha una lingua. Ha priorità la lingua del venditore, poi quella del profilo del negozio. La lingua del tuo menu non influisce sulle email.",
     "vatModeConsignmentBusiness": "IVA per aziende registrate",
-    "consignment_business": "IVA sull'intero prezzo di vendita"
+    "consignment_business": "IVA sull'intero prezzo di vendita",
+    "dayCollectionHelp": "Facoltativo per i periodi in giorni. Si applica ai nuovi articoli in conto vendita da restituire al venditore. Lasciare vuoto se non è prevista una scadenza fissa per il ritiro. Il termine decorre dalla fine del periodo di vendita; la proprietà non cambia automaticamente."
   },
   "sellerTerms": {
     "title": "Condizioni del conferente",
@@ -1393,10 +1402,13 @@
       "price_set": "Prezzo impostato",
       "provenance": "Provenienza registrata",
       "sold": "Venduto",
-      "returned": "Restituito",
+      "returned": "Reso del cliente",
       "markdown_applied": "Ribasso applicato",
       "period_extended": "Periodo di vendita prolungato",
-      "period_ended": "Periodo di vendita concluso"
+      "period_ended": "Periodo di vendita concluso",
+      "collection_recorded": "Stato del ritiro registrato",
+      "period_reopened": "Periodo di vendita riaperto",
+      "period_end_corrected": "Motivo della chiusura corretto"
     },
     "clearFilters": "Cancella filtri",
     "showingRange": "Articoli {from}–{to} di {total}",
@@ -1411,7 +1423,26 @@
     "markdownWaiting": "Ribasso in attesa",
     "allOwnerships": "Tutti gli articoli",
     "ownership": "Proprietà",
-    "createPurchasedItem": "Crea articolo"
+    "createPurchasedItem": "Crea articolo",
+    "eventDetails": {
+      "action": "Azione",
+      "reason": "Motivo",
+      "days": "Proroga (giorni)",
+      "priceChange": "Variazione di prezzo",
+      "price": "Prezzo",
+      "actions": {
+        "charity": "Beneficenza",
+        "return": "Restituzione al venditore",
+        "recycle": "Riciclo",
+        "transfer": "Trasferimento a un altro negozio"
+      },
+      "collection": "Stato del ritiro",
+      "collected": "Ritirato",
+      "notCollected": "Non ritirato",
+      "observedOn": "Data della verifica",
+      "saleEndsOn": "In vendita fino al giorno incluso",
+      "previousAction": "Motivo della chiusura precedente"
+    }
   },
   "sales": {
     "title": "Vendite",
@@ -1950,7 +1981,9 @@
       "item_sold": "Articolo venduto",
       "payout_approved": "Pagamento approvato",
       "payout_paid": "Pagamento effettuato",
-      "statement_issued": "Rendiconto emesso"
+      "statement_issued": "Rendiconto emesso",
+      "period_ending": "Il periodo di vendita termina presto",
+      "period_ended": "Il periodo di vendita è terminato"
     },
     "outcomes": {
       "queued": "in coda",
@@ -2021,6 +2054,14 @@
         "bodyNumber": "Nota di credito per autofattura #{number}. L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
         "amount": "Saldo finale: {amount}.",
         "note": "Puoi aprire il documento e scaricare il PDF nel portale del venditore."
+      },
+      "period_ending": {
+        "subject": "{store}: il periodo di vendita termina presto",
+        "body": "Ciao {seller},\n\nIl periodo di vendita di {item} termina il {date}. Contatta {store} per domande sui prossimi passi."
+      },
+      "period_ended": {
+        "subject": "{store}: il periodo di vendita è terminato",
+        "body": "Ciao {seller},\n\nIl periodo di vendita di {item} è terminato. Contatta {store} per informazioni sull’articolo."
       }
     },
     "invitation": {
@@ -2488,7 +2529,7 @@
     "noItems": "Nessun articolo finora.",
     "item": "Articolo",
     "price": "Prezzo",
-    "itemDate": "Venduto il / in vendita fino al",
+    "itemDate": "Data",
     "wasPrice": "era",
     "until": "fino al",
     "then": "poi",
@@ -2577,7 +2618,15 @@
       "sold": "Nessun articolo venduto per ora.",
       "ended": "Nessun articolo concluso per ora.",
       "all": "Nessun articolo per ora."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "In vendita",
+      "sold": "Venduti",
+      "ended": "Terminati"
+    },
+    "forSaleUntil": "In vendita fino al",
+    "soldOn": "Venduto il",
+    "endedOn": "Terminato il"
   },
   "plans": {
     "heading": "Piano",
@@ -3088,7 +3137,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Questo scontrino richiede una verifica in PayPal POS. Importi o sconti non supportati non vengono mai indovinati.",
       "ITEM_NOT_FOUND": "L'articolo non è stato trovato in questo negozio. Controlla il suo ID completo.",
       "ITEM_ALREADY_SOLD": "Un articolo è già stato venduto. Controlla lo scontrino e l'abbinamento.",
-      "VAT_MODE_NOT_SET": "Scegli la modalità IVA del negozio nelle impostazioni prima di registrare vendite.",
+      "VAT_MODE_NOT_SET": "Scegli nelle impostazioni del negozio il regime IVA relativo alla proprietà dell’articolo prima di esportarlo o registrare una vendita.",
       "INVALID_INPUT": "Controlla che ogni riga punti a un articolo diverso con un ID valido.",
       "REQUEST_CONFLICT": "Questa richiesta non corrisponde più al tentativo registrato. Ricarica e controlla il risultato.",
       "FORBIDDEN": "Il tuo ruolo o accesso attuale non può eseguire questa azione.",
@@ -4047,7 +4096,7 @@
     "review": "Leggi e accetta l’accordo",
     "accepted": "Accordo accettato",
     "recorded": "Il negozio ha registrato il tuo accordo",
-    "accept": "Accetto l’accordo",
+    "accept": "Approva l’accordo",
     "failed": "Impossibile confermare la risposta. Riprova.",
     "changed": "L’accordo è cambiato. Leggi la nuova versione prima di accettare.",
     "acceptedBy": "Accettato da",
@@ -4226,7 +4275,9 @@
       "INVALID_INPUT": "Impossibile completare l’importazione. Nessun nuovo articolo registrato.",
       "REQUEST_CONFLICT": "Impossibile completare l’importazione. Nessun nuovo articolo registrato.",
       "CURRENCY_MISMATCH": "Le condizioni sono cambiate. Visualizza nuovamente l’anteprima.",
-      "CUSTODY_REQUIRED": "Confermo che gli articoli si trovano in negozio."
+      "CUSTODY_REQUIRED": "Confermo che gli articoli si trovano in negozio.",
+      "DESCRIPTION_REQUIRED": "Inserisci una descrizione.",
+      "NOTE_CHANGED": "I dati sono cambiati o manca l’accesso. Ricarica la pagina."
     },
     "fromFile": "Da file",
     "fromPos": "Dal POS"
@@ -4614,7 +4665,8 @@
     "categoryExists": "Esiste già una categoria con questo nome.",
     "translations": "Traduzioni (facoltative)",
     "languages": "Lingue",
-    "noCategories": "Nessuna categoria presente."
+    "noCategories": "Nessuna categoria presente.",
+    "inheritDefaults": "Usa i campi predefiniti del negozio"
   },
   "settingsHelp": {
     "label": "Aiuto",
@@ -4756,6 +4808,7 @@
     "previousCategory": "Testo precedente della categoria: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Registrati come venditore presso {store}",
     "joinLogin": "Vuoi vendere tramite il negozio? Crea un account personale oppure accedi se ne hai già uno. Poi tornerai qui per leggere le condizioni del negozio e inviare la tua richiesta.",
     "reviewTerms": "L'accordo accettato dal venditore",
     "title": "Registrazione venditori",
@@ -5038,5 +5091,149 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Scansiona / scrivi"
+  "scanFocus": "Scansiona / scrivi",
+  "itemCollection": {
+    "title": "Ritiro da parte del venditore",
+    "description": "La fine del periodo per la restituzione non conferma il ritiro. Registra quanto è stato verificato.",
+    "collected": "Ritirato",
+    "notCollected": "Non ritirato",
+    "unrecorded": "Stato del ritiro non registrato",
+    "record": "Registra stato del ritiro",
+    "status": "Stato del ritiro",
+    "choose": "Scegli stato",
+    "date": "Data della verifica",
+    "note": "Nota (facoltativa)",
+    "save": "Salva stato del ritiro",
+    "saved": "Stato del ritiro salvato"
+  },
+  "itemPeriod": {
+    "title": "Modifica chiusura",
+    "description": "Rimetti in vendita l’articolo o correggi il motivo della chiusura. Gli eventi precedenti vengono conservati.",
+    "open": "Mostra modifica",
+    "operation": "Modifica",
+    "reopen": "Rimetti in vendita",
+    "correct": "Correggi motivo della chiusura",
+    "saleEndsOn": "In vendita fino al giorno incluso",
+    "noFee": "La riapertura non genera costi né un nuovo periodo di addebito.",
+    "endAction": "Nuovo motivo della chiusura",
+    "choose": "Scegli motivo della chiusura",
+    "reason": "Motivo",
+    "confirm": "Ho controllato l’articolo e desidero salvare la modifica.",
+    "save": "Salva modifica",
+    "saved": "Modifica salvata"
+  },
+  "itemLifecycleBatch": {
+    "title": "Modifica periodi di vendita",
+    "hint": "Controlla fino a 50 articoli selezionati. Gli articoli non modificabili vengono saltati con una motivazione.",
+    "preview": "Anteprima",
+    "apply": "Conferma modifiche",
+    "ready": "Modifica possibile",
+    "applied": "Modificato",
+    "skipped": "Saltato",
+    "back": "Modifica selezione",
+    "results": "Risultati",
+    "markdown": "Applica il prossimo ribasso previsto",
+    "reasons": {
+      "missing": "Articolo non trovato",
+      "sold": "Articolo venduto",
+      "ended": "Vendita dell’articolo conclusa",
+      "markdown_not_due": "Nessun ribasso previsto al momento",
+      "collection_not_due": "Il termine di ritiro non è scaduto",
+      "changed": "Articolo modificato dopo l’anteprima"
+    },
+    "previewFailed": "Impossibile caricare l’anteprima. Controlla i campi e riprova."
+  },
+  "periodNotices": {
+    "setting": "Messaggi automatici sui periodi di vendita",
+    "hint": "Avvisa il venditore sette giorni prima della fine del periodo di vendita e alla sua conclusione. Gli eventi passati non vengono inviati retroattivamente."
+  },
+  "sellerAccess": {
+    "choosePassword": "Scegli una nuova password",
+    "confirmEmail": "Conferma il tuo indirizzo email",
+    "confirmHint": "Apri il link di conferma nella tua email. Se non trovi il messaggio, puoi inviare un nuovo link qui.",
+    "passwordHint": "Scegli una nuova password per completare il ripristino e continuare.",
+    "switchView": "Scegli la vista",
+    "store": "Negozio",
+    "seller": "Venditore",
+    "stores": "I miei negozi",
+    "rateLimited": "Troppi tentativi in poco tempo. Attendi un momento e riprova. Controlla anche se l’email è già arrivata."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Portale venditore",
+    "details": "I miei dati",
+    "agreement": "Accordo",
+    "invoices": "Autofatture",
+    "account": "Impostazioni account",
+    "noAgreement": "Il negozio non ha ancora pubblicato un accordo."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Le condizioni in breve",
+    "currentSettings": "Qui sono riportate le impostazioni attuali del negozio. Gli articoli mantengono le condizioni salvate per loro. Leggi l’accordo completo qui sotto.",
+    "commission": "Commissione del negozio: {rate} % {basis}.",
+    "days": "Periodo di vendita: {days} giorni.",
+    "months": "Periodo di vendita: {months} mesi di calendario dalla consegna fisica.",
+    "collection": "Ritira gli articoli invenduti entro {days} giorni dalla fine del periodo di vendita.",
+    "return": "Dopo il periodo di vendita: gli articoli invenduti vengono restituiti.",
+    "charity": "Dopo il periodo di vendita: gli articoli invenduti vengono donati in beneficenza.",
+    "fullText": "Leggi l’accordo completo",
+    "needsApproval": "Approvazione necessaria"
+  },
+  "registrationApprovalEmail": {
+    "subject": "La tua registrazione presso {store} è stata approvata",
+    "body": "Ciao {seller}!\n\n{store} ha approvato la tua registrazione. Ora puoi accedere al portale venditori con lo stesso account usato per registrarti:\n{url}\n\nNel portale puoi seguire i tuoi articoli e i pagamenti."
+  },
+  "returnNavigation": {
+    "back": "Indietro"
+  },
+  "labelFields": {
+    "title": "Campi delle etichette",
+    "hint": "Scegli fino a quattro attributi in ordine di stampa. Vale per le etichette Zebra, del browser e dei fogli PDF. I valori mancanti vengono saltati. Prezzo e codice a barre restano sempre.",
+    "custom": "Usa gli stessi campi in tutto il negozio",
+    "default": "Viene usato l’ordine attuale dei campi del tipo di articolo.",
+    "field": "Campo {number}",
+    "none": "Nessun campo",
+    "save": "Salva campi etichette",
+    "saved": "Campi delle etichette salvati."
+  },
+  "priceEdit": {
+    "title": "Modifica prezzo",
+    "reason": "Motivo (facoltativo)",
+    "none": "Nessun motivo",
+    "store": "Decisione del negozio",
+    "sale": "Saldi",
+    "defect": "Difetto",
+    "other": "Altro",
+    "custom": "Motivo personalizzato",
+    "saved": "Il prezzo è stato salvato."
+  },
+  "saleSummary": {
+    "title": "Riepilogo della vendita",
+    "download": "Scarica riepilogo della vendita (PDF)",
+    "saleDate": "Data di vendita",
+    "reference": "Riferimento della vendita",
+    "notice": "Riepilogo dei dati registrati in Komisio. Lo scontrino viene emesso dal sistema di cassa.",
+    "reversed": "La vendita è stata stornata",
+    "returned": "Reso registrato",
+    "originalTotal": "Totale della vendita originale",
+    "returnTotal": "Totale dei resi registrati",
+    "currentDetails": "Le descrizioni del negozio e degli articoli riflettono i dati attuali. Gli importi provengono dalla vendita registrata e dagli eventuali resi.",
+    "generatedAt": "Generato"
+  },
+  "registration": {
+    "title": "Registrazione articoli",
+    "hint": "I campi predefiniti si applicano ai tipi che ereditano le impostazioni del negozio.",
+    "descriptionRequired": "Richiedi una descrizione alla registrazione",
+    "template": "Titolo quando manca la descrizione",
+    "templateHint": "Usa questi segnaposto. I valori mancanti vengono omessi; un titolo vuoto viene sostituito dal riferimento articolo.",
+    "fields": "Campi predefiniti del negozio",
+    "inherit": "Usa i campi predefiniti del negozio",
+    "note": "Nota interna",
+    "noteHint": "Solo per il personale. Non viene mostrata al venditore né inclusa nelle etichette, nei riepiloghi di vendita o nei dati del POS.",
+    "save": "Salva",
+    "retry": "Riprova",
+    "saved": "Salvato.",
+    "invalid": "Controlla i campi e i segnaposto del titolo.",
+    "changed": "I dati sono cambiati o manca l’accesso. Ricarica la pagina.",
+    "uncertain": "Impossibile confermare la risposta. Riprova con gli stessi dati."
+  }
 }

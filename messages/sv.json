@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "Fotot är för stort (högst 3 MB).",
       "INVALID_IMAGE": "Filen är inte en giltig JPEG- eller PNG-bild.",
       "REQUEST_FAILED": "Förfrågan misslyckades. Försök igen.",
-      "BAG_COMPLETED": "Inlämningen är färdigbehandlad. Återöppna den för att fortsätta."
+      "BAG_COMPLETED": "Inlämningen är färdigbehandlad. Återöppna den för att fortsätta.",
+      "DESCRIPTION_REQUIRED": "Ange en beskrivning."
     },
     "addPhoto": "Ta eller välj en bild",
     "sellerSearchHint": "Namn, e-post eller telefon",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Välj fält",
     "assortment": "Sortimentsgrupp",
     "noAssortment": "Utan sortimentsgrupp",
-    "noCategory": "Ingen kategori"
+    "noCategory": "Ingen kategori",
+    "internalNote": "Intern anteckning",
+    "internalNoteHint": "Endast för personal. Visas inte för säljaren och följer inte med till etiketter, försäljningsunderlag eller kassasystem."
   },
   "intake": {
     "quickLink": "Snabb mottagning: en skärm per plagg",
@@ -694,7 +697,12 @@
     "zettle.line_resolved": "PayPal POS · Kvittorad · Manuell lösning",
     "zettle.page_received": "PayPal POS · Kvittosida · Mottagning",
     "zettle.pull_enabled": "PayPal POS · Kvittohämtning · Aktivering",
-    "zettle.window_abandoned": "PayPal POS · Synkperiod · Återkallelse"
+    "zettle.window_abandoned": "PayPal POS · Synkperiod · Återkallelse",
+    "item.collection_recorded": "Hämtstatus registrerad",
+    "item.period_reopened": "Säljperiod återöppnad",
+    "item.period_end_corrected": "Avslutsorsak rättad",
+    "item.lifecycle_batch": "Massändring av säljperioder",
+    "label_fields.set": "Etikettfält · Sparade"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -1265,7 +1273,8 @@
     "communicationLanguage": "Standardspråk för meddelanden",
     "communicationLanguageHint": "Används för säljarmejl och som förval för personalinbjudningar när butiksprofilen saknar språk. Säljarens eget språk går först, därefter butiksprofilens språk. Språket i din egen meny påverkar inte mejlen.",
     "vatModeConsignmentBusiness": "Moms för momsregistrerade företag",
-    "consignment_business": "Moms på hela försäljningspriset"
+    "consignment_business": "Moms på hela försäljningspriset",
+    "dayCollectionHelp": "Valfritt i dagläge. Gäller nya kommissionsvaror som ska återlämnas till säljaren. Tomt fält betyder ingen fast hämtningsfrist. Fristen räknas från säljperiodens slut; ägandet ändras inte automatiskt."
   },
   "sellerTerms": {
     "title": "Säljarvillkor",
@@ -1393,10 +1402,13 @@
       "price_set": "Pris satt",
       "provenance": "Ursprung dokumenterat",
       "sold": "Såld",
-      "returned": "Returnerad",
+      "returned": "Kundretur",
       "markdown_applied": "Prissänkning genomförd",
       "period_extended": "Säljperiod förlängd",
-      "period_ended": "Säljperiod avslutad"
+      "period_ended": "Säljperiod avslutad",
+      "collection_recorded": "Hämtstatus registrerad",
+      "period_reopened": "Säljperiod återöppnad",
+      "period_end_corrected": "Avslutsorsak rättad"
     },
     "clearFilters": "Rensa filter",
     "showingRange": "Visar {from}–{to} av {total} varor",
@@ -1411,7 +1423,26 @@
     "markdownWaiting": "Prissänkning väntar",
     "allOwnerships": "Alla varor",
     "ownership": "Ägande",
-    "createPurchasedItem": "Skapa vara"
+    "createPurchasedItem": "Skapa vara",
+    "eventDetails": {
+      "action": "Åtgärd",
+      "reason": "Orsak",
+      "days": "Förlängning (dagar)",
+      "priceChange": "Prisändring",
+      "price": "Pris",
+      "actions": {
+        "charity": "Till välgörenhet",
+        "return": "Åter till säljaren",
+        "recycle": "Återvinning",
+        "transfer": "Flytt till annan butik"
+      },
+      "collection": "Hämtstatus",
+      "collected": "Hämtad",
+      "notCollected": "Inte hämtad",
+      "observedOn": "Kontrolldatum",
+      "saleEndsOn": "Säljbar till och med",
+      "previousAction": "Tidigare avslutsorsak"
+    }
   },
   "sales": {
     "title": "Försäljning",
@@ -1950,7 +1981,9 @@
       "item_sold": "Vara såld",
       "payout_approved": "Utbetalning godkänd",
       "payout_paid": "Utbetalning gjord",
-      "statement_issued": "Avräkning utfärdad"
+      "statement_issued": "Avräkning utfärdad",
+      "period_ending": "Säljperioden går snart ut",
+      "period_ended": "Säljperioden har avslutats"
     },
     "outcomes": {
       "queued": "köad",
@@ -2021,6 +2054,14 @@
         "bodyNumber": "Kreditnota för självfaktura #{number}. Självfakturan avser säljarens tillgodo för varorna. Utbetalningar och saldo redovisas separat i avräkningen.",
         "amount": "Utgående saldo: {amount}.",
         "note": "Du kan öppna underlaget och ladda ner PDF i säljarportalen."
+      },
+      "period_ending": {
+        "subject": "{store}: säljperioden går snart ut",
+        "body": "Hej {seller},\n\nSäljperioden för {item} slutar den {date}. Kontakta {store} om du har frågor om nästa steg."
+      },
+      "period_ended": {
+        "subject": "{store}: säljperioden har avslutats",
+        "body": "Hej {seller},\n\nSäljperioden för {item} har avslutats. Kontakta {store} för besked om varan."
       }
     },
     "invitation": {
@@ -2470,7 +2511,7 @@
     "noItems": "Inga varor ännu.",
     "item": "Vara",
     "price": "Pris",
-    "itemDate": "Såld / till salu till",
+    "itemDate": "Datum",
     "wasPrice": "var",
     "until": "till",
     "then": "sedan",
@@ -2577,7 +2618,15 @@
       "sold": "Inga sålda varor ännu.",
       "ended": "Inga avslutade varor ännu.",
       "all": "Inga varor ännu."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "Till försäljning",
+      "sold": "Sålda",
+      "ended": "Avslutade"
+    },
+    "forSaleUntil": "Till försäljning till",
+    "soldOn": "Såld",
+    "endedOn": "Avslutad"
   },
   "plans": {
     "heading": "Plan",
@@ -3088,7 +3137,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Kvittot behöver utredas i PayPal POS. Belopp eller rabatter som saknar stöd gissas aldrig.",
       "ITEM_NOT_FOUND": "Varan hittades inte i denna butik. Kontrollera dess fullständiga ID.",
       "ITEM_ALREADY_SOLD": "En vara är redan såld. Kontrollera kvittot och matchningen.",
-      "VAT_MODE_NOT_SET": "Välj butikens momsläge i inställningarna innan försäljning registreras.",
+      "VAT_MODE_NOT_SET": "Välj momsläge för varans ägartyp i butiksinställningarna innan varan exporteras eller försäljning registreras.",
       "INVALID_INPUT": "Kontrollera att varje rad pekar på en egen vara med ett giltigt ID.",
       "REQUEST_CONFLICT": "Begäran stämmer inte med det sparade försöket. Ladda om och kontrollera resultatet.",
       "FORBIDDEN": "Din roll eller inloggning tillåter inte denna åtgärd.",
@@ -4047,7 +4096,7 @@
     "review": "Läs och acceptera avtalet",
     "accepted": "Avtalet är accepterat",
     "recorded": "Butiken har registrerat ditt avtal",
-    "accept": "Jag accepterar avtalet",
+    "accept": "Godkänn avtal",
     "failed": "Svaret kunde inte bekräftas. Försök igen.",
     "changed": "Avtalet har ändrats. Läs den nya versionen innan du accepterar.",
     "acceptedBy": "Accepterat av",
@@ -4226,7 +4275,9 @@
       "INVALID_INPUT": "Importen kunde inte genomföras. Inga nya varor registrerades.",
       "REQUEST_CONFLICT": "Importen kunde inte genomföras. Inga nya varor registrerades.",
       "CURRENCY_MISMATCH": "Villkoren har ändrats. Förhandsgranska filen igen.",
-      "CUSTODY_REQUIRED": "Jag bekräftar att varorna finns i butiken."
+      "CUSTODY_REQUIRED": "Jag bekräftar att varorna finns i butiken.",
+      "DESCRIPTION_REQUIRED": "Ange en beskrivning.",
+      "NOTE_CHANGED": "Uppgifterna har ändrats eller åtkomst saknas. Ladda om sidan innan du fortsätter."
     },
     "fromFile": "Från fil",
     "fromPos": "Från kassa"
@@ -4614,7 +4665,8 @@
     "categoryExists": "Det finns redan en kategori med det namnet.",
     "translations": "Översättningar (valfritt)",
     "languages": "Språk",
-    "noCategories": "Inga kategorier ännu."
+    "noCategories": "Inga kategorier ännu.",
+    "inheritDefaults": "Använd butikens standardfält"
   },
   "settingsHelp": {
     "label": "Hjälp",
@@ -4756,6 +4808,7 @@
     "previousCategory": "Tidigare kategoritext: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Registrera dig som säljare hos {store}",
     "joinLogin": "Vill du sälja genom butiken? Skapa ett personligt konto eller logga in om du redan har ett. Därefter kommer du tillbaka hit för att läsa butikens villkor och skicka din ansökan.",
     "reviewTerms": "Avtalet säljaren godkände",
     "title": "Säljarregistrering",
@@ -5038,5 +5091,149 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Skanna / skriv"
+  "scanFocus": "Skanna / skriv",
+  "itemCollection": {
+    "title": "Hämtning av vara",
+    "description": "Avslut för återlämning innebär inte att varan har hämtats. Registrera vad som har kontrollerats.",
+    "collected": "Hämtad",
+    "notCollected": "Inte hämtad",
+    "unrecorded": "Hämtstatus inte registrerad",
+    "record": "Registrera hämtstatus",
+    "status": "Hämtstatus",
+    "choose": "Välj status",
+    "date": "Kontrolldatum",
+    "note": "Anteckning (valfri)",
+    "save": "Spara hämtstatus",
+    "saved": "Hämtstatus sparad"
+  },
+  "itemPeriod": {
+    "title": "Ändra avslut",
+    "description": "Återöppna varan för försäljning eller rätta avslutsorsaken. Tidigare händelser behålls.",
+    "open": "Visa ändring",
+    "operation": "Ändring",
+    "reopen": "Återöppna för försäljning",
+    "correct": "Rätta avslutsorsak",
+    "saleEndsOn": "Säljbar till och med",
+    "noFee": "Återöppningen skapar ingen avgift eller ny avgiftsperiod.",
+    "endAction": "Ny avslutsorsak",
+    "choose": "Välj avslutsorsak",
+    "reason": "Anledning",
+    "confirm": "Jag har kontrollerat varan och vill spara ändringen.",
+    "save": "Spara ändring",
+    "saved": "Ändringen sparad"
+  },
+  "itemLifecycleBatch": {
+    "title": "Ändra säljperioder",
+    "hint": "Granska högst 50 markerade varor. Varor som inte kan ändras hoppas över med en förklaring.",
+    "preview": "Förhandsgranska",
+    "apply": "Bekräfta ändringarna",
+    "ready": "Kan ändras",
+    "applied": "Ändrad",
+    "skipped": "Överhoppad",
+    "back": "Ändra val",
+    "results": "Resultat",
+    "markdown": "Tillämpa nästa förfallna prissänkning",
+    "reasons": {
+      "missing": "Varan hittades inte",
+      "sold": "Varan är såld",
+      "ended": "Varan är avslutad",
+      "markdown_not_due": "Ingen prissänkning är dags",
+      "collection_not_due": "Sista hämtdagen har inte passerat",
+      "changed": "Varan har ändrats efter förhandsvisningen"
+    },
+    "previewFailed": "Kunde inte hämta förhandsvisningen. Kontrollera fälten och försök igen."
+  },
+  "periodNotices": {
+    "setting": "Automatiska meddelanden om säljperioder",
+    "hint": "Meddela säljaren sju dagar före periodslut och när perioden avslutas. Tidigare händelser skickas inte i efterhand."
+  },
+  "sellerAccess": {
+    "choosePassword": "Välj ett nytt lösenord",
+    "confirmEmail": "Bekräfta din e-postadress",
+    "confirmHint": "Öppna bekräftelselänken i ditt mail. Om du inte hittar mailet kan du skicka en ny länk här.",
+    "passwordHint": "Välj ett nytt lösenord för att slutföra återställningen och fortsätta.",
+    "switchView": "Välj vy",
+    "store": "Butik",
+    "seller": "Säljare",
+    "stores": "Mina butiker",
+    "rateLimited": "För många försök på kort tid. Vänta en stund och försök igen. Kontrollera även om mailet redan har kommit."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Säljarportal",
+    "details": "Mina uppgifter",
+    "agreement": "Avtal",
+    "invoices": "Självfakturor",
+    "account": "Kontoinställningar",
+    "noAgreement": "Butiken har inte publicerat något avtal ännu."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Kort om villkoren",
+    "currentSettings": "Butikens nuvarande inställningar visas här. Varor behåller de villkor som sparats för dem. Läs hela avtalet nedan.",
+    "commission": "Butikens provision: {rate} % {basis}.",
+    "days": "Säljperiod: {days} dagar.",
+    "months": "Säljperiod: {months} kalendermånader från fysisk inlämning.",
+    "collection": "Hämta osålda varor inom {days} dagar efter säljperiodens slut.",
+    "return": "Efter säljperioden: osålda varor återlämnas.",
+    "charity": "Efter säljperioden: osålda varor skänks till välgörenhet.",
+    "fullText": "Läs hela avtalet",
+    "needsApproval": "Godkännande behövs"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Din registrering hos {store} är godkänd",
+    "body": "Hej {seller}!\n\n{store} har godkänt din registrering. Du kan nu logga in i säljarportalen med kontot du använde när du registrerade dig:\n{url}\n\nDär kan du följa dina varor och utbetalningar."
+  },
+  "returnNavigation": {
+    "back": "Tillbaka"
+  },
+  "labelFields": {
+    "title": "Fält på varuetiketter",
+    "hint": "Välj upp till fyra attribut i önskad ordning. Gäller varuetiketter i Zebra, webbläsaren och PDF-ark. Saknade värden hoppas över. Pris och streckkod finns alltid kvar.",
+    "custom": "Använd samma fält för hela butiken",
+    "default": "Varutypens befintliga fältordning används.",
+    "field": "Fält {number}",
+    "none": "Inget fält",
+    "save": "Spara etikettfält",
+    "saved": "Etikettfälten har sparats."
+  },
+  "priceEdit": {
+    "title": "Ändra pris",
+    "reason": "Motivering (valfri)",
+    "none": "Ingen motivering",
+    "store": "Butiksbeslut",
+    "sale": "Rea",
+    "defect": "Defekt",
+    "other": "Annat",
+    "custom": "Egen motivering",
+    "saved": "Priset har sparats."
+  },
+  "saleSummary": {
+    "title": "Försäljningssammanställning",
+    "download": "Ladda ner försäljningssammanställning (PDF)",
+    "saleDate": "Försäljningsdatum",
+    "reference": "Försäljningsreferens",
+    "notice": "Sammanställning av registrerade uppgifter i Komisio. Kassakvitto lämnas av kassan.",
+    "reversed": "Försäljningen är återförd",
+    "returned": "Registrerad retur",
+    "originalTotal": "Ursprunglig försäljning",
+    "returnTotal": "Registrerade returer totalt",
+    "currentDetails": "Butiks- och varubeskrivningar visas enligt nuvarande uppgifter. Beloppen kommer från den registrerade försäljningen och eventuella returer.",
+    "generatedAt": "Sammanställd"
+  },
+  "registration": {
+    "title": "Varuregistrering",
+    "hint": "Standardfälten gäller för varutyper som ärver butikens inställningar.",
+    "descriptionRequired": "Kräv beskrivning vid registrering",
+    "template": "Titel när beskrivning saknas",
+    "templateHint": "Använd dessa platshållare. Saknade värden utelämnas; om titeln blir tom används varureferensen.",
+    "fields": "Butikens standardfält",
+    "inherit": "Använd butikens standardfält",
+    "note": "Intern anteckning",
+    "noteHint": "Endast för personal. Visas inte för säljaren och följer inte med till etiketter, försäljningsunderlag eller kassasystem.",
+    "save": "Spara",
+    "retry": "Försök igen",
+    "saved": "Sparat.",
+    "invalid": "Kontrollera fälten och titelns platshållare.",
+    "changed": "Uppgifterna har ändrats eller åtkomst saknas. Ladda om sidan innan du fortsätter.",
+    "uncertain": "Svaret kunde inte bekräftas. Försök igen med samma uppgifter."
+  }
 }

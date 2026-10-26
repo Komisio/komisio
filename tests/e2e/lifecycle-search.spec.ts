@@ -74,7 +74,9 @@ test('lifecycle search preserves paging and batch scope, and item shortcuts open
     await expect(batch).toContainText(d.lifecycle.searchScopeHint)
     await batch.locator('summary').click()
     await page.getByRole('link', { name: d.items.open, exact: false }).click()
-    await expect(page).toHaveURL('/intake/items/' + target)
+    await expect
+      .poll(() => new URL(page.url()).pathname)
+      .toBe('/intake/items/' + target)
     await page
       .getByRole('link', { name: d.items.manageSalePeriod, exact: true })
       .click()

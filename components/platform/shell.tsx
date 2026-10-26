@@ -1,6 +1,8 @@
 'use client'
+import { ReturnScroll } from './return-scroll'
 import { useBusyState } from './work-activity'
 import { can } from '@/lib/platform/permissions'
+import { pageWidth } from '@/lib/platform/page-width'
 import { usePathname } from 'next/navigation'
 import { useRouter } from '@/components/platform/use-working-router'
 import {
@@ -16,6 +18,7 @@ import {
 } from '@/lib/platform/navigation'
 import { Brand } from './brand'
 import { Sidebar } from './sidebar'
+import { RoleSwitch } from './role-switch'
 import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
 import { LanguagePicker } from './language-picker'
 import type { Tenant } from '@/lib/platform/types'
@@ -38,6 +41,8 @@ export function Shell({
   intakeEnabled = false,
   host = false,
   sidebarCollapsed = false,
+  sellerAccess = false,
+  pendingRegistrations,
 }: {
   children: React.ReactNode
   d: Dictionary
@@ -49,6 +54,8 @@ export function Shell({
   intakeEnabled?: boolean
   host?: boolean
   sidebarCollapsed?: boolean
+  sellerAccess?: boolean
+  pendingRegistrations?: number
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const pathname = usePathname()
@@ -57,6 +64,7 @@ export function Shell({
   const [signingOut, setSigningOut] = useBusyState(false)
   const confirmNavigation = useConfirmNavigation()
   const groups = buildNavigation(d, {
+    pendingRegistrations,
     intakeEnabled,
     host,
     audit: can(active.role, 'audit.read'),
@@ -75,7 +83,13 @@ export function Shell({
       // Safari can focus the enclosing panel while a pointer is still down.
       // Scrolling that container moves the pressed control before click fires.
       target.matches('[role="tabpanel"]') ||
-      (target instanceof HTMLAnchorElement && !target.matches(':focus-visible'))
+      // Pointer focus must not move an action before its click/toggle completes.
+      // Text editors still need caret/keyboard clearance; keyboard focus reveals
+      // every control, including buttons, checkboxes and links.
+      (!target.matches(':focus-visible') &&
+        !target.matches(
+          'textarea,input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):not([type="reset"])',
+        ))
     )
       return
     const focusedUrl = window.location.href
@@ -138,6 +152,7 @@ export function Shell({
         {d.skipToContent}
       </a>
       <Sidebar
+        pendingRegistrations={pendingRegistrations}
         d={d}
         tenants={tenants}
         active={active}
@@ -180,6 +195,7 @@ export function Shell({
           </form>
         )}
         <div className="topbar-tools">
+          {sellerAccess && <RoleSwitch current="store" d={d} />}
           {intakeEnabled && (
             <Suspense
               fallback={
@@ -201,8 +217,9 @@ export function Shell({
         </div>
         <div className="mobile-only">{picker(true)}</div>
       </header>
+      <ReturnScroll tenantId={active.id} />
       <main
-        className="main"
+        className={`main main--${pageWidth(pathname)}`}
         id="main-content"
         tabIndex={-1}
         onFocusCapture={revealFocusedControl}

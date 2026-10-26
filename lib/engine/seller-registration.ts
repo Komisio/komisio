@@ -3,6 +3,24 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Locale } from '@/lib/i18n'
 
 export const registrationToken = z.string().regex(/^[a-f0-9]{64}$/)
+export function registrationTokenFromNext(next: unknown): string | null {
+  if (typeof next !== 'string' || !/^\/join\/[a-f0-9]{64}$/.test(next))
+    return null
+  return next.slice('/join/'.length)
+}
+
+export async function readPublicRegistrationStore(
+  client: SupabaseClient,
+  token: string,
+) {
+  if (!registrationToken.safeParse(token).success) return null
+  const result = await client.rpc('public_seller_registration_store', {
+    p_token: token,
+  })
+  if (result.error) throw new Error('REQUEST_FAILED')
+  return z.string().nullable().parse(result.data)
+}
+
 export const registrationCommand = z.discriminatedUnion('action', [
   z.strictObject({
     action: z.literal('mailSettings'),
@@ -145,9 +163,20 @@ export async function readStoreRegistrations(
   if (r.error) throw new Error('REQUEST_FAILED')
   return storeRegistrations.parse(r.data)
 }
+export async function readPendingRegistrationCount(
+  client: SupabaseClient,
+  tenantId: string,
+) {
+  const r = await client.rpc('pending_seller_registration_count', {
+    p_tenant: z.uuid().parse(tenantId),
+  })
+  if (r.error) throw new Error('REQUEST_FAILED')
+  return z.number().int().nonnegative().parse(r.data)
+}
 export async function executeRegistration(
   client: SupabaseClient,
   input: RegistrationCommand,
+  applicationLocale?: Locale,
 ) {
   const c = registrationCommand.parse(input)
   if (c.action === 'mailSettings')
@@ -165,7 +194,7 @@ export async function executeRegistration(
       p_action: c.change,
     })
   if (c.action === 'apply')
-    return client.rpc('submit_seller_registration', {
+    return client.rpc('submit_seller_registration_in_language', {
       p_token: c.token,
       p_id: c.requestId,
       p_name: c.name,
@@ -174,6 +203,7 @@ export async function executeRegistration(
       p_translation: c.translationId,
       p_accepted: c.accepted,
       p_mail_setting: c.mailSettingId,
+      p_locale: applicationLocale ?? null,
     })
   return client.rpc('review_seller_registration', {
     p_tenant: c.tenantId,

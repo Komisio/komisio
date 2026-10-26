@@ -7,6 +7,7 @@ import { dictionary } from '@/lib/i18n'
 import { buildNavigation } from '@/lib/platform/navigation'
 import { can } from '@/lib/platform/permissions'
 import { isPlatformHost } from '@/lib/engine/plans'
+import { readPendingRegistrationCount } from '@/lib/engine/seller-registration'
 import { NavIcon } from '@/components/platform/nav-icon'
 
 /** Every page of the store in its groups; the mobile bar's "more". */
@@ -14,6 +15,11 @@ export default async function MenuPage() {
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
   const groups = buildNavigation(d, {
+    pendingRegistrations:
+      process.env.KOMISIO_INTAKE_ENABLED === 'true' &&
+      ctx.active!.role !== 'readonly'
+        ? await readPendingRegistrationCount(ctx.client, ctx.active!.id)
+        : undefined,
     audit: can(ctx.active?.role ?? null, 'audit.read'),
     intakeEnabled: process.env.KOMISIO_INTAKE_ENABLED === 'true',
     host: await isPlatformHost(ctx.client),
@@ -33,9 +39,21 @@ export default async function MenuPage() {
             {group.label && <h2>{group.label}</h2>}
             <nav className={styles.links} aria-label={group.label || d.home}>
               {group.links.map((link) => (
-                <Link key={link.path} href={link.path} className={styles.link}>
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  className={styles.link}
+                  aria-label={
+                    link.badge ? `${link.label} (${link.badge})` : link.label
+                  }
+                >
                   <NavIcon name={link.icon} size={17} strokeWidth={1.7} />
                   <span>{link.label}</span>
+                  {!!link.badge && (
+                    <b className="nav-count" aria-hidden="true">
+                      {link.badge > 99 ? '99+' : link.badge}
+                    </b>
+                  )}
                   <ChevronRight size={16} aria-hidden="true" />
                 </Link>
               ))}

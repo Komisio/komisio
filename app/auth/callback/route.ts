@@ -10,7 +10,10 @@ export async function GET(request: Request) {
     const { error } = await client.auth.exchangeCodeForSession(code)
     if (!error)
       return NextResponse.redirect(
-        new URL(safeNext(url.searchParams.get('next')), base),
+        new URL(
+          `/auth/landing?next=${encodeURIComponent(safeNext(url.searchParams.get('next')))}`,
+          base,
+        ),
       )
   }
   const login = new URL('/login?error=callback', base)

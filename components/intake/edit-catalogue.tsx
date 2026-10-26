@@ -52,6 +52,9 @@ export function EditCatalogue(
   const [suggestedCategory, setSuggestedCategory] = useState(
     props.kind === 'type' ? (props.record.suggested_category_id ?? '') : '',
   )
+  const [inherit, setInherit] = useState(
+    props.kind === 'type' && props.record.inherit_attributes === true,
+  )
   const [fields, setFields] = useState(
     props.kind === 'type'
       ? props.record.attributes.filter((a) => a.slug !== 'category')
@@ -100,6 +103,7 @@ export function EditCatalogue(
                 suggestedCategoryId: suggestedCategory || null,
                 active,
                 attributes: fields,
+                inheritAttributes: inherit,
               },
             }),
     )
@@ -237,7 +241,15 @@ export function EditCatalogue(
                   </small>
                 )}
             </div>
-            <fieldset>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={inherit}
+                onChange={(e) => setInherit(e.target.checked)}
+              />
+              {d.vocabularySettings.inheritDefaults}
+            </label>
+            <fieldset disabled={inherit}>
               <legend>{d.vocabularySettings.fields}</legend>
               <div className="vocabulary-field-choices">
                 {(props.definitions ?? [])

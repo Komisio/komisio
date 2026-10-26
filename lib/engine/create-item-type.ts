@@ -7,6 +7,7 @@ export const createItemTypeInput = z.object({
   requestId: z.uuid(),
   name: z.string().trim().min(1).max(120),
   locale: z.enum(['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']),
+  inheritAttributes: z.boolean().optional(),
   attributes: z
     .array(
       z.object({
@@ -24,13 +25,16 @@ export async function createItemType(
   input: z.input<typeof createItemTypeInput>,
 ) {
   const c = createItemTypeInput.parse(input)
-  const result = await client.rpc('create_item_type', {
-    p_tenant: c.tenantId,
-    p_id: c.requestId,
-    p_name: c.name,
-    p_locale: c.locale,
-    p_attributes: c.attributes,
-  })
+  const result = await client.rpc(
+    c.inheritAttributes ? 'create_inheriting_item_type' : 'create_item_type',
+    {
+      p_tenant: c.tenantId,
+      p_id: c.requestId,
+      p_name: c.name,
+      p_locale: c.locale,
+      ...(c.inheritAttributes ? {} : { p_attributes: c.attributes }),
+    },
+  )
   if (result.error) {
     const code = [
       'FORBIDDEN',

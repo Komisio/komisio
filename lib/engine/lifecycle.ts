@@ -66,12 +66,13 @@ export const transferItemCommand = z.strictObject({
   toTenantId: z.uuid(),
   note: z.string().trim().max(500).default(''),
 })
-// Manual price set (P2 S20): a person's decision with a reason; the item stays on sale.
+// Human price decisions retain immutable actor/time history; the note is optional.
 export const setItemPriceCommand = z.strictObject({
   action: z.literal('setItemPrice'),
   ...ids,
   priceOre: z.number().int().min(1).max(99_999_999_999),
-  reason: z.string().trim().min(1).max(500),
+  expectedPriceOre: z.number().int().min(1).max(99_999_999_999).optional(),
+  reason: z.string().trim().max(500).default(''),
 })
 export const lifecycleStage = z.enum([
   'on_sale',

@@ -3,10 +3,14 @@ import { HelpSupportProvider } from '@/components/help/contact-support'
 import { HelpContentProvider } from '@/components/help/content-provider'
 import { helpCatalog } from '@/lib/help/content'
 import { supportConfig, supportVersion } from '@/lib/help/support'
-import { version } from '../../package.json'
+import packageInfo from '../../package.json'
 import { LoadingMessageProvider } from '@/components/platform/loading-message'
 import { NavigationWarningProvider } from '@/components/platform/navigation-warning'
-import { isSellerOnly, requirePlatform } from '@/lib/platform/context'
+import {
+  isSellerOnly,
+  hasSellerAccount,
+  requirePlatform,
+} from '@/lib/platform/context'
 import { dictionary, intlLocale } from '@/lib/i18n'
 import { Shell } from '@/components/platform/shell'
 import { Brand } from '@/components/platform/brand'
@@ -15,6 +19,7 @@ import { SignOut } from '@/components/platform/sign-out'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { PlanBanner } from '@/components/platform/plan-banner'
 import { isPlatformHost, readPlanStatus } from '@/lib/engine/plans'
+import { readPendingRegistrationCount } from '@/lib/engine/seller-registration'
 import {
   SIDEBAR_COOKIE,
   readSidebarCollapsed,
@@ -50,9 +55,14 @@ export default async function DashboardLayout({
     )
   }
   const d = dictionary(ctx.locale)
-  const [plan, host] = await Promise.all([
+  const [plan, host, sellerAccess, pendingRegistrations] = await Promise.all([
     readPlanStatus(ctx.client, ctx.active.id),
     isPlatformHost(ctx.client),
+    hasSellerAccount(ctx),
+    process.env.KOMISIO_INTAKE_ENABLED === 'true' &&
+    ctx.active.role !== 'readonly'
+      ? readPendingRegistrationCount(ctx.client, ctx.active.id)
+      : undefined,
   ])
   return (
     <LoadingMessageProvider message={d.loading}>
@@ -63,7 +73,10 @@ export default async function DashboardLayout({
             storeName: ctx.active.name,
             tenantId: ctx.active.id,
             locale: ctx.locale,
-            version: supportVersion(version, process.env.VERCEL_GIT_COMMIT_SHA),
+            version: supportVersion(
+              packageInfo.version,
+              process.env.VERCEL_GIT_COMMIT_SHA,
+            ),
           }}
         >
           <HelpContentProvider
@@ -77,6 +90,8 @@ export default async function DashboardLayout({
             }}
           >
             <Shell
+              pendingRegistrations={pendingRegistrations}
+              sellerAccess={sellerAccess}
               intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}
               host={host}
               d={d}

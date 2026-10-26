@@ -28,7 +28,7 @@ test('item back control restores filtered page and row, including refresh and a 
     await link.click()
     await expect(page).toHaveURL(destination.href)
     const back = page.getByRole('link', {
-      name: d.items.backToList,
+      name: d.returnNavigation.back,
       exact: true,
     })
     await expect(back).toBeVisible()
@@ -53,7 +53,7 @@ test('item back control restores filtered page and row, including refresh and a 
     const other = await page.context().newPage()
     await other.goto(destination.href)
     await other
-      .getByRole('link', { name: d.items.backToList, exact: true })
+      .getByRole('link', { name: d.returnNavigation.back, exact: true })
       .click()
     await expect(other).toHaveURL(new URL(returnTo, page.url()).href)
     await other.close()

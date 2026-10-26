@@ -8,6 +8,7 @@ const config: NextConfig = {
   outputFileTracingIncludes: {
     '/api/items/labels': ['./assets/fonts/*'],
     '/api/statements/pdf': ['./assets/fonts/*'],
+    '/api/sales/summary': ['./assets/fonts/*'],
     '/api/seller/statement/pdf': ['./assets/fonts/*'],
     '/api/agreements/pdf': ['./assets/fonts/*'],
     '/api/seller/agreement/pdf': ['./assets/fonts/*'],
@@ -45,6 +46,14 @@ const config: NextConfig = {
           { key: 'Cache-Control', value: 'private, no-store' },
         ],
       },
+      ...['/login', '/register'].map((source) => ({
+        source,
+        headers: [
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+          { key: 'Cache-Control', value: 'private, no-store' },
+        ],
+      })),
     ]
   },
 }

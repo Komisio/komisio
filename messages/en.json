@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "The photo is too large (3 MB at most).",
       "INVALID_IMAGE": "The file is not a valid JPEG or PNG image.",
       "REQUEST_FAILED": "The request failed. Retry.",
-      "BAG_COMPLETED": "This drop-off is completed. Reopen it to continue."
+      "BAG_COMPLETED": "This drop-off is completed. Reopen it to continue.",
+      "DESCRIPTION_REQUIRED": "Enter a description."
     },
     "addPhoto": "Take or choose a photo",
     "sellerSearchHint": "Name, email or phone",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Choose fields",
     "assortment": "Assortment group",
     "noAssortment": "No assortment group",
-    "noCategory": "No category"
+    "noCategory": "No category",
+    "internalNote": "Internal note",
+    "internalNoteHint": "Staff only. Not shown to sellers or included on labels, sales summaries or in POS data."
   },
   "intake": {
     "quickLink": "Quick reception: one screen per garment",
@@ -694,7 +697,12 @@
     "zettle.line_resolved": "PayPal POS · Receipt line · Manual resolution",
     "zettle.page_received": "PayPal POS · Receipt page · Receipt",
     "zettle.pull_enabled": "PayPal POS · Receipt retrieval · Activation",
-    "zettle.window_abandoned": "PayPal POS · Sync window · Revocation"
+    "zettle.window_abandoned": "PayPal POS · Sync window · Revocation",
+    "item.collection_recorded": "Collection status recorded",
+    "item.period_reopened": "Sale period reopened",
+    "item.period_end_corrected": "End action corrected",
+    "item.lifecycle_batch": "Bulk sale-period change",
+    "label_fields.set": "Label fields · Saved"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -1265,7 +1273,8 @@
     "communicationLanguage": "Default message language",
     "communicationLanguageHint": "Used for seller emails and the default staff invitation language when the store profile has no language. The seller’s preference takes priority, followed by the store profile language. Your own menu language does not affect emails.",
     "vatModeConsignmentBusiness": "VAT for VAT-registered businesses",
-    "consignment_business": "VAT on the whole sale price"
+    "consignment_business": "VAT on the whole sale price",
+    "dayCollectionHelp": "Optional for periods in days. Applies to new consignment items to be returned to the seller. Leave blank for no fixed collection deadline. The grace period starts at the end of the sale period; ownership does not change automatically."
   },
   "sellerTerms": {
     "title": "Seller terms",
@@ -1393,10 +1402,13 @@
       "price_set": "Price set",
       "provenance": "Provenance recorded",
       "sold": "Sold",
-      "returned": "Returned",
+      "returned": "Customer return",
       "markdown_applied": "Markdown applied",
       "period_extended": "Sale period extended",
-      "period_ended": "Sale period ended"
+      "period_ended": "Sale period ended",
+      "collection_recorded": "Collection status recorded",
+      "period_reopened": "Sale period reopened",
+      "period_end_corrected": "End action corrected"
     },
     "clearFilters": "Clear filters",
     "showingRange": "Showing {from}–{to} of {total} items",
@@ -1411,7 +1423,26 @@
     "markdownWaiting": "Markdown pending",
     "allOwnerships": "All items",
     "ownership": "Ownership",
-    "createPurchasedItem": "Create item"
+    "createPurchasedItem": "Create item",
+    "eventDetails": {
+      "action": "Action",
+      "reason": "Reason",
+      "days": "Extension (days)",
+      "priceChange": "Price change",
+      "price": "Price",
+      "actions": {
+        "charity": "To charity",
+        "return": "Return to seller",
+        "recycle": "Recycling",
+        "transfer": "Transfer to another store"
+      },
+      "collection": "Collection status",
+      "collected": "Collected",
+      "notCollected": "Not collected",
+      "observedOn": "Observation date",
+      "saleEndsOn": "For sale through",
+      "previousAction": "Previous end action"
+    }
   },
   "sales": {
     "title": "Sales",
@@ -1950,7 +1981,9 @@
       "item_sold": "Item sold",
       "payout_approved": "Payout approved",
       "payout_paid": "Payout paid",
-      "statement_issued": "Statement issued"
+      "statement_issued": "Statement issued",
+      "period_ending": "Sale period ending soon",
+      "period_ended": "Sale period ended"
     },
     "outcomes": {
       "queued": "queued",
@@ -2021,6 +2054,14 @@
         "bodyNumber": "Self-billing credit note #{number}. This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
         "amount": "Closing balance: {amount}.",
         "note": "You can open the document and download its PDF in the seller portal."
+      },
+      "period_ending": {
+        "subject": "{store}: sale period ending soon",
+        "body": "Hello {seller},\n\nThe sale period for {item} ends on {date}. Contact {store} if you have questions about the next steps."
+      },
+      "period_ended": {
+        "subject": "{store}: sale period ended",
+        "body": "Hello {seller},\n\nThe sale period for {item} has ended. Contact {store} for information about the item."
       }
     },
     "invitation": {
@@ -2488,7 +2529,7 @@
     "noItems": "No items yet.",
     "item": "Item",
     "price": "Price",
-    "itemDate": "Sold on / for sale until",
+    "itemDate": "Date",
     "wasPrice": "was",
     "until": "until",
     "then": "then",
@@ -2577,7 +2618,15 @@
       "sold": "No sold items yet.",
       "ended": "No ended items yet.",
       "all": "No items yet."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "For sale",
+      "sold": "Sold",
+      "ended": "Ended"
+    },
+    "forSaleUntil": "For sale until",
+    "soldOn": "Sold",
+    "endedOn": "Ended"
   },
   "plans": {
     "heading": "Plan",
@@ -3088,7 +3137,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "This receipt needs investigation in PayPal POS. Unsupported amounts or discounts are never guessed.",
       "ITEM_NOT_FOUND": "The item was not found in this store. Check its full ID.",
       "ITEM_ALREADY_SOLD": "An item has already been sold. Check the receipt and matching.",
-      "VAT_MODE_NOT_SET": "Choose the store VAT mode in settings before recording sales.",
+      "VAT_MODE_NOT_SET": "Choose the VAT mode for the item’s ownership type in store settings before exporting the item or recording a sale.",
       "INVALID_INPUT": "Check that every row points to a different item with a valid ID.",
       "REQUEST_CONFLICT": "This request no longer matches the recorded attempt. Reload and check the result.",
       "FORBIDDEN": "Your current role or sign-in cannot perform this action.",
@@ -4047,7 +4096,7 @@
     "review": "Read and accept the agreement",
     "accepted": "Agreement accepted",
     "recorded": "The store has recorded your agreement",
-    "accept": "I accept the agreement",
+    "accept": "Approve agreement",
     "failed": "The response could not be confirmed. Please try again.",
     "changed": "The agreement has changed. Read the new version before accepting.",
     "acceptedBy": "Accepted by",
@@ -4226,7 +4275,9 @@
       "INVALID_INPUT": "Import could not be completed. No new items were registered.",
       "REQUEST_CONFLICT": "Import could not be completed. No new items were registered.",
       "CURRENCY_MISMATCH": "Terms have changed. Preview the file again.",
-      "CUSTODY_REQUIRED": "I confirm that the items are in the store."
+      "CUSTODY_REQUIRED": "I confirm that the items are in the store.",
+      "DESCRIPTION_REQUIRED": "Enter a description.",
+      "NOTE_CHANGED": "The data changed or access is unavailable. Reload before continuing."
     },
     "fromFile": "From file",
     "fromPos": "From POS"
@@ -4614,7 +4665,8 @@
     "categoryExists": "A category with that name already exists.",
     "translations": "Translations (optional)",
     "languages": "Languages",
-    "noCategories": "No categories yet."
+    "noCategories": "No categories yet.",
+    "inheritDefaults": "Use store default fields"
   },
   "settingsHelp": {
     "label": "Help",
@@ -4756,6 +4808,7 @@
     "previousCategory": "Previous category text: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Register as a seller at {store}",
     "joinLogin": "Would you like to sell through the store? Create a personal account, or log in if you already have one. You will then return here to read the store’s terms and submit your application.",
     "reviewTerms": "The agreement accepted by the seller",
     "title": "Seller registration",
@@ -5038,5 +5091,149 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Scan / type"
+  "scanFocus": "Scan / type",
+  "itemCollection": {
+    "title": "Seller collection",
+    "description": "Ending the sale period for return does not confirm collection. Record what has been checked.",
+    "collected": "Collected",
+    "notCollected": "Not collected",
+    "unrecorded": "Collection status not recorded",
+    "record": "Record collection status",
+    "status": "Collection status",
+    "choose": "Choose status",
+    "date": "Observation date",
+    "note": "Note (optional)",
+    "save": "Save collection status",
+    "saved": "Collection status saved"
+  },
+  "itemPeriod": {
+    "title": "Change period ending",
+    "description": "Reopen the item for sale or correct its end action. Earlier events are retained.",
+    "open": "Show change",
+    "operation": "Change",
+    "reopen": "Reopen for sale",
+    "correct": "Correct end action",
+    "saleEndsOn": "For sale through",
+    "noFee": "Reopening creates no fee or new fee period.",
+    "endAction": "New end action",
+    "choose": "Choose end action",
+    "reason": "Reason",
+    "confirm": "I have checked the item and want to save this change.",
+    "save": "Save change",
+    "saved": "Change saved"
+  },
+  "itemLifecycleBatch": {
+    "title": "Change sale periods",
+    "hint": "Review up to 50 selected items. Items that cannot be changed are skipped with a reason.",
+    "preview": "Preview",
+    "apply": "Confirm changes",
+    "ready": "Ready to change",
+    "applied": "Changed",
+    "skipped": "Skipped",
+    "back": "Edit selection",
+    "results": "Results",
+    "markdown": "Apply next due markdown",
+    "reasons": {
+      "missing": "Item not found",
+      "sold": "Item is sold",
+      "ended": "Item has ended",
+      "markdown_not_due": "No markdown is due",
+      "collection_not_due": "Collection deadline has not passed",
+      "changed": "Item changed after preview"
+    },
+    "previewFailed": "Could not load the preview. Check the fields and try again."
+  },
+  "periodNotices": {
+    "setting": "Automatic sale-period messages",
+    "hint": "Notify the seller seven days before the sale period ends and when it ends. Past events are not sent retrospectively."
+  },
+  "sellerAccess": {
+    "choosePassword": "Choose a new password",
+    "confirmEmail": "Confirm your email address",
+    "confirmHint": "Open the confirmation link in your email. If you cannot find the email, send a new link here.",
+    "passwordHint": "Choose a new password to finish the reset and continue.",
+    "switchView": "Choose workspace",
+    "store": "Store",
+    "seller": "Seller",
+    "stores": "My stores",
+    "rateLimited": "Too many attempts in a short time. Wait a little and try again. Also check whether the email has already arrived."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Seller portal",
+    "details": "My details",
+    "agreement": "Agreement",
+    "invoices": "Self-billing invoices",
+    "account": "Account settings",
+    "noAgreement": "The store has not published an agreement yet."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Terms at a glance",
+    "currentSettings": "These are the store’s current settings. Items retain the terms saved for them. Read the full agreement below.",
+    "commission": "Store commission: {rate}% {basis}.",
+    "days": "Sale period: {days} days.",
+    "months": "Sale period: {months} calendar months from physical receipt.",
+    "collection": "Collect unsold items within {days} days after the sale period ends.",
+    "return": "After the sale period: unsold items are returned.",
+    "charity": "After the sale period: unsold items are donated to charity.",
+    "fullText": "Read the full agreement",
+    "needsApproval": "Approval needed"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Your registration at {store} is approved",
+    "body": "Hello {seller},\n\n{store} has approved your registration. You can now sign in to the Seller Portal using the account you registered with:\n{url}\n\nYou can follow your items and payouts there."
+  },
+  "returnNavigation": {
+    "back": "Back"
+  },
+  "labelFields": {
+    "title": "Item label fields",
+    "hint": "Choose up to four attributes in print order. Applies to item labels on Zebra, in the browser and on PDF sheets. Missing values are skipped. Price and barcode always remain.",
+    "custom": "Use the same fields across the store",
+    "default": "The existing item-type field order is used.",
+    "field": "Field {number}",
+    "none": "No field",
+    "save": "Save label fields",
+    "saved": "Label fields saved."
+  },
+  "priceEdit": {
+    "title": "Edit price",
+    "reason": "Reason (optional)",
+    "none": "No reason",
+    "store": "Store decision",
+    "sale": "Sale",
+    "defect": "Defect",
+    "other": "Other",
+    "custom": "Custom reason",
+    "saved": "The price has been saved."
+  },
+  "saleSummary": {
+    "title": "Sales summary",
+    "download": "Download sales summary (PDF)",
+    "saleDate": "Sale date",
+    "reference": "Sale reference",
+    "notice": "Summary of records in Komisio. The point of sale provides the receipt.",
+    "reversed": "The sale has been reversed",
+    "returned": "Recorded return",
+    "originalTotal": "Original sale total",
+    "returnTotal": "Recorded returns total",
+    "currentDetails": "Store and item descriptions reflect current records. Amounts come from the recorded sale and any returns.",
+    "generatedAt": "Generated"
+  },
+  "registration": {
+    "title": "Item registration",
+    "hint": "Default fields apply to item types that inherit the store settings.",
+    "descriptionRequired": "Require a description at registration",
+    "template": "Title when the description is empty",
+    "templateHint": "Use these placeholders. Missing values are omitted; an empty title falls back to the item reference.",
+    "fields": "Store default fields",
+    "inherit": "Use store default fields",
+    "note": "Internal note",
+    "noteHint": "Staff only. Not shown to sellers or included on labels, sales summaries or in POS data.",
+    "save": "Save",
+    "retry": "Retry",
+    "saved": "Saved.",
+    "invalid": "Check the fields and title placeholders.",
+    "changed": "The data changed or access is unavailable. Reload before continuing.",
+    "uncertain": "The response could not be confirmed. Retry with the same information."
+  }
 }

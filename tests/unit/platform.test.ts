@@ -43,6 +43,16 @@ describe('permission boundaries', () => {
     expect(canChangeMember('owner', 'staff', 'owner')).toBe(true))
 })
 describe('untrusted input', () => {
+  it('keeps recovery targets internal and prevents nested recovery loops', () => {
+    expect(safeNext('/update-password?next=%2Fseller')).toBe(
+      '/update-password?next=%2Fseller',
+    )
+    expect(safeNext('/update-password?next=https%3A%2F%2Fevil.test')).toBe(
+      '/update-password?next=%2F',
+    )
+    expect(safeNext('/update-password?next=%2Fupdate-password')).toBe('/')
+    expect(safeNext('/seller/activate')).toBe('/seller/activate')
+  })
   it.each([
     'https://evil.test',
     '//evil.test',

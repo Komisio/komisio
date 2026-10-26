@@ -1,3 +1,4 @@
+import { labelHeading } from '@/lib/labels/label-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Image from 'next/image'
 import { labelAttributeLines } from '@/lib/labels/item-attributes'
@@ -61,7 +62,7 @@ export default async function ItemLabel({
       {label && svg && dimensions ? (
         <article className="item-browser-label" aria-label={d.itemLabel}>
           <p className="item-browser-label-store">{active.name}</p>
-          <h2>{label.title || d.itemLabel}</h2>
+          {labelHeading(label.title) && <h2>{labelHeading(label.title)}</h2>}
           {label.attributes?.length ? (
             <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-left text-sm">
               {labelAttributeLines(label.attributes, ctx.locale).map(

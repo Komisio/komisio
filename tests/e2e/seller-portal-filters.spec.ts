@@ -80,17 +80,38 @@ test('seller status groups filter the full owned set and preserve search through
     const section = page.locator('#portal-items'),
       rows = section.locator('tbody tr'),
       form = section.getByRole('search')
-    const status = form.getByLabel(d.sellerPortal.itemsStatus, { exact: true })
+    const status = section.getByRole('navigation', {
+      name: d.sellerPortal.itemsStatus,
+      exact: true,
+    })
+    const tab = (value: 'active' | 'sold' | 'ended') =>
+      status
+        .getByRole('link')
+        .filter({ hasText: d.sellerPortal.itemStatusTabs[value] })
+    async function select(value: 'active' | 'sold' | 'ended') {
+      await tab(value).click()
+      await expect(tab(value)).toHaveAttribute('aria-current', 'page')
+    }
     const search = form.getByLabel(d.items.search, { exact: true })
     async function apply() {
+      const query = await search.inputValue()
       await form
         .getByRole('button', { name: d.items.searchButton, exact: true })
         .click()
+      await expect
+        .poll(() => new URL(page.url()).searchParams.get('q') ?? '')
+        .toBe(query)
     }
-    await expect(status).toHaveValue('active')
+    await expect(tab('active')).toHaveAttribute('aria-current', 'page')
+    await expect(tab('active')).toHaveText('Till försäljning (2)')
+    await expect(tab('sold')).toHaveText('Sålda (28)')
+    await expect(tab('ended')).toHaveText('Avslutade (1)')
     await expect(rows).toHaveCount(2)
     await expect(rows.first()).toContainText('Active newer')
-    await status.selectOption('sold')
+    await expect(rows.first().locator('.seller-item-date')).toContainText(
+      d.sellerPortal.forSaleUntil,
+    )
+    await select('sold')
     await search.fill('Archive')
     await apply()
     await expect(rows).toHaveCount(25)
@@ -104,27 +125,39 @@ test('seller status groups filter the full owned set and preserve search through
     await expect(rows.first()).toContainText('Archive 02')
     await expect(page).toHaveURL(/q=Archive/)
     await expect(page).toHaveURL(/status=sold/)
-    await expect(status).toHaveValue('sold')
+    await expect(tab('sold')).toHaveAttribute('aria-current', 'page')
+    await expect(rows.first().locator('.seller-item-date')).toContainText(
+      d.sellerPortal.soldOn,
+    )
+    await expect(rows.first().locator('.seller-item-date')).not.toContainText(
+      d.sellerPortal.forSaleUntil,
+    )
     await expect(search).toHaveValue('Archive')
     await search.fill('Archive 00')
     await apply()
     await expect(rows).toHaveCount(1)
     await expect(rows).toContainText('Archive 00')
     await expect(page).not.toHaveURL(/page=2/)
-    await status.selectOption('active')
-    await apply()
+    await select('active')
     await expect(rows).toHaveCount(0)
     await expect(
       section.getByText(d.items.noMatches, { exact: true }),
     ).toBeVisible()
     await search.fill('')
-    await status.selectOption('ended')
     await apply()
+    await expect(search).toHaveValue('')
+    await select('ended')
     await expect(rows).toHaveCount(1)
     await expect(rows).toContainText('Ended item')
-    await status.selectOption('all')
-    await apply()
-    await expect(section.getByText('Visar 1–25 av 31 varor')).toBeVisible()
+    await expect(rows.first().locator('.seller-item-date')).toContainText(
+      d.sellerPortal.endedOn,
+    )
+    await expect(rows.first().locator('.seller-item-date')).not.toContainText(
+      '—',
+    )
+    await expect(rows.first()).toContainText(d.sellerPortal.endedAs.return)
+    await select('active')
+    await expect(rows).toHaveCount(2)
     await expect(rows.first()).toContainText('Active newer')
     expect(
       await page.evaluate(
@@ -155,7 +188,7 @@ test('seller status groups filter the full owned set and preserve search through
         ])
       ).rows[0].id
     })
-    for (const value of ['active', 'sold', 'ended', 'all'] as const) {
+    for (const value of ['active', 'sold', 'ended'] as const) {
       await page.goto(`/seller?seller=${empty}&status=${value}#portal-items`)
       await expect(
         section.getByText(d.sellerPortal.itemFilterEmpty[value], {
@@ -248,9 +281,8 @@ test('disabled handovers are hidden without history and read-only with history',
     await expect(
       handovers.getByText(d.sellerPortal.none, { exact: true }),
     ).toHaveCount(0)
-    await expect(page.locator('a[href="#portal-handovers"]')).toHaveText(
-      d.sellerPortal.handoverHistory,
-    )
+    await page.goto(url + '#portal-handovers')
+    await expect(handovers.getByText(reference, { exact: true })).toBeVisible()
   } finally {
     await f.close()
   }

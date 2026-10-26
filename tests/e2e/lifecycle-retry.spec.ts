@@ -47,7 +47,10 @@ for (const c of cases)
       if (c.action === 'setItemPrice') {
         await actions.getByLabel(d.lifecycle.price, { exact: true }).fill('125')
         await actions
-          .getByLabel(d.lifecycle.priceReason, { exact: true })
+          .getByLabel(d.priceEdit.reason, { exact: true })
+          .selectOption('other')
+        await actions
+          .getByLabel(d.priceEdit.custom, { exact: true })
           .fill('Synthetic price reason')
       } else if (c.action === 'extendSalePeriod') {
         await actions.getByLabel(d.lifecycle.days, { exact: true }).fill('21')
@@ -170,7 +173,10 @@ test('a definitive lifecycle input refusal permits correction; stale context off
     const price = actions.getByLabel(d.lifecycle.price, { exact: true })
     await price.fill('125')
     await actions
-      .getByLabel(d.lifecycle.priceReason, { exact: true })
+      .getByLabel(d.priceEdit.reason, { exact: true })
+      .selectOption('other')
+    await actions
+      .getByLabel(d.priceEdit.custom, { exact: true })
       .fill('Synthetic correction')
     let calls = 0
     await page.route('**/api/intake', async (route) => {

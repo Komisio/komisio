@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "Fotoet er for stort (højst 3 MB).",
       "INVALID_IMAGE": "Filen er ikke et gyldigt JPEG- eller PNG-billede.",
       "REQUEST_FAILED": "Forespørgslen mislykkedes. Prøv igen.",
-      "BAG_COMPLETED": "Indleveringen er færdigbehandlet. Genåbn den for at fortsætte."
+      "BAG_COMPLETED": "Indleveringen er færdigbehandlet. Genåbn den for at fortsætte.",
+      "DESCRIPTION_REQUIRED": "Indtast en beskrivelse."
     },
     "addPhoto": "Tag eller vælg et billede",
     "sellerSearchHint": "Navn, e-mail eller telefon",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Vælg felter",
     "assortment": "Sortimentsgruppe",
     "noAssortment": "Uden sortimentsgruppe",
-    "noCategory": "Ingen kategori"
+    "noCategory": "Ingen kategori",
+    "internalNote": "Intern note",
+    "internalNoteHint": "Kun for personale. Vises ikke til sælgeren og medtages ikke på etiketter, salgsoversigter eller i kassadata."
   },
   "intake": {
     "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",
@@ -694,7 +697,12 @@
     "zettle.line_resolved": "PayPal POS · Kvitteringslinje · Manuel løsning",
     "zettle.page_received": "PayPal POS · Kvitteringsside · Modtagelse",
     "zettle.pull_enabled": "PayPal POS · Kvitteringshentning · Aktivering",
-    "zettle.window_abandoned": "PayPal POS · Synkperiode · Tilbagekaldelse"
+    "zettle.window_abandoned": "PayPal POS · Synkperiode · Tilbagekaldelse",
+    "item.collection_recorded": "Afhentningsstatus registreret",
+    "item.period_reopened": "Salgsperiode genåbnet",
+    "item.period_end_corrected": "Afslutningsårsag rettet",
+    "item.lifecycle_batch": "Masseændring af salgsperioder",
+    "label_fields.set": "Etiketfelter · Gemt"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -1265,7 +1273,8 @@
     "communicationLanguage": "Standardsprog for beskeder",
     "communicationLanguageHint": "Bruges til e-mails til sælgere og som standard for personaleinvitationer, når butiksprofilen ikke har et sprog. Sælgerens eget sprog har førsteprioritet, derefter butiksprofilens sprog. Sproget i din egen menu påvirker ikke e-mails.",
     "vatModeConsignmentBusiness": "Moms for momsregistrerede virksomheder",
-    "consignment_business": "Moms af hele salgsprisen"
+    "consignment_business": "Moms af hele salgsprisen",
+    "dayCollectionHelp": "Valgfrit for perioder i dage. Gælder nye kommissionsvarer, der skal returneres til sælgeren. Et tomt felt betyder ingen fast afhentningsfrist. Fristen regnes fra salgsperiodens slutning; ejerskabet ændres ikke automatisk."
   },
   "sellerTerms": {
     "title": "Indleverervilkår",
@@ -1393,10 +1402,13 @@
       "price_set": "Pris sat",
       "provenance": "Oprindelse registreret",
       "sold": "Solgt",
-      "returned": "Returneret",
+      "returned": "Kunderetur",
       "markdown_applied": "Prisnedsættelse gennemført",
       "period_extended": "Salgsperiode forlænget",
-      "period_ended": "Salgsperiode afsluttet"
+      "period_ended": "Salgsperiode afsluttet",
+      "collection_recorded": "Afhentningsstatus registreret",
+      "period_reopened": "Salgsperiode genåbnet",
+      "period_end_corrected": "Afslutningsårsag rettet"
     },
     "clearFilters": "Ryd filtre",
     "showingRange": "Viser {from}–{to} af {total} varer",
@@ -1411,7 +1423,26 @@
     "markdownWaiting": "Prisnedsættelse afventer",
     "allOwnerships": "Alle varer",
     "ownership": "Ejerskab",
-    "createPurchasedItem": "Opret vare"
+    "createPurchasedItem": "Opret vare",
+    "eventDetails": {
+      "action": "Handling",
+      "reason": "Årsag",
+      "days": "Forlængelse (dage)",
+      "priceChange": "Prisændring",
+      "price": "Pris",
+      "actions": {
+        "charity": "Til velgørenhed",
+        "return": "Retur til sælger",
+        "recycle": "Genanvendelse",
+        "transfer": "Flytning til en anden butik"
+      },
+      "collection": "Afhentningsstatus",
+      "collected": "Afhentet",
+      "notCollected": "Ikke afhentet",
+      "observedOn": "Kontroldato",
+      "saleEndsOn": "Til salg til og med",
+      "previousAction": "Tidligere afslutningsårsag"
+    }
   },
   "sales": {
     "title": "Salg",
@@ -1950,7 +1981,9 @@
       "item_sold": "Vare solgt",
       "payout_approved": "Udbetaling godkendt",
       "payout_paid": "Udbetaling betalt",
-      "statement_issued": "Afregning udstedt"
+      "statement_issued": "Afregning udstedt",
+      "period_ending": "Salgsperioden udløber snart",
+      "period_ended": "Salgsperioden er afsluttet"
     },
     "outcomes": {
       "queued": "i kø",
@@ -2021,6 +2054,14 @@
         "bodyNumber": "Kreditnota til selvfaktura #{number}. Selvfakturaen vedrører sælgerens tilgodehavende for varerne. Udbetalinger og saldo vises separat i afregningen.",
         "amount": "Udgående saldo: {amount}.",
         "note": "Du kan åbne dokumentet og downloade PDF i sælgerportalen."
+      },
+      "period_ending": {
+        "subject": "{store}: salgsperioden udløber snart",
+        "body": "Hej {seller},\n\nSalgsperioden for {item} slutter den {date}. Kontakt {store}, hvis du har spørgsmål om de næste skridt."
+      },
+      "period_ended": {
+        "subject": "{store}: salgsperioden er afsluttet",
+        "body": "Hej {seller},\n\nSalgsperioden for {item} er afsluttet. Kontakt {store} for oplysninger om varen."
       }
     },
     "invitation": {
@@ -2488,7 +2529,7 @@
     "noItems": "Ingen varer endnu.",
     "item": "Vare",
     "price": "Pris",
-    "itemDate": "Solgt den / til salg indtil",
+    "itemDate": "Dato",
     "wasPrice": "var",
     "until": "indtil",
     "then": "derefter",
@@ -2577,7 +2618,15 @@
       "sold": "Ingen solgte varer endnu.",
       "ended": "Ingen afsluttede varer endnu.",
       "all": "Ingen varer endnu."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "Til salg",
+      "sold": "Solgt",
+      "ended": "Afsluttet"
+    },
+    "forSaleUntil": "Til salg indtil",
+    "soldOn": "Solgt",
+    "endedOn": "Afsluttet"
   },
   "plans": {
     "heading": "Abonnement",
@@ -3088,7 +3137,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Denne kvittering skal undersøges i PayPal POS. Ikke-understøttede beløb eller rabatter gættes aldrig.",
       "ITEM_NOT_FOUND": "Varen blev ikke fundet i denne butik. Tjek dens fulde id.",
       "ITEM_ALREADY_SOLD": "En vare er allerede solgt. Tjek kvitteringen og matchningen.",
-      "VAT_MODE_NOT_SET": "Vælg butikkens momstilstand i indstillingerne, før du registrerer salg.",
+      "VAT_MODE_NOT_SET": "Vælg momstilstand for varens ejerskabstype i butiksindstillingerne, før varen eksporteres eller et salg registreres.",
       "INVALID_INPUT": "Tjek, at hver række peger på en forskellig vare med et gyldigt id.",
       "REQUEST_CONFLICT": "Denne forespørgsel matcher ikke længere det registrerede forsøg. Genindlæs, og tjek resultatet.",
       "FORBIDDEN": "Din nuværende rolle eller dit login kan ikke udføre denne handling.",
@@ -4047,7 +4096,7 @@
     "review": "Læs og accepter aftalen",
     "accepted": "Aftalen er accepteret",
     "recorded": "Butikken har registreret din aftale",
-    "accept": "Jeg accepterer aftalen",
+    "accept": "Godkend aftalen",
     "failed": "Svaret kunne ikke bekræftes. Prøv igen.",
     "changed": "Aftalen er ændret. Læs den nye version, før du accepterer.",
     "acceptedBy": "Accepteret af",
@@ -4226,7 +4275,9 @@
       "INVALID_INPUT": "Importen kunne ikke gennemføres. Ingen nye varer blev registreret.",
       "REQUEST_CONFLICT": "Importen kunne ikke gennemføres. Ingen nye varer blev registreret.",
       "CURRENCY_MISMATCH": "Vilkårene er ændret. Forhåndsvis filen igen.",
-      "CUSTODY_REQUIRED": "Jeg bekræfter, at varerne er i butikken."
+      "CUSTODY_REQUIRED": "Jeg bekræfter, at varerne er i butikken.",
+      "DESCRIPTION_REQUIRED": "Indtast en beskrivelse.",
+      "NOTE_CHANGED": "Oplysningerne er ændret, eller adgang mangler. Genindlæs siden."
     },
     "fromFile": "Fra fil",
     "fromPos": "Fra kasse"
@@ -4614,7 +4665,8 @@
     "categoryExists": "Der findes allerede en kategori med dette navn.",
     "translations": "Oversættelser (valgfrit)",
     "languages": "Sprog",
-    "noCategories": "Ingen kategorier endnu."
+    "noCategories": "Ingen kategorier endnu.",
+    "inheritDefaults": "Brug butikkens standardfelter"
   },
   "settingsHelp": {
     "label": "Hjælp",
@@ -4756,6 +4808,7 @@
     "previousCategory": "Tidligere kategoritekst: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Registrer dig som sælger hos {store}",
     "joinLogin": "Vil du sælge gennem butikken? Opret en personlig konto, eller log ind, hvis du allerede har en. Derefter kommer du tilbage hertil for at læse butikkens vilkår og sende din ansøgning.",
     "reviewTerms": "Aftalen sælgeren accepterede",
     "title": "Sælgerregistrering",
@@ -5038,5 +5091,149 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Scan / skriv"
+  "scanFocus": "Scan / skriv",
+  "itemCollection": {
+    "title": "Afhentning af vare",
+    "description": "Afslutning med returnering betyder ikke, at varen er afhentet. Registrer det, der er kontrolleret.",
+    "collected": "Afhentet",
+    "notCollected": "Ikke afhentet",
+    "unrecorded": "Afhentningsstatus ikke registreret",
+    "record": "Registrer afhentningsstatus",
+    "status": "Afhentningsstatus",
+    "choose": "Vælg status",
+    "date": "Kontroldato",
+    "note": "Bemærkning (valgfri)",
+    "save": "Gem afhentningsstatus",
+    "saved": "Afhentningsstatus gemt"
+  },
+  "itemPeriod": {
+    "title": "Ret afslutning",
+    "description": "Genåbn varen til salg, eller ret afslutningsårsagen. Tidligere hændelser bevares.",
+    "open": "Vis ændring",
+    "operation": "Ændring",
+    "reopen": "Genåbn til salg",
+    "correct": "Ret afslutningsårsag",
+    "saleEndsOn": "Til salg til og med",
+    "noFee": "Genåbning opretter intet gebyr eller ny gebyrperiode.",
+    "endAction": "Ny afslutningsårsag",
+    "choose": "Vælg afslutningsårsag",
+    "reason": "Begrundelse",
+    "confirm": "Jeg har kontrolleret varen og vil gemme ændringen.",
+    "save": "Gem ændring",
+    "saved": "Ændringen er gemt"
+  },
+  "itemLifecycleBatch": {
+    "title": "Rediger salgsperioder",
+    "hint": "Gennemgå op til 50 valgte varer. Varer, der ikke kan ændres, springes over med en forklaring.",
+    "preview": "Forhåndsvisning",
+    "apply": "Bekræft ændringer",
+    "ready": "Kan ændres",
+    "applied": "Ændret",
+    "skipped": "Sprunget over",
+    "back": "Rediger valg",
+    "results": "Resultater",
+    "markdown": "Anvend næste forfaldne prisnedsættelse",
+    "reasons": {
+      "missing": "Varen blev ikke fundet",
+      "sold": "Varen er solgt",
+      "ended": "Varen er afsluttet",
+      "markdown_not_due": "Ingen prisnedsættelse er forfalden",
+      "collection_not_due": "Afhentningsfristen er ikke udløbet",
+      "changed": "Varen er ændret efter forhåndsvisningen"
+    },
+    "previewFailed": "Forhåndsvisningen kunne ikke hentes. Kontrollér felterne, og prøv igen."
+  },
+  "periodNotices": {
+    "setting": "Automatiske beskeder om salgsperioder",
+    "hint": "Giv sælgeren besked syv dage før salgsperioden slutter, og når den slutter. Tidligere hændelser sendes ikke efterfølgende."
+  },
+  "sellerAccess": {
+    "choosePassword": "Vælg en ny adgangskode",
+    "confirmEmail": "Bekræft din e-mailadresse",
+    "confirmHint": "Åbn bekræftelseslinket i din e-mail. Hvis du ikke kan finde mailen, kan du sende et nyt link her.",
+    "passwordHint": "Vælg en ny adgangskode for at afslutte nulstillingen og fortsætte.",
+    "switchView": "Vælg visning",
+    "store": "Butik",
+    "seller": "Sælger",
+    "stores": "Mine butikker",
+    "rateLimited": "For mange forsøg på kort tid. Vent lidt, og prøv igen. Tjek også, om mailen allerede er kommet."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Sælgerportal",
+    "details": "Mine oplysninger",
+    "agreement": "Aftale",
+    "invoices": "Selvfakturaer",
+    "account": "Kontoindstillinger",
+    "noAgreement": "Butikken har endnu ikke offentliggjort en aftale."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Vilkårene kort fortalt",
+    "currentSettings": "Her vises butikkens aktuelle indstillinger. Varer beholder de vilkår, der er gemt for dem. Læs hele aftalen nedenfor.",
+    "commission": "Butikkens provision: {rate} % {basis}.",
+    "days": "Salgsperiode: {days} dage.",
+    "months": "Salgsperiode: {months} kalendermåneder fra fysisk indlevering.",
+    "collection": "Hent usolgte varer senest {days} dage efter salgsperiodens udløb.",
+    "return": "Efter salgsperioden: usolgte varer returneres.",
+    "charity": "Efter salgsperioden: usolgte varer doneres til velgørenhed.",
+    "fullText": "Læs hele aftalen",
+    "needsApproval": "Godkendelse mangler"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Din registrering hos {store} er godkendt",
+    "body": "Hej {seller}!\n\n{store} har godkendt din registrering. Du kan nu logge ind på sælgerportalen med den konto, du brugte ved registreringen:\n{url}\n\nHer kan du følge dine varer og udbetalinger."
+  },
+  "returnNavigation": {
+    "back": "Tilbage"
+  },
+  "labelFields": {
+    "title": "Felter på varemærkater",
+    "hint": "Vælg op til fire egenskaber i den ønskede rækkefølge. Gælder varemærkater på Zebra, i browseren og på PDF-ark. Manglende værdier springes over. Pris og stregkode vises altid.",
+    "custom": "Brug de samme felter i hele butikken",
+    "default": "Varetypens eksisterende feltrækkefølge bruges.",
+    "field": "Felt {number}",
+    "none": "Intet felt",
+    "save": "Gem mærkatfelter",
+    "saved": "Mærkatfelterne er gemt."
+  },
+  "priceEdit": {
+    "title": "Rediger pris",
+    "reason": "Begrundelse (valgfri)",
+    "none": "Ingen begrundelse",
+    "store": "Butikkens beslutning",
+    "sale": "Udsalg",
+    "defect": "Fejl",
+    "other": "Andet",
+    "custom": "Egen begrundelse",
+    "saved": "Prisen er gemt."
+  },
+  "saleSummary": {
+    "title": "Salgsoversigt",
+    "download": "Download salgsoversigt (PDF)",
+    "saleDate": "Salgsdato",
+    "reference": "Salgsreference",
+    "notice": "Oversigt over registrerede oplysninger i Komisio. Kvitteringen udstedes af kassen.",
+    "reversed": "Salget er tilbageført",
+    "returned": "Registreret returnering",
+    "originalTotal": "Oprindeligt salg i alt",
+    "returnTotal": "Registrerede returneringer i alt",
+    "currentDetails": "Butiks- og varebeskrivelser viser de aktuelle oplysninger. Beløbene kommer fra det registrerede salg og eventuelle returneringer.",
+    "generatedAt": "Udarbejdet"
+  },
+  "registration": {
+    "title": "Vareregistrering",
+    "hint": "Standardfelterne gælder varetyper, der arver butikkens indstillinger.",
+    "descriptionRequired": "Kræv beskrivelse ved registrering",
+    "template": "Titel, når beskrivelsen mangler",
+    "templateHint": "Brug disse pladsholdere. Manglende værdier udelades; en tom titel erstattes med varereferencen.",
+    "fields": "Butikkens standardfelter",
+    "inherit": "Brug butikkens standardfelter",
+    "note": "Intern note",
+    "noteHint": "Kun for personale. Vises ikke til sælgeren og medtages ikke på etiketter, salgsoversigter eller i kassadata.",
+    "save": "Gem",
+    "retry": "Prøv igen",
+    "saved": "Gemt.",
+    "invalid": "Kontrollér felterne og titlens pladsholdere.",
+    "changed": "Oplysningerne er ændret, eller adgang mangler. Genindlæs siden.",
+    "uncertain": "Svaret kunne ikke bekræftes. Prøv igen med de samme oplysninger."
+  }
 }

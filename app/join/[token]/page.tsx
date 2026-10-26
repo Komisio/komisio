@@ -8,6 +8,7 @@ import { RegistrationApplication } from '@/components/seller-registration/apply'
 import { renderPlatformContext } from '@/lib/platform/context'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { dictionary, intlLocale, resolveLocale } from '@/lib/i18n'
+import { registrationStoreForNext } from '@/lib/platform/registration-store'
 import {
   registrationToken,
   readRegistrationEntry,
@@ -31,11 +32,20 @@ export default async function JoinStore({
   if (!ctx) {
     const locale = resolveLocale((await cookies()).get('komisio-locale')?.value)
     const all = dictionary(locale)
+    const storeName = await registrationStoreForNext(`/join/${token}`)
     return (
       <main className="onboarding" lang={intlLocale(locale)}>
         <SellerHeader locale={locale} />
         <section className="card">
           <h1>{all.selfRegistration.applyTitle}</h1>
+          {storeName && (
+            <p className="registration-store-name">
+              {all.selfRegistration.storeContext.replace(
+                '{store}',
+                () => storeName,
+              )}
+            </p>
+          )}
           <p>{all.selfRegistration.joinLogin}</p>
           <div className="row wrap">
             <Button asChild>

@@ -1,5 +1,10 @@
+import { raceInlinePrice } from './inline-price-race.mjs'
+import { raceItemRegistration } from './item-registration-race.mjs'
+import { raceLabelFields } from './label-fields-race.mjs'
 import { raceSalePayment } from './sale-payment-race.mjs'
 import { raceRegistrationCategory } from './registration-category-race.mjs'
+import { raceCatalogReadiness } from './catalog-readiness-race.mjs'
+import { raceItemCollection } from './item-collection-race.mjs'
 import {
   prepareRegistrationCategories,
   verifyRegistrationCategories,
@@ -73,9 +78,11 @@ try {
   await setup.connect()
   await setup.query(`create schema extensions;
  create schema auth;
- create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,
-  encrypted_password text,raw_user_meta_data jsonb,raw_app_meta_data jsonb);
+ create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,deleted_at timestamptz,
+  encrypted_password text,raw_user_meta_data jsonb,raw_app_meta_data jsonb,recovery_token text,recovery_sent_at timestamptz);
  create table auth.mfa_factors(user_id uuid,status text);
+ create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id));
+ create table auth.mfa_amr_claims(id uuid primary key,session_id uuid references auth.sessions(id),authentication_method text,created_at timestamptz,updated_at timestamptz);
  create function auth.jwt() returns jsonb language sql stable as 'select coalesce(nullif(current_setting(''request.jwt.claims'',true),'''')::jsonb,''{}''::jsonb)';
  create function auth.uid() returns uuid language sql stable as 'select (auth.jwt()->>''sub'')::uuid';
  grant usage on schema auth to authenticated;
@@ -110,6 +117,8 @@ try {
   }
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceRegistrationCategory({ setup, connectionString: parsed.toString() })
+  await raceCatalogReadiness({ setup, connectionString: parsed.toString() })
+  await raceItemCollection({ setup, connectionString: parsed.toString() })
   await raceWeblinkQueue({ setup, connectionString: parsed.toString() })
   await raceStoreWorkflow({ setup, connectionString: parsed.toString() })
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })
@@ -179,6 +188,9 @@ try {
   await raceShopifyPrivacy({ setup, sessions, tenant })
   await raceSellerProfile({ setup, sessions, tenant })
   await raceSellerPrivacy({ setup, sessions, tenant })
+  await raceLabelFields({ setup, sessions, tenant })
+  await raceInlinePrice({ setup, sessions })
+  await raceItemRegistration({ setup, sessions })
   await raceLabelPrintRule({ setup, sessions, tenant })
   await raceCatalogueDeletion({ setup, sessions, tenant })
   await raceCatalogueEditing({ setup, sessions, tenant })

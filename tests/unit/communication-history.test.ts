@@ -5,6 +5,44 @@ import { readSellerCommunicationHistory } from '../../lib/engine/communications'
 const tenant = '11111111-1111-4111-8111-111111111111'
 const seller = '22222222-2222-4222-8222-222222222222'
 
+it('shows an unresolved period send claim as unconfirmed while ordinary queued mail stays queued', async () => {
+  const query = { select: vi.fn(), eq: vi.fn(), order: vi.fn(), range: vi.fn() }
+  query.select.mockReturnValue(query)
+  query.eq.mockReturnValue(query)
+  query.order.mockReturnValue(query)
+  const row = {
+    id: tenant,
+    locale: 'en',
+    recipient: 'synthetic@example.test',
+    subject: 'Synthetic',
+    body: 'Synthetic',
+    reference_kind: 'item',
+    reference_id: seller,
+    status: 'queued',
+    queued_at: '2026-10-26T12:00:00Z',
+    delivered_at: null,
+  }
+  query.range.mockResolvedValue({
+    data: [
+      { ...row, kind: 'period_ending' },
+      { ...row, kind: 'period_ended' },
+      { ...row, kind: 'message' },
+    ],
+    count: 3,
+    error: null,
+  })
+  const result = await readSellerCommunicationHistory(
+    { from: () => query } as unknown as SupabaseClient,
+    tenant,
+    seller,
+  )
+  expect(result.items.map((message) => message.status)).toEqual([
+    'unconfirmed',
+    'unconfirmed',
+    'queued',
+  ])
+})
+
 it('recovers only an out-of-range page using a fresh scoped count', async () => {
   const query = { select: vi.fn(), eq: vi.fn(), order: vi.fn(), range: vi.fn() }
   query.select.mockReturnValue(query)

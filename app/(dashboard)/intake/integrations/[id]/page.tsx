@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
@@ -31,9 +32,12 @@ export default async function Receipt({
     <>
       <div className="page-heading">
         <h1>{r.returnInfo ? d.returns.receipt : d.receipt}</h1>
-        <Link className="text-link" href="/intake/integrations?provider=paypal">
-          {d.back}
-        </Link>
+        <BackLink
+          className="text-link"
+          href="/intake/integrations?provider=paypal"
+        >
+          {all.returnNavigation.back}
+        </BackLink>
       </div>
       <section className="card intake-form">
         <p>

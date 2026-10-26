@@ -175,3 +175,28 @@ it('validates an optional message language independently of item language', () =
     ).toBe(false)
   expect(storePolicyBody.parse(policy()).communicationLanguage).toBeUndefined()
 })
+
+it('validates optional day collection grace without inventing a default or conflicting calendar setting', () => {
+  expect(storePolicyBody.parse(policy()).collectionDays).toBeUndefined()
+  for (const collectionDays of [0, 7, 365])
+    expect(
+      storePolicyBody.parse({ ...policy(), collectionDays }).collectionDays,
+    ).toBe(collectionDays)
+  for (const collectionDays of [-1, 366, 0.5, '7', null])
+    expect(
+      storePolicyBody.safeParse({ ...policy(), collectionDays }).success,
+    ).toBe(false)
+  expect(
+    storePolicyBody.safeParse({
+      ...policy(),
+      collectionDays: 7,
+      consignmentPeriod: { months: 3, collectionDays: 2 },
+    }).success,
+  ).toBe(false)
+  expect(
+    storePolicyBody.safeParse({
+      ...policy(),
+      consignmentPeriod: { months: 3, collectionDays: 2 },
+    }).success,
+  ).toBe(true)
+})

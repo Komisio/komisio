@@ -1,4 +1,10 @@
+import { setItemLabelFieldsCommand } from './label-fields'
 import { businessDetails, sellerType } from './seller-business'
+import { recordItemCollectionCommand } from './item-collection'
+import {
+  reopenItemPeriodCommand,
+  correctItemPeriodEndCommand,
+} from './item-period'
 import {
   startStocktakeCommand,
   scanStocktakeCommand,
@@ -66,6 +72,10 @@ import {
 import { locales, type Locale } from '../i18n'
 
 export const intakeCommand = z.discriminatedUnion('action', [
+  setItemLabelFieldsCommand,
+  recordItemCollectionCommand,
+  reopenItemPeriodCommand,
+  correctItemPeriodEndCommand,
   recordConsignmentFeePaymentCommand,
   reverseConsignmentFeeCommand,
   accrueSellerConsignmentFeesCommand,
@@ -151,6 +161,18 @@ export const intakeCommand = z.discriminatedUnion('action', [
   }),
   z.object({
     action: z.literal('registerPurchase'),
+    facts: z
+      .record(
+        z.string().regex(/^[a-z][a-z0-9_]{0,39}$/),
+        z.string().trim().min(1).max(1000),
+      )
+      .optional(),
+    itemType: z
+      .string()
+      .regex(/^[a-z][a-z0-9_]{0,39}$/)
+      .nullable()
+      .optional(),
+    internalNote: z.string().trim().max(2000).optional(),
     tenantId: z.uuid(),
     requestId: z.uuid(),
     supplierNote: z.string().trim().max(500),
@@ -379,11 +401,48 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_day_close: c.dayCloseId,
       })
     case 'setItemPrice':
-      return client.rpc('set_item_price', {
+      return client.rpc(
+        c.expectedPriceOre === undefined
+          ? 'set_item_price'
+          : 'set_item_price_checked',
+        {
+          ...(c.expectedPriceOre === undefined
+            ? {}
+            : { p_expected_ore: c.expectedPriceOre }),
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_item: c.itemId,
+          p_price_ore: c.priceOre,
+          p_reason: c.reason,
+        },
+      )
+    case 'recordItemCollection':
+      return client.rpc('record_item_collection', {
         p_tenant: c.tenantId,
         p_id: c.requestId,
         p_item: c.itemId,
-        p_price_ore: c.priceOre,
+        p_end_event: c.endEventId,
+        p_expected_current: c.expectedCurrentId,
+        p_collected: c.collected,
+        p_observed_on: c.observedOn,
+        p_note: c.note,
+      })
+    case 'reopenItemPeriod':
+      return client.rpc('reopen_item_period', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_expected_end: c.expectedEndEventId,
+        p_sale_ends_on: c.saleEndsOn,
+        p_reason: c.reason,
+      })
+    case 'correctItemPeriodEnd':
+      return client.rpc('correct_item_period_end', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_item: c.itemId,
+        p_expected_end: c.expectedEndEventId,
+        p_action: c.endAction,
         p_reason: c.reason,
       })
     case 'applyDueMarkdowns':
@@ -432,6 +491,13 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_model: c.model,
         p_dpi: c.dpi,
         p_active: c.active,
+      })
+    case 'setItemLabelFields':
+      return client.rpc('set_item_label_fields', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_expected: c.expectedRevision,
+        p_fields: c.fields,
       })
     case 'setLabelFormat':
       return client.rpc('set_label_format', {
@@ -491,14 +557,31 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_expires: c.expiresAt,
       })
     case 'registerPurchase':
-      return client.rpc('register_purchase', {
-        p_tenant: c.tenantId,
-        p_id: c.requestId,
-        p_note: c.supplierNote,
-        p_price_ore: oreFromDecimal(c.purchasePrice),
-        p_evidence: c.evidenceReference,
-        p_margin_eligible: c.marginEligible,
-      })
+      return client.rpc(
+        c.facts !== undefined || c.itemType !== undefined
+          ? 'register_purchase_described'
+          : c.internalNote !== undefined
+            ? 'register_purchase_noted'
+            : 'register_purchase',
+        {
+          ...(c.facts !== undefined || c.itemType !== undefined
+            ? {
+                p_facts: c.facts ?? {},
+                p_item_type: c.itemType ?? null,
+                p_internal_note: c.internalNote ?? '',
+              }
+            : {}),
+          ...(c.internalNote !== undefined
+            ? { p_internal_note: c.internalNote }
+            : {}),
+          p_tenant: c.tenantId,
+          p_id: c.requestId,
+          p_note: c.supplierNote,
+          p_price_ore: oreFromDecimal(c.purchasePrice),
+          p_evidence: c.evidenceReference,
+          p_margin_eligible: c.marginEligible,
+        },
+      )
     case 'receiveGarment':
       return client.rpc('receive_garment', {
         p_tenant: c.tenantId,
@@ -517,13 +600,24 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         },
       )
     case 'saveReceptionSources':
-      return client.rpc('save_reception_sources', {
-        p_tenant: c.tenantId,
-        p_request: c.requestId,
-        p_session: c.sessionId,
-        p_expected: c.expectedRevision,
-        p_sources: c.sources,
-      })
+      return client.rpc(
+        c.internalNote
+          ? 'save_reception_sources_noted'
+          : 'save_reception_sources',
+        {
+          ...(c.internalNote
+            ? {
+                p_note: c.internalNote.note,
+                p_note_expected: c.internalNote.id,
+              }
+            : {}),
+          p_tenant: c.tenantId,
+          p_request: c.requestId,
+          p_session: c.sessionId,
+          p_expected: c.expectedRevision,
+          p_sources: c.sources,
+        },
+      )
     case 'saveSellerProfile':
       if (c.agreementApproval)
         return client.rpc(

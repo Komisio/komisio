@@ -1,3 +1,4 @@
+import { registrationRecord, defaultRegistration } from './registration'
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -43,6 +44,7 @@ export const attributeDefinition = z.object({
 export const itemTypeProfile = z.object({
   slug,
   labels,
+  inherit_attributes: z.boolean().optional(),
   suggested_category: z.string(),
   suggested_category_id: z.uuid().nullable().optional(),
   active: z.boolean(),
@@ -58,6 +60,7 @@ export const itemTypeProfile = z.object({
 export const attributeVocabulary = z.object({
   definitions: z.array(attributeDefinition),
   types: z.array(itemTypeProfile),
+  registration: registrationRecord.optional(),
 })
 export type AttributeDefinition = z.infer<typeof attributeDefinition>
 export type ItemTypeProfile = z.infer<typeof itemTypeProfile>
@@ -75,11 +78,8 @@ export async function readAttributeVocabulary(
   return attributeVocabulary.parse(data)
 }
 
-/** Start with the essentials; a selected item type supplies extra questions. */
-const BASIC_FIELDS = ['description']
-
 /**
- * What a screen should ask for a given type, in the profile's order, with each
+ * What a screen should ask for a given type, in the effective profile's order, with each
  * attribute's definition attached. An attribute a profile names but nothing
  * defines is left out rather than rendered as an input nobody can fill: the
  * profile is guidance, and guidance that points at nothing is not an error.
@@ -90,22 +90,22 @@ export function questionsFor(
 ): { definition: AttributeDefinition; expected: boolean }[] {
   const byslug = new Map(vocabulary.definitions.map((d) => [d.slug, d]))
   const type = vocabulary.types.find((t) => t.slug === typeSlug)
-  if (!type) {
-    return BASIC_FIELDS.flatMap((slug) => {
-      const definition = byslug.get(slug)
-      return definition && definition.active
-        ? [{ definition, expected: slug === 'description' }]
-        : []
-    })
-  }
-  return type.attributes
-    .filter((entry) => entry.slug !== 'category')
-    .flatMap((entry) => {
-      const definition = byslug.get(entry.slug)
-      return definition && definition.active
-        ? [{ definition, expected: entry.expected }]
-        : []
-    })
+  const settings = vocabulary.registration?.settings ?? defaultRegistration
+  const fields =
+    type && type.inherit_attributes !== true
+      ? type.attributes
+      : settings.attributes.map((slug, sort) => ({
+          slug,
+          sort,
+          expected: false,
+        }))
+  return [
+    { slug: 'description', expected: settings.descriptionRequired },
+    ...fields.filter((a) => !['description', 'category'].includes(a.slug)),
+  ].flatMap((entry) => {
+    const definition = byslug.get(entry.slug)
+    return definition?.active ? [{ definition, expected: entry.expected }] : []
+  })
 }
 
 /** The label a person reads, in their language, falling back to English and
@@ -150,7 +150,9 @@ export function catalogueFor(
       .filter((t) => t.active)
       .map((t) => ({
         slug: t.slug,
-        attributes: t.attributes.map((a) => a.slug),
+        attributes: questionsFor(vocabulary, t.slug).map(
+          (q) => q.definition.slug,
+        ),
       })),
   }
 }

@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "Kuva on liian suuri (enintään 3 Mt).",
       "INVALID_IMAGE": "Tiedosto ei ole kelvollinen JPEG- tai PNG-kuva.",
       "REQUEST_FAILED": "Pyyntö epäonnistui. Yritä uudelleen.",
-      "BAG_COMPLETED": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi."
+      "BAG_COMPLETED": "Tämä vastaanotto on käsitelty. Avaa se uudelleen jatkaaksesi.",
+      "DESCRIPTION_REQUIRED": "Kirjoita kuvaus."
     },
     "addPhoto": "Ota tai valitse kuva",
     "sellerSearchHint": "Nimi, sähköposti tai puhelin",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Valitse kentät",
     "assortment": "Valikoimaryhmä",
     "noAssortment": "Ei valikoimaryhmää",
-    "noCategory": "Ei kategoriaa"
+    "noCategory": "Ei kategoriaa",
+    "internalNote": "Sisäinen huomautus",
+    "internalNoteHint": "Vain henkilökunnalle. Ei näytetä myyjälle eikä sisälly etiketteihin, myyntiyhteenvetoihin tai kassajärjestelmän tietoihin."
   },
   "intake": {
     "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
@@ -694,7 +697,12 @@
     "zettle.line_resolved": "PayPal POS · Kuittirivi · Manuaalinen ratkaisu",
     "zettle.page_received": "PayPal POS · Kuittisivu · Vastaanotto",
     "zettle.pull_enabled": "PayPal POS · Kuittien haku · Aktivointi",
-    "zettle.window_abandoned": "PayPal POS · Synkronointijakso · Peruutus"
+    "zettle.window_abandoned": "PayPal POS · Synkronointijakso · Peruutus",
+    "item.collection_recorded": "Noutotila kirjattu",
+    "item.period_reopened": "Myyntijakso avattu uudelleen",
+    "item.period_end_corrected": "Päättämistoimi korjattu",
+    "item.lifecycle_batch": "Myyntiaikojen joukkomuutos",
+    "label_fields.set": "Etikettikentät · Tallennettu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -1265,7 +1273,8 @@
     "communicationLanguage": "Viestien oletuskieli",
     "communicationLanguageHint": "Käytetään myyjien sähköposteissa ja henkilöstökutsujen oletuskielenä, kun myymäläprofiilissa ei ole kieltä. Myyjän oma kielivalinta on ensisijainen, sen jälkeen myymäläprofiilin kieli. Oman valikkosi kieli ei vaikuta sähköposteihin.",
     "vatModeConsignmentBusiness": "ALV-rekisteröityjen yritysten ALV",
-    "consignment_business": "Alv koko myyntihinnasta"
+    "consignment_business": "Alv koko myyntihinnasta",
+    "dayCollectionHelp": "Valinnainen päivinä määritetyille jaksoille. Koskee uusia myyntitilituotteita, jotka palautetaan myyjälle. Tyhjä kenttä tarkoittaa, ettei kiinteää noutoaikaa ole. Noutoaika alkaa myyntijakson päättyessä; omistus ei siirry automaattisesti."
   },
   "sellerTerms": {
     "title": "Tuojan ehdot",
@@ -1393,10 +1402,13 @@
       "price_set": "Hinta asetettu",
       "provenance": "Alkuperä kirjattu",
       "sold": "Myyty",
-      "returned": "Palautettu",
+      "returned": "Asiakaspalautus",
       "markdown_applied": "Hinnanalennus tehty",
       "period_extended": "Myyntiaikaa pidennetty",
-      "period_ended": "Myyntiaika päättynyt"
+      "period_ended": "Myyntiaika päättynyt",
+      "collection_recorded": "Noutotila kirjattu",
+      "period_reopened": "Myyntijakso avattu uudelleen",
+      "period_end_corrected": "Päättämistoimi korjattu"
     },
     "clearFilters": "Tyhjennä suodattimet",
     "showingRange": "Näytetään {from}–{to} / {total} tuotetta",
@@ -1411,7 +1423,26 @@
     "markdownWaiting": "Hinnanalennus odottaa",
     "allOwnerships": "Kaikki tuotteet",
     "ownership": "Omistus",
-    "createPurchasedItem": "Luo tuote"
+    "createPurchasedItem": "Luo tuote",
+    "eventDetails": {
+      "action": "Toimenpide",
+      "reason": "Syy",
+      "days": "Pidennys (päivää)",
+      "priceChange": "Hinnanmuutos",
+      "price": "Hinta",
+      "actions": {
+        "charity": "Hyväntekeväisyyteen",
+        "return": "Palautus myyjälle",
+        "recycle": "Kierrätys",
+        "transfer": "Siirto toiseen kauppaan"
+      },
+      "collection": "Noutotila",
+      "collected": "Noudettu",
+      "notCollected": "Ei noudettu",
+      "observedOn": "Tarkistuspäivä",
+      "saleEndsOn": "Myynnissä tähän päivään asti",
+      "previousAction": "Aiempi päättämistoimi"
+    }
   },
   "sales": {
     "title": "Myynti",
@@ -1950,7 +1981,9 @@
       "item_sold": "Tuote myyty",
       "payout_approved": "Tilitys hyväksytty",
       "payout_paid": "Tilitys maksettu",
-      "statement_issued": "Tiliote annettu"
+      "statement_issued": "Tiliote annettu",
+      "period_ending": "Myyntiaika päättyy pian",
+      "period_ended": "Myyntiaika on päättynyt"
     },
     "outcomes": {
       "queued": "jonossa",
@@ -2021,6 +2054,14 @@
         "bodyNumber": "Itselaskutuksen hyvityslasku #{number}. Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
         "amount": "Loppusaldo: {amount}.",
         "note": "Voit avata asiakirjan ja ladata PDF-tiedoston myyjäportaalissa."
+      },
+      "period_ending": {
+        "subject": "{store}: myyntiaika päättyy pian",
+        "body": "Hei {seller},\n\nTuotteen {item} myyntiaika päättyy {date}. Ota yhteyttä liikkeeseen {store}, jos sinulla on kysyttävää jatkosta."
+      },
+      "period_ended": {
+        "subject": "{store}: myyntiaika on päättynyt",
+        "body": "Hei {seller},\n\nTuotteen {item} myyntiaika on päättynyt. Kysy tuotteen tilanteesta liikkeestä {store}."
       }
     },
     "invitation": {
@@ -2488,7 +2529,7 @@
     "noItems": "Ei vielä tuotteita.",
     "item": "Tuote",
     "price": "Hinta",
-    "itemDate": "Myyty / myynnissä asti",
+    "itemDate": "Päivämäärä",
     "wasPrice": "oli",
     "until": "asti",
     "then": "sitten",
@@ -2577,7 +2618,15 @@
       "sold": "Ei vielä myytyjä tuotteita.",
       "ended": "Ei vielä päättyneitä tuotteita.",
       "all": "Ei vielä tuotteita."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "Myynnissä",
+      "sold": "Myydyt",
+      "ended": "Päättyneet"
+    },
+    "forSaleUntil": "Myynnissä asti",
+    "soldOn": "Myyty",
+    "endedOn": "Päättynyt"
   },
   "plans": {
     "heading": "Tilaus",
@@ -3088,7 +3137,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Tämä kuitti vaatii tutkintaa PayPal POSsä. Tukemattomia summia tai alennuksia ei koskaan arvata.",
       "ITEM_NOT_FOUND": "Tuotetta ei löytynyt tästä kaupasta. Tarkista sen koko tunnus.",
       "ITEM_ALREADY_SOLD": "Jokin tuote on jo myyty. Tarkista kuitti ja täsmäytys.",
-      "VAT_MODE_NOT_SET": "Valitse kaupan alv-tila asetuksissa ennen myyntien kirjaamista.",
+      "VAT_MODE_NOT_SET": "Valitse tuotteen omistustyypin alv-tila kaupan asetuksissa ennen tuotteen vientiä tai myynnin kirjaamista.",
       "INVALID_INPUT": "Tarkista, että jokainen rivi osoittaa eri tuotteeseen kelvollisella tunnuksella.",
       "REQUEST_CONFLICT": "Tämä pyyntö ei enää vastaa kirjattua yritystä. Lataa sivu uudelleen ja tarkista tulos.",
       "FORBIDDEN": "Nykyinen roolisi tai kirjautumisesi ei voi suorittaa tätä toimintoa.",
@@ -4053,7 +4102,7 @@
     "review": "Lue ja hyväksy sopimus",
     "accepted": "Sopimus hyväksytty",
     "recorded": "Myymälä on kirjannut sopimuksesi",
-    "accept": "Hyväksyn sopimuksen",
+    "accept": "Hyväksy sopimus",
     "failed": "Vastausta ei voitu vahvistaa. Yritä uudelleen.",
     "changed": "Sopimus on muuttunut. Lue uusi versio ennen hyväksymistä.",
     "acceptedBy": "Hyväksyjä",
@@ -4232,7 +4281,9 @@
       "INVALID_INPUT": "Tuontia ei voitu suorittaa. Uusia tuotteita ei kirjattu.",
       "REQUEST_CONFLICT": "Tuontia ei voitu suorittaa. Uusia tuotteita ei kirjattu.",
       "CURRENCY_MISMATCH": "Ehdot ovat muuttuneet. Esikatsele tiedosto uudelleen.",
-      "CUSTODY_REQUIRED": "Vahvistan, että tuotteet ovat myymälässä."
+      "CUSTODY_REQUIRED": "Vahvistan, että tuotteet ovat myymälässä.",
+      "DESCRIPTION_REQUIRED": "Kirjoita kuvaus.",
+      "NOTE_CHANGED": "Tiedot ovat muuttuneet tai käyttöoikeus puuttuu. Lataa sivu uudelleen."
     },
     "fromFile": "Tiedostosta",
     "fromPos": "Kassasta"
@@ -4620,7 +4671,8 @@
     "categoryExists": "Samanniminen kategoria on jo olemassa.",
     "translations": "Käännökset (valinnainen)",
     "languages": "Kielet",
-    "noCategories": "Ei vielä kategorioita."
+    "noCategories": "Ei vielä kategorioita.",
+    "inheritDefaults": "Käytä myymälän oletuskenttiä"
   },
   "settingsHelp": {
     "label": "Ohje",
@@ -4762,6 +4814,7 @@
     "previousCategory": "Aiempi kategoriateksti: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Rekisteröidy myyjäksi kauppaan {store}",
     "joinLogin": "Haluatko myydä liikkeen kautta? Luo henkilökohtainen tili tai kirjaudu sisään, jos sinulla on jo tili. Sen jälkeen palaat tänne lukemaan liikkeen ehdot ja lähettämään hakemuksesi.",
     "reviewTerms": "Myyjän hyväksymä sopimus",
     "title": "Myyjäksi rekisteröityminen",
@@ -5044,5 +5097,149 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Skannaa / kirjoita"
+  "scanFocus": "Skannaa / kirjoita",
+  "itemCollection": {
+    "title": "Tavaran nouto",
+    "description": "Myyntijakson päättäminen palautusta varten ei vahvista noutoa. Kirjaa tarkistettu tilanne.",
+    "collected": "Noudettu",
+    "notCollected": "Ei noudettu",
+    "unrecorded": "Noutotilaa ei ole kirjattu",
+    "record": "Kirjaa noutotila",
+    "status": "Noutotila",
+    "choose": "Valitse tila",
+    "date": "Tarkistuspäivä",
+    "note": "Huomautus (valinnainen)",
+    "save": "Tallenna noutotila",
+    "saved": "Noutotila tallennettu"
+  },
+  "itemPeriod": {
+    "title": "Muuta päättämistä",
+    "description": "Avaa tavara uudelleen myyntiin tai korjaa päättämistoimi. Aiemmat tapahtumat säilyvät.",
+    "open": "Näytä muutos",
+    "operation": "Muutos",
+    "reopen": "Avaa uudelleen myyntiin",
+    "correct": "Korjaa päättämistoimi",
+    "saleEndsOn": "Myynnissä tähän päivään asti",
+    "noFee": "Uudelleenavaaminen ei luo maksua tai uutta maksukautta.",
+    "endAction": "Uusi päättämistoimi",
+    "choose": "Valitse päättämistoimi",
+    "reason": "Syy",
+    "confirm": "Olen tarkistanut tavaran ja haluan tallentaa muutoksen.",
+    "save": "Tallenna muutos",
+    "saved": "Muutos tallennettu"
+  },
+  "itemLifecycleBatch": {
+    "title": "Muuta myyntiaikoja",
+    "hint": "Tarkista enintään 50 valittua tuotetta. Tuotteet, joita ei voi muuttaa, ohitetaan ja syy näytetään.",
+    "preview": "Esikatsele",
+    "apply": "Vahvista muutokset",
+    "ready": "Voidaan muuttaa",
+    "applied": "Muutettu",
+    "skipped": "Ohitettu",
+    "back": "Muokkaa valintaa",
+    "results": "Tulokset",
+    "markdown": "Toteuta seuraava ajankohtainen hinnanalennus",
+    "reasons": {
+      "missing": "Tuotetta ei löytynyt",
+      "sold": "Tuote on myyty",
+      "ended": "Tuotteen myynti on päätetty",
+      "markdown_not_due": "Hinnanalennus ei ole ajankohtainen",
+      "collection_not_due": "Noutoaika ei ole päättynyt",
+      "changed": "Tuote muuttui esikatselun jälkeen"
+    },
+    "previewFailed": "Esikatselua ei voitu ladata. Tarkista kentät ja yritä uudelleen."
+  },
+  "periodNotices": {
+    "setting": "Automaattiset myyntiaikailmoitukset",
+    "hint": "Ilmoita myyjälle seitsemän päivää ennen myyntiajan päättymistä ja sen päättyessä. Menneistä tapahtumista ei lähetetä ilmoituksia jälkikäteen."
+  },
+  "sellerAccess": {
+    "choosePassword": "Valitse uusi salasana",
+    "confirmEmail": "Vahvista sähköpostiosoitteesi",
+    "confirmHint": "Avaa sähköpostin vahvistuslinkki. Jos et löydä viestiä, voit lähettää uuden linkin tästä.",
+    "passwordHint": "Valitse uusi salasana, jotta voit viimeistellä palautuksen ja jatkaa.",
+    "switchView": "Valitse näkymä",
+    "store": "Liike",
+    "seller": "Myyjä",
+    "stores": "Omat liikkeet",
+    "rateLimited": "Liian monta yritystä lyhyessä ajassa. Odota hetki ja yritä uudelleen. Tarkista myös, onko sähköposti jo saapunut."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Myyjäportaali",
+    "details": "Omat tiedot",
+    "agreement": "Sopimus",
+    "invoices": "Itselaskutuslaskut",
+    "account": "Tilin asetukset",
+    "noAgreement": "Liike ei ole vielä julkaissut sopimusta."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Ehdot lyhyesti",
+    "currentSettings": "Tässä näkyvät myymälän nykyiset asetukset. Tuotteille tallennetut ehdot säilyvät. Lue koko sopimus alta.",
+    "commission": "Myymälän provisio: {rate} % {basis}.",
+    "days": "Myyntiaika: {days} päivää.",
+    "months": "Myyntiaika: {months} kalenterikuukautta tuotteiden vastaanottamisesta.",
+    "collection": "Nouda myymättömät tuotteet {days} päivän kuluessa myyntiajan päättymisestä.",
+    "return": "Myyntiajan jälkeen: myymättömät tuotteet palautetaan.",
+    "charity": "Myyntiajan jälkeen: myymättömät tuotteet lahjoitetaan hyväntekeväisyyteen.",
+    "fullText": "Lue koko sopimus",
+    "needsApproval": "Hyväksyntä tarvitaan"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Rekisteröitymisesi myymälään {store} on hyväksytty",
+    "body": "Hei {seller}!\n\n{store} on hyväksynyt rekisteröitymisesi. Voit nyt kirjautua myyjäportaaliin tilillä, jota käytit rekisteröityessäsi:\n{url}\n\nSiellä voit seurata tuotteitasi ja tilityksiäsi."
+  },
+  "returnNavigation": {
+    "back": "Takaisin"
+  },
+  "labelFields": {
+    "title": "Tuote-etikettien kentät",
+    "hint": "Valitse enintään neljä ominaisuutta tulostusjärjestyksessä. Valinta koskee Zebraa, selainta ja PDF-arkkeja. Puuttuvat arvot ohitetaan. Hinta ja viivakoodi säilyvät aina.",
+    "custom": "Käytä samoja kenttiä koko myymälässä",
+    "default": "Käytetään tuotetyypin nykyistä kenttäjärjestystä.",
+    "field": "Kenttä {number}",
+    "none": "Ei kenttää",
+    "save": "Tallenna etikettikentät",
+    "saved": "Etikettikentät tallennettu."
+  },
+  "priceEdit": {
+    "title": "Muuta hintaa",
+    "reason": "Syy (valinnainen)",
+    "none": "Ei syytä",
+    "store": "Myymälän päätös",
+    "sale": "Alennusmyynti",
+    "defect": "Vika",
+    "other": "Muu",
+    "custom": "Oma syy",
+    "saved": "Hinta on tallennettu."
+  },
+  "saleSummary": {
+    "title": "Myyntiyhteenveto",
+    "download": "Lataa myyntiyhteenveto (PDF)",
+    "saleDate": "Myyntipäivä",
+    "reference": "Myyntiviite",
+    "notice": "Yhteenveto Komisioon kirjatuista tiedoista. Kassajärjestelmä antaa kuitin.",
+    "reversed": "Myynti on peruttu",
+    "returned": "Kirjattu palautus",
+    "originalTotal": "Alkuperäinen myynti yhteensä",
+    "returnTotal": "Kirjatut palautukset yhteensä",
+    "currentDetails": "Myymälän ja tuotteiden kuvaukset perustuvat nykyisiin tietoihin. Summat perustuvat kirjattuun myyntiin ja mahdollisiin palautuksiin.",
+    "generatedAt": "Luotu"
+  },
+  "registration": {
+    "title": "Tuotteen rekisteröinti",
+    "hint": "Oletuskentät koskevat tuotetyyppejä, jotka käyttävät myymälän asetuksia.",
+    "descriptionRequired": "Vaadi kuvaus rekisteröinnissä",
+    "template": "Otsikko, kun kuvaus puuttuu",
+    "templateHint": "Käytä näitä paikkamerkkejä. Puuttuvat arvot ohitetaan; tyhjän otsikon tilalla käytetään tuoteviitettä.",
+    "fields": "Myymälän oletuskentät",
+    "inherit": "Käytä myymälän oletuskenttiä",
+    "note": "Sisäinen huomautus",
+    "noteHint": "Vain henkilökunnalle. Ei näytetä myyjälle eikä sisälly etiketteihin, myyntiyhteenvetoihin tai kassajärjestelmän tietoihin.",
+    "save": "Tallenna",
+    "retry": "Yritä uudelleen",
+    "saved": "Tallennettu.",
+    "invalid": "Tarkista kentät ja otsikon paikkamerkit.",
+    "changed": "Tiedot ovat muuttuneet tai käyttöoikeus puuttuu. Lataa sivu uudelleen.",
+    "uncertain": "Vastausta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla."
+  }
 }

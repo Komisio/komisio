@@ -37,7 +37,6 @@ export const publishReceptionReviewPayload = z.strictObject({
   expiresAt: z.iso.datetime(),
   suggestions: receptionSuggestions.refine(
     (s) =>
-      s.attributes.some((a) => a.slug === 'description') &&
       !!s.price &&
       s.questions.length === 0 &&
       s.attributes.every((a) => a.certainty === 'observed'),

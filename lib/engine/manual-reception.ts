@@ -9,6 +9,16 @@ import {
 const descriptionRef = 'komisio:manual-description:v1',
   appraisalRef = 'komisio:manual-appraisal:v1',
   typeRef = 'komisio:manual-item-type:v1'
+const attributePrefix = 'komisio:manual-attribute:'
+const manualAttribute = z.object({
+  slug: z
+    .string()
+    .regex(/^[a-z][a-z0-9_]{0,39}$/)
+    .refine((s) => s !== 'description'),
+  definitionVersion: z.number().int().positive(),
+  value: z.string().trim().min(1).max(1000),
+  sourceId: z.uuid(),
+})
 const appraisal = z.strictObject({
   amount: suggestedPrice.shape.amount,
   reference: z.string().trim().min(1).max(200),
@@ -24,8 +34,9 @@ export function exactPrice(input: string) {
   return suggestedPrice.shape.amount.parse(normalized)
 }
 export const manualReceptionInput = appraisal.extend({
-  description: z.string().trim().min(1).max(1000),
+  description: z.string().trim().max(1000),
   itemType: receptionSuggestions.shape.itemType,
+  attributes: z.array(manualAttribute).max(100).optional(),
 })
 export function manualReceptionSources(
   previous: ReceptionSession['sources'],
@@ -39,15 +50,30 @@ export function manualReceptionSources(
     ...previous.filter(
       (s) =>
         s.reference !== descriptionRef &&
+        !s.reference.startsWith(attributePrefix) &&
         s.reference !== appraisalRef &&
         s.reference !== typeRef,
     ),
-    {
-      id: descriptionId,
+    ...(c.attributes ?? []).map((a) => ({
+      id: a.sourceId,
       kind: 'observation',
-      reference: descriptionRef,
-      observation: c.description,
-    },
+      reference: `${attributePrefix}${a.slug}:v1`,
+      observation: JSON.stringify({
+        slug: a.slug,
+        definitionVersion: a.definitionVersion,
+        value: a.value,
+      }),
+    })),
+    ...(c.description
+      ? [
+          {
+            id: descriptionId,
+            kind: 'observation',
+            reference: descriptionRef,
+            observation: c.description,
+          },
+        ]
+      : []),
     {
       id: appraisalId,
       kind: 'price-evidence',
@@ -84,14 +110,20 @@ export function readManualReception(
   const types = sources.filter(
     (s) => s.kind === 'observation' && s.reference === typeRef,
   )
-  if (descriptions.length !== 1 || appraisals.length !== 1 || types.length > 1)
+  if (descriptions.length > 1 || appraisals.length !== 1 || types.length > 1)
     return null
   try {
     const a = appraisal.parse(JSON.parse(appraisals[0].observation))
     const input = manualReceptionInput.parse({
       ...a,
-      description: descriptions[0].observation,
+      description: descriptions[0]?.observation ?? '',
       itemType: types[0]?.observation,
+      attributes: sources
+        .filter(
+          (s) =>
+            s.kind === 'observation' && s.reference.startsWith(attributePrefix),
+        )
+        .map((s) => ({ ...JSON.parse(s.observation), sourceId: s.id })),
     })
     return {
       input,
@@ -100,13 +132,24 @@ export function readManualReception(
         // description is a platform definition at version one, seeded with the
         // vocabulary, so a manual reception can name it without a lookup.
         attributes: [
-          {
-            slug: 'description',
-            definitionVersion: 1,
-            value: input.description,
-            sourceIds: [descriptions[0].id],
+          ...(input.description
+            ? [
+                {
+                  slug: 'description',
+                  definitionVersion: 1,
+                  value: input.description,
+                  sourceIds: [descriptions[0].id],
+                  certainty: 'observed',
+                },
+              ]
+            : []),
+          ...(input.attributes ?? []).map((a) => ({
+            slug: a.slug,
+            definitionVersion: a.definitionVersion,
+            value: a.value,
+            sourceIds: [a.sourceId],
             certainty: 'observed',
-          },
+          })),
         ],
         price: {
           currency,

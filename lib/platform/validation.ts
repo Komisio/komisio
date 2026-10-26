@@ -57,7 +57,15 @@ export const commandSchema = z.discriminatedUnion('action', [
   }),
   z.object({ action: z.literal('chainLeave'), tenantId }),
 ])
-export function safeNext(value: string | null | undefined) {
+export function safeNext(value: string | null | undefined): string {
+  if (value === '/seller/activate' || value === '/update-password') return value
+  if (value?.startsWith('/update-password?next=')) {
+    const target = new URL(value, 'https://local.invalid').searchParams.get(
+      'next',
+    )
+    if (!target || target.startsWith('/update-password')) return '/'
+    return `/update-password?next=${encodeURIComponent(safeNext(target))}`
+  }
   if (value === '/account' || value === '/seller' || value === '/intake/open')
     return value
   // Exact same-application label destinations only; no arbitrary query or redirect.

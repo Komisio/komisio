@@ -25,29 +25,39 @@ const subscribe = () => () => {}
 const clientReady = () => true
 const serverReady = () => false
 export function AuthForm({
-  mode,
+  mode: initialMode,
   next = '/',
   callbackError = false,
   initialLocale = 'sv',
   marketingConsent = false,
   legalBaseUrl,
+  registrationStoreName,
+  initialEmail = '',
 }: {
-  mode: 'login' | 'register' | 'reset' | 'password'
+  mode: 'login' | 'register' | 'reset' | 'password' | 'confirm'
   next?: string
   callbackError?: boolean
   initialLocale?: Locale
   marketingConsent?: boolean
   legalBaseUrl?: string
+  registrationStoreName?: string | null
+  initialEmail?: string
 }) {
+  const [mode, setMode] = useState(initialMode)
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [locale, setLocale] = useState<Locale>(initialLocale)
   const d = dictionary(locale)
   const [busy, setBusy] = useBusyState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(initialEmail)
   const router = useRouter()
-  const destination = safeNext(next)
+  const requested = safeNext(next)
+  const destination =
+    (mode === 'password' || mode === 'reset') &&
+    requested.startsWith('/update-password')
+      ? '/'
+      : requested
   function changeLocale(value: Locale) {
     setLocale(value)
     document.cookie = `komisio-locale=${value};path=/;SameSite=Lax`
@@ -60,7 +70,9 @@ export function AuthForm({
           ? translated.register
           : mode === 'reset'
             ? translated.reset
-            : translated.passwordChange
+            : mode === 'confirm'
+              ? translated.sellerAccess.confirmEmail
+              : translated.sellerAccess.choosePassword
     document.title = `${title} · Komisio`
   }
   async function submit(form: React.FormEvent<HTMLFormElement>) {
@@ -78,12 +90,16 @@ export function AuthForm({
           email,
           password,
         })
+        if (error?.code === 'email_not_confirmed') {
+          setMode('confirm')
+          return
+        }
         if (error) throw error
         const { data } = await client.auth.mfa.getAuthenticatorAssuranceLevel()
         router.push(
           data?.nextLevel === 'aal2' && data.currentLevel !== 'aal2'
             ? `/mfa?next=${encodeURIComponent(destination)}`
-            : destination,
+            : `/auth/landing?next=${encodeURIComponent(destination)}`,
         )
         router.refresh()
       } else if (mode === 'register') {
@@ -103,22 +119,40 @@ export function AuthForm({
         })
         if (error) throw error
         if (data.session) {
-          router.push(destination)
+          router.push(`/auth/landing?next=${encodeURIComponent(destination)}`)
           router.refresh()
         } else setSuccess(d.verifySent)
       } else if (mode === 'reset') {
         const { error } = await client.auth.resetPasswordForEmail(email, {
-          redirectTo: `${base}/auth/callback?next=/account`,
+          redirectTo: `${base}/auth/callback?next=${encodeURIComponent(`/update-password?next=${encodeURIComponent(destination)}`)}`,
         })
         if (error) throw error
         setSuccess(d.resetSent)
+      } else if (mode === 'confirm') {
+        const { error } = await client.auth.resend({
+          type: 'signup',
+          email,
+          options: {
+            emailRedirectTo: `${base}/auth/callback?next=${encodeURIComponent(destination)}`,
+          },
+        })
+        if (error) throw error
+        setSuccess(d.verifySent)
       } else {
         const { error } = await client.auth.updateUser({ password })
         if (error) throw error
-        setSuccess(d.saved)
+        router.replace(`/auth/landing?next=${encodeURIComponent(destination)}`)
+        router.refresh()
       }
-    } catch {
-      setError(d.authError)
+    } catch (error) {
+      setError(
+        error &&
+          typeof error === 'object' &&
+          'status' in error &&
+          error.status === 429
+          ? d.sellerAccess.rateLimited
+          : d.authError,
+      )
     } finally {
       setBusy(false)
     }
@@ -131,13 +165,20 @@ export function AuthForm({
         type: 'signup',
         email,
         options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=${encodeURIComponent(destination)}`,
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin}/auth/callback?next=${encodeURIComponent(destination)}`,
         },
       })
       if (error) throw error
       setSuccess(d.verifySent)
-    } catch {
-      setError(d.authError)
+    } catch (error) {
+      setError(
+        error &&
+          typeof error === 'object' &&
+          'status' in error &&
+          error.status === 429
+          ? d.sellerAccess.rateLimited
+          : d.authError,
+      )
     } finally {
       setBusy(false)
     }
@@ -150,7 +191,9 @@ export function AuthForm({
         ? d.register
         : mode === 'reset'
           ? d.reset
-          : d.passwordChange
+          : mode === 'confirm'
+            ? d.sellerAccess.confirmEmail
+            : d.sellerAccess.choosePassword
   return (
     <div className="auth-layout" lang={intlLocale(locale)}>
       <aside className="auth-story">
@@ -188,6 +231,15 @@ export function AuthForm({
             <Brand />
           </div>
           <h1>{title}</h1>
+          {registrationStoreName &&
+            (mode === 'register' || mode === 'login') && (
+              <p className="registration-store-name">
+                {d.selfRegistration.storeContext.replace(
+                  '{store}',
+                  () => registrationStoreName,
+                )}
+              </p>
+            )}
           {mode === 'register' && destination === '/' && (
             <AdsConsentControl
               d={d}
@@ -203,7 +255,11 @@ export function AuthForm({
                 ? d.registerIntro
                 : mode === 'login'
                   ? d.loginIntro
-                  : d.passwordHint}
+                  : mode === 'confirm'
+                    ? d.sellerAccess.confirmHint
+                    : mode === 'password'
+                      ? d.sellerAccess.passwordHint
+                      : d.passwordHint}
           </p>
           {destination.startsWith('/invite/') &&
             (mode === 'register' || mode === 'login') && (
@@ -231,7 +287,7 @@ export function AuthForm({
                   />
                 </div>
               )}
-              {mode !== 'reset' && (
+              {mode !== 'reset' && mode !== 'confirm' && (
                 <div className="field">
                   <label htmlFor="password">
                     {mode === 'password' ? d.newPassword : d.password}
@@ -264,7 +320,10 @@ export function AuthForm({
                     marginBottom: 24,
                   }}
                 >
-                  <Link href="/reset-password" className="text-link">
+                  <Link
+                    href={`/reset-password?next=${encodeURIComponent(destination)}`}
+                    className="text-link"
+                  >
                     {d.forgot}
                   </Link>
                 </p>
@@ -277,9 +336,11 @@ export function AuthForm({
                   ? d.loading
                   : mode === 'reset'
                     ? d.sendReset
-                    : mode === 'password'
-                      ? d.savePassword
-                      : title}
+                    : mode === 'confirm'
+                      ? d.resend
+                      : mode === 'password'
+                        ? d.savePassword
+                        : title}
                 <ArrowRight size={16} />
               </Button>
             </form>
@@ -319,7 +380,7 @@ export function AuthForm({
               </>
             ) : (
               <Link
-                href={mode === 'password' ? '/' : '/login'}
+                href={`/login?next=${encodeURIComponent(destination)}`}
                 className="text-link"
               >
                 {mode === 'password' ? d.back : d.backLogin}

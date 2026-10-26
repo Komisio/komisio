@@ -1,5 +1,21 @@
 # Decision Log
 
+- 2026-10-26: #638 shows an exact pending seller-registration count to owner/admin/staff in dashboard and navigation, without exposing applicant details in the count read. Existing submitted/reviewed audit events remain. Store notification email and its rate limit are a separate delivery slice.
+
+- 2026-10-26: #651 makes human single/bulk price reasons optional, with suggested reasons and free text. Price history retains actor/time; inline edits compare the displayed price and replay once. Inventory and drop-off lists share editing and put category, type and price before secondary fields.
+
+- 2026-10-26: #652 adds owner/admin selection of up to four ordered label attributes, retaining type defaults until chosen. Blank/punctuation titles print no heading. Single-seller A4 sheets use a seller/date filename and sheet-only heading; mixed sheets stay neutral. Price/barcode remain.
+
+- 2026-10-26: #650 carries allowlisted internal origins in detail links, retaining list queries and tabs. Back uses the origin or a safe default, never history depth. Tab-local bounded scroll memory restores position; saves retain the origin and existing unsaved-work warnings.
+
+- 2026-10-26: #643 freezes the application UI language. Approval replies ignore routine notification opt-outs, use application/store/English fallback and retain communication history. A tenant-locked claim permits one send attempt per approval; unknown outcomes never resend automatically.
+
+- 2026-10-26: #654 adds optional collection days to new day-period consignment return terms; calendar snapshots and historic items remain unchanged. Grace follows extensions and reopening in Stockholm time. Ownership transfer, acquisition VAT and reversal rules remain deferred.
+
+- 2026-10-26: #656 explicitly opts list/report routes into a wide main-container variant. Detail/settings routes keep the reading width; entry forms inside mixed workspaces use a shared reading-width wrapper. Existing mobile padding and table scrolling remain intact.
+
+- 2026-10-26: #649 puts seller approval in the Agreement tab. A seller-scoped summary shows current effective commission and period settings separately from literal published terms. Acceptance stays version-bound and append-only; staff PDF access and historical evidence remain available.
+
 - 2026-10-21: e-conomic sends only the signed change from the last confirmed export for a store/date. Freeze its baseline and full target; serialize across versions. Unknown sends, ambiguous legacy history, stale baselines and changed posting context block sending. Existing records stay immutable.
 - 2026-10-21: An unverified e-conomic response after dispatch is a held provider outcome, never invalid user input. Show explicit verification guidance for new and historical holds; do not resend or infer success from a visible voucher number alone.
 
@@ -1203,3 +1219,23 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-25: #626: Full-VAT business seller credit includes supplier VAT, extracted per sale line in öre (100 = 80 net + 20 VAT at 25%). Freeze supplier amounts; returns reverse original facts. Self-billing uses settlement numbering and immutable identity snapshots.
 
 - 2026-10-26: #632 selects optional category IDs in reception and type defaults. Only unique legacy matches backfill; original facts remain. Category reports and filters use IDs, with unlinked items grouped together. Existing financial and access rules are unchanged.
+
+- 2026-10-26: #631: PayPal item readiness uses existing sale facts and VAT mapping. Missing configuration shows attention and prevents automatic claims until corrected. No VAT choice is inferred; historic outcomes, export guards and lease/retry boundaries remain unchanged.
+
+- 2026-10-26: #637: A current enabled seller-registration capability with an agreement exposes only the store name before login. Join and auth pages resolve it server-side; invalid links return no name. Registration, verified identity, agreement access and staff approval stay unchanged.
+
+- 2026-10-26: #636 history displays recorded end actions, reasons, extension days and price changes. Future markdown events retain the previous price; old events are not rewritten or guessed. Customer returns have a distinct label from returns to sellers. Financial calculations stay unchanged.
+- 2026-10-26: #636: reopening requires a new future sale-end date and a reason. Period notices cover new events only, seven days before end and at end. Pause/resume is deferred until safe automatic POS handling is verified; manual POS handling is not an interim release.
+- 2026-10-26: #636: staff record seller collection as immutable item events tied to the current return-to-seller end event. Each record states collected/not collected and an observed date, not a future plan. Stale edits require reload; replay creates no duplicate or financial entries.
+- 2026-10-26: #636: reopening creates no automatic fee and starts no new monthly fee period. Previous fees stay unchanged; other active items and new receipts retain the existing fee rules.
+- 2026-10-26: #636: staff reopen or correct an ended item with a reason and current end-event identity. Transfers stay terminal; sold goods require customer return. Reopening sells through the chosen future Stockholm date, preserves prices/terms and adds no fees. Corrections retain prior evidence.
+- 2026-10-26: #636: staff bulk lifecycle actions preview up to 50 items. Apply rechecks each item, skips ineligible or changed facts and records one event per eligible item. An immutable audit receipt replays the exact result, including skips. Agent proposals retain second-person approval.
+- 2026-10-26: #636: period notices have an independent default-on store setting. Seller automatic-email opt-out wins. Activation and re-enabling exclude past due events. One reminder and one end notice per item/reopening cycle; extension never repeats a claimed reminder.
+- 2026-10-26: #636: an operator-registered verified identity scans bounded period candidates without tenant membership. Claims recheck facts under the tenant lock, freeze existing communication history and permit one send attempt. Unknown results never resend automatically; shared mail caps apply.
+- 2026-10-26: #646 retains verified-email and MFA boundaries for all sellers, including invited accounts. Recovery must choose a new password before returning to work. Seller-only login lands in the portal; one store opens directly. Dual-role users may switch views without changing membership.
+- 2026-10-26: #647 groups seller items into for sale, sold and ended with counts before status paging. Dates show the sale, original end event or expired period boundary; end corrections keep the original date. Pausing remains deferred under #636.
+- 2026-10-26: #648 organizes the seller portal into items, payouts, details and agreement tabs. Payouts retain business self-invoices; generic statements, internal ledger events and fee history leave the overview. Existing requests, consent and access checks are unchanged.
+- 2026-10-26: #655 becomes a simple sales summary PDF: recorded sale prices/currency and separate returns, current store/item descriptions, no internal VAT, commission or seller data. Download is a tenant-authorized read; no cash receipt, payment claim or new financial entry is created.
+- 2026-10-26: #653 makes description optional by default; stores may require it for new registration. Missing titles use the store template and finally the item reference, without inventing source observations.
+- 2026-10-26: #653 fields inherit store defaults unless a type overrides them. Existing tenant profiles retain overrides; platform starter profiles inherit. Description requirements are store-wide.
+- 2026-10-26: #653 internal notes are append-only staff records, excluded from seller evidence, labels, customer documents and POS. Registration saves supplied notes atomically; edits use optimistic concurrency and request replay.

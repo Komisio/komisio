@@ -78,6 +78,9 @@ export const itemEventKind = z.enum([
   'markdown_applied',
   'period_extended',
   'period_ended',
+  'collection_recorded',
+  'period_reopened',
+  'period_end_corrected',
 ])
 const priceRow = z.object({
   actor: itemActor.optional(),

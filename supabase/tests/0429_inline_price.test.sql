@@ -1,0 +1,51 @@
+begin;
+\ir bag-reception-fixture.inc
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values ('f0000000-0000-4000-8000-000000000221','bulk-life@example.test',now());
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000221","role":"authenticated"}';
+select set_config('test.tenant',create_tenant('Bulk lifecycle','bulk-lifecycle',gen_random_uuid())::text,true);
+select set_config('test.seller',register_seller(current_setting('test.tenant')::uuid,gen_random_uuid(),'Synthetic seller','seller@bulk.test','')::text,true);
+select set_config('test.agreement',publish_seller_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),null,'Synthetic terms','Test','en',false)::text,true);
+select record_agreement_evidence(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,current_setting('test.agreement')::uuid,'Signed');
+select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full"}');
+select set_config('test.bag',receive_bag_with_agreement(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.seller')::uuid,'',current_setting('test.agreement')::uuid)::text,true);
+create function pg_temp.make_item() returns uuid language plpgsql as $$
+declare draft uuid:=gen_random_uuid(); item uuid:=gen_random_uuid();
+begin
+ perform pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,draft,0,'Synthetic bulk jacket','Jackets','Good');
+ perform public.accept_item(current_setting('test.tenant')::uuid,item,'reception_review',draft,1,20000);
+ return item;
+end $$;
+
+select set_config('test.item',pg_temp.make_item()::text,true);
+select set_config('test.request',gen_random_uuid()::text,true);
+select lives_ok($$select set_item_price_checked(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.item')::uuid,15000,'',20000)$$,'inline price accepts no reason');
+select lives_ok($$select set_item_price_checked(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.item')::uuid,15000,'',20000)$$,'lost response replays original price');
+select is((select count(*) from item_prices where item_id=current_setting('test.item')::uuid and reason='manual'),1::bigint,'one immutable manual price');
+select is((select detail->>'reason' from item_events where id=current_setting('test.request')::uuid),'','absence is retained without an invented reason');
+select is((select actor from item_events where id=current_setting('test.request')::uuid),auth.uid(),'history retains identified actor');
+select ok((select occurred_at is not null from item_events where id=current_setting('test.request')::uuid),'history retains time');
+select throws_ok($$select set_item_price_checked(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,13000,'',20000)$$,'P0001','ITEM_PRICE_CHANGED','stale list cannot overwrite a price');
+select throws_ok($$select set_item_price_checked(current_setting('test.tenant')::uuid,current_setting('test.request')::uuid,current_setting('test.item')::uuid,15000,'',19000)$$,'P0001','REQUEST_CONFLICT','replay binds previous displayed price');
+select throws_ok($$select set_item_price_checked(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,0,'',15000)$$,'P0001','INVALID_INPUT','positive price remains required');
+select lives_ok($$select set_item_price(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,14000,null)$$,'single lifecycle change accepts omitted note');
+select set_config('test.operation','{"kind":"setPrice","priceOre":12000,"reason":""}',true);
+select set_config('test.preview',preview_item_lifecycle_batch(current_setting('test.tenant')::uuid,array[current_setting('test.item')::uuid],current_setting('test.operation')::jsonb)::text,true);
+select lives_ok($$select apply_item_lifecycle_batch(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.operation')::jsonb,current_setting('test.preview')::jsonb)$$,'bulk price accepts an empty reason');
+select throws_ok($$select preview_item_lifecycle_batch(current_setting('test.tenant')::uuid,array[current_setting('test.item')::uuid],'{"kind":"extend","days":7,"reason":""}')$$,'P0001','INVALID_INPUT','extension still needs its reason');
+select set_config('test.operation','{"kind":"end","endAction":"return","reason":"Custom physical return arrangement"}',true);
+select set_config('test.preview',preview_item_lifecycle_batch(current_setting('test.tenant')::uuid,array[current_setting('test.item')::uuid],current_setting('test.operation')::jsonb)::text,true);
+select lives_ok($$select apply_item_lifecycle_batch(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.operation')::jsonb,current_setting('test.preview')::jsonb)$$,'bulk ending accepts free text');
+select throws_ok($$select set_item_price_checked(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,11000,'',12000)$$,'P0001','ITEM_ENDED','ended goods remain blocked');
+reset role;
+insert into auth.users(id,email,email_confirmed_at) values ('f0000000-0000-4000-8000-000000000222','reader-price@example.test',now());
+insert into tenant_members(tenant_id,user_id,role) values(current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000222','readonly');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000222","role":"authenticated"}';
+select throws_ok($$select set_item_price_checked(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,11000,'',12000)$$,'42501','FORBIDDEN','read-only members cannot change a price');
+set local role anon;
+select throws_ok($$select public.set_item_price_checked(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,11000,'',12000)$$,'42501',null,'anonymous calls denied');
+select * from finish();
+rollback;

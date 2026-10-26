@@ -1,3 +1,4 @@
+import { BackLink } from '@/components/platform/back-link'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
 import { notFound } from 'next/navigation'
@@ -55,9 +56,9 @@ export default async function BagLabel({
   return (
     <div className="bag-label-page">
       {/* Reload the queue: cached client navigation can retain #new-seller. */}
-      <a className="text-link no-print" href="/intake">
-        {d.back}
-      </a>
+      <BackLink className="text-link no-print" href="/intake">
+        {dictionary(ctx.locale).returnNavigation.back}
+      </BackLink>
       <div className="page-heading no-print">
         <h1>{d.label}</h1>
       </div>

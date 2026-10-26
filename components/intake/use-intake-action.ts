@@ -104,6 +104,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
           'INVALID_INPUT',
           'AGREEMENT_CHANGED',
           'POLICY_CHANGED',
+          'LABEL_FIELDS_CHANGED',
+          'ITEM_PRICE_CHANGED',
           'PROFILE_CHANGED',
           'SELLER_TERMS_CHANGED',
           'MAP_CHANGED',
@@ -127,6 +129,10 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'AUTH_REQUIRED',
             'FORBIDDEN',
             'TENANT_CHANGED',
+            'ITEM_COLLECTION_CHANGED',
+            'ITEM_COLLECTION_UNAVAILABLE',
+            'ITEM_PERIOD_CHANGED',
+            'ITEM_TRANSFER_TERMINAL',
             'STOCKTAKE_OPEN',
             'STOCKTAKE_CHANGED',
             'STOCKTAKE_CLOSED',
@@ -136,6 +142,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
             'BAG_PROCESSING_CHANGED',
             'BAG_COMPLETED',
             'POLICY_CHANGED',
+            'LABEL_FIELDS_CHANGED',
+            'ITEM_PRICE_CHANGED',
             'FEE_DECIDED',
             'FEE_NOT_FOUND',
             'PROFILE_CHANGED',
@@ -163,6 +171,10 @@ export function useIntakeAction(d: Dictionary['intake']) {
                         'STOCKTAKE_CHANGED',
                         'STOCKTAKE_CLOSED',
                         'STOCKTAKE_NOT_FOUND',
+                        'ITEM_COLLECTION_CHANGED',
+                        'ITEM_COLLECTION_UNAVAILABLE',
+                        'ITEM_PERIOD_CHANGED',
+                        'ITEM_TRANSFER_TERMINAL',
                       ].includes(result.error)
                     ? d.recordChanged
                     : result.error === 'PAYOUT_BANK_REVIEW_REQUIRED'
@@ -193,6 +205,8 @@ export function useIntakeAction(d: Dictionary['intake']) {
                                     : [
                                           'TENANT_CHANGED',
                                           'POLICY_CHANGED',
+                                          'LABEL_FIELDS_CHANGED',
+                                          'ITEM_PRICE_CHANGED',
                                         ].includes(result.error)
                                       ? d.changed
                                       : ['FORBIDDEN', 'AUTH_REQUIRED'].includes(

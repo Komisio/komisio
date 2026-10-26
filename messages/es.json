@@ -243,7 +243,8 @@
       "IMAGE_TOO_LARGE": "La foto es demasiado grande (máximo 3 MB).",
       "INVALID_IMAGE": "El archivo no es una imagen JPEG o PNG válida.",
       "REQUEST_FAILED": "La solicitud falló. Vuelve a intentarlo.",
-      "BAG_COMPLETED": "Esta entrega está completada. Reábrela para continuar."
+      "BAG_COMPLETED": "Esta entrega está completada. Reábrela para continuar.",
+      "DESCRIPTION_REQUIRED": "Introduce una descripción."
     },
     "addPhoto": "Hacer o elegir una foto",
     "sellerSearchHint": "Nombre, correo o teléfono",
@@ -279,7 +280,9 @@
     "typeFieldsLegend": "Elegir campos",
     "assortment": "Grupo de surtido",
     "noAssortment": "Sin grupo de surtido",
-    "noCategory": "Sin categoría"
+    "noCategory": "Sin categoría",
+    "internalNote": "Nota interna",
+    "internalNoteHint": "Solo para el personal. No se muestra al vendedor ni se incluye en etiquetas, resúmenes de venta o datos del TPV."
   },
   "intake": {
     "quickLink": "Recepción rápida: una pantalla por prenda",
@@ -694,7 +697,12 @@
     "zettle.line_resolved": "PayPal POS · Línea de recibo · Resolución manual",
     "zettle.page_received": "PayPal POS · Página de recibos · Recepción",
     "zettle.pull_enabled": "PayPal POS · Obtención de recibos · Activación",
-    "zettle.window_abandoned": "PayPal POS · Periodo de sincronización · Revocación"
+    "zettle.window_abandoned": "PayPal POS · Periodo de sincronización · Revocación",
+    "item.collection_recorded": "Estado de recogida registrado",
+    "item.period_reopened": "Periodo de venta reabierto",
+    "item.period_end_corrected": "Motivo de finalización corregido",
+    "item.lifecycle_batch": "Cambio de períodos de venta en lote",
+    "label_fields.set": "Campos de etiqueta · Guardados"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -1265,7 +1273,8 @@
     "communicationLanguage": "Idioma predeterminado de los mensajes",
     "communicationLanguageHint": "Se usa en los correos a vendedores y como idioma predeterminado de las invitaciones al personal cuando el perfil de la tienda no tiene idioma. Tiene prioridad el idioma del vendedor y después el del perfil de la tienda. El idioma de tu menú no afecta a los correos.",
     "vatModeConsignmentBusiness": "IVA de empresas registradas",
-    "consignment_business": "IVA sobre todo el precio de venta"
+    "consignment_business": "IVA sobre todo el precio de venta",
+    "dayCollectionHelp": "Opcional para períodos en días. Se aplica a los nuevos artículos en consignación que deben devolverse al vendedor. Déjalo vacío si no hay un plazo fijo de recogida. El plazo comienza al terminar el período de venta; la propiedad no cambia automáticamente."
   },
   "sellerTerms": {
     "title": "Condiciones del depositante",
@@ -1393,10 +1402,13 @@
       "price_set": "Precio fijado",
       "provenance": "Procedencia registrada",
       "sold": "Vendido",
-      "returned": "Devuelto",
+      "returned": "Devolución del cliente",
       "markdown_applied": "Rebaja aplicada",
       "period_extended": "Periodo de venta ampliado",
-      "period_ended": "Periodo de venta finalizado"
+      "period_ended": "Periodo de venta finalizado",
+      "collection_recorded": "Estado de recogida registrado",
+      "period_reopened": "Periodo de venta reabierto",
+      "period_end_corrected": "Motivo de finalización corregido"
     },
     "clearFilters": "Borrar filtros",
     "showingRange": "Mostrando {from}–{to} de {total} artículos",
@@ -1411,7 +1423,26 @@
     "markdownWaiting": "Rebaja pendiente",
     "allOwnerships": "Todos los artículos",
     "ownership": "Propiedad",
-    "createPurchasedItem": "Crear artículo"
+    "createPurchasedItem": "Crear artículo",
+    "eventDetails": {
+      "action": "Acción",
+      "reason": "Motivo",
+      "days": "Ampliación (días)",
+      "priceChange": "Cambio de precio",
+      "price": "Precio",
+      "actions": {
+        "charity": "Donación",
+        "return": "Devolución al vendedor",
+        "recycle": "Reciclaje",
+        "transfer": "Traslado a otra tienda"
+      },
+      "collection": "Estado de recogida",
+      "collected": "Recogido",
+      "notCollected": "No recogido",
+      "observedOn": "Fecha de comprobación",
+      "saleEndsOn": "A la venta hasta el día inclusive",
+      "previousAction": "Motivo de finalización anterior"
+    }
   },
   "sales": {
     "title": "Ventas",
@@ -1950,7 +1981,9 @@
       "item_sold": "Artículo vendido",
       "payout_approved": "Pago aprobado",
       "payout_paid": "Pago pagado",
-      "statement_issued": "Liquidación emitida"
+      "statement_issued": "Liquidación emitida",
+      "period_ending": "El período de venta termina pronto",
+      "period_ended": "El período de venta ha terminado"
     },
     "outcomes": {
       "queued": "en cola",
@@ -2021,6 +2054,14 @@
         "bodyNumber": "Nota de crédito de autofactura #{number}. La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación.",
         "amount": "Saldo final: {amount}.",
         "note": "Puede abrir el documento y descargar el PDF en el portal del vendedor."
+      },
+      "period_ending": {
+        "subject": "{store}: el período de venta termina pronto",
+        "body": "Hola {seller}:\n\nEl período de venta de {item} termina el {date}. Contacte con {store} si tiene preguntas sobre los siguientes pasos."
+      },
+      "period_ended": {
+        "subject": "{store}: el período de venta ha terminado",
+        "body": "Hola {seller}:\n\nEl período de venta de {item} ha terminado. Contacte con {store} para obtener información sobre el artículo."
       }
     },
     "invitation": {
@@ -2488,7 +2529,7 @@
     "noItems": "Aún no hay artículos.",
     "item": "Artículo",
     "price": "Precio",
-    "itemDate": "Vendido el / en venta hasta",
+    "itemDate": "Fecha",
     "wasPrice": "antes",
     "until": "hasta",
     "then": "después",
@@ -2577,7 +2618,15 @@
       "sold": "Aún no hay artículos vendidos.",
       "ended": "Aún no hay artículos finalizados.",
       "all": "Aún no hay artículos."
-    }
+    },
+    "itemStatusTabs": {
+      "active": "En venta",
+      "sold": "Vendidos",
+      "ended": "Finalizados"
+    },
+    "forSaleUntil": "En venta hasta",
+    "soldOn": "Vendido el",
+    "endedOn": "Finalizado el"
   },
   "plans": {
     "heading": "Plan",
@@ -3088,7 +3137,7 @@
       "ZETTLE_UNSUPPORTED_PURCHASE": "Este recibo necesita investigación en PayPal POS. Los importes o descuentos no admitidos nunca se adivinan.",
       "ITEM_NOT_FOUND": "No se encontró el artículo en esta tienda. Comprueba su ID completo.",
       "ITEM_ALREADY_SOLD": "Un artículo ya se ha vendido. Comprueba el recibo y la asignación.",
-      "VAT_MODE_NOT_SET": "Elige el modo de IVA de la tienda en los ajustes antes de registrar ventas.",
+      "VAT_MODE_NOT_SET": "Elige en los ajustes de la tienda el modo de IVA correspondiente a la titularidad del artículo antes de exportarlo o registrar una venta.",
       "INVALID_INPUT": "Comprueba que cada fila apunta a un artículo distinto con un ID válido.",
       "REQUEST_CONFLICT": "Esta solicitud ya no coincide con el intento registrado. Recarga y comprueba el resultado.",
       "FORBIDDEN": "Tu rol actual o tu inicio de sesión no permiten esta acción.",
@@ -4053,7 +4102,7 @@
     "review": "Leer y aceptar el acuerdo",
     "accepted": "Acuerdo aceptado",
     "recorded": "La tienda ha registrado tu acuerdo",
-    "accept": "Acepto el acuerdo",
+    "accept": "Aprobar el acuerdo",
     "failed": "No se pudo confirmar la respuesta. Inténtalo de nuevo.",
     "changed": "El acuerdo ha cambiado. Lee la nueva versión antes de aceptarlo.",
     "acceptedBy": "Aceptado por",
@@ -4232,7 +4281,9 @@
       "INVALID_INPUT": "No se pudo completar la importación. No se registraron artículos nuevos.",
       "REQUEST_CONFLICT": "No se pudo completar la importación. No se registraron artículos nuevos.",
       "CURRENCY_MISMATCH": "Las condiciones han cambiado. Revisa el archivo de nuevo.",
-      "CUSTODY_REQUIRED": "Confirmo que los artículos están en la tienda."
+      "CUSTODY_REQUIRED": "Confirmo que los artículos están en la tienda.",
+      "DESCRIPTION_REQUIRED": "Introduce una descripción.",
+      "NOTE_CHANGED": "Los datos han cambiado o no tienes acceso. Recarga la página."
     },
     "fromFile": "Desde archivo",
     "fromPos": "Desde TPV"
@@ -4620,7 +4671,8 @@
     "categoryExists": "Ya existe una categoría con ese nombre.",
     "translations": "Traducciones (opcional)",
     "languages": "Idiomas",
-    "noCategories": "Aún no hay categorías."
+    "noCategories": "Aún no hay categorías.",
+    "inheritDefaults": "Usar los campos predeterminados de la tienda"
   },
   "settingsHelp": {
     "label": "Ayuda",
@@ -4762,6 +4814,7 @@
     "previousCategory": "Texto de categoría anterior: {name}"
   },
   "selfRegistration": {
+    "storeContext": "Regístrate como vendedor en {store}",
     "joinLogin": "¿Quieres vender a través de la tienda? Crea una cuenta personal o inicia sesión si ya tienes una. Después volverás aquí para leer las condiciones de la tienda y enviar tu solicitud.",
     "reviewTerms": "El acuerdo aceptado por el vendedor",
     "title": "Registro de vendedores",
@@ -5044,5 +5097,149 @@
       "zettle": "PayPal POS"
     }
   },
-  "scanFocus": "Escanear / escribir"
+  "scanFocus": "Escanear / escribir",
+  "itemCollection": {
+    "title": "Recogida por el vendedor",
+    "description": "Finalizar el periodo para devolver el artículo no confirma su recogida. Registra lo que se ha comprobado.",
+    "collected": "Recogido",
+    "notCollected": "No recogido",
+    "unrecorded": "Estado de recogida sin registrar",
+    "record": "Registrar estado de recogida",
+    "status": "Estado de recogida",
+    "choose": "Seleccionar estado",
+    "date": "Fecha de comprobación",
+    "note": "Nota (opcional)",
+    "save": "Guardar estado de recogida",
+    "saved": "Estado de recogida guardado"
+  },
+  "itemPeriod": {
+    "title": "Cambiar finalización",
+    "description": "Vuelve a poner el artículo a la venta o corrige el motivo de finalización. Se conserva el historial anterior.",
+    "open": "Mostrar cambio",
+    "operation": "Cambio",
+    "reopen": "Volver a poner a la venta",
+    "correct": "Corregir motivo de finalización",
+    "saleEndsOn": "A la venta hasta el día inclusive",
+    "noFee": "La reapertura no genera cargos ni un nuevo periodo de cuotas.",
+    "endAction": "Nuevo motivo de finalización",
+    "choose": "Elegir motivo de finalización",
+    "reason": "Motivo",
+    "confirm": "He comprobado el artículo y quiero guardar el cambio.",
+    "save": "Guardar cambio",
+    "saved": "Cambio guardado"
+  },
+  "itemLifecycleBatch": {
+    "title": "Cambiar períodos de venta",
+    "hint": "Revise hasta 50 artículos seleccionados. Los que no puedan modificarse se omitirán indicando el motivo.",
+    "preview": "Vista previa",
+    "apply": "Confirmar cambios",
+    "ready": "Se puede cambiar",
+    "applied": "Modificado",
+    "skipped": "Omitido",
+    "back": "Editar selección",
+    "results": "Resultados",
+    "markdown": "Aplicar la siguiente rebaja pendiente",
+    "reasons": {
+      "missing": "Artículo no encontrado",
+      "sold": "El artículo está vendido",
+      "ended": "La venta del artículo ha finalizado",
+      "markdown_not_due": "No hay rebajas pendientes",
+      "collection_not_due": "El plazo de recogida no ha vencido",
+      "changed": "El artículo cambió después de la vista previa"
+    },
+    "previewFailed": "No se pudo cargar la vista previa. Revise los campos e inténtelo de nuevo."
+  },
+  "periodNotices": {
+    "setting": "Mensajes automáticos sobre períodos de venta",
+    "hint": "Avise al vendedor siete días antes de finalizar el período de venta y cuando termine. No se envían eventos pasados de forma retroactiva."
+  },
+  "sellerAccess": {
+    "choosePassword": "Elija una nueva contraseña",
+    "confirmEmail": "Confirme su dirección de correo",
+    "confirmHint": "Abra el enlace de confirmación de su correo. Si no encuentra el mensaje, puede enviar un nuevo enlace aquí.",
+    "passwordHint": "Elija una nueva contraseña para completar el restablecimiento y continuar.",
+    "switchView": "Elegir vista",
+    "store": "Tienda",
+    "seller": "Vendedor",
+    "stores": "Mis tiendas",
+    "rateLimited": "Demasiados intentos en poco tiempo. Espere un poco y vuelva a intentarlo. Compruebe también si el correo ya ha llegado."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Portal del vendedor",
+    "details": "Mis datos",
+    "agreement": "Acuerdo",
+    "invoices": "Autofacturas",
+    "account": "Ajustes de la cuenta",
+    "noAgreement": "La tienda aún no ha publicado un acuerdo."
+  },
+  "sellerAgreementSummary": {
+    "summary": "Resumen de las condiciones",
+    "currentSettings": "Se muestran los ajustes actuales de la tienda. Los artículos conservan las condiciones guardadas para ellos. Lea el acuerdo completo a continuación.",
+    "commission": "Comisión de la tienda: {rate} % {basis}.",
+    "days": "Periodo de venta: {days} días.",
+    "months": "Periodo de venta: {months} meses naturales desde la recepción física.",
+    "collection": "Recoja los artículos no vendidos en los {days} días siguientes al fin del periodo de venta.",
+    "return": "Al finalizar el periodo de venta: se devuelven los artículos no vendidos.",
+    "charity": "Al finalizar el periodo de venta: se donan los artículos no vendidos a una entidad benéfica.",
+    "fullText": "Leer el acuerdo completo",
+    "needsApproval": "Se requiere aprobación"
+  },
+  "registrationApprovalEmail": {
+    "subject": "Tu registro en {store} ha sido aprobado",
+    "body": "¡Hola, {seller}!\n\n{store} ha aprobado tu registro. Ya puedes iniciar sesión en el portal de vendedores con la cuenta que utilizaste al registrarte:\n{url}\n\nAllí puedes consultar tus artículos y pagos."
+  },
+  "returnNavigation": {
+    "back": "Volver"
+  },
+  "labelFields": {
+    "title": "Campos de las etiquetas",
+    "hint": "Elige hasta cuatro atributos en el orden de impresión. Se aplica a las etiquetas Zebra, del navegador y de las hojas PDF. Se omiten los valores que faltan. El precio y el código de barras se mantienen siempre.",
+    "custom": "Usar los mismos campos en toda la tienda",
+    "default": "Se utiliza el orden de campos actual del tipo de artículo.",
+    "field": "Campo {number}",
+    "none": "Ningún campo",
+    "save": "Guardar campos",
+    "saved": "Campos de las etiquetas guardados."
+  },
+  "priceEdit": {
+    "title": "Editar precio",
+    "reason": "Motivo (opcional)",
+    "none": "Sin motivo",
+    "store": "Decisión de la tienda",
+    "sale": "Rebajas",
+    "defect": "Defecto",
+    "other": "Otro",
+    "custom": "Motivo personalizado",
+    "saved": "El precio se ha guardado."
+  },
+  "saleSummary": {
+    "title": "Resumen de venta",
+    "download": "Descargar resumen de venta (PDF)",
+    "saleDate": "Fecha de venta",
+    "reference": "Referencia de venta",
+    "notice": "Resumen de los datos registrados en Komisio. El sistema de caja emite el recibo.",
+    "reversed": "La venta se ha anulado",
+    "returned": "Devolución registrada",
+    "originalTotal": "Total de la venta original",
+    "returnTotal": "Total de devoluciones registradas",
+    "currentDetails": "Las descripciones de la tienda y los artículos reflejan los datos actuales. Los importes proceden de la venta registrada y de las posibles devoluciones.",
+    "generatedAt": "Generado"
+  },
+  "registration": {
+    "title": "Registro de artículos",
+    "hint": "Los campos predeterminados se aplican a los tipos que heredan la configuración de la tienda.",
+    "descriptionRequired": "Exigir descripción al registrar",
+    "template": "Título cuando falta la descripción",
+    "templateHint": "Usa estos marcadores. Se omiten los valores ausentes; un título vacío se sustituye por la referencia del artículo.",
+    "fields": "Campos predeterminados de la tienda",
+    "inherit": "Usar los campos predeterminados de la tienda",
+    "note": "Nota interna",
+    "noteHint": "Solo para el personal. No se muestra al vendedor ni se incluye en etiquetas, resúmenes de venta o datos del TPV.",
+    "save": "Guardar",
+    "retry": "Reintentar",
+    "saved": "Guardado.",
+    "invalid": "Revisa los campos y los marcadores del título.",
+    "changed": "Los datos han cambiado o no tienes acceso. Recarga la página.",
+    "uncertain": "No se pudo confirmar la respuesta. Reintenta con los mismos datos."
+  }
 }

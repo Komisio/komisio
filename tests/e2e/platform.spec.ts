@@ -835,7 +835,13 @@ test('password recovery and MFA protect the authenticated platform', async ({
     page.getByText('Om kontot finns har en återställningslänk skickats.'),
   ).toBeVisible()
   await confirmEmail(page, email, d.authEmail.recovery.subject)
-  await expect(page).toHaveURL(/\/account/)
+  await expect(page).toHaveURL(/\/update-password/)
+  await expect(
+    page.getByRole('heading', {
+      name: d.sellerAccess.choosePassword,
+      exact: true,
+    }),
+  ).toBeVisible()
   await page.getByLabel('Nytt lösenord', { exact: true }).fill(newPassword)
   await page.getByRole('button', { name: d.showPassword, exact: true }).click()
   await expect(
@@ -844,13 +850,7 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await page
     .getByRole('button', { name: 'Spara lösenord', exact: true })
     .click()
-  await expect(page.getByText('Ändringarna har sparats.')).toBeVisible()
-  await expect(page.getByLabel('Nytt lösenord', { exact: true })).toHaveValue(
-    '',
-  )
-  await expect(
-    page.getByLabel('Nytt lösenord', { exact: true }),
-  ).toHaveAttribute('type', 'password')
+  await expect(page).toHaveURL(/\/onboarding$/)
   await page.goto('/onboarding')
   await page.getByLabel('Butikens namn').fill('E2E Security')
   await page.getByRole('button', { name: 'Skapa min butik' }).click()
@@ -922,6 +922,25 @@ test('password recovery and MFA protect the authenticated platform', async ({
   await expect(
     page.getByRole('heading', { name: d.home, exact: true }),
   ).toBeVisible()
+  // A recovery session cannot bypass an already configured second factor.
+  await page.goto('/account')
+  await page.getByRole('button', { name: d.logout, exact: true }).click()
+  await expect(page).toHaveURL(/\/login/)
+  await page.goto('/reset-password')
+  await page.getByLabel(d.email, { exact: true }).fill(email)
+  await page.getByRole('button', { name: d.sendReset, exact: true }).click()
+  await expect(page.getByText(d.resetSent, { exact: true })).toBeVisible()
+  await confirmEmail(page, email, d.authEmail.recovery.subject)
+  await expect(page).toHaveURL(/\/mfa/)
+  await expect(page.getByLabel(d.newPassword, { exact: true })).toHaveCount(0)
+  await page
+    .getByLabel(d.mfaCode, { exact: true })
+    .fill(totp(factor.totp.secret))
+  await page.getByRole('button', { name: 'Verifiera kod', exact: true }).click()
+  await expect(page).toHaveURL(/\/update-password/)
+  await page.getByLabel(d.newPassword, { exact: true }).fill(newPassword + '2')
+  await page.getByRole('button', { name: d.savePassword, exact: true }).click()
+  await expect(page).toHaveURL(baseURL! + '/')
 })
 
 test('bag queue finds older receipts and keeps seller filters while paging', async ({
@@ -1506,11 +1525,11 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
     page.getByRole('heading', { name: 'Mottagningskö' }),
   ).toBeVisible()
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toContainText('Väntar på mottagande')
   // Seller approval never proves the garment is in the store: custody comes first.
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toContainText('Registrera mottagandet')
   await page.goto(`/intake/reception/${sessionId}`)
   await expect(page.getByText('Inget mottagande registrerat')).toBeVisible()
@@ -1529,17 +1548,17 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   ).toHaveCount(0)
   await page.goto('/intake/reception?stage=ready_to_accept')
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toContainText('Acceptera varan')
   await page.getByLabel('Visa läge').selectOption('declined')
   await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toHaveCount(0)
   await page.getByLabel('Visa läge').selectOption('ready_to_accept')
   await page.getByRole('button', { name: 'Visa läge', exact: true }).click()
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toBeVisible()
   // Delegated pricing: the store accepts the garment under the terms in force.
   await page.goto(`/intake/reception/${sessionId}`)
@@ -1565,7 +1584,7 @@ test('seller reviews exact terms on mobile without becoming a store member', asy
   await expect(page.getByText('Ursprung dokumenterat')).toBeVisible()
   await page.goto('/intake/reception?stage=accepted')
   await expect(
-    page.locator(`a[href="/intake/reception/${sessionId}"]`),
+    page.locator(`a[href^="/intake/reception/${sessionId}?"]`),
   ).toContainText('Accepterad som vara')
   expect((await access(reviewId, accessId, false)).status()).toBe(200)
   expect((await mobile.request.get(photoUrl)).status()).toBe(404)

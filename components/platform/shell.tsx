@@ -42,6 +42,7 @@ export function Shell({
   host = false,
   sidebarCollapsed = false,
   sellerAccess = false,
+  pendingRegistrations,
 }: {
   children: React.ReactNode
   d: Dictionary
@@ -54,6 +55,7 @@ export function Shell({
   host?: boolean
   sidebarCollapsed?: boolean
   sellerAccess?: boolean
+  pendingRegistrations?: number
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const pathname = usePathname()
@@ -62,6 +64,7 @@ export function Shell({
   const [signingOut, setSigningOut] = useBusyState(false)
   const confirmNavigation = useConfirmNavigation()
   const groups = buildNavigation(d, {
+    pendingRegistrations,
     intakeEnabled,
     host,
     audit: can(active.role, 'audit.read'),
@@ -149,6 +152,7 @@ export function Shell({
         {d.skipToContent}
       </a>
       <Sidebar
+        pendingRegistrations={pendingRegistrations}
         d={d}
         tenants={tenants}
         active={active}

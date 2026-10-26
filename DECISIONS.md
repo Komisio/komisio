@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-10-26: #638 shows an exact pending seller-registration count to owner/admin/staff in dashboard and navigation, without exposing applicant details in the count read. Existing submitted/reviewed audit events remain. Store notification email and its rate limit are a separate delivery slice.
+
 - 2026-10-26: #651 makes human single/bulk price reasons optional, with suggested reasons and free text. Price history retains actor/time; inline edits compare the displayed price and replay once. Inventory and drop-off lists share editing and put category, type and price before secondary fields.
 
 - 2026-10-26: #652 adds owner/admin selection of up to four ordered label attributes, retaining type defaults until chosen. Blank/punctuation titles print no heading. Single-seller A4 sheets use a seller/date filename and sheet-only heading; mixed sheets stay neutral. Price/barcode remain.

@@ -40,6 +40,7 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
         intakeEnabled: true,
         host: false,
         audit: true,
+        pendingRegistrations: 0,
       }).flatMap((g) => g.links)
       expect(links).toContainEqual(
         expect.objectContaining({ path: '/settings/activity' }),
@@ -66,9 +67,9 @@ test('store menu keeps all destinations and comfortable targets on narrow screen
           .getByRole('main')
           .evaluate((main) => main.getBoundingClientRect().height)
         console.log('menu content height at 320px:', height)
-        // Purchases, item import and owner/admin activity each add a 44px destination.
+        // Purchases, item import, activity and registrations each add a 44px destination.
         // Keep the per-destination density and accessible target size unchanged.
-        expect(height).toBeLessThan(1220 + 3 * 44)
+        expect(height).toBeLessThan(1220 + 4 * 44)
       }
       await page.screenshot({
         path: info.outputPath(`menu-${locale}.png`),

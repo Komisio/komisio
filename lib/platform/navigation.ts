@@ -3,12 +3,22 @@ import type { Dictionary } from '@/lib/i18n'
 // One source for the store navigation: the sidebar groups, the mobile bar
 // and the "more" page read the same list, so a page is never reachable from
 // one and missing from another. Labels are the pages' own titles.
-export type NavLink = { path: string; label: string; icon: string }
+export type NavLink = {
+  path: string
+  label: string
+  icon: string
+  badge?: number
+}
 export type NavGroup = { label: string; links: NavLink[] }
 
 export function buildNavigation(
   d: Dictionary,
-  options: { intakeEnabled: boolean; host: boolean; audit?: boolean },
+  options: {
+    intakeEnabled: boolean
+    host: boolean
+    audit?: boolean
+    pendingRegistrations?: number
+  },
 ): NavGroup[] {
   const n = d.nav
   const groups: NavGroup[] = [
@@ -55,6 +65,16 @@ export function buildNavigation(
         label: n.sellers,
         links: [
           { path: '/intake/sellers', label: n.sellersList, icon: 'Users' },
+          ...(options.pendingRegistrations !== undefined
+            ? [
+                {
+                  path: '/intake/sellers/registrations',
+                  label: d.selfRegistration.queue,
+                  icon: 'Inbox',
+                  badge: options.pendingRegistrations,
+                },
+              ]
+            : []),
           {
             path: '/intake/agreements',
             label: d.agreements.title,
@@ -137,6 +157,12 @@ export function mobileNavigation(
 
 export function isActivePath(pathname: string, path: string) {
   if (path === '/') return pathname === '/'
+  if (
+    path === '/intake/sellers' &&
+    (pathname === '/intake/sellers/registrations' ||
+      pathname.startsWith('/intake/sellers/registrations/'))
+  )
+    return false
   if (path === '/settings' && pathname.startsWith('/settings/activity'))
     return false
   if (path === '/intake/import') return pathname === path

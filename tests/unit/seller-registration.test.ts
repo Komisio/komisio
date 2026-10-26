@@ -4,10 +4,26 @@ import {
   registrationCommand,
   registrationTokenFromNext,
   readPublicRegistrationStore,
+  readPendingRegistrationCount,
 } from '../../lib/engine/seller-registration'
 import { safeNext } from '../../lib/platform/validation'
 
 describe('seller registration boundary', () => {
+  it('reads only the aggregate and never silently turns failures into zero', async () => {
+    const tenant = 'f4300000-0000-4000-8000-000000000001'
+    const rpc = vi.fn().mockResolvedValue({ data: 3, error: null })
+    const client = { rpc } as unknown as SupabaseClient
+    expect(await readPendingRegistrationCount(client, tenant)).toBe(3)
+    expect(rpc).toHaveBeenCalledWith('pending_seller_registration_count', {
+      p_tenant: tenant,
+    })
+    rpc.mockResolvedValueOnce({ data: null, error: { message: 'FORBIDDEN' } })
+    await expect(readPendingRegistrationCount(client, tenant)).rejects.toThrow(
+      'REQUEST_FAILED',
+    )
+    rpc.mockResolvedValueOnce({ data: -1, error: null })
+    await expect(readPendingRegistrationCount(client, tenant)).rejects.toThrow()
+  })
   const valid = {
     action: 'apply',
     token: 'a'.repeat(64),

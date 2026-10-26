@@ -214,7 +214,22 @@ for (const automatic of [false, true])
       await expect(
         sellerPage.getByText(all.sellerPortal.empty, { exact: true }),
       ).toHaveCount(0)
-      await page.goto('/intake/sellers/registrations')
+      await page.goto('/')
+      const followUp = page.locator(
+        'main a.dashboard-followup[href="/intake/sellers/registrations"]',
+      )
+      await expect(
+        page.locator('aside a[href="/intake/sellers/registrations"]'),
+      ).toHaveAccessibleName(`${d.queue} (1)`)
+      await expect(followUp).toContainText('1')
+      await page.locator('main a[href="/intake/sellers/registrations"]').click()
+      await expect(page).toHaveURL(/\/intake\/sellers\/registrations$/)
+      await page.goto('/menu')
+      const queueLink = page.locator(
+        'main a[href="/intake/sellers/registrations"]',
+      )
+      await expect(queueLink).toHaveAccessibleName(`${d.queue} (1)`)
+      await queueLink.click()
       const application = page.getByRole('article', {
         name: 'Synthetic applicant',
         exact: true,
@@ -237,6 +252,9 @@ for (const automatic of [false, true])
         .getByRole('button', { name: d.approve, exact: true })
         .click()
       await expect(page.getByText(d.empty, { exact: true })).toBeVisible()
+      await expect(
+        page.locator('aside a[href="/intake/sellers/registrations"]'),
+      ).toHaveAccessibleName(d.queue)
       const approvedCommand = (await approvalRequest).postDataJSON()
       await expect
         .poll(

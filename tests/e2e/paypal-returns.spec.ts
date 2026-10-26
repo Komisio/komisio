@@ -127,7 +127,10 @@ test('concurrent refund delivery reverses once, links the original sale and hold
     ).toBeVisible()
     await expect(
       page.getByRole('link', { name: d.zettle.returns.original }),
-    ).toHaveAttribute('href', /\/intake\/sales\/[\da-f-]+$/)
+    ).toHaveAttribute(
+      'href',
+      /\/intake\/sales\/[\da-f-]+(?:\?returnTo=[^#]+)?$/,
+    )
     await expect(
       page.getByRole('button', { name: d.zettle.returns.retry }),
     ).toHaveCount(0)

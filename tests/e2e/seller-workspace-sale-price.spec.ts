@@ -79,7 +79,12 @@ test('seller workspace distinguishes actual sale price from list price through r
     await expect(row.locator('.inventory-price')).toHaveText('170.00 SEK')
     await expect(unsold.locator('.inventory-price')).toHaveText('200.00 SEK')
     await row.getByRole('link').click()
-    await expect(page).toHaveURL(new RegExp(`/intake/items/${sold}$`))
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname === `/intake/items/${sold}` &&
+        url.searchParams.get('returnTo') ===
+          `/intake/sellers/${f.seller}#seller-items`,
+    )
   } finally {
     await f.close()
   }

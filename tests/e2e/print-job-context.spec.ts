@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -66,10 +67,7 @@ test('print history identifies its item and printer and can inspect a job beyond
       const source = row.getByRole('link', {
         name: `I-${items[index].slice(0, 8).toUpperCase()}`,
       })
-      await expect(source).toHaveAttribute(
-        'href',
-        `/intake/items/${items[index]}`,
-      )
+      await expectDetailTarget(source, `/intake/items/${items[index]}`)
       await expect(row).toContainText(d.printing.statuses.queued)
     }
     expect(

@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { readFileSync } from 'node:fs'
@@ -107,9 +108,10 @@ test('older purchases remain reachable and can be accepted from their page', asy
       [f.tenant, older.id],
     )
     expect(accepted.rows).toHaveLength(1)
-    await expect(
+    await expectDetailTarget(
       row.getByRole('link', { name: d.items.open, exact: true }),
-    ).toHaveAttribute('href', `/intake/items/${accepted.rows[0].id}`)
+      `/intake/items/${accepted.rows[0].id}`,
+    )
     // The local confirmation link appears before the refreshed receipt replaces
     // its form. Wait for that replacement before an independent navigation.
     await expect(row.locator('form')).toHaveCount(0)

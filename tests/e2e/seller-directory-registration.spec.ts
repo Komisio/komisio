@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -37,10 +38,7 @@ test('directory registration and duplicate selection stay in the seller workspac
     const duplicate = page
       .getByRole('alert')
       .getByRole('link', { name: 'Synthetic P2 seller', exact: true })
-    await expect(duplicate).toHaveAttribute(
-      'href',
-      `/intake/sellers/${f.seller}`,
-    )
+    await expectDetailTarget(duplicate, `/intake/sellers/${f.seller}`)
     // Selecting a match replaces the entered registration. Both choices in
     // the unsaved-details warning must preserve their intended destination.
     page.once('dialog', async (dialog) => {

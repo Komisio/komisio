@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -100,9 +101,10 @@ for (const action of ['adjustSellerLedger', 'issueStatement'] as const)
           },
         ])
       } else {
-        await expect(
+        await expectDetailTarget(
           form.getByRole('link', { name: d.statements.open, exact: true }),
-        ).toHaveAttribute('href', `/intake/statements/${committedId}`)
+          `/intake/statements/${committedId}`,
+        )
         const rows = (
           await f.db.query(
             'select id,number,period_from,period_to from settlement_statements where tenant_id=$1 and seller_id=$2',

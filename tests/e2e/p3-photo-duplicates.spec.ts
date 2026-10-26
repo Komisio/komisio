@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import sharp from 'sharp'
@@ -56,9 +57,10 @@ test('a photo uploaded before is pointed out on the new reception', async ({
       hasText: d.reception.photoSeenBefore,
     })
     await expect(notice).toBeVisible()
-    await expect(
+    await expectDetailTarget(
       notice.getByRole('link', { name: 'Synthetic P2 seller', exact: true }),
-    ).toHaveAttribute('href', `/intake/reception/${first}`)
+      `/intake/reception/${first}`,
+    )
     await page.goto(`/intake/reception/${first}`)
     await expect(
       page.getByRole('status').filter({ hasText: d.reception.photoSeenBefore }),

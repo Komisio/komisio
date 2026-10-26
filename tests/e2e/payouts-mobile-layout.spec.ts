@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -214,9 +215,10 @@ test('a payout for a seller beyond the first fifty names shows the name, not an 
       hasText: p.statuses.requested,
     })
     await expect(card).toHaveCount(1)
-    await expect(
+    await expectDetailTarget(
       card.getByRole('link', { name: 'Synthetic P2 seller', exact: true }),
-    ).toHaveAttribute('href', `/intake/sellers/${f.seller}`)
+      `/intake/sellers/${f.seller}`,
+    )
     await expect(card).not.toContainText(f.seller)
     // The request form's bounded list is the first 50 by name, none of them with credit.
     const request = page.getByTestId('payout-request')

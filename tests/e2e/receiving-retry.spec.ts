@@ -1,3 +1,4 @@
+import { expectDetailTarget } from '../helpers/detail-target'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -112,8 +113,8 @@ for (const action of ['registerSeller', 'receiveBag'] as const) {
           await retry.click()
         }
         if (action === 'receiveBag') {
-          await expect(panel.locator('.intake-success a')).toHaveAttribute(
-            'href',
+          await expectDetailTarget(
+            panel.locator('.intake-success a'),
             `/intake/bags/${savedId}`,
           )
         } else {

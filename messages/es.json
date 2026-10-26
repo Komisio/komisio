@@ -1269,7 +1269,8 @@
     "communicationLanguage": "Idioma predeterminado de los mensajes",
     "communicationLanguageHint": "Se usa en los correos a vendedores y como idioma predeterminado de las invitaciones al personal cuando el perfil de la tienda no tiene idioma. Tiene prioridad el idioma del vendedor y después el del perfil de la tienda. El idioma de tu menú no afecta a los correos.",
     "vatModeConsignmentBusiness": "IVA de empresas registradas",
-    "consignment_business": "IVA sobre todo el precio de venta"
+    "consignment_business": "IVA sobre todo el precio de venta",
+    "dayCollectionHelp": "Opcional para períodos en días. Se aplica a los nuevos artículos en consignación que deben devolverse al vendedor. Déjalo vacío si no hay un plazo fijo de recogida. El plazo comienza al terminar el período de venta; la propiedad no cambia automáticamente."
   },
   "sellerTerms": {
     "title": "Condiciones del depositante",

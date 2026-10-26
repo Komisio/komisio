@@ -1269,7 +1269,8 @@
     "communicationLanguage": "Standardspråk för meddelanden",
     "communicationLanguageHint": "Används för säljarmejl och som förval för personalinbjudningar när butiksprofilen saknar språk. Säljarens eget språk går först, därefter butiksprofilens språk. Språket i din egen meny påverkar inte mejlen.",
     "vatModeConsignmentBusiness": "Moms för momsregistrerade företag",
-    "consignment_business": "Moms på hela försäljningspriset"
+    "consignment_business": "Moms på hela försäljningspriset",
+    "dayCollectionHelp": "Valfritt i dagläge. Gäller nya kommissionsvaror som ska återlämnas till säljaren. Tomt fält betyder ingen fast hämtningsfrist. Fristen räknas från säljperiodens slut; ägandet ändras inte automatiskt."
   },
   "sellerTerms": {
     "title": "Säljarvillkor",

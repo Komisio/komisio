@@ -17,65 +17,75 @@ const days = z.number().int().nonnegative()
 /** Explicit S1 body; default values are selected separately, never merged into input.
  * Parsing is not authorization, policy publication or agreement evidence.
  */
-export const storePolicyBody = z.strictObject({
-  photoSubmissionsEnabled: z.boolean().optional(),
-  submissionPricing: z.enum(['store', 'seller', 'approval']).optional(),
-  commissionBasis: z.enum(['inclusive', 'exclusive']),
-  commissionRatePercent: percent,
-  agreementRequiredFor: z
-    .array(z.enum(['bag_receipt', 'review_publication', 'acceptance']))
-    .max(3)
-    .refine((values) => new Set(values).size === values.length),
-  custodySources: z
-    .array(z.enum(['staff_receipt', 'locker', 'seller_dropoff']))
-    .max(3)
-    .refine((values) => new Set(values).size === values.length),
-  sellerReviewMode: z.enum(['delegated', 'per_item']),
-  salePeriodDays: days.positive(),
-  consignmentPeriod: z
-    .strictObject({
-      months: z.number().int().min(1).max(36),
-      collectionDays: z.number().int().min(0).max(365),
-      monthlyFee: z
-        .strictObject({
-          amountOre: z.number().int().min(1).max(9_999_999_999),
-          vatBasis: z.enum(['inclusive', 'exclusive']),
-          vatRatePercent: percent,
-          collection: z.enum(['balance', 'separate']),
-        })
-        .optional(),
-    })
-    .optional(),
-  unsoldNotifyAfterDays: days,
-  markdownSteps: z.array(z.strictObject({ afterDays: days, percent })),
-  endOfPeriodAction: z.enum(['charity', 'return']),
-  minPayoutThreshold: decimal,
-  // VAT modes (P2 S10, docs/VAT-CASES.md): optional, chosen by the tenant with its accountant.
-  ...vatPolicyShape,
-  // Built-in assistance (P1 S9): the tenant switches it on; the server holds the kill switch.
-  assistanceEnabled: z.boolean().optional(),
-  // Shared language for new AI item text; absence preserves Swedish.
-  itemLanguage: itemLanguage.optional(),
-  // Monthly assistance quota (P2 S20): absent means unlimited, 0 blocks the feature.
-  assistanceMonthlyQuota: z
-    .number()
-    .int()
-    .nonnegative()
-    .max(1_000_000)
-    .optional(),
-  // Automatic seller notifications (P2 S18): absent means off; every message is logged.
-  automaticSellerNotifications: z.boolean().optional(),
-  // Period notices have their own default-on switch; seller opt-out still wins.
-  automaticPeriodNotifications: z.boolean().optional(),
-  // Mail default when the seller and saved public store profile have no language.
-  communicationLanguage: z.enum(locales).optional(),
-  // Automatic markdowns (P3): absent means off; due steps are applied by the daily run as the policy's publisher.
-  automaticMarkdowns: z.boolean().optional(),
-  // One currency per store (decided 2026-09-13); absent means SEK; frozen after the first money fact.
-  currency: currencyCode.optional(),
-  // Intake profile (2026-09-15): quick is one screen per garment, standard adds the seller's price approval, full keeps the step-by-step reception. Absent means quick.
-  intakeProfile: z.enum(['quick', 'standard', 'full']).optional(),
-})
+export const storePolicyBody = z
+  .strictObject({
+    photoSubmissionsEnabled: z.boolean().optional(),
+    submissionPricing: z.enum(['store', 'seller', 'approval']).optional(),
+    commissionBasis: z.enum(['inclusive', 'exclusive']),
+    commissionRatePercent: percent,
+    agreementRequiredFor: z
+      .array(z.enum(['bag_receipt', 'review_publication', 'acceptance']))
+      .max(3)
+      .refine((values) => new Set(values).size === values.length),
+    custodySources: z
+      .array(z.enum(['staff_receipt', 'locker', 'seller_dropoff']))
+      .max(3)
+      .refine((values) => new Set(values).size === values.length),
+    sellerReviewMode: z.enum(['delegated', 'per_item']),
+    salePeriodDays: days.positive(),
+    // Optional grace for new day-period consignment return items.
+    collectionDays: z.number().int().min(0).max(365).optional(),
+    consignmentPeriod: z
+      .strictObject({
+        months: z.number().int().min(1).max(36),
+        collectionDays: z.number().int().min(0).max(365),
+        monthlyFee: z
+          .strictObject({
+            amountOre: z.number().int().min(1).max(9_999_999_999),
+            vatBasis: z.enum(['inclusive', 'exclusive']),
+            vatRatePercent: percent,
+            collection: z.enum(['balance', 'separate']),
+          })
+          .optional(),
+      })
+      .optional(),
+    unsoldNotifyAfterDays: days,
+    markdownSteps: z.array(z.strictObject({ afterDays: days, percent })),
+    endOfPeriodAction: z.enum(['charity', 'return']),
+    minPayoutThreshold: decimal,
+    // VAT modes (P2 S10, docs/VAT-CASES.md): optional, chosen by the tenant with its accountant.
+    ...vatPolicyShape,
+    // Built-in assistance (P1 S9): the tenant switches it on; the server holds the kill switch.
+    assistanceEnabled: z.boolean().optional(),
+    // Shared language for new AI item text; absence preserves Swedish.
+    itemLanguage: itemLanguage.optional(),
+    // Monthly assistance quota (P2 S20): absent means unlimited, 0 blocks the feature.
+    assistanceMonthlyQuota: z
+      .number()
+      .int()
+      .nonnegative()
+      .max(1_000_000)
+      .optional(),
+    // Automatic seller notifications (P2 S18): absent means off; every message is logged.
+    automaticSellerNotifications: z.boolean().optional(),
+    // Period notices have their own default-on switch; seller opt-out still wins.
+    automaticPeriodNotifications: z.boolean().optional(),
+    // Mail default when the seller and saved public store profile have no language.
+    communicationLanguage: z.enum(locales).optional(),
+    // Automatic markdowns (P3): absent means off; due steps are applied by the daily run as the policy's publisher.
+    automaticMarkdowns: z.boolean().optional(),
+    // One currency per store (decided 2026-09-13); absent means SEK; frozen after the first money fact.
+    currency: currencyCode.optional(),
+    // Intake profile (2026-09-15): quick is one screen per garment, standard adds the seller's price approval, full keeps the step-by-step reception. Absent means quick.
+    intakeProfile: z.enum(['quick', 'standard', 'full']).optional(),
+  })
+  .refine(
+    (value) => value.collectionDays === undefined || !value.consignmentPeriod,
+    {
+      path: ['collectionDays'],
+      message: 'Use the collection days for the selected period mode',
+    },
+  )
 
 export type StorePolicyBody = z.infer<typeof storePolicyBody>
 

@@ -1269,7 +1269,8 @@
     "communicationLanguage": "Standardspråk for meldinger",
     "communicationLanguageHint": "Brukes for e-post til selgere og som standard for personalinvitasjoner når butikkprofilen mangler språk. Selgerens eget språk har prioritet, deretter butikkprofilens språk. Språket i din egen meny påvirker ikke e-postene.",
     "vatModeConsignmentBusiness": "MVA for MVA-registrerte bedrifter",
-    "consignment_business": "Mva på hele salgsprisen"
+    "consignment_business": "Mva på hele salgsprisen",
+    "dayCollectionHelp": "Valgfritt for perioder i dager. Gjelder nye kommisjonsvarer som skal returneres til selgeren. Et tomt felt betyr ingen fast hentefrist. Fristen regnes fra salgsperiodens slutt; eierskapet endres ikke automatisk."
   },
   "sellerTerms": {
     "title": "Innleverervilkår",

@@ -1269,7 +1269,8 @@
     "communicationLanguage": "Standardsprog for beskeder",
     "communicationLanguageHint": "Bruges til e-mails til sælgere og som standard for personaleinvitationer, når butiksprofilen ikke har et sprog. Sælgerens eget sprog har førsteprioritet, derefter butiksprofilens sprog. Sproget i din egen menu påvirker ikke e-mails.",
     "vatModeConsignmentBusiness": "Moms for momsregistrerede virksomheder",
-    "consignment_business": "Moms af hele salgsprisen"
+    "consignment_business": "Moms af hele salgsprisen",
+    "dayCollectionHelp": "Valgfrit for perioder i dage. Gælder nye kommissionsvarer, der skal returneres til sælgeren. Et tomt felt betyder ingen fast afhentningsfrist. Fristen regnes fra salgsperiodens slutning; ejerskabet ændres ikke automatisk."
   },
   "sellerTerms": {
     "title": "Indleverervilkår",

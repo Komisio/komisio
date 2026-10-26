@@ -84,7 +84,7 @@ export function SellerAgreementWorkspace({
                   : copy.days.replace('{days}', number(summary.salePeriodDays))}
               </li>
               <li>
-                {summary.months
+                {summary.collectionDays !== null
                   ? copy.collection.replace(
                       '{days}',
                       number(summary.collectionDays ?? 0),

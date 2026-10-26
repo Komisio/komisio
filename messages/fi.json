@@ -1269,7 +1269,8 @@
     "communicationLanguage": "Viestien oletuskieli",
     "communicationLanguageHint": "Käytetään myyjien sähköposteissa ja henkilöstökutsujen oletuskielenä, kun myymäläprofiilissa ei ole kieltä. Myyjän oma kielivalinta on ensisijainen, sen jälkeen myymäläprofiilin kieli. Oman valikkosi kieli ei vaikuta sähköposteihin.",
     "vatModeConsignmentBusiness": "ALV-rekisteröityjen yritysten ALV",
-    "consignment_business": "Alv koko myyntihinnasta"
+    "consignment_business": "Alv koko myyntihinnasta",
+    "dayCollectionHelp": "Valinnainen päivinä määritetyille jaksoille. Koskee uusia myyntitilituotteita, jotka palautetaan myyjälle. Tyhjä kenttä tarkoittaa, ettei kiinteää noutoaikaa ole. Noutoaika alkaa myyntijakson päättyessä; omistus ei siirry automaattisesti."
   },
   "sellerTerms": {
     "title": "Tuojan ehdot",

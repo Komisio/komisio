@@ -1269,7 +1269,8 @@
     "communicationLanguage": "Standardsprache für Nachrichten",
     "communicationLanguageHint": "Wird für E-Mails an Verkäufer und als Vorgabe für Mitarbeitereinladungen verwendet, wenn im Ladenprofil keine Sprache festgelegt ist. Die Sprache des Verkäufers hat Vorrang, danach die Sprache des Ladenprofils. Ihre eigene Menüsprache beeinflusst die E-Mails nicht.",
     "vatModeConsignmentBusiness": "Umsatzsteuer für registrierte Unternehmen",
-    "consignment_business": "MwSt. auf den gesamten Verkaufspreis"
+    "consignment_business": "MwSt. auf den gesamten Verkaufspreis",
+    "dayCollectionHelp": "Optional bei Zeiträumen in Tagen. Gilt für neue Kommissionsware, die an den Verkäufer zurückgegeben werden soll. Leer lassen, wenn keine feste Abholfrist gilt. Die Frist beginnt mit dem Ende des Verkaufszeitraums; das Eigentum wechselt nicht automatisch."
   },
   "sellerTerms": {
     "title": "Einlieferer-Bedingungen",

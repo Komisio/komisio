@@ -1269,7 +1269,8 @@
     "communicationLanguage": "Default message language",
     "communicationLanguageHint": "Used for seller emails and the default staff invitation language when the store profile has no language. The seller’s preference takes priority, followed by the store profile language. Your own menu language does not affect emails.",
     "vatModeConsignmentBusiness": "VAT for VAT-registered businesses",
-    "consignment_business": "VAT on the whole sale price"
+    "consignment_business": "VAT on the whole sale price",
+    "dayCollectionHelp": "Optional for periods in days. Applies to new consignment items to be returned to the seller. Leave blank for no fixed collection deadline. The grace period starts at the end of the sale period; ownership does not change automatically."
   },
   "sellerTerms": {
     "title": "Seller terms",

@@ -5199,5 +5199,18 @@
     "other": "Other",
     "custom": "Custom reason",
     "saved": "The price has been saved."
+  },
+  "saleSummary": {
+    "title": "Sales summary",
+    "download": "Download sales summary (PDF)",
+    "saleDate": "Sale date",
+    "reference": "Sale reference",
+    "notice": "Summary of records in Komisio. The point of sale provides the receipt.",
+    "reversed": "The sale has been reversed",
+    "returned": "Recorded return",
+    "originalTotal": "Original sale total",
+    "returnTotal": "Recorded returns total",
+    "currentDetails": "Store and item descriptions reflect current records. Amounts come from the recorded sale and any returns.",
+    "generatedAt": "Generated"
   }
 }

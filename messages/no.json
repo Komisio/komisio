@@ -5199,5 +5199,18 @@
     "other": "Annet",
     "custom": "Egen begrunnelse",
     "saved": "Prisen er lagret."
+  },
+  "saleSummary": {
+    "title": "Salgsoversikt",
+    "download": "Last ned salgsoversikt (PDF)",
+    "saleDate": "Salgsdato",
+    "reference": "Salgsreferanse",
+    "notice": "Oversikt over registrerte opplysninger i Komisio. Kvitteringen utstedes av kassen.",
+    "reversed": "Salget er tilbakeført",
+    "returned": "Registrert retur",
+    "originalTotal": "Opprinnelig salg totalt",
+    "returnTotal": "Registrerte returer totalt",
+    "currentDetails": "Butikk- og varebeskrivelser viser gjeldende opplysninger. Beløpene kommer fra det registrerte salget og eventuelle returer.",
+    "generatedAt": "Opprettet"
   }
 }

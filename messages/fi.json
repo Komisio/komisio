@@ -5205,5 +5205,18 @@
     "other": "Muu",
     "custom": "Oma syy",
     "saved": "Hinta on tallennettu."
+  },
+  "saleSummary": {
+    "title": "Myyntiyhteenveto",
+    "download": "Lataa myyntiyhteenveto (PDF)",
+    "saleDate": "Myyntipäivä",
+    "reference": "Myyntiviite",
+    "notice": "Yhteenveto Komisioon kirjatuista tiedoista. Kassajärjestelmä antaa kuitin.",
+    "reversed": "Myynti on peruttu",
+    "returned": "Kirjattu palautus",
+    "originalTotal": "Alkuperäinen myynti yhteensä",
+    "returnTotal": "Kirjatut palautukset yhteensä",
+    "currentDetails": "Myymälän ja tuotteiden kuvaukset perustuvat nykyisiin tietoihin. Summat perustuvat kirjattuun myyntiin ja mahdollisiin palautuksiin.",
+    "generatedAt": "Luotu"
   }
 }

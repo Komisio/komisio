@@ -5199,5 +5199,18 @@
     "other": "Annat",
     "custom": "Egen motivering",
     "saved": "Priset har sparats."
+  },
+  "saleSummary": {
+    "title": "Försäljningssammanställning",
+    "download": "Ladda ner försäljningssammanställning (PDF)",
+    "saleDate": "Försäljningsdatum",
+    "reference": "Försäljningsreferens",
+    "notice": "Sammanställning av registrerade uppgifter i Komisio. Kassakvitto lämnas av kassan.",
+    "reversed": "Försäljningen är återförd",
+    "returned": "Registrerad retur",
+    "originalTotal": "Ursprunglig försäljning",
+    "returnTotal": "Registrerade returer totalt",
+    "currentDetails": "Butiks- och varubeskrivningar visas enligt nuvarande uppgifter. Beloppen kommer från den registrerade försäljningen och eventuella returer.",
+    "generatedAt": "Sammanställd"
   }
 }

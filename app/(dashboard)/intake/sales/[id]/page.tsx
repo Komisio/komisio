@@ -71,6 +71,12 @@ export default async function Sale({
           <summary>{d.reference}</summary>
           <p>{sale.external_id}</p>
         </details>
+        <a
+          className="button-secondary"
+          href={`/api/sales/summary?tenant=${active.id}&sale=${sale.id}`}
+        >
+          {all.saleSummary.download}
+        </a>
       </div>
       <section className="card sales-register">
         <h2>{d.lines}</h2>

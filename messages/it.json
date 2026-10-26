@@ -5199,5 +5199,18 @@
     "other": "Altro",
     "custom": "Motivo personalizzato",
     "saved": "Il prezzo è stato salvato."
+  },
+  "saleSummary": {
+    "title": "Riepilogo della vendita",
+    "download": "Scarica riepilogo della vendita (PDF)",
+    "saleDate": "Data di vendita",
+    "reference": "Riferimento della vendita",
+    "notice": "Riepilogo dei dati registrati in Komisio. Lo scontrino viene emesso dal sistema di cassa.",
+    "reversed": "La vendita è stata stornata",
+    "returned": "Reso registrato",
+    "originalTotal": "Totale della vendita originale",
+    "returnTotal": "Totale dei resi registrati",
+    "currentDetails": "Le descrizioni del negozio e degli articoli riflettono i dati attuali. Gli importi provengono dalla vendita registrata e dagli eventuali resi.",
+    "generatedAt": "Generato"
   }
 }

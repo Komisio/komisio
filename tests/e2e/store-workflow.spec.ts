@@ -128,7 +128,7 @@ test('seller saves bank details and owner explicitly reviews the payout destinat
       'K!' + randomBytes(16).toString('hex'),
       '/seller',
     )
-    await sellerPage.goto(`/seller?seller=${f.seller}`)
+    await sellerPage.goto(`/seller?seller=${f.seller}#seller-workspace-payouts`)
     await sellerPage.locator('#portal-bank summary').click()
     await sellerPage
       .getByLabel(d.sellerBank.holder, { exact: true })

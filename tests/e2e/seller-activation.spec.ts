@@ -187,7 +187,7 @@ test('registration creates an unconfirmed account, activation works in another b
     )
     await expect(
       sellerPage.getByRole('heading', {
-        name: `P2 browser store · ${d.sellerPortal.title}`,
+        name: 'P2 browser store',
       }),
     ).toBeVisible()
     await sellerPage.getByRole('link', { name: d.sellerAccess.stores }).click()
@@ -208,7 +208,7 @@ test('registration creates an unconfirmed account, activation works in another b
       )
       await expect(
         sellerPage.getByRole('heading', {
-          name: `P2 browser store · ${d.sellerPortal.title}`,
+          name: 'P2 browser store',
         }),
       ).toBeVisible()
     }

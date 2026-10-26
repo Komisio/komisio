@@ -5149,5 +5149,13 @@
     "seller": "Seller",
     "stores": "My stores",
     "rateLimited": "Too many attempts in a short time. Wait a little and try again. Also check whether the email has already arrived."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Seller portal",
+    "details": "My details",
+    "agreement": "Agreement",
+    "invoices": "Self-billing invoices",
+    "account": "Account settings",
+    "noAgreement": "The store has not published an agreement yet."
   }
 }

@@ -5149,5 +5149,13 @@
     "seller": "Venditore",
     "stores": "I miei negozi",
     "rateLimited": "Troppi tentativi in poco tempo. Attendi un momento e riprova. Controlla anche se l’email è già arrivata."
+  },
+  "sellerPortalWorkspace": {
+    "navigation": "Portale venditore",
+    "details": "I miei dati",
+    "agreement": "Accordo",
+    "invoices": "Autofatture",
+    "account": "Impostazioni account",
+    "noAgreement": "Il negozio non ha ancora pubblicato un accordo."
   }
 }

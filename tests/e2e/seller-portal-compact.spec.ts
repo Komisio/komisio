@@ -7,12 +7,8 @@ import { register } from '../helpers/account'
 import { localTestUrl } from '../helpers/local-services'
 import sv from '../../messages/sv.json' with { type: 'json' }
 
-// The seller portal on a phone with a small but realistic history: one
-// requested payout, five ledger entries, one statement, no items, handovers
-// or messages. Balance, shortcuts, payout request, payouts and statements stay
-// in plain view; the ledger and message history fold behind native summaries
-// that still carry the heading and the count. Nothing is paid or sent.
-test('compact seller portal keeps money facts visible and folds only secondary history', async ({
+// Synthetic balances and message history exercise the four task tabs.
+test('seller portal tabs retain drafts, bookmarks and localized mobile navigation', async ({
   page,
 }, testInfo) => {
   const email = `seller-compact-${randomUUID()}@example.test`
@@ -75,108 +71,120 @@ test('compact seller portal keeps money facts visible and folds only secondary h
     await page.setViewportSize({ width: 320, height: 720 })
     await page.goto(url)
     await expect(
+      page.getByRole('heading', { name: 'Compact portal', exact: true }),
+    ).toBeVisible()
+    await expect(page.getByRole('tab')).toHaveCount(4)
+    await expect(
+      page.getByRole('tab', { name: sv.sellerPortal.items, exact: true }),
+    ).toHaveAttribute('aria-selected', 'true')
+    await expect(page.getByTestId('portal-ledger')).toHaveCount(0)
+    await expect(page.locator('.seller-portal-shortcuts')).toHaveCount(0)
+    await expect(page.locator('#portal-statements')).toHaveCount(0)
+    await page
+      .getByRole('tab', { name: sv.sellerPortal.payouts, exact: true })
+      .click()
+    await expect(
       page.getByRole('heading', { name: /Tillg.*290/ }),
     ).toBeVisible()
-    const height = await page.evaluate(
-      () => document.documentElement.scrollHeight,
+    await expect(page.getByText(/begärd/)).toBeVisible()
+    const amount = page.getByLabel(
+      sv.sellerPortal.amount.replace('{currency}', 'SEK'),
+      { exact: true },
     )
-    testInfo.annotations.push({
-      type: 'document-height-320',
-      description: String(height),
-    })
-    console.log(`seller portal document height at 320px: ${height}`)
-    await page.screenshot({
-      path: testInfo.outputPath('seller-portal-compact-320.png'),
-      fullPage: true,
-      caret: 'initial',
-    })
-    // Money facts and actions stay in plain view.
-    const portal = page.locator('main')
-    await expect(
-      portal.getByRole('heading', {
-        name: sv.sellerPortal.payouts,
-        exact: true,
-      }),
-    ).toBeVisible()
-    await expect(portal.getByText(/begärd/)).toBeVisible()
-    await expect(page.locator('#portal-statements h2')).toBeVisible()
-    await expect(page.locator('#portal-payout-request h2')).toBeVisible()
-    // Secondary history is folded with heading and count in the summary.
-    const ledger = page.getByTestId('portal-ledger')
+    await amount.fill('120')
+    await page
+      .getByRole('tab', { name: sv.sellerPortalWorkspace.details, exact: true })
+      .click()
+    await expect(page.getByText(email, { exact: true })).toBeVisible()
+    await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0)
+    await expect(page.locator('meta[name="format-detection"]')).toHaveAttribute(
+      'content',
+      /email=no/,
+    )
     const messages = page.getByTestId('portal-messages')
-    await expect(ledger).not.toHaveAttribute('open', '')
-    await expect(ledger.locator('summary')).toContainText(
-      sv.sellerPortal.ledger,
-    )
-    await expect(ledger.locator('summary')).toContainText('5')
     await expect(messages).not.toHaveAttribute('open', '')
     await expect(messages.locator('summary')).toContainText(
       sv.sellerPortal.messages,
     )
     await expect(messages.locator('summary')).toContainText('0')
-    // The per-list limit notice stays next to the whole history, not inside one fold.
+    await messages.locator('summary').focus()
+    await page.keyboard.press('Enter')
+    await expect(messages).toHaveAttribute('open', '')
+    await page
+      .getByRole('tab', { name: sv.sellerPortal.payouts, exact: true })
+      .click()
+    await expect(amount).toHaveValue('120')
+    await page
+      .getByRole('tab', { name: sv.sellerPortal.payouts, exact: true })
+      .focus()
+    await page.keyboard.press('ArrowRight')
     await expect(
-      page.getByText(sv.sellerPortal.recent, { exact: true }),
-    ).toBeVisible()
-    // Keyboard: the summary is focusable and Enter opens and closes it.
-    await ledger.locator('summary').focus()
-    await page.keyboard.press('Enter')
-    await expect(ledger).toHaveAttribute('open', '')
-    await expect(ledger.getByText(/-10\.00 SEK/)).toBeVisible()
-    await page.keyboard.press('Enter')
-    await expect(ledger).not.toHaveAttribute('open', '')
-    // Eight languages: no horizontal overflow, folds still labelled.
+      page.getByRole('tab', {
+        name: sv.sellerPortalWorkspace.details,
+        exact: true,
+      }),
+    ).toHaveAttribute('aria-selected', 'true')
+    await page.screenshot({
+      path: testInfo.outputPath('seller-details-320.png'),
+      fullPage: true,
+    })
     for (const locale of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
-      await test.step(locale, async () => {
-        const d: Dictionary = JSON.parse(
-          readFileSync(
-            new URL(`../../messages/${locale}.json`, import.meta.url),
-            'utf8',
-          ),
-        )
-        await page.context().addCookies([
-          {
-            name: 'komisio-locale',
-            value: locale,
-            url: 'http://127.0.0.1:3000',
-          },
-        ])
-        await page.goto(url)
-        await expect(
-          page.getByTestId('portal-ledger').locator('summary'),
-        ).toContainText(d.sellerPortal.ledger)
+      const d: Dictionary = JSON.parse(
+        readFileSync(
+          new URL('../../messages/' + locale + '.json', import.meta.url),
+          'utf8',
+        ),
+      )
+      await page.context().addCookies([
+        {
+          name: 'komisio-locale',
+          value: locale,
+          url: new URL(page.url()).origin,
+        },
+      ])
+      await page.reload()
+      for (const [id, label] of [
+        ['items', d.sellerPortal.items],
+        ['payouts', d.sellerPortal.payouts],
+        ['details', d.sellerPortalWorkspace.details],
+        ['agreement', d.sellerPortalWorkspace.agreement],
+      ]) {
+        const tab = page.getByRole('tab', { name: label, exact: true })
+        await tab.click()
+        await expect(tab).toHaveAttribute('aria-selected', 'true')
+        expect((await tab.boundingBox())!.height).toBeGreaterThanOrEqual(44)
         expect(
           await page.evaluate(
-            () => document.documentElement.scrollWidth <= window.innerWidth,
+            () => document.documentElement.scrollWidth <= innerWidth,
           ),
         ).toBe(true)
-      })
+        if (locale === 'sv') {
+          await page.reload()
+          await expect(tab).toHaveAttribute('aria-selected', 'true')
+        }
+        await expect(page).toHaveURL(
+          new RegExp('#seller-workspace-' + id + '$'),
+        )
+      }
+      await expect(
+        page.getByText(d.sellerPortalWorkspace.noAgreement, { exact: true }),
+      ).toBeVisible()
     }
-    await page
-      .context()
-      .addCookies([
-        { name: 'komisio-locale', value: 'sv', url: 'http://127.0.0.1:3000' },
-      ])
-    // Leave the page so the next goto is a full load in Swedish, not a
-    // same-document hash change of the Italian page.
-    await page.goto('/seller')
-    // Hash navigation and the items section are untouched.
+    await page.context().addCookies([
+      {
+        name: 'komisio-locale',
+        value: 'sv',
+        url: new URL(page.url()).origin,
+      },
+    ])
     await page.goto(url + '#portal-items')
+    await page.reload()
+    await expect(page.getByRole('tab').first()).toBeEnabled()
     await expect(page.locator('#portal-items h2')).toBeInViewport()
-    await page.goto(url + '#portal-statements')
-    await expect(page.locator('#portal-statements h2')).toBeInViewport()
-    // The statement deep link and its way back still work.
-    await page
-      .getByRole('link', { name: `${sv.sellerPortal.open} #1`, exact: true })
-      .click()
-    await expect(
-      page.getByRole('heading', { name: `${sv.sellerPortal.statements} #1` }),
-    ).toBeVisible()
-    await page
-      .getByRole('link', { name: 'Compact portal', exact: true })
-      .click()
-    await expect(page).toHaveURL(/#portal-statements$/)
-    await expect(page.locator('#portal-statements h2')).toBeInViewport()
+    await page.goto(url + '#portal-payout-request')
+    await expect(page.locator('#portal-payout-request h2')).toBeInViewport()
+    await page.goto(url + '#portal-messages')
+    await expect(messages.locator('summary')).toBeInViewport()
     // A pending or failed synthetic message remains visible without opening a fold.
     // Use only the local engine log; no delivery transport is invoked.
     const messageId = randomUUID()

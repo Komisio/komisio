@@ -38,6 +38,7 @@ select is(apply_markdown(current_setting('test.tenant')::uuid,current_setting('t
 select throws_like($$select apply_markdown(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.item')::uuid,1)$$,'%MARKDOWN_ALREADY_APPLIED%','a step applies once');
 select is((select price_ore from item_prices where item_id=current_setting('test.item')::uuid order by seq desc limit 1),18000::bigint,'10 percent off the accepted price');
 select is((select reason from item_prices where item_id=current_setting('test.item')::uuid order by seq desc limit 1),'markdown','price row says markdown');
+select is((select detail->>'previousPriceOre' from item_events where id=current_setting('test.m1')::uuid),'20000','markdown history freezes the actual preceding price');
 select is((select stage from lifecycle_queue(current_setting('test.tenant')::uuid) where item_id=current_setting('test.item')::uuid),'on_sale','back on sale after the markdown');
 -- Extension moves the period end; ending needs a reason.
 select set_config('test.e1',gen_random_uuid()::text,true);

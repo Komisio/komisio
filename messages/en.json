@@ -1393,7 +1393,7 @@
       "price_set": "Price set",
       "provenance": "Provenance recorded",
       "sold": "Sold",
-      "returned": "Returned",
+      "returned": "Customer return",
       "markdown_applied": "Markdown applied",
       "period_extended": "Sale period extended",
       "period_ended": "Sale period ended"
@@ -1411,7 +1411,20 @@
     "markdownWaiting": "Markdown pending",
     "allOwnerships": "All items",
     "ownership": "Ownership",
-    "createPurchasedItem": "Create item"
+    "createPurchasedItem": "Create item",
+    "eventDetails": {
+      "action": "Action",
+      "reason": "Reason",
+      "days": "Extension (days)",
+      "priceChange": "Price change",
+      "price": "Price",
+      "actions": {
+        "charity": "To charity",
+        "return": "Return to seller",
+        "recycle": "Recycling",
+        "transfer": "Transfer to another store"
+      }
+    }
   },
   "sales": {
     "title": "Sales",

@@ -1393,7 +1393,7 @@
       "price_set": "Pris sat",
       "provenance": "Oprindelse registreret",
       "sold": "Solgt",
-      "returned": "Returneret",
+      "returned": "Kunderetur",
       "markdown_applied": "Prisnedsættelse gennemført",
       "period_extended": "Salgsperiode forlænget",
       "period_ended": "Salgsperiode afsluttet"
@@ -1411,7 +1411,20 @@
     "markdownWaiting": "Prisnedsættelse afventer",
     "allOwnerships": "Alle varer",
     "ownership": "Ejerskab",
-    "createPurchasedItem": "Opret vare"
+    "createPurchasedItem": "Opret vare",
+    "eventDetails": {
+      "action": "Handling",
+      "reason": "Årsag",
+      "days": "Forlængelse (dage)",
+      "priceChange": "Prisændring",
+      "price": "Pris",
+      "actions": {
+        "charity": "Til velgørenhed",
+        "return": "Retur til sælger",
+        "recycle": "Genanvendelse",
+        "transfer": "Flytning til en anden butik"
+      }
+    }
   },
   "sales": {
     "title": "Salg",

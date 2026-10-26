@@ -5,6 +5,7 @@ import { expect, it } from 'vitest'
 import { ItemHistory } from '../../components/intake/item-history'
 import { itemEventKind, itemPriceReason } from '../../lib/engine/items'
 import { dictionary, locales } from '../../lib/i18n'
+import { economyFormat } from '../../lib/intake/economy-format'
 
 it('keeps the shared kind and reason lists aligned with the latest database constraints', () => {
   const dir = new URL('../../supabase/migrations/', import.meta.url)
@@ -72,3 +73,83 @@ it.each(locales)(
     expect(html.match(/<li>/g)).toHaveLength(events.length + prices.length)
   },
 )
+
+it.each(locales)(
+  'shows recorded lifecycle details without exposing arbitrary metadata in %s',
+  (locale) => {
+    const d = dictionary(locale).items
+    const events = [
+      {
+        id: 'end',
+        kind: 'period_ended' as const,
+        detail: {
+          action: 'return',
+          note: '<b>Collection arranged</b>',
+          privateToken: 'DO_NOT_RENDER',
+        },
+      },
+      {
+        id: 'extend',
+        kind: 'period_extended' as const,
+        detail: { days: 7, reason: 'Synthetic extension' },
+      },
+      {
+        id: 'price',
+        kind: 'price_set' as const,
+        detail: {
+          previousPriceOre: 25000,
+          priceOre: '20000',
+          reason: 'Synthetic price',
+        },
+      },
+      {
+        id: 'old',
+        kind: 'markdown_applied' as const,
+        detail: { priceOre: 18000 },
+      },
+      { id: 'return', kind: 'returned' as const, detail: {} },
+    ].map((e) => ({ ...e, occurred_at: '2026-10-26T09:00:00Z' }))
+    const html = renderToStaticMarkup(
+      createElement(ItemHistory, {
+        events,
+        prices: [],
+        currency: 'DKK',
+        locale,
+        d,
+      }),
+    )
+    expect(html).toContain(d.eventDetails.actions.return)
+    expect(html).toContain('&lt;b&gt;Collection arranged&lt;/b&gt;')
+    expect(html).toContain(d.eventDetails.days)
+    expect(html).toContain('<dd>7</dd>')
+    expect(html).toContain('Synthetic extension')
+    const money = economyFormat(locale).money
+    expect(html).toContain(`${money(25000, 'DKK')} → ${money(20000, 'DKK')}`)
+    expect(html).toContain(money(18000, 'DKK'))
+    expect(html.match(/→/g)).toHaveLength(1)
+    expect(html).toContain(`<strong>${d.eventKinds.returned}</strong>`)
+    expect(html).not.toContain('DO_NOT_RENDER')
+  },
+)
+
+it('does not infer old prices or render invalid numeric facts', () => {
+  const d = dictionary('sv').items
+  const html = renderToStaticMarkup(
+    createElement(ItemHistory, {
+      prices: [],
+      currency: 'SEK',
+      locale: 'sv',
+      d,
+      events: [
+        {
+          id: 'bad',
+          kind: 'price_set',
+          detail: { priceOre: { secret: 'hidden' }, previousPriceOre: true },
+          occurred_at: '2026-10-26T09:00:00Z',
+        },
+      ],
+    }),
+  )
+  expect(html).not.toContain('item-event-details')
+  expect(html).not.toContain('hidden')
+})

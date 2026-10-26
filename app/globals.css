@@ -5098,6 +5098,24 @@ button.text-link:hover:not(:disabled) {
   color: var(--muted);
   font-size: 0.875rem;
 }
+.item-event-details {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0;
+}
+.item-event-details > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+.item-event-details dt {
+  color: var(--muted);
+}
+.item-event-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
 .item-actor-line {
   display: flex;
   align-items: center;

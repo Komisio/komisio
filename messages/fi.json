@@ -1393,7 +1393,7 @@
       "price_set": "Hinta asetettu",
       "provenance": "Alkuperä kirjattu",
       "sold": "Myyty",
-      "returned": "Palautettu",
+      "returned": "Asiakaspalautus",
       "markdown_applied": "Hinnanalennus tehty",
       "period_extended": "Myyntiaikaa pidennetty",
       "period_ended": "Myyntiaika päättynyt"
@@ -1411,7 +1411,20 @@
     "markdownWaiting": "Hinnanalennus odottaa",
     "allOwnerships": "Kaikki tuotteet",
     "ownership": "Omistus",
-    "createPurchasedItem": "Luo tuote"
+    "createPurchasedItem": "Luo tuote",
+    "eventDetails": {
+      "action": "Toimenpide",
+      "reason": "Syy",
+      "days": "Pidennys (päivää)",
+      "priceChange": "Hinnanmuutos",
+      "price": "Hinta",
+      "actions": {
+        "charity": "Hyväntekeväisyyteen",
+        "return": "Palautus myyjälle",
+        "recycle": "Kierrätys",
+        "transfer": "Siirto toiseen kauppaan"
+      }
+    }
   },
   "sales": {
     "title": "Myynti",

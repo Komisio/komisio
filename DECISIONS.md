@@ -1207,3 +1207,6 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-26: #631: PayPal item readiness uses existing sale facts and VAT mapping. Missing configuration shows attention and prevents automatic claims until corrected. No VAT choice is inferred; historic outcomes, export guards and lease/retry boundaries remain unchanged.
 
 - 2026-10-26: #637: A current enabled seller-registration capability with an agreement exposes only the store name before login. Join and auth pages resolve it server-side; invalid links return no name. Registration, verified identity, agreement access and staff approval stay unchanged.
+
+- 2026-10-26: #636 history displays recorded end actions, reasons, extension days and price changes. Future markdown events retain the previous price; old events are not rewritten or guessed. Customer returns have a distinct label from returns to sellers. Financial calculations stay unchanged.
+- 2026-10-26: #636: reopening requires a new future sale-end date and a reason. Period notices cover new events only, seven days before end and at end. Pause/resume is deferred until safe automatic POS handling is verified; manual POS handling is not an interim release.

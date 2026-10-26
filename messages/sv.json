@@ -1393,7 +1393,7 @@
       "price_set": "Pris satt",
       "provenance": "Ursprung dokumenterat",
       "sold": "Såld",
-      "returned": "Returnerad",
+      "returned": "Kundretur",
       "markdown_applied": "Prissänkning genomförd",
       "period_extended": "Säljperiod förlängd",
       "period_ended": "Säljperiod avslutad"
@@ -1411,7 +1411,20 @@
     "markdownWaiting": "Prissänkning väntar",
     "allOwnerships": "Alla varor",
     "ownership": "Ägande",
-    "createPurchasedItem": "Skapa vara"
+    "createPurchasedItem": "Skapa vara",
+    "eventDetails": {
+      "action": "Åtgärd",
+      "reason": "Orsak",
+      "days": "Förlängning (dagar)",
+      "priceChange": "Prisändring",
+      "price": "Pris",
+      "actions": {
+        "charity": "Till välgörenhet",
+        "return": "Åter till säljaren",
+        "recycle": "Återvinning",
+        "transfer": "Flytt till annan butik"
+      }
+    }
   },
   "sales": {
     "title": "Försäljning",

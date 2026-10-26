@@ -99,17 +99,25 @@ describe('attribute vocabulary', () => {
     expect(slugs).not.toContain('retired')
     expect(slugs).not.toContain('nothing_defines_this')
   })
-  it('asks only for description and category when no known type is chosen', () => {
+  it('keeps category outside attribute questions when no known type is chosen', () => {
     expect(
       questionsFor(vocabulary, null).map((q) => q.definition.slug),
-    ).toEqual(['description', 'category'])
+    ).toEqual(['description'])
     expect(
       questionsFor(vocabulary, 'no_such_type').map((q) => q.expected),
-    ).toEqual([true, false])
+    ).toEqual([true])
   })
   it('keeps the profile order and marks what is expected', () => {
     const lamp = questionsFor(vocabulary, 'lamp')
     expect(lamp.map((q) => q.expected)).toEqual([true, true, false])
+  })
+  it('reads historical category observations but never offers category as a type question', () => {
+    const copy = structuredClone(vocabulary)
+    copy.types[0].attributes.push({ slug: 'category', expected: true, sort: 3 })
+    expect(
+      questionsFor(copy, copy.types[0].slug).map((q) => q.definition.slug),
+    ).not.toContain('category')
+    expect(copy.definitions.some((d) => d.slug === 'category')).toBe(true)
   })
   it('carries the unit and the stable value ids a form needs', () => {
     const lamp = questionsFor(vocabulary, 'lamp')

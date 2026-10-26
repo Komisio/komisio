@@ -761,6 +761,12 @@ matches are linked automatically; other text stays available for manual selectio
 Current displays follow renames while source and financial evidence stay frozen.
 Deactivated entries remain on existing items and are excluded from new selections.
 
+Category registration (#632, resolved 2026-10-26): optional store-category IDs
+replace the category question in quick and bag reception. Item types prefill a
+linked default that staff may override or clear. Only unique legacy matches are
+backfilled; unlinked text remains readable. Category reports and UI filters use
+identity, with unlinked items together. VAT, commission and accounting are unchanged.
+
 Unused store catalogue deletion (resolved in owner issue #460): owner/admin may
 permanently remove unused categories, item types, attributes and assortment
 groups, including store-created defaults. Any current or historical reference

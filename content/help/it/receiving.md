@@ -30,3 +30,5 @@ Inizia dal negozio e dal conferente corretti\. Registra ciò che è arrivato fis
 4. Controlla la conferma e l’elenco degli articoli registrati prima di etichettare\. Se manca la risposta al salvataggio, tieni aperto il modulo e usa il suo nuovo tentativo\. Non creare di nuovo lo stesso articolo per ottenere una conferma\.
 
 > Il numero di articoli registrati descrive dati salvati, non il completamento dell’intera consegna\. Controlla anche gli articoli fisici\. La guida non modifica dati; chiedi al personale autorizzato di eseguire le azioni a cui non hai accesso\.
+
+Scegli una categoria facoltativa nella ricezione rapida o quando registri un articolo da una consegna. Puoi cambiare la categoria predefinita del tipo per ogni articolo. Modifica il tipo di articolo per scegliere una categoria suggerita dall’elenco del negozio. La categoria è una scelta separata, non una domanda sugli attributi.

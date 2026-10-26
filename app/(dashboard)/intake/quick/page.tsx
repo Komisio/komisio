@@ -7,6 +7,7 @@ import { dictionary } from '@/lib/i18n'
 import { readSellersOverview } from '@/lib/engine/sellers'
 import { readPrinters } from '@/lib/engine/printing'
 import { resolveReceptionAssistance } from '@/lib/assistance/reception-config'
+import { readItemCategories } from '@/lib/engine/item-categories'
 import { readAssortmentGroups } from '@/lib/engine/item-classification'
 import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import type { AgreementSummary } from '@/components/intake/seller-agreement-fields'
@@ -42,7 +43,10 @@ export default async function QuickIntake() {
         .maybeSingle(),
     ])
   if (agreement.error) throw new Error('Unable to read current agreement')
-  const groups = await readAssortmentGroups(ctx.client, a.id)
+  const [groups, categories] = await Promise.all([
+    readAssortmentGroups(ctx.client, a.id),
+    readItemCategories(ctx.client, a.id),
+  ])
   return (
     <div className="intake quick-page">
       <div className="intake-header">
@@ -76,6 +80,7 @@ export default async function QuickIntake() {
           typeSettings={all.vocabularySettings}
           canManageTypes={['owner', 'admin'].includes(a.role)}
           groups={groups}
+          categories={categories}
           lang={ctx.locale}
           assistance={assistance !== null}
           d={d}

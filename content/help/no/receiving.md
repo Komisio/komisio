@@ -30,3 +30,5 @@ Start med riktig butikk og innleverer\. Registrer det som faktisk har kommet inn
 4. Kontroller bekreftelsen og listen over registrerte varer før merking\. Hvis svaret på en lagring mangler, hold skjemaet åpent og bruk funksjonen for nytt forsøk\. Ikke opprett samme vare igjen for å få en bekreftelse\.
 
 > Antall registrerte varer viser lagrede opplysninger, ikke at hele innleveringen er ferdigbehandlet\. Kontroller også de fysiske varene\. Hjelpen endrer ingenting; be autorisert personale utføre handlinger du ikke har tilgang til\.
+
+Velg en valgfri kategori i Hurtigmottak eller når du registrerer en vare fra en innlevering. Varetypens standardvalg kan endres for hver vare. Rediger varetypen for å velge en foreslått kategori fra butikkens liste. Kategorien er et eget valg, ikke et attributtspørsmål.

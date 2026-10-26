@@ -1201,3 +1201,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-25: #626: Sales/returns use frozen seller type and paid payouts use immutable registered type for separate period/day totals. Historical lines without type are private; store-owned goods stay outside these consignment groups. Existing accounting mappings are unchanged.
 
 - 2026-10-25: #626: Full-VAT business seller credit includes supplier VAT, extracted per sale line in öre (100 = 80 net + 20 VAT at 25%). Freeze supplier amounts; returns reverse original facts. Self-billing uses settlement numbering and immutable identity snapshots.
+
+- 2026-10-26: #632 selects optional category IDs in reception and type defaults. Only unique legacy matches backfill; original facts remain. Category reports and filters use IDs, with unlinked items grouped together. Existing financial and access rules are unchanged.

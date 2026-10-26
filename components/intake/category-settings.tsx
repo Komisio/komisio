@@ -20,15 +20,23 @@ export function CategorySettings({
   locale,
   editable,
   d,
+  onChanged,
 }: {
   tenantId: string
   initial: ItemCategory[]
   locale: string
   editable: boolean
   d: Dictionary
+  onChanged?: (update: (current: ItemCategory[]) => ItemCategory[]) => void
 }) {
   const t = d.vocabularySettings
   const [categories, setCategories] = useState(initial)
+  function updateCategories(
+    update: (current: ItemCategory[]) => ItemCategory[],
+  ) {
+    setCategories(update)
+    onChanged?.(update)
+  }
   const [editing, setEditing] = useState<ItemCategory | null>(null)
   const [query, setQuery] = useState('')
   const [name, setName] = useState('')
@@ -96,7 +104,7 @@ export function CategorySettings({
             value,
         )
       ) {
-        setCategories((current) => [
+        updateCategories((current) => [
           ...current.filter((c) => c.id !== category.data.id),
           category.data,
         ])
@@ -223,7 +231,7 @@ export function CategorySettings({
           d={d}
           onClose={() => setEditing(null)}
           onSaved={(category) => {
-            setCategories((current) =>
+            updateCategories((current) =>
               current.map((c) => (c.id === category.id ? category : c)),
             )
             setSaved(t.saved.replace('{name}', categoryName(category, locale)))
@@ -269,7 +277,9 @@ export function CategorySettings({
                     name={categoryName(c, locale)}
                     d={d}
                     onDeleted={() => {
-                      setCategories((v) => v.filter((row) => row.id !== c.id))
+                      updateCategories((current) =>
+                        current.filter((row) => row.id !== c.id),
+                      )
                       setSaved(
                         d.catalogueDeletion.deleted.replace(
                           '{name}',

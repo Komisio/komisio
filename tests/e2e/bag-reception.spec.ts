@@ -27,6 +27,13 @@ test('bag reception saves one item at a time with optional photo and inherited s
       "select publish_store_policy($1,$2,(current_store_policy($1)->>'id')::uuid,(current_store_policy($1)->'policy') || '{\"intakeProfile\":\"full\"}')",
       [f.tenant, randomUUID()],
     )
+    const categoryId = randomUUID()
+    await f.db.query('select create_item_category($1,$2,$3,$4)', [
+      f.tenant,
+      categoryId,
+      'Synthetic lighting',
+      { en: 'Synthetic lighting' },
+    ])
     await f.commit()
     await page.setViewportSize({ width: 320, height: 720 })
     await page.goto(`/intake/bags/${bag}/inspect?view=drafts`)
@@ -43,7 +50,7 @@ test('bag reception saves one item at a time with optional photo and inherited s
     await page
       .getByLabel(d.quickIntake.description, { exact: true })
       .fill('Synthetic lamp')
-    await page.locator('#quick-category').fill('Synthetic lighting')
+    await page.locator('#quick-category').selectOption(categoryId)
     await page.locator('#quick-condition').fill('Synthetic minor wear')
     await page.getByLabel(d.quickIntake.price, { exact: true }).fill('150')
     await page
@@ -163,6 +170,13 @@ test('concurrent retries create one bag session and one item', async ({
         f.agreement,
       ])
     ).rows[0].id
+    const categoryId = randomUUID()
+    await f.db.query('select create_item_category($1,$2,$3,$4)', [
+      f.tenant,
+      categoryId,
+      'Synthetic lighting',
+      { en: 'Synthetic lighting' },
+    ])
     await f.commit()
     const session = randomUUID(),
       request = randomUUID()

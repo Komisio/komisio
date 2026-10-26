@@ -30,3 +30,5 @@ Beginnen Sie mit dem richtigen Laden und Einlieferer\. Erfassen Sie tatsächlich
 4. Prüfen Sie die Bestätigung und die Liste erfasster Artikel vor dem Etikettieren\. Fehlt die Antwort auf eine Speicherung, lassen Sie das Formular geöffnet und nutzen dessen Wiederholungsfunktion\. Legen Sie denselben Artikel nicht erneut an, um eine Bestätigung zu erhalten\.
 
 > Artikelzahlen beschreiben gespeicherte Daten, nicht den Abschluss der gesamten Einlieferung\. Prüfen Sie auch die physischen Waren\. Die Hilfe ändert keine Daten; bitten Sie berechtigtes Personal um Aktionen, auf die Sie keinen Zugriff haben\.
+
+Wählen Sie bei der Schnellannahme oder beim Erfassen eines Artikels aus einer Abgabe optional eine Kategorie. Die Vorgabe des Artikeltyps lässt sich für jeden Artikel ändern. Bearbeiten Sie den Artikeltyp, um eine vorgeschlagene Kategorie aus der Geschäftsliste auszuwählen. Die Kategorie ist eine separate Auswahl, keine Attributfrage.

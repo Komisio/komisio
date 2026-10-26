@@ -20,7 +20,7 @@ export function VocabularySettings({
   tenantId,
   initial,
   groups,
-  categories,
+  categories: initialCategories,
   locale,
   editable,
   d,
@@ -35,6 +35,7 @@ export function VocabularySettings({
 }) {
   const t = d.vocabularySettings
   const [vocabulary, setVocabulary] = useState(initial)
+  const [categories, setCategories] = useState(initialCategories)
   const [typeSearch, setTypeSearch] = useState('')
   const [showInactiveTypes, setShowInactiveTypes] = useState(false)
   const [attributeSearch, setAttributeSearch] = useState('')
@@ -78,6 +79,7 @@ export function VocabularySettings({
               <CategorySettings
                 tenantId={tenantId}
                 initial={categories}
+                onChanged={setCategories}
                 locale={locale}
                 editable={editable}
                 d={d}
@@ -144,6 +146,7 @@ export function VocabularySettings({
                     kind="type"
                     record={editingType}
                     definitions={vocabulary.definitions}
+                    categories={categories}
                     tenantId={tenantId}
                     locale={locale}
                     d={d}

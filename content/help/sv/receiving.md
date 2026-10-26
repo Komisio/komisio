@@ -30,3 +30,5 @@ Börja med rätt butik och inlämnare\. Registrera det som faktiskt har kommit i
 4. Kontrollera bekräftelsen och listan med registrerade varor innan du går vidare till märkning\. Om svaret på en sparning saknas, håll formuläret öppet och använd dess återförsök\. Skapa inte samma vara på nytt för att få en bekräftelse\.
 
 > Antalet registrerade varor visar sparade uppgifter, inte att hela inlämningen är färdigbehandlad\. Kontrollera även de fysiska varorna\. Hjälpen ändrar inga uppgifter; be behörig personal utföra åtgärder som du saknar tillgång till\.
+
+Välj en valfri kategori i Snabb mottagning eller när du registrerar en vara från en inlämning. Varutypens förval kan ändras för varje vara. Redigera varutypen för att välja en föreslagen kategori från butikens lista. Kategorin är ett separat val, inte en attributfråga.

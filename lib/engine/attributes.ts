@@ -44,6 +44,7 @@ export const itemTypeProfile = z.object({
   slug,
   labels,
   suggested_category: z.string(),
+  suggested_category_id: z.uuid().nullable().optional(),
   active: z.boolean(),
   own: z.boolean(),
   attributes: z.array(
@@ -75,7 +76,7 @@ export async function readAttributeVocabulary(
 }
 
 /** Start with the essentials; a selected item type supplies extra questions. */
-const BASIC_FIELDS = ['description', 'category']
+const BASIC_FIELDS = ['description']
 
 /**
  * What a screen should ask for a given type, in the profile's order, with each
@@ -97,12 +98,14 @@ export function questionsFor(
         : []
     })
   }
-  return type.attributes.flatMap((entry) => {
-    const definition = byslug.get(entry.slug)
-    return definition && definition.active
-      ? [{ definition, expected: entry.expected }]
-      : []
-  })
+  return type.attributes
+    .filter((entry) => entry.slug !== 'category')
+    .flatMap((entry) => {
+      const definition = byslug.get(entry.slug)
+      return definition && definition.active
+        ? [{ definition, expected: entry.expected }]
+        : []
+    })
 }
 
 /** The label a person reads, in their language, falling back to English and

@@ -1,4 +1,9 @@
 import { raceSalePayment } from './sale-payment-race.mjs'
+import { raceRegistrationCategory } from './registration-category-race.mjs'
+import {
+  prepareRegistrationCategories,
+  verifyRegistrationCategories,
+} from './registration-category-backfill-fixture.mjs'
 import {
   raceSellerSubmission,
   raceSellerAI,
@@ -89,6 +94,10 @@ try {
       file === '20261018120000_edit_item_catalogue.sql'
         ? await prepareCategoryBackfill(setup)
         : null
+    const registrationCategories =
+      file === '20261026090000_registration_categories.sql'
+        ? await prepareRegistrationCategories(setup)
+        : null
     await setup.query(
       await readFile(
         new URL(`../supabase/migrations/${file}`, import.meta.url),
@@ -96,8 +105,11 @@ try {
       ),
     )
     if (backfill) await verifyCategoryBackfill(setup, backfill)
+    if (registrationCategories)
+      await verifyRegistrationCategories(setup, registrationCategories)
   }
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
+  await raceRegistrationCategory({ setup, connectionString: parsed.toString() })
   await raceWeblinkQueue({ setup, connectionString: parsed.toString() })
   await raceStoreWorkflow({ setup, connectionString: parsed.toString() })
   await raceAgreementAssistance({ setup, connectionString: parsed.toString() })

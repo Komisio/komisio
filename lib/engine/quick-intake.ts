@@ -40,6 +40,7 @@ export const quickReceiveInput = z.strictObject({
     .nullable()
     .default(null),
   assortment: z.uuid().nullable().optional(),
+  categoryId: z.uuid().nullable().optional(),
   priceOre: z.number().int().positive().max(99_999_999),
 })
 export type QuickReceiveInput = z.infer<typeof quickReceiveInput>
@@ -65,6 +66,7 @@ export const quickErrorCodes = [
   'PLAN_LIMIT_ITEMS',
   'PLAN_PLUS_REQUIRED',
   'GROUP_NOT_FOUND',
+  'CATEGORY_NOT_FOUND',
   'ITEM_TYPE_UNDEFINED',
 ] as const
 
@@ -87,17 +89,25 @@ export async function quickReceive(client: SupabaseClient, input: unknown) {
     sessionId = z.guid().parse(created.data)
   }
   const r = await client.rpc(
-    c.assortment !== undefined
-      ? 'quick_receive_classified'
-      : c.bagId
-        ? 'quick_receive_from_bag'
-        : 'quick_receive',
-    {
-      ...(c.assortment !== undefined
-        ? { p_group: c.assortment, p_bag: c.bagId ?? null }
+    c.categoryId !== undefined
+      ? 'quick_receive_categorized'
+      : c.assortment !== undefined
+        ? 'quick_receive_classified'
         : c.bagId
-          ? { p_bag: c.bagId }
-          : {}),
+          ? 'quick_receive_from_bag'
+          : 'quick_receive',
+    {
+      ...(c.categoryId !== undefined
+        ? {
+            p_category: c.categoryId,
+            p_group: c.assortment ?? null,
+            p_bag: c.bagId ?? null,
+          }
+        : c.assortment !== undefined
+          ? { p_group: c.assortment, p_bag: c.bagId ?? null }
+          : c.bagId
+            ? { p_bag: c.bagId }
+            : {}),
       p_tenant: c.tenantId,
       p_request: c.requestId,
       p_session: sessionId,

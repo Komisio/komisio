@@ -21,7 +21,7 @@ test('stock overview separates current inventory from period sales on desktop an
       .click()
     await expect(
       page.getByRole('region', { name: d.stock.categoriesHeading }),
-    ).toContainText('Jackets')
+    ).toContainText(d.stock.uncategorised)
     await expect(page.locator('.stock-details')).not.toHaveAttribute('open', '')
     await page
       .getByRole('tab', { name: d.stock.tabs.overview, exact: true })
@@ -53,7 +53,7 @@ test('stock overview separates current inventory from period sales on desktop an
     const categoryTable = page.getByRole('region', {
       name: d.stock.categoriesHeading,
     })
-    await expect(categoryTable).toContainText('Jackets')
+    await expect(categoryTable).toContainText(d.stock.uncategorised)
     await expect(categoryTable.locator('td').first()).toHaveAttribute(
       'data-label',
       d.stock.inStock,

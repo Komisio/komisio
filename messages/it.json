@@ -278,7 +278,8 @@
     "typeFieldsHint": "Scegli un tipo di articolo simile per usare le stesse domande, come taglia e materiale.",
     "typeFieldsLegend": "Scegli campi",
     "assortment": "Gruppo di assortimento",
-    "noAssortment": "Nessun gruppo di assortimento"
+    "noAssortment": "Nessun gruppo di assortimento",
+    "noCategory": "Nessuna categoria"
   },
   "intake": {
     "quickLink": "Ricezione rapida: una schermata per capo",
@@ -1316,7 +1317,7 @@
       "quickFilters": "Filtri rapidi",
       "endsWithinWeek": "Periodo termina entro 7 giorni da oggi",
       "periodWindow": "Periodo di vendita",
-      "categoryChoiceHint": "Scegli una categoria o scrivine un’altra."
+      "categoryChoiceHint": "Scegli una categoria dall’elenco del negozio."
     },
     "title": "Articoli",
     "item": "Articolo",
@@ -4651,12 +4652,13 @@
     "categories": [
       "Crea categorie ampie come Abbigliamento, Casa e arredamento o Libri per organizzare gli articoli.",
       "Inserisci il nome della categoria. Aggiungi traduzioni se usate più lingue; i nomi personalizzati non vengono tradotti automaticamente.",
-      "La categoria si sceglie sull’articolo. Creare una categoria non modifica gli articoli esistenti."
+      "Scegli una categoria facoltativa nella ricezione rapida o quando registri un articolo da una consegna. Puoi cambiare la categoria predefinita del tipo per ogni articolo."
     ],
     "types": [
       "Crea tipi come Giacca o Pantaloni. Il tipo determina quali dati vengono compilati durante la ricezione.",
       "Assegna un nome al tipo e scegli attributi come Taglia e Materiale. Puoi copiare le domande da un tipo simile.",
-      "Manca un attributo? Crealo prima nella scheda Attributi e selezionalo quando crei il tipo."
+      "Manca un attributo? Crealo prima nella scheda Attributi e selezionalo quando crei il tipo.",
+      "Modifica il tipo di articolo per scegliere una categoria suggerita dall’elenco del negozio. La categoria è una scelta separata, non una domanda sugli attributi."
     ],
     "attributes": [
       "Gli attributi sono domande sull’articolo, come Taglia, Colore, Marca, Materiale e Condizioni. La risposta, come M o blu, si inserisce sull’articolo.",
@@ -4750,7 +4752,8 @@
     "changed": "I dati sono cambiati. Chiudi la modifica e ricarica la pagina prima di riprovare.",
     "duplicate": "Questo nome è già in uso. Scegli un altro nome.",
     "suggestedCategory": "Categoria suggerita",
-    "showInactive": "Mostra i tipi di prodotto inattivi"
+    "showInactive": "Mostra i tipi di prodotto inattivi",
+    "previousCategory": "Testo precedente della categoria: {name}"
   },
   "selfRegistration": {
     "joinLogin": "Vuoi vendere tramite il negozio? Crea un account personale oppure accedi se ne hai già uno. Poi tornerai qui per leggere le condizioni del negozio e inviare la tua richiesta.",

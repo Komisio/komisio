@@ -13,6 +13,16 @@ test('seller portal tabs retain drafts, bookmarks and localized mobile navigatio
 }, testInfo) => {
   const email = `seller-compact-${randomUUID()}@example.test`
   await register(page, email, `K!${randomBytes(16).toString('hex')}`, '/seller')
+  await expect(
+    page.getByRole('heading', { name: sv.sellerAccess.stores, exact: true }),
+  ).toBeVisible()
+  for (const width of [390, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.screenshot({
+      path: testInfo.outputPath(`stores-empty-${width}.png`),
+      fullPage: true,
+    })
+  }
   const { Client } = createRequire(import.meta.url)('pg')
   const db = new Client({
     connectionString: localTestUrl(
@@ -67,6 +77,26 @@ test('seller portal tabs retain drafts, bookmarks and localized mobile navigatio
       [tenant, randomUUID(), seller],
     )
     await db.query('commit')
+    await page.goto('/seller?stores=1')
+    const storeCard = page.getByRole('link', { name: /Compact portal/ })
+    await expect(storeCard).toBeVisible()
+    await expect(
+      page.getByRole('heading', {
+        name: sv.selfRegistration.queue,
+        exact: true,
+      }),
+    ).toHaveCount(0)
+    for (const width of [390, 1280]) {
+      await page.setViewportSize({ width, height: 900 })
+      await page.screenshot({
+        path: testInfo.outputPath(`stores-one-${width}.png`),
+        fullPage: true,
+      })
+    }
+    await storeCard.click()
+    await expect(page).toHaveURL(new RegExp('seller=' + seller))
+    const portalErrors: string[] = []
+    page.on('pageerror', (error) => portalErrors.push(error.message))
     const url = `/seller?seller=${seller}`
     await page.setViewportSize({ width: 320, height: 720 })
     await page.goto(url)
@@ -83,9 +113,7 @@ test('seller portal tabs retain drafts, bookmarks and localized mobile navigatio
     await page
       .getByRole('tab', { name: sv.sellerPortal.payouts, exact: true })
       .click()
-    await expect(
-      page.getByRole('heading', { name: /Tillg.*290/ }),
-    ).toBeVisible()
+    await expect(page.locator('.seller-balance')).toHaveText('290,00 kr')
     await expect(page.getByText(/begärd/)).toBeVisible()
     const amount = page.getByLabel(
       sv.sellerPortal.amount.replace('{currency}', 'SEK'),
@@ -95,7 +123,9 @@ test('seller portal tabs retain drafts, bookmarks and localized mobile navigatio
     await page
       .getByRole('tab', { name: sv.sellerPortalWorkspace.details, exact: true })
       .click()
-    await expect(page.getByText(email, { exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('tabpanel').getByText(email, { exact: true }),
+    ).toBeVisible()
     await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0)
     await expect(page.locator('meta[name="format-detection"]')).toHaveAttribute(
       'content',
@@ -159,6 +189,20 @@ test('seller portal tabs retain drafts, bookmarks and localized mobile navigatio
           ),
         ).toBe(true)
         if (locale === 'sv') {
+          for (const width of [390, 1280]) {
+            await page.setViewportSize({ width, height: 900 })
+            await page.screenshot({
+              path: testInfo.outputPath(`portal-${id}-${width}.png`),
+              fullPage: true,
+            })
+            const panel = page.getByRole('tabpanel')
+            const cards = panel.locator('.card')
+            for (const card of await cards.all()) {
+              const box = await card.boundingBox()
+              if (box) expect(box.width).toBeGreaterThan(250)
+            }
+          }
+          await page.setViewportSize({ width: 320, height: 720 })
           await page.reload()
           await expect(tab).toHaveAttribute('aria-selected', 'true')
         }
@@ -229,6 +273,7 @@ test('seller portal tabs retain drafts, bookmarks and localized mobile navigatio
     await page.reload()
     await expect(messages).toHaveAttribute('open', '')
     await expect(messages).toContainText(sv.communications.outcomes.failed)
+    expect(portalErrors).toEqual([])
   } finally {
     await db.query('rollback')
     await db.end()

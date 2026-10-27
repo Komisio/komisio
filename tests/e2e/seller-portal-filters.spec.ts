@@ -156,6 +156,22 @@ test('seller status groups filter the full owned set and preserve search through
       '—',
     )
     await expect(rows.first()).toContainText(d.sellerPortal.endedAs.return)
+    const badge = await rows.first().locator('.seller-item-badge').boundingBox()
+    const date = await rows
+      .first()
+      .locator('.seller-item-date time')
+      .first()
+      .boundingBox()
+    expect(badge).not.toBeNull()
+    expect(date).not.toBeNull()
+    expect(
+      Math.abs(badge!.y + badge!.height / 2 - date!.y - date!.height / 2),
+    ).toBeLessThan(8)
+    await page.screenshot({
+      path: test.info().outputPath('seller-ended-date-mobile.png'),
+      fullPage: true,
+    })
+
     await select('active')
     await expect(rows).toHaveCount(2)
     await expect(rows.first()).toContainText('Active newer')

@@ -1,9 +1,11 @@
 'use client'
+import { SellerSection } from '@/components/seller/section'
 import { useBusyState } from '@/components/platform/work-activity'
 import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from '@/components/platform/use-working-router'
-import type { Dictionary } from '@/lib/i18n'
+import type { Dictionary, Locale } from '@/lib/i18n'
+import { economyFormat } from '@/lib/intake/economy-format'
 
 type EconomyAction =
   | { action: 'requestPayout'; amountOre: number }
@@ -18,7 +20,9 @@ export function SellerEconomyForms({
   tenantId,
   sellerId,
   currency,
+  locale = 'sv',
   availableOre,
+  reservedOre = 0,
   thresholdOre,
   enabled,
   d,
@@ -27,7 +31,9 @@ export function SellerEconomyForms({
 }: {
   tenantId: string
   sellerId: string
+  locale?: Locale
   currency: string
+  reservedOre?: number
   availableOre: number
   thresholdOre: number
   enabled: boolean
@@ -55,7 +61,7 @@ export function SellerEconomyForms({
   >({})
   const payoutForm = useRef<HTMLFormElement>(null)
   const canRequest = availableOre > 0 && availableOre >= thresholdOre
-  const amount = (ore: number) => `${(ore / 100).toFixed(2)} ${currency}`
+  const amount = (ore: number) => economyFormat(locale).money(ore, currency)
   const payoutError = (code: keyof typeof d.payoutErrors) =>
     setFeedback({
       action: 'requestPayout',
@@ -167,13 +173,19 @@ export function SellerEconomyForms({
   return (
     <div className="intake-grid">
       {view !== 'notifications' && (
-        <section
+        <SellerSection
           id="portal-payout-request"
           tabIndex={-1}
           className="card intake-form"
           aria-label={d.request}
         >
-          <h2>{d.request}</h2>
+          <h2>{d.available}</h2>
+          <p className="seller-balance">{amount(availableOre)}</p>
+          {reservedOre > 0 && (
+            <p className="muted">
+              {d.reserved}: {amount(reservedOre)}
+            </p>
+          )}
           {canRequest || locked.requestPayout ? (
             <form
               ref={payoutForm}
@@ -252,17 +264,29 @@ export function SellerEconomyForms({
               )}
             </form>
           ) : (
-            <p>
-              {availableOre <= 0
-                ? d.noPayoutBalance
-                : d.payoutBelowThreshold.replace(
-                    '{minimum}',
-                    amount(thresholdOre),
-                  )}
-            </p>
+            <>
+              {thresholdOre > 0 && (
+                <progress
+                  aria-label={d.threshold}
+                  value={Math.max(0, availableOre)}
+                  max={thresholdOre}
+                />
+              )}
+              <p>
+                {thresholdOre > 0
+                  ? d.payoutRemaining
+                      .replace(
+                        '{remaining}',
+                        amount(thresholdOre - availableOre),
+                      )
+                      .replace('{minimum}', amount(thresholdOre))
+                  : d.noPayoutBalance}
+              </p>
+              <Button disabled>{d.request}</Button>
+            </>
           )}
           {responseFor('requestPayout')}
-        </section>
+        </SellerSection>
       )}
       {view !== 'payout' && (
         <form

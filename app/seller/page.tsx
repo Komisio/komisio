@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { storeCountries } from '@/lib/platform/countries'
 import { SellerAgreementWorkspace } from '@/components/seller/agreement-workspace'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { SelfBillingDetails } from '@/components/intake/self-billing-details'
@@ -26,7 +27,6 @@ import {
   readMySellerEconomy,
   readMySellerStatement,
 } from '@/lib/engine/seller-portal'
-import { formatSignedOre } from '@/lib/engine/seller-ledger'
 import { SellerEconomyForms } from '@/components/seller/economy-forms'
 import { SellerHandovers } from '@/components/seller/handover-forms'
 import { readMyHandovers } from '@/lib/engine/handovers'
@@ -36,7 +36,6 @@ import {
   sellerItemFilter,
 } from '@/lib/engine/seller-items'
 import { readStoreCurrency } from '@/lib/engine/money'
-import { SignOut } from '@/components/platform/sign-out'
 import { SellerHeader } from '@/components/seller/header'
 import { EventTime } from '@/components/ui/event-time'
 import {
@@ -94,27 +93,73 @@ export default async function SellerPortal({
       timeZone: 'Europe/Stockholm',
     })
   const numbers = economyFormat(ctx.locale)
-  const amount = (ore: number) => `${formatSignedOre(ore)} ${currency}`
-  if (!account)
+  const amount = (ore: number) => numbers.money(ore, currency)
+  if (!account) {
+    const summaries = await Promise.all(
+      accounts.map(async (a) => {
+        const [economy, items, currency] = await Promise.all([
+          readMySellerEconomy(ctx.client, a.tenantId, a.sellerId),
+          readMyItemsPage(ctx.client, a.tenantId, a.sellerId, {
+            status: 'active',
+          }),
+          readStoreCurrency(ctx.client, a.tenantId),
+        ])
+        return {
+          ...a,
+          availableOre: economy.balance.availableOre,
+          count: items?.total ?? 0,
+          currency,
+        }
+      }),
+    )
     return (
-      <main className="onboarding seller-review" lang={intlLocale(ctx.locale)}>
-        <SellerHeader locale={ctx.locale} />
-        <SignOut d={all} next="/seller" />
-        <section className="card">
-          <h1>{d.title}</h1>
-          <p>{ctx.user.email}</p>
-          {accounts.length === 0 && registrations.length === 0 && (
-            <p>{d.empty}</p>
-          )}
-          {accounts.map((a) => (
-            <p key={a.sellerId}>
-              <Link href={`/seller?seller=${a.sellerId}`}>{a.storeName}</Link>
-            </p>
+      <main
+        className="onboarding seller-review seller-portal"
+        lang={intlLocale(ctx.locale)}
+      >
+        <SellerHeader locale={ctx.locale} email={ctx.user.email} />
+        <div className="page-heading">
+          <h1>{all.sellerAccess.stores}</h1>
+        </div>
+        <div className="seller-store-list">
+          {summaries.map((a) => (
+            <Link
+              className="card seller-store-card"
+              key={a.sellerId}
+              href={`/seller?seller=${a.sellerId}`}
+            >
+              <h2>{a.storeName}</h2>
+              {a.count > 0 && (
+                <p>
+                  {d.itemStatusTabs.active}: {numbers.number(a.count)}
+                </p>
+              )}
+              {a.availableOre > 0 && (
+                <p>
+                  {d.available}: {numbers.money(a.availableOre, a.currency)}
+                </p>
+              )}
+              <span className="seller-store-open">
+                {all.sellerPortalWorkspace.open}{' '}
+                <span aria-hidden="true">→</span>
+              </span>
+            </Link>
           ))}
-        </section>
-        <MyRegistrations rows={registrations} d={all.selfRegistration} />
+          <MyRegistrations
+            rows={registrations}
+            d={all.selfRegistration}
+            labels={all.sellerPortalWorkspace}
+          />
+          {accounts.length === 0 &&
+            !registrations.some((r) => r.state !== 'approved') && (
+              <section className="card">
+                <p>{all.sellerPortalWorkspace.emptyStores}</p>
+              </section>
+            )}
+        </div>
       </main>
     )
+  }
   const identity = await ctx.client.rpc('my_seller_business', {
     p_tenant: account.tenantId,
     p_seller: account.sellerId,
@@ -167,6 +212,12 @@ export default async function SellerPortal({
     redirect('/seller?' + q + '#seller-workspace-agreement')
   }
   const currency = await readStoreCurrency(ctx.client, account.tenantId)
+  const countryNames = new Intl.DisplayNames([intlLocale(ctx.locale)], {
+    type: 'region',
+  })
+  const bankCountries = storeCountries
+    .map((code) => ({ code, name: countryNames.of(code) ?? code }))
+    .sort((a, b) => a.name.localeCompare(b.name, intlLocale(ctx.locale)))
   const bank = await readSellerBank(
     ctx.client,
     account.tenantId,
@@ -182,9 +233,11 @@ export default async function SellerPortal({
     )
     if (!statement) notFound()
     return (
-      <main className="onboarding seller-review" lang={intlLocale(ctx.locale)}>
-        <SellerHeader locale={ctx.locale} />
-        <SignOut d={all} next="/seller" />
+      <main
+        className="onboarding seller-review seller-portal"
+        lang={intlLocale(ctx.locale)}
+      >
+        <SellerHeader locale={ctx.locale} email={ctx.user.email} />
         <section className="card">
           <Link className="text-link" href={base + '#seller-workspace-payouts'}>
             {account.storeName}
@@ -317,8 +370,7 @@ export default async function SellerPortal({
       className="onboarding seller-review seller-portal"
       lang={intlLocale(ctx.locale)}
     >
-      <SellerHeader locale={ctx.locale} />
-      <SignOut d={all} next="/seller" />
+      <SellerHeader locale={ctx.locale} email={ctx.user.email} />
       <div className="page-heading">
         <Link href="/seller?stores=1">{all.sellerAccess.stores}</Link>
         <h1>{account.storeName}</h1>
@@ -473,21 +525,14 @@ export default async function SellerPortal({
             anchors: ['portal-payout-request', 'portal-statements'],
             content: (
               <>
-                <section className="card">
-                  <h2>
-                    {d.available}: {amount(economy.balance.availableOre)}
-                  </h2>
-                  <p>
-                    {d.reserved}: {amount(economy.balance.reservedOre)}
-                  </p>
-                </section>
-
                 <SellerEconomyForms
                   view="payout"
+                  reservedOre={economy.balance.reservedOre}
                   key={`economy:${account.tenantId}:${account.sellerId}`}
                   tenantId={account.tenantId}
                   sellerId={account.sellerId}
                   currency={currency}
+                  locale={ctx.locale}
                   availableOre={economy.balance.availableOre}
                   thresholdOre={economy.thresholdOre}
                   enabled={economy.automaticEmails}
@@ -500,20 +545,19 @@ export default async function SellerPortal({
                   tenantId={account.tenantId}
                   sellerId={account.sellerId}
                   current={bank}
-                  locale={ctx.locale}
+                  countries={bankCountries}
                   d={all}
                 />
 
                 <section className="card">
-                  <h2>{d.payouts}</h2>
+                  <h2>{all.sellerPortalWorkspace.previousPayouts}</h2>
                   <p className="muted">{d.recent}</p>
                   {economy.payouts.length === 0 && <p>{d.none}</p>}
                   {economy.payouts.map((p) => (
                     <p key={p.id}>
                       <EventTime value={p.requested_at} locale={ctx.locale} /> ·{' '}
                       {amount(p.amount_ore)} ·{' '}
-                      {label(all.payouts.statuses, p.status)} · {d.source}:{' '}
-                      {d[p.request_source]}
+                      {label(all.payouts.statuses, p.status)}
                     </p>
                   ))}
                 </section>
@@ -569,6 +613,7 @@ export default async function SellerPortal({
                   tenantId={account.tenantId}
                   sellerId={account.sellerId}
                   currency={currency}
+                  locale={ctx.locale}
                   availableOre={economy.balance.availableOre}
                   thresholdOre={economy.thresholdOre}
                   enabled={economy.automaticEmails}

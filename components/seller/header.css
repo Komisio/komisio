@@ -14,3 +14,47 @@
     display: none;
   }
 }
+.seller-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.seller-account-menu {
+  position: relative;
+}
+.seller-account-menu summary {
+  cursor: pointer;
+  min-height: 44px;
+  align-content: center;
+}
+.seller-account-menu > div {
+  position: absolute;
+  right: 0;
+  z-index: 10;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  width: min(280px, 80vw);
+  overflow-wrap: anywhere;
+}
+
+.seller-account-menu > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.seller-account-menu > summary::marker {
+  content: '';
+}
+.seller-account-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.seller-header-actions {
+  gap: 8px;
+}

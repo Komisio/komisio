@@ -1,4 +1,5 @@
 'use client'
+import { SellerSection } from '@/components/seller/section'
 import { useRef, useState } from 'react'
 import { useBusyState } from '@/components/platform/work-activity'
 import { useRouter } from '@/components/platform/use-working-router'
@@ -7,8 +8,7 @@ import {
   type BankVersion,
   type PayoutBank,
 } from '@/lib/engine/seller-bank'
-import { storeCountries } from '@/lib/platform/countries'
-import { intlLocale, type Dictionary, type Locale } from '@/lib/i18n'
+import type { Dictionary } from '@/lib/i18n'
 
 function useBankSave(d: Dictionary) {
   const router = useRouter(),
@@ -59,13 +59,13 @@ export function SellerBankEditor({
   tenantId,
   sellerId,
   current,
-  locale,
+  countries,
   d,
 }: {
   tenantId: string
   sellerId: string
   current: BankVersion | null
-  locale: Locale
+  countries: { code: string; name: string }[]
   d: Dictionary
 }) {
   const t = d.sellerBank,
@@ -73,114 +73,122 @@ export function SellerBankEditor({
     [kind, setKind] = useState<'iban' | 'local'>(
       current?.details.kind ?? 'iban',
     )
-  const names = new Intl.DisplayNames([intlLocale(locale)], { type: 'region' })
-  const countries = storeCountries
-    .map((code) => ({ code, name: names.of(code) ?? code }))
-    .sort((a, b) => a.name.localeCompare(b.name, intlLocale(locale)))
   return (
-    <details className="card" id="portal-bank">
-      <summary>{t.title}</summary>
-      <p>{t.privacy}</p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          const f = new FormData(e.currentTarget)
-          const account = String(f.get('account') ?? '')
-          void state.save({
-            action: 'save',
-            tenantId,
-            sellerId,
-            requestId: crypto.randomUUID(),
-            expected: current?.id ?? null,
-            details: {
-              holder: String(f.get('holder') ?? ''),
-              country: String(f.get('country') ?? ''),
-              kind,
-              account:
-                kind === 'iban'
-                  ? account.replace(/\s/g, '').toUpperCase()
-                  : account,
-              routing: kind === 'iban' ? '' : String(f.get('routing') ?? ''),
-            },
-          })
-        }}
-      >
-        <fieldset disabled={state.locked || state.busy} className="form-grid">
-          <label>
-            {t.holder}
-            <input
-              name="holder"
-              required
-              maxLength={160}
-              defaultValue={current?.details.holder ?? ''}
-              autoComplete="off"
-            />
-          </label>
-          <label>
-            {t.country}
-            <select
-              name="country"
-              aria-label={t.country}
-              required
-              defaultValue={current?.details.country ?? ''}
-            >
-              <option value="">{d.itemWorkflow.choose}</option>
-              {countries.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            {t.kind}
-            <select
-              value={kind}
-              aria-label={t.kind}
-              onChange={(e) => setKind(e.target.value as 'iban' | 'local')}
-            >
-              <option value="iban">IBAN</option>
-              <option value="local">{t.local}</option>
-            </select>
-          </label>
-          <label>
-            {kind === 'iban' ? 'IBAN' : t.account}
-            <input
-              name="account"
-              required
-              maxLength={100}
-              defaultValue={current?.details.account ?? ''}
-              autoComplete="off"
-              spellCheck={false}
-            />
-          </label>
-          {kind === 'local' && (
+    <SellerSection id="portal-bank">
+      <h2>{t.title}</h2>
+      {current && (
+        <p>
+          {current.details.holder} · …{current.details.account.slice(-4)}
+        </p>
+      )}
+      <p className="muted">{t.privacy}</p>
+      <details>
+        <summary>
+          {current
+            ? d.sellerPortalWorkspace.changeBank
+            : d.sellerPortalWorkspace.addBank}
+        </summary>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            const f = new FormData(e.currentTarget)
+            const account = String(f.get('account') ?? '')
+            void state.save({
+              action: 'save',
+              tenantId,
+              sellerId,
+              requestId: crypto.randomUUID(),
+              expected: current?.id ?? null,
+              details: {
+                holder: String(f.get('holder') ?? ''),
+                country: String(f.get('country') ?? ''),
+                kind,
+                account:
+                  kind === 'iban'
+                    ? account.replace(/\s/g, '').toUpperCase()
+                    : account,
+                routing: kind === 'iban' ? '' : String(f.get('routing') ?? ''),
+              },
+            })
+          }}
+        >
+          <fieldset disabled={state.locked || state.busy} className="form-grid">
             <label>
-              {t.routing}
+              {t.holder}
               <input
-                name="routing"
-                maxLength={100}
-                defaultValue={current?.details.routing ?? ''}
+                name="holder"
+                required
+                maxLength={160}
+                defaultValue={current?.details.holder ?? ''}
                 autoComplete="off"
               />
             </label>
-          )}
-        </fieldset>
-        <button className="btn" disabled={state.busy || state.refused}>
-          {d.itemWorkflow.save}
-        </button>
-        {state.message && <p role="status">{state.message}</p>}
-        {state.refused && (
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => window.location.reload()}
-          >
-            {d.itemWorkflow.reload}
+            <label>
+              {t.country}
+              <select
+                name="country"
+                aria-label={t.country}
+                required
+                defaultValue={current?.details.country ?? ''}
+              >
+                <option value="">{d.itemWorkflow.choose}</option>
+                {countries.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t.kind}
+              <select
+                value={kind}
+                aria-label={t.kind}
+                onChange={(e) => setKind(e.target.value as 'iban' | 'local')}
+              >
+                <option value="iban">IBAN</option>
+                <option value="local">{t.local}</option>
+              </select>
+            </label>
+            <label>
+              {kind === 'iban' ? 'IBAN' : t.account}
+              <input
+                name="account"
+                required
+                maxLength={100}
+                defaultValue={current?.details.account ?? ''}
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </label>
+            {kind === 'local' && (
+              <label>
+                {t.routing}
+                <input
+                  name="routing"
+                  maxLength={100}
+                  defaultValue={current?.details.routing ?? ''}
+                  autoComplete="off"
+                />
+              </label>
+            )}
+          </fieldset>
+          <button className="btn" disabled={state.busy || state.refused}>
+            {d.itemWorkflow.save}
           </button>
-        )}
-      </form>
-    </details>
+          {state.message && <p role="status">{state.message}</p>}
+          {state.refused && (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => window.location.reload()}
+            >
+              {d.itemWorkflow.reload}
+            </button>
+          )}
+        </form>
+      </details>
+    </SellerSection>
   )
 }
 export function SellerBankAccount({

@@ -5,6 +5,7 @@ import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { SellerSearchStep } from '@/components/intake/seller-search-step'
+import { SellerSearch } from '@/components/intake/seller-search'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from '@/components/platform/working-link'
 import { notFound, redirect } from 'next/navigation'
@@ -178,10 +179,7 @@ export default async function Intake({
                   >
                     <h2 id="seller-search-heading">{d.find}</h2>
                     <div className="intake-search-actions">
-                      <WorkingForm
-                        action="/intake#seller-search"
-                        className="field"
-                      >
+                      <SellerSearch>
                         <label htmlFor="seller-search" className="sr-only">
                           {all.sellersList.search}
                         </label>
@@ -189,7 +187,6 @@ export default async function Intake({
                           <ScanFocusInput
                             focusLabel={all.scanFocus}
                             contextLabel={d.title}
-                            key={q}
                             id="seller-search"
                             type="search"
                             placeholder={all.sellersList.searchHint}
@@ -197,11 +194,13 @@ export default async function Intake({
                             defaultValue={q}
                             maxLength={120}
                           />
-                          <button className="btn btn-secondary">
-                            {d.searchButton}
-                          </button>
+                          <noscript>
+                            <button className="btn btn-secondary">
+                              {d.searchButton}
+                            </button>
+                          </noscript>
                         </div>
-                      </WorkingForm>
+                      </SellerSearch>
                       {active.role !== 'readonly' && (
                         <Link
                           className="btn btn-secondary"

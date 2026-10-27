@@ -63,11 +63,16 @@ export function SellerSearchStep({
         )
           return
         const destination = new URL(link.href)
+        // Live search uses form encoding (+); links may encode spaces as %20.
+        // Equivalent queries still open registration as a local step.
+        const currentSearch = new URLSearchParams(location.search)
+        currentSearch.sort()
+        destination.searchParams.sort()
         if (
           registration &&
           destination.origin === location.origin &&
           destination.pathname === location.pathname &&
-          destination.search === location.search &&
+          destination.searchParams.toString() === currentSearch.toString() &&
           destination.hash === '#new-seller'
         ) {
           event.preventDefault()

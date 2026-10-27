@@ -156,24 +156,15 @@ for (const locale of [
           }
           expect(widths.tabs).toBeCloseTo(widths.page, 0)
           expect(widths.card).toBeCloseTo(widths.page, 0)
-          const searchButton = page
-            .locator('form')
-            .filter({ has: search })
-            .getByRole('button', { name: d.intake.searchButton, exact: true })
-          expect(
-            (await searchButton.boundingBox())!.height,
-          ).toBeGreaterThanOrEqual(44)
-          // Compare in one frame while sidebar resizing moves both controls.
-          expect(
-            await searchButton.evaluate((button) =>
-              Math.abs(
-                button.getBoundingClientRect().y -
-                  document
-                    .querySelector('#seller-search')!
-                    .getBoundingClientRect().y,
-              ),
-            ),
-          ).toBeLessThanOrEqual(0.5)
+          await expect(
+            page.locator('form').filter({ has: search }).getByRole('button', {
+              name: d.intake.searchButton,
+              exact: true,
+            }),
+          ).toHaveCount(0)
+          expect((await search.boundingBox())!.height).toBeGreaterThanOrEqual(
+            44,
+          )
           const registration = page.getByRole('link', {
             name: d.intake.newSellerAction,
             exact: true,

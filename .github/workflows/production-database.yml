@@ -1,7 +1,7 @@
 name: Production database
 
 # Promotion is by code, not by data: the owner dispatches this on main after
-# the revision has been observed on staging (one working day, decision C6),
+# the exact revision passes CI and is verified on staging (no fixed wait),
 # and approves the protected `production-database` environment. The job
 # applies the committed migrations to the production project, verifies the
 # history and, when a deploy hook is configured, deploys the application

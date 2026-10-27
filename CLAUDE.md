@@ -108,6 +108,12 @@ The ruleset has no bypass actors. A second approving reviewer is not required
 globally while the owner is the only maintainer; this is not an independent review
 of owner-authored PRs. See CONTRIBUTING.md for the public policy.
 
+Owner decision, 2026-10-27: production has no fixed staging waiting period.
+The exact revision must pass CI and staging release checks and be verified on
+staging before the owner-authorized production workflow and protected environment
+approval. Complete the production route and runtime checks before reporting it
+as verified. This supersedes the one-working-day wait in the original C6 decision.
+
 ## Build-conscious delivery
 
 Owner instruction, 2026-10-22: collect roughly 4–5 locally verified feature PRs

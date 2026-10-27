@@ -146,7 +146,8 @@ hook or additional deploy token is needed. A failed or unfinished check leaves
 the previous application on the staging domain. Do not use Force Promote to
 bypass it. Additive migrations that have already run remain applied if a later
 configuration or application step fails. Production retains its separate
-owner-approved workflow and staging-observation gate. Preview builds are not
+owner-approved workflow and staging-verification gate, with no fixed waiting
+period (owner decision, 2026-10-27). Preview builds are not
 proof of passing the full suite or permission to promote.
 
 After the exact revision passes GitHub's Platform checks, verify basic reachability:

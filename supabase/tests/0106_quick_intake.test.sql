@@ -61,6 +61,7 @@ select is((select count(*) from items where tenant_id=current_setting('test.tena
 -- have no room.
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000981","role":"authenticated"}';
 select set_config('test.lampsession',gen_random_uuid()::text,true);
+select set_item_type(current_setting('test.tenant')::uuid,'lamp','{"labels":{"en":"Lamp"},"inheritAttributes":true}');
 select create_reception_session(current_setting('test.tenant')::uuid,current_setting('test.lampsession')::uuid,current_setting('test.seller')::uuid);
 select lives_ok($$select quick_receive(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.lampsession')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Brass table lamp","socket":"e27","height_cm":"45"}','25000','lamp')$$,'a lamp is received with attributes no garment has');
 select is((select suggestions->>'itemType' from reception_reviews where tenant_id=current_setting('test.tenant')::uuid and session_id=current_setting('test.lampsession')::uuid),'lamp','the item type is recorded');

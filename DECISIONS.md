@@ -1247,3 +1247,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-27: #687 groups seller notification and store-news preferences in one card with compact checkboxes and save-on-change. Each retains its existing endpoint, audit and request replay; uncertain results require retry and stale consent requires reload.
 
 - 2026-10-27: Login language hints are session fallbacks only: explicit browser preference wins, then authenticated profile, then entry hint, then Swedish. Entry hints never overwrite saved preferences; existing store-registration language behaviour stays unchanged.
+- 2026-10-27: #680 makes item types store-owned. Copy used shared types and profiles under the same tenant/slug, preserving historical references and overrides; hide unused shared types. New stores seed only Jacket/Trousers. Shared attributes remain available.

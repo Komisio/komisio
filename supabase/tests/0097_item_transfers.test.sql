@@ -75,6 +75,7 @@ set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000971","r
 -- both. Before this, the target got a description, a category and nothing
 -- else, and the receiving staff re-inspected a lamp somebody had measured.
 select set_config('test.lampsession',gen_random_uuid()::text,true);
+select set_item_type(current_setting('test.a')::uuid,'lamp','{"labels":{"en":"Lamp"},"inheritAttributes":true}');
 select create_reception_session(current_setting('test.a')::uuid,current_setting('test.lampsession')::uuid,current_setting('test.s1')::uuid);
 select quick_receive(current_setting('test.a')::uuid,gen_random_uuid(),current_setting('test.lampsession')::uuid,current_setting('test.s1')::uuid,0,'{"description":"Brass table lamp","category":"Belysning","socket":"e27","height_cm":"45"}','25000','lamp');
 select set_config('test.lampitem',(select id from items where tenant_id=current_setting('test.a')::uuid and origin_kind='reception_review' and origin_id=current_setting('test.lampsession')::uuid)::text,true);

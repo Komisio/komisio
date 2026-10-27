@@ -189,7 +189,6 @@ export function VocabularySettings({
                       <tr key={type.slug}>
                         <th scope="row">
                           {labelOf(type, locale)}
-                          <small>{type.own ? t.own : t.standard}</small>
                           {!type.active && (
                             <small>{d.catalogueEditing.inactive}</small>
                           )}
@@ -212,31 +211,27 @@ export function VocabularySettings({
                             >
                               {d.catalogueEditing.edit}
                             </Button>
-                            {type.own ? (
-                              <DeleteCatalogueRecord
-                                tenantId={tenantId}
-                                kind="type"
-                                recordKey={type.slug}
-                                name={labelOf(type, locale)}
-                                d={d}
-                                onDeleted={() => {
-                                  setVocabulary((v) => ({
-                                    ...v,
-                                    types: v.types.filter(
-                                      (row) => row.slug !== type.slug,
-                                    ),
-                                  }))
-                                  setSavedType(
-                                    d.catalogueDeletion.deleted.replace(
-                                      '{name}',
-                                      labelOf(type, locale),
-                                    ),
-                                  )
-                                }}
-                              />
-                            ) : (
-                              <small>{d.catalogueDeletion.shared}</small>
-                            )}
+                            <DeleteCatalogueRecord
+                              tenantId={tenantId}
+                              kind="type"
+                              recordKey={type.slug}
+                              name={labelOf(type, locale)}
+                              d={d}
+                              onDeleted={() => {
+                                setVocabulary((v) => ({
+                                  ...v,
+                                  types: v.types.filter(
+                                    (row) => row.slug !== type.slug,
+                                  ),
+                                }))
+                                setSavedType(
+                                  d.catalogueDeletion.deleted.replace(
+                                    '{name}',
+                                    labelOf(type, locale),
+                                  ),
+                                )
+                              }}
+                            />
                           </td>
                         )}
                       </tr>

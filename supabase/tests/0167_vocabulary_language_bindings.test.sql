@@ -35,6 +35,7 @@ select is((select c->'labels'->>'de' from attribute_definitions d cross join lat
 select is((select array_agg(c->>'id' order by o) from attribute_definitions d cross join lateral jsonb_array_elements(d.choices) with ordinality c(c,o) where d.tenant_id is null and d.slug='socket' and d.version=2),(select array_agg(c->>'id' order by o) from attribute_definitions d cross join lateral jsonb_array_elements(d.choices) with ordinality c(c,o) where d.tenant_id is null and d.slug='socket' and d.version=1),'version 2 keeps version 1''s choice ids in the same order');
 
 -- 1. A new quick reception binds the socket to the platform's newest version.
+select set_item_type(current_setting('test.tenant')::uuid,'lamp','{"labels":{"en":"Lamp","de":"Lampe"},"inheritAttributes":true}');
 select set_config('test.quick',gen_random_uuid()::text,true);
 select create_reception_session(current_setting('test.tenant')::uuid,current_setting('test.quick')::uuid,current_setting('test.seller')::uuid);
 select set_config('test.quick_result',quick_receive(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.quick')::uuid,current_setting('test.seller')::uuid,0,'{"description":"Brass lamp","socket":"e27"}',25000,'lamp')::text,true);
@@ -80,6 +81,7 @@ select is((select f->>'label' from jsonb_array_elements(current_setting('test.se
 -- 4. Store B overrides the socket: its own definition keeps binding to its own version.
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000c03","role":"authenticated"}';
 select set_config('test.tenant_b',create_tenant('Override store','override-store',gen_random_uuid())::text,true);
+select set_item_type(current_setting('test.tenant_b')::uuid,'lamp','{"labels":{"en":"Lamp"},"inheritAttributes":true}');
 select set_config('test.seller_b',register_seller(current_setting('test.tenant_b')::uuid,gen_random_uuid(),'Other seller','bind-other-seller@example.test','')::text,true);
 select publish_store_policy(current_setting('test.tenant_b')::uuid,gen_random_uuid(),null,(current_store_policy(current_setting('test.tenant_b')::uuid)->'policy') || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_margin","vatRatePercent":25}');
 select is(set_attribute_definition(current_setting('test.tenant_b')::uuid,'socket','{"dataType":"choice","choices":[{"id":"e27","labels":{"sv":"E27","en":"E27"}},{"id":"bayonet","labels":{"sv":"Bajonett","en":"Bayonet"}}],"labels":{"sv":"Sockel","en":"Socket"}}')->>'version','1','the store''s own socket is its version 1');

@@ -1244,6 +1244,10 @@ button.text-link:hover:not(:disabled) {
   margin-top: 25px;
   font-size: 13px;
 }
+.auth-seller-hint {
+  display: block;
+  margin-top: 12px;
+}
 .locale-switch {
   position: absolute;
   right: 25px;

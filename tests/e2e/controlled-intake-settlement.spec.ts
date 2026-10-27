@@ -88,7 +88,7 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
       .click()
     const row = page.locator('.bag-inventory .inventory-row').first()
     await expect(row).toContainText('Synthetic wool coat')
-    await expect(row).toContainText('400.00')
+    await expect(row.locator('.inventory-price')).toHaveText('400,00 kr')
     await noOverflow()
     const itemHref = await row
       .locator('.inventory-open-item')

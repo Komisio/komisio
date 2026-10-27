@@ -43,12 +43,36 @@ test('store opt-in, recipient review, individual log and public unsubscribe', as
     await f.commit()
     await page.goto(`/seller?seller=${seller}#seller-workspace-details`)
     const consent = page.locator('#store-mail-consent')
-    await consent.locator('summary').click()
     await expect(consent.getByRole('checkbox')).not.toBeChecked()
+    const requests: unknown[] = []
+    await page.route('**/api/store-mail', async (route) => {
+      const payload = route.request().postDataJSON()
+      if (payload.action !== 'consent') return route.continue()
+      requests.push(payload)
+      const response = await route.fetch()
+      expect(response.ok()).toBe(true)
+      if (requests.length === 1)
+        await route.fulfill({ status: 200, json: { data: randomUUID() } })
+      else await route.fulfill({ response })
+    })
     await consent.getByRole('checkbox').check()
+    await expect(consent.getByRole('alert')).toHaveText(d.storeMail.error)
+    await expect(consent.getByRole('checkbox')).toBeDisabled()
     await consent
-      .getByRole('button', { name: d.storeMail.save, exact: true })
+      .getByRole('button', { name: d.intake.retry, exact: true })
       .click()
+    await expect(consent.getByRole('checkbox')).toBeEnabled()
+    expect(requests).toHaveLength(2)
+    expect(requests[1]).toEqual(requests[0])
+    expect(
+      (
+        await f.db.query(
+          'select count(*)::int n from seller_store_mail_consents where tenant_id=$1 and seller_id=$2',
+          [f.tenant, seller],
+        )
+      ).rows[0].n,
+    ).toBe(1)
+    await page.unroute('**/api/store-mail')
     await expect
       .poll(
         async () =>

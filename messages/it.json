@@ -2566,8 +2566,7 @@
     "amount": "Importo in {currency}",
     "threshold": "Pagamento minimo",
     "notice": "Una richiesta non sposta denaro. Il negozio la esamina e gestisce il pagamento.",
-    "emails": "E-mail automatiche dal negozio",
-    "save": "Salva preferenza e-mail",
+    "emails": "I tuoi articoli e pagamenti",
     "saved": "Salvato.",
     "error": "Impossibile salvare. Controlla l'importo e ricarica per il saldo attuale.",
     "recent": "Qui sono mostrati gli ultimi 100.",
@@ -2627,7 +2626,8 @@
     "forSaleUntil": "In vendita fino al",
     "soldOn": "Venduto il",
     "endedOn": "Terminato il",
-    "payoutRemaining": "Mancano {remaining} al pagamento minimo di {minimum}."
+    "payoutRemaining": "Mancano {remaining} al pagamento minimo di {minimum}.",
+    "emailPreferences": "Notifiche via e-mail"
   },
   "plans": {
     "heading": "Piano",
@@ -4764,8 +4764,7 @@
     "done": "Elaborazione completata. Consulta i risultati qui sotto.",
     "skipped": "Saltati dopo modifiche ai dati o al consenso",
     "consentTitle": "Email dal negozio",
-    "consentLabel": "Ricevi notizie e informazioni dal negozio via email",
-    "consentHint": "Facoltativo. Modifica la scelta qui o tramite il link nell’email. Gli avvisi su articoli e pagamenti restano invariati.",
+    "consentLabel": "Novità e informazioni dal negozio",
     "save": "Salva",
     "saved": "Salvato",
     "unsubscribe": "Annulla le email del negozio",

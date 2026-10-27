@@ -2566,8 +2566,7 @@
     "amount": "Summa valuutassa {currency}",
     "threshold": "Vähimmäismaksu",
     "notice": "Pyyntö ei siirrä rahaa. Kauppa tarkistaa ja hoitaa maksun.",
-    "emails": "Automaattiset sähköpostit kaupalta",
-    "save": "Tallenna sähköpostiasetus",
+    "emails": "Tuotteesi ja tilityksesi",
     "saved": "Tallennettu.",
     "error": "Tallennus ei onnistunut. Tarkista summa ja lataa sivu uudelleen nähdäksesi nykyisen saldon.",
     "recent": "Tässä näkyvät 100 viimeisintä.",
@@ -2627,7 +2626,8 @@
     "forSaleUntil": "Myynnissä asti",
     "soldOn": "Myyty",
     "endedOn": "Päättynyt",
-    "payoutRemaining": "Vähimmäismaksuun {minimum} tarvitaan vielä {remaining}."
+    "payoutRemaining": "Vähimmäismaksuun {minimum} tarvitaan vielä {remaining}.",
+    "emailPreferences": "Sähköposti-ilmoitukset"
   },
   "plans": {
     "heading": "Tilaus",
@@ -4770,8 +4770,7 @@
     "done": "Käsittely on valmis. Katso tulokset alta.",
     "skipped": "Ohitettu tietojen tai suostumuksen muutoksen vuoksi",
     "consentTitle": "Kaupan sähköpostit",
-    "consentLabel": "Vastaanota myymälän uutisia ja tietoja sähköpostitse",
-    "consentHint": "Vapaaehtoinen. Voit muuttaa valintaa täällä tai sähköpostin linkistä. Tuotteita ja tilityksiä koskevat ilmoitukset eivät muutu.",
+    "consentLabel": "Myymälän uutiset ja tiedotteet",
     "save": "Tallenna",
     "saved": "Tallennettu",
     "unsubscribe": "Peru kaupan sähköpostit",

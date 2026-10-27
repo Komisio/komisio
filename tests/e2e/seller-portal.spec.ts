@@ -120,7 +120,22 @@ test('seller reads own economy, requests payout and opts out without becoming st
     await page
       .getByRole('tab', { name: d.sellerPortalWorkspace.details, exact: true })
       .click()
-    await page.getByRole('checkbox').uncheck()
+    const emailCard = page.getByRole('region', {
+      name: d.sellerPortal.emailPreferences,
+    })
+    await expect(emailCard.getByRole('checkbox')).toHaveCount(2)
+    await expect(emailCard.getByRole('button')).toHaveCount(0)
+    for (const width of [1280, 390]) {
+      await page.setViewportSize({ width, height: 900 })
+      for (const checkbox of await emailCard.getByRole('checkbox').all()) {
+        expect((await checkbox.boundingBox())!.width).toBe(18)
+        expect((await checkbox.boundingBox())!.height).toBe(18)
+      }
+      await page.screenshot({
+        path: test.info().outputPath(`email-preferences-${width}.png`),
+        fullPage: true,
+      })
+    }
     // Wait for persistence before reloading; the checkbox changes immediately.
     const savedPreference = page.waitForResponse(
       (response) =>
@@ -128,16 +143,21 @@ test('seller reads own economy, requests payout and opts out without becoming st
         response.request().method() === 'POST' &&
         response.request().postDataJSON()?.action === 'notifications',
     )
-    await page.getByRole('button', { name: 'Spara mejlval' }).click()
+    await page
+      .getByRole('checkbox', { name: d.sellerPortal.emails, exact: true })
+      .uncheck()
     expect((await savedPreference).ok()).toBe(true)
     await expect(page.getByRole('status')).toHaveText('Sparat.')
-    await expect(page.getByRole('checkbox')).not.toBeChecked()
-    await expect(page.getByRole('checkbox')).toHaveJSProperty(
-      'defaultChecked',
-      false,
-    )
+    await expect(
+      page.getByRole('checkbox', { name: d.sellerPortal.emails, exact: true }),
+    ).not.toBeChecked()
+    await expect(
+      page.getByRole('checkbox', { name: d.sellerPortal.emails, exact: true }),
+    ).toHaveJSProperty('defaultChecked', false)
     await page.reload()
-    await expect(page.getByRole('checkbox')).not.toBeChecked()
+    await expect(
+      page.getByRole('checkbox', { name: d.sellerPortal.emails, exact: true }),
+    ).not.toBeChecked()
     await expect(
       page.getByRole('link', { name: 'Visa avräkning #1' }),
     ).toHaveCount(0)

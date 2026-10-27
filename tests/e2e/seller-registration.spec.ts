@@ -345,34 +345,20 @@ for (const automatic of [false, true])
           exact: true,
         })
         .click()
-      await sellerPage.locator('#store-mail-consent summary').click()
-      await expect(
-        sellerPage.getByText(
-          automatic
-            ? all.storeMail.statuses.automatic
-            : all.storeMail.statuses.none,
-          { exact: true },
-        ),
-      ).toBeVisible()
+      const sellerNews = sellerPage.getByLabel(all.storeMail.consentLabel, {
+        exact: true,
+      })
+      await expect(sellerNews).toBeChecked({ checked: automatic })
       if (automatic) {
-        await sellerPage
-          .getByLabel(all.storeMail.consentLabel, { exact: true })
-          .uncheck()
-        await sellerPage
-          .locator('#store-mail-consent')
-          .getByRole('button', { name: all.storeMail.save, exact: true })
-          .click()
-        await expect(
-          sellerPage.getByText(all.storeMail.statuses.unsubscribed, {
-            exact: true,
-          }),
-        ).toBeAttached()
-        await sellerPage.locator('#store-mail-consent summary').click()
-        await expect(
-          sellerPage.getByText(all.storeMail.statuses.unsubscribed, {
-            exact: true,
-          }),
-        ).toBeVisible()
+        const saved = sellerPage.waitForResponse(
+          (response) =>
+            response.url().endsWith('/api/store-mail') &&
+            response.request().postDataJSON()?.action === 'consent',
+        )
+        await sellerNews.uncheck()
+        expect((await saved).ok()).toBe(true)
+        await sellerPage.reload()
+        await expect(sellerNews).not.toBeChecked()
       }
       // Revoked links show a clear message rather than inviting a second registration.
       await page.goto('/settings/seller-registration')

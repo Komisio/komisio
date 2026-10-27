@@ -25,11 +25,11 @@ async function readyField(page: Page, field: Locator) {
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(page.viewportSize()!.width)
     if ((await field.getAttribute('id')) === 'seller-search') {
-      const submit = await page
-        .locator('.intake-find-seller .row > button')
-        .boundingBox()
-      const input = await field.boundingBox()
-      expect(Math.abs(submit!.y - input!.y)).toBeLessThanOrEqual(1)
+      await expect(
+        page
+          .locator('.intake-find-seller')
+          .getByRole('button', { name: d.intake.searchButton, exact: true }),
+      ).toHaveCount(0)
     }
     if (test.info().title.startsWith('all five'))
       await page.screenshot({

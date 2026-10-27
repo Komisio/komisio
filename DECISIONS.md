@@ -1241,3 +1241,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-26: #653 internal notes are append-only staff records, excluded from seller evidence, labels, customer documents and POS. Registration saves supplied notes atomically; edits use optimistic concurrency and request replay.
 
 - 2026-10-27: #681/#682 share seller cards, localized amounts and plain-language payout guidance. Store selection hides approved applications and keeps one-store direct entry. Existing verified identity, payout thresholds, permissions and immutable records remain unchanged.
+
+- 2026-10-27: Adopt the owner-supplied F brand assets for app navigation and icons, with the lowercase komisio wordmark without a dot, Aptos fallbacks and exact evergreen/lime brand colours. Other UI colours and navigation behaviour remain unchanged.

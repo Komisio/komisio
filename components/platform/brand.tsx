@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { NavigationLink as Link } from './navigation-warning'
 export function Brand({
   light = false,
@@ -12,17 +13,25 @@ export function Brand({
   return (
     <Link
       href={href}
-      className={`brand ${light ? 'brand-light' : ''}`}
+      className={`brand ${light ? 'brand-light' : ''} ${compact ? 'brand-compact' : ''}`}
       aria-label="Komisio"
     >
-      <span className="brand-mark" aria-hidden="true">
-        k
-      </span>
-      {compact ? null : (
-        <span>
-          komisio<span className="brand-dot">.</span>
-        </span>
-      )}
+      <Image
+        className="brand-mark"
+        src={
+          compact
+            ? '/brand/icon-small.svg'
+            : light
+              ? '/brand/mark-lime-on-dark.svg'
+              : '/brand/mark-dark-on-light.svg'
+        }
+        width={compact ? 32 : 48}
+        height={compact ? 32 : 48}
+        alt=""
+        aria-hidden="true"
+        unoptimized
+      />
+      {compact ? null : <span>komisio</span>}
     </Link>
   )
 }

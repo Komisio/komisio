@@ -16,6 +16,15 @@ import italian from '../../messages/it.json'
 import { resolveLocale } from '../../lib/i18n'
 
 describe('language preference', () => {
+  it('uses entry language only when neither saved preference is supported', () => {
+    for (const lang of ['sv', 'en', 'no', 'dk', 'fi', 'de', 'es', 'it']) {
+      expect(resolveLocale(undefined, undefined, lang)).toBe(lang)
+      expect(resolveLocale('en', 'sv', lang)).toBe('en')
+      expect(resolveLocale(undefined, 'sv', lang)).toBe('sv')
+    }
+    expect(resolveLocale('invalid', 'invalid', 'dk')).toBe('dk')
+    expect(resolveLocale(undefined, undefined, 'invalid')).toBe('sv')
+  })
   it('retains an explicit browser choice over a default or different profile', () => {
     expect(resolveLocale('en', 'sv')).toBe('en')
     expect(resolveLocale('sv', 'en')).toBe('sv')

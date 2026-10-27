@@ -1245,3 +1245,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-27: Adopt the owner-supplied F brand assets for app navigation and icons, with the lowercase komisio wordmark without a dot, Aptos fallbacks and exact evergreen/lime brand colours. Other UI colours and navigation behaviour remain unchanged.
 
 - 2026-10-27: #687 groups seller notification and store-news preferences in one card with compact checkboxes and save-on-change. Each retains its existing endpoint, audit and request replay; uncertain results require retry and stale consent requires reload.
+
+- 2026-10-27: Login language hints are session fallbacks only: explicit browser preference wins, then authenticated profile, then entry hint, then Swedish. Entry hints never overwrite saved preferences; existing store-registration language behaviour stays unchanged.

@@ -37,6 +37,9 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname === '/register' && isLocale(lang)
       ? lang
       : undefined
+  const entryLocale =
+    request.nextUrl.pathname === '/login' && isLocale(lang) ? lang : undefined
+  if (entryLocale) request.cookies.set('komisio-entry-locale', entryLocale)
   if (locale) request.cookies.set('komisio-locale', locale)
   function nextResponse() {
     const result = NextResponse.next({ request })
@@ -44,6 +47,14 @@ export async function proxy(request: NextRequest) {
       result.cookies.set('komisio-locale', locale, {
         path: '/',
         sameSite: 'lax',
+      })
+      result.headers.set('Cache-Control', 'private, no-store')
+    }
+    if (entryLocale) {
+      result.cookies.set('komisio-entry-locale', entryLocale, {
+        path: '/',
+        sameSite: 'lax',
+        httpOnly: true,
       })
       result.headers.set('Cache-Control', 'private, no-store')
     }

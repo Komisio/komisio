@@ -120,7 +120,7 @@ for (const locale of [
             .evaluate((element) => ({
               page: element.getBoundingClientRect().width,
               parent:
-                element.parentElement!.clientWidth -
+                element.parentElement!.getBoundingClientRect().width -
                 parseFloat(
                   getComputedStyle(element.parentElement!).paddingLeft,
                 ) -
@@ -163,10 +163,17 @@ for (const locale of [
           expect(
             (await searchButton.boundingBox())!.height,
           ).toBeGreaterThanOrEqual(44)
-          expect((await searchButton.boundingBox())!.y).toBeCloseTo(
-            (await search.boundingBox())!.y,
-            0,
-          )
+          // Compare in one frame while sidebar resizing moves both controls.
+          expect(
+            await searchButton.evaluate((button) =>
+              Math.abs(
+                button.getBoundingClientRect().y -
+                  document
+                    .querySelector('#seller-search')!
+                    .getBoundingClientRect().y,
+              ),
+            ),
+          ).toBeLessThanOrEqual(0.5)
           const registration = page.getByRole('link', {
             name: d.intake.newSellerAction,
             exact: true,

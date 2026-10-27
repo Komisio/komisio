@@ -1,3 +1,4 @@
+import { CompactDirectory } from '@/components/ui/compact-directory'
 import { WorkingForm } from '@/components/platform/working-form'
 import { ScanFocusInput } from '@/components/platform/scan-focus'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
@@ -13,7 +14,6 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale, localeNames, resolveLocale } from '@/lib/i18n'
 import type {
   Seller,
-  BagReceipt,
   SellerAgreement,
   AgreementEvidence,
 } from '@/lib/engine/intake'
@@ -373,23 +373,8 @@ export default async function Intake({
                 className="card intake-form received-bags"
                 id="bag-queue"
               >
-                <h2>{d.queue}</h2>
-                {filters.state && (
-                  <p>
-                    {filters.state === 'unstarted'
-                      ? all.storeFlow.live.dropoffHelp
-                      : d.queueHint}
-                  </p>
-                )}
-                {filters.state && (
-                  <p>
-                    <strong>
-                      {filters.state === 'unstarted'
-                        ? all.storeFlow.live.dropoffs
-                        : all.bagProcessing[filters.state]}
-                    </strong>{' '}
-                    · <Link href={bagQueueHref({})}>{d.showAllBags}</Link>
-                  </p>
+                {filters.state === 'unstarted' && (
+                  <p>{all.storeFlow.live.dropoffHelp}</p>
                 )}
                 {selected.data && (
                   <p>
@@ -416,12 +401,17 @@ export default async function Intake({
                       placeholder="K-123"
                       pattern="[ ]*([Kk][ ]*-[ ]*)?[1-9][0-9]*[ ]*|"
                     />
-                    <button className="btn btn-secondary">{d.findBag}</button>
+                    <button className="btn btn-secondary">
+                      {d.searchButton}
+                    </button>
                   </div>
                 </WorkingForm>
-                <div className="row wrap received-bags-filters">
+                <nav
+                  className="row wrap operation-filters received-bags-filters"
+                  aria-label={d.queueColumns.status}
+                >
                   <Link
-                    className="text-link"
+                    aria-current={!filters.state ? 'page' : undefined}
                     href={bagQueueHref({
                       seller: filters.seller,
                       bag: filters.bag || undefined,
@@ -432,7 +422,6 @@ export default async function Intake({
                   {(['open', 'completed'] as const).map((state) => (
                     <Link
                       key={state}
-                      className="text-link"
                       aria-current={
                         filters.state === state ? 'page' : undefined
                       }
@@ -445,6 +434,20 @@ export default async function Intake({
                       {all.bagProcessing[state]}
                     </Link>
                   ))}
+                  {filters.state === 'unstarted' && (
+                    <Link
+                      aria-current="page"
+                      href={bagQueueHref({
+                        seller: filters.seller,
+                        bag: filters.bag || undefined,
+                        state: 'unstarted',
+                      })}
+                    >
+                      {all.storeFlow.live.dropoffs}
+                    </Link>
+                  )}
+                </nav>
+                <div className="row wrap received-bags-clear">
                   {filters.bag && (
                     <Link
                       className="text-link"
@@ -456,54 +459,73 @@ export default async function Intake({
                       {d.clearBagSearch}
                     </Link>
                   )}
-                  {filters.seller && (
+                  {(filters.seller || filters.state) && (
                     <Link className="text-link" href={bagQueueHref({})}>
                       {d.showAllBags}
                     </Link>
                   )}
                 </div>
-                <ul className="intake-list">
-                  {bags.items.map((row) => {
-                    const bag = row as unknown as BagReceipt & {
-                      sellers: { name: string } | null
-                    }
-                    return (
-                      <li key={bag.id} className="intake-bag">
-                        <div className="received-bag-info">
-                          <strong>
-                            {d.bag} K-{bag.reference}
-                          </strong>
-                          {!selected.data && <span>{bag.sellers?.name}</span>}
-                          <small>
-                            {new Date(bag.received_at).toLocaleString(
-                              intlLocale(ctx.locale),
-                              {
-                                timeZone: 'Europe/Stockholm',
-                                dateStyle: 'short',
-                                timeStyle: 'short',
-                              },
-                            )}{' '}
-                            · {all.bagProcessing[row.processing_state]}
-                          </small>
-                        </div>
-                        <div className="received-bag-actions">
-                          <Link
-                            className="btn btn-secondary"
-                            href={`/intake/bags/${bag.id}/inspect`}
-                          >
-                            {all.inspection.title}
-                          </Link>
-                          <Link
-                            className="text-link"
-                            href={`/intake/bags/${bag.id}`}
-                          >
-                            {d.label}
-                          </Link>
-                        </div>
-                      </li>
-                    )
-                  })}
-                </ul>
+                <CompactDirectory
+                  label={d.queue}
+                  columns={[
+                    {
+                      key: 'reference',
+                      label: d.queueColumns.number,
+                      width: 10,
+                    },
+                    { key: 'seller', label: d.queueColumns.seller, width: 25 },
+                    {
+                      key: 'received',
+                      label: d.queueColumns.received,
+                      width: 22,
+                    },
+                    { key: 'status', label: d.queueColumns.status, width: 20 },
+                    {
+                      key: 'actions',
+                      label: d.queueColumns.actions,
+                      mobileLabel: null,
+                      width: 23,
+                    },
+                  ]}
+                  rows={bags.items.map((bag) => ({
+                    id: bag.id,
+                    cells: [
+                      <strong key="reference">K-{bag.reference}</strong>,
+                      bag.sellers.name,
+                      <time key="received" dateTime={bag.received_at}>
+                        {new Date(bag.received_at).toLocaleString(
+                          intlLocale(ctx.locale),
+                          {
+                            timeZone: 'Europe/Stockholm',
+                            dateStyle: 'short',
+                            timeStyle: 'short',
+                          },
+                        )}
+                      </time>,
+                      <span
+                        key="status"
+                        className="badge received-bag-status"
+                        data-state={bag.processing_state}
+                      >
+                        {all.bagProcessing[bag.processing_state]}
+                      </span>,
+                      <div key="actions" className="received-bag-actions">
+                        <Link
+                          className="btn btn-primary directory-primary-link"
+                          href={`/intake/bags/${bag.id}/inspect`}
+                        >
+                          {d.queueReview}
+                        </Link>
+                        <Link
+                          className="text-link"
+                          href={`/intake/bags/${bag.id}`}
+                        >
+                          {d.queueLabel}
+                        </Link>
+                      </div>,
+                    ],
+                  }))}
+                />
                 {!bags.items.length && <p>{d.noMatchingBags}</p>}
                 <nav className="row" aria-label={d.bagPages}>
                   {bags.hasNewer && bags.items[0] && (

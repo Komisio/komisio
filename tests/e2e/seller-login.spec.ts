@@ -58,6 +58,7 @@ test('seller login opens the only store, recovery requires a new password, and d
     await expect(
       page.getByRole('navigation', { name: d.sellerAccess.switchView }),
     ).toHaveCount(0)
+    await page.locator('.seller-account-menu summary').click()
     await page.getByRole('button', { name: d.logout, exact: true }).click()
     await expect(page).toHaveURL(/\/login/)
     await page.goto('/login?next=/account')
@@ -65,6 +66,7 @@ test('seller login opens the only store, recovery requires a new password, and d
     await page.getByLabel(d.password, { exact: true }).fill(password)
     await page.getByRole('button', { name: d.login, exact: true }).click()
     await expect(page).toHaveURL(new RegExp(`/seller\\?seller=${first.seller}`))
+    await page.locator('.seller-account-menu summary').click()
     await page.getByRole('button', { name: d.logout, exact: true }).click()
     await expect(page).toHaveURL(/\/login/)
     await page.goto('/login?next=/seller')
@@ -92,6 +94,7 @@ test('seller login opens the only store, recovery requires a new password, and d
       .getByRole('button', { name: d.savePassword, exact: true })
       .click()
     await expect(page).toHaveURL(new RegExp(`/seller\\?seller=${first.seller}`))
+    await page.locator('.seller-account-menu summary').click()
     await page.getByRole('button', { name: d.logout, exact: true }).click()
     await expect(page).toHaveURL(/\/login/)
     await page.getByLabel(d.email, { exact: true }).fill(email)
@@ -104,10 +107,10 @@ test('seller login opens the only store, recovery requires a new password, and d
     await store('Synthetic second store')
     await page.goto('/seller')
     await expect(
-      page.getByRole('link', { name: 'Synthetic first store', exact: true }),
+      page.getByRole('link', { name: /^Synthetic first store\b/ }),
     ).toBeVisible()
     await expect(
-      page.getByRole('link', { name: 'Synthetic second store', exact: true }),
+      page.getByRole('link', { name: /^Synthetic second store\b/ }),
     ).toBeVisible()
     // Fixture grants staff explicitly; navigation itself must never grant a role.
     await db.query(
@@ -138,7 +141,7 @@ test('seller login opens the only store, recovery requires a new password, and d
       .getByRole('link', { name: d.sellerAccess.seller, exact: true })
       .click()
     await expect(
-      page.getByRole('link', { name: 'Synthetic first store', exact: true }),
+      page.getByRole('link', { name: /^Synthetic first store\b/ }),
     ).toBeVisible()
     expect(
       (

@@ -1,7 +1,6 @@
+import { requestLocale } from '@/lib/platform/request-locale'
 import { publicPageMetadata } from '@/lib/platform/page-metadata'
-import { cookies } from 'next/headers'
 import { AuthForm } from '@/components/auth/auth-form'
-import { resolveLocale } from '@/lib/i18n'
 export default async function ResetPassword({
   searchParams,
 }: {
@@ -11,9 +10,7 @@ export default async function ResetPassword({
     <AuthForm
       mode="reset"
       next={(await searchParams).next}
-      initialLocale={resolveLocale(
-        (await cookies()).get('komisio-locale')?.value,
-      )}
+      initialLocale={await requestLocale()}
     />
   )
 }

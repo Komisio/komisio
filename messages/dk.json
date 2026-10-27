@@ -2566,8 +2566,7 @@
     "amount": "Beløb i {currency}",
     "threshold": "Mindste udbetaling",
     "notice": "En anmodning flytter ingen penge. Butikken gennemgår og håndterer betalingen.",
-    "emails": "Automatiske e-mails fra butikken",
-    "save": "Gem e-mailpræference",
+    "emails": "Dine varer og udbetalinger",
     "saved": "Gemt.",
     "error": "Kunne ikke gemme. Tjek beløbet, og genindlæs for den aktuelle saldo.",
     "recent": "De seneste 100 vises her.",
@@ -2627,7 +2626,8 @@
     "forSaleUntil": "Til salg indtil",
     "soldOn": "Solgt",
     "endedOn": "Afsluttet",
-    "payoutRemaining": "{remaining} tilbage før minimumsudbetalingen på {minimum}."
+    "payoutRemaining": "{remaining} tilbage før minimumsudbetalingen på {minimum}.",
+    "emailPreferences": "Beskeder via e-mail"
   },
   "plans": {
     "heading": "Abonnement",
@@ -4764,8 +4764,7 @@
     "done": "Behandlingen er færdig. Se resultaterne nedenfor.",
     "skipped": "Sprunget over efter ændrede oplysninger eller samtykke",
     "consentTitle": "E-mail fra butikken",
-    "consentLabel": "Modtag nyheder og information via e-mail fra butikken",
-    "consentHint": "Valgfrit. Skift dit valg her eller via linket i e-mailen. Beskeder om dine varer og udbetalinger påvirkes ikke.",
+    "consentLabel": "Nyheder og information fra butikken",
     "save": "Gem",
     "saved": "Gemt",
     "unsubscribe": "Afmeld butikkens e-mails",

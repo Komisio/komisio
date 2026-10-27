@@ -290,7 +290,7 @@ export function SellerEconomyForms({
       )}
       {view !== 'payout' && (
         <form
-          className="card intake-form"
+          className="seller-email-setting"
           onChange={() => {
             if (!locked.notifications && feedback?.action === 'notifications')
               setFeedback(null)
@@ -303,23 +303,27 @@ export function SellerEconomyForms({
             })
           }}
         >
-          <label className="row">
+          <label className="seller-email-checkbox">
             <input
               type="checkbox"
               name="emails"
               key={String(enabled)}
               defaultChecked={pendingPreference ?? enabled}
               disabled={busy || locked.notifications}
+              onChange={(event) => {
+                void submit({
+                  action: 'notifications',
+                  enabled: event.target.checked,
+                })
+              }}
             />
             {d.emails}
           </label>
-          <Button type="submit" disabled={busy || needsReload.notifications}>
-            {busy
-              ? recovery.busy
-              : locked.notifications
-                ? recovery.retry
-                : d.save}
-          </Button>
+          {locked.notifications && !needsReload.notifications && (
+            <Button type="submit" disabled={busy}>
+              {busy ? recovery.busy : recovery.retry}
+            </Button>
+          )}
           {needsReload.notifications && (
             <Button
               type="button"

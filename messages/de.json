@@ -2566,8 +2566,7 @@
     "amount": "Betrag in {currency}",
     "threshold": "Mindestauszahlung",
     "notice": "Ein Antrag bewegt kein Geld. Der Store prüft und kümmert sich um die Zahlung.",
-    "emails": "Automatische E-Mails vom Store",
-    "save": "E-Mail-Einstellung speichern",
+    "emails": "Deine Artikel und Auszahlungen",
     "saved": "Gespeichert.",
     "error": "Speichern nicht möglich. Prüfen Sie den Betrag und laden Sie neu für das aktuelle Guthaben.",
     "recent": "Hier werden die letzten 100 angezeigt.",
@@ -2627,7 +2626,8 @@
     "forSaleUntil": "Im Verkauf bis",
     "soldOn": "Verkauft am",
     "endedOn": "Beendet am",
-    "payoutRemaining": "Noch {remaining} bis zur Mindestauszahlung von {minimum}."
+    "payoutRemaining": "Noch {remaining} bis zur Mindestauszahlung von {minimum}.",
+    "emailPreferences": "E-Mail-Benachrichtigungen"
   },
   "plans": {
     "heading": "Plan",
@@ -4770,8 +4770,7 @@
     "done": "Die Verarbeitung ist abgeschlossen. Ergebnisse siehe unten.",
     "skipped": "Nach Änderung der Daten oder Zustimmung übersprungen",
     "consentTitle": "E-Mails vom Laden",
-    "consentLabel": "Neuigkeiten und Informationen des Geschäfts per E-Mail erhalten",
-    "consentHint": "Freiwillig. Ändern Sie Ihre Wahl hier oder über den Link in einer E-Mail. Hinweise zu Ihren Artikeln und Auszahlungen bleiben unverändert.",
+    "consentLabel": "Neuigkeiten und Informationen vom Geschäft",
     "save": "Speichern",
     "saved": "Gespeichert",
     "unsubscribe": "E-Mails des Ladens abbestellen",

@@ -2566,8 +2566,7 @@
     "amount": "Importe en {currency}",
     "threshold": "Pago mínimo",
     "notice": "Una solicitud no mueve dinero. La tienda la revisa y gestiona el pago.",
-    "emails": "Correos automáticos de la tienda",
-    "save": "Guardar preferencia de correo",
+    "emails": "Tus artículos y pagos",
     "saved": "Guardado.",
     "error": "No se pudo guardar. Comprueba el importe y recarga para ver el saldo actual.",
     "recent": "Aquí se muestran los últimos 100.",
@@ -2627,7 +2626,8 @@
     "forSaleUntil": "En venta hasta",
     "soldOn": "Vendido el",
     "endedOn": "Finalizado el",
-    "payoutRemaining": "Faltan {remaining} para el pago mínimo de {minimum}."
+    "payoutRemaining": "Faltan {remaining} para el pago mínimo de {minimum}.",
+    "emailPreferences": "Avisos por correo electrónico"
   },
   "plans": {
     "heading": "Plan",
@@ -4770,8 +4770,7 @@
     "done": "Procesamiento terminado. Consulta los resultados a continuación.",
     "skipped": "Omitidos por cambios en los datos o el consentimiento",
     "consentTitle": "Correos de la tienda",
-    "consentLabel": "Recibir noticias e información de la tienda por correo",
-    "consentHint": "Opcional. Cambia tu elección aquí o mediante el enlace del correo. Los avisos sobre tus artículos y pagos no cambian.",
+    "consentLabel": "Noticias e información de la tienda",
     "save": "Guardar",
     "saved": "Guardado",
     "unsubscribe": "Cancelar los correos de la tienda",

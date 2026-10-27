@@ -2566,8 +2566,7 @@
     "amount": "Amount in {currency}",
     "threshold": "Minimum payout",
     "notice": "A request moves no money. The store reviews and handles payment.",
-    "emails": "Automatic emails from the store",
-    "save": "Save email preference",
+    "emails": "Your items and payouts",
     "saved": "Saved.",
     "error": "Unable to save. Check the amount and reload for the current balance.",
     "recent": "The latest 100 are shown here.",
@@ -2627,7 +2626,8 @@
     "forSaleUntil": "For sale until",
     "soldOn": "Sold",
     "endedOn": "Ended",
-    "payoutRemaining": "{remaining} to go before the minimum payout of {minimum}."
+    "payoutRemaining": "{remaining} to go before the minimum payout of {minimum}.",
+    "emailPreferences": "Email notifications"
   },
   "plans": {
     "heading": "Plan",
@@ -4764,8 +4764,7 @@
     "done": "Processing is complete. See the results below.",
     "skipped": "Skipped after details or consent changed",
     "consentTitle": "Email from the store",
-    "consentLabel": "Receive news and information by email from the store",
-    "consentHint": "Optional. Change your choice here or through the link in an email. Notices about your items and payouts are unaffected.",
+    "consentLabel": "News and information from the store",
     "save": "Save",
     "saved": "Saved",
     "unsubscribe": "Unsubscribe from store emails",

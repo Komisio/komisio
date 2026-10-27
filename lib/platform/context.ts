@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
-import { cookies } from 'next/headers'
 import { cache } from 'react'
-import { resolveLocale } from '@/lib/i18n'
+import { requestLocale } from './request-locale'
 import { serverClient } from '@/lib/supabase/server'
 import { readMySellerAccounts } from '@/lib/engine/seller-portal'
 import { readMyRegistrations } from '@/lib/engine/seller-registration'
@@ -50,10 +49,7 @@ export async function platformContext() {
     active,
     mfaRequired,
     profile: profile.data,
-    locale: resolveLocale(
-      (await cookies()).get('komisio-locale')?.value,
-      profile.data?.locale,
-    ),
+    locale: await requestLocale(profile.data?.locale),
   }
 }
 // Share one snapshot only within a server render. API handlers keep the raw

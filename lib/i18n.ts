@@ -52,9 +52,11 @@ export function isLocale(value: unknown): value is Locale {
 export function resolveLocale(
   browserLocale?: string | null,
   profileLocale?: string | null,
+  entryLocale?: string | null,
 ): Locale {
   if (isLocale(browserLocale)) return browserLocale
   if (isLocale(profileLocale)) return profileLocale
+  if (isLocale(entryLocale)) return entryLocale
   return 'sv'
 }
 export function dictionary(locale: string = 'sv'): Dictionary {

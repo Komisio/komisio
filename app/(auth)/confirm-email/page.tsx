@@ -1,8 +1,7 @@
-import { cookies } from 'next/headers'
+import { requestLocale } from '@/lib/platform/request-locale'
 import { redirect } from 'next/navigation'
 import { serverClient } from '@/lib/supabase/server'
 import { safeNext } from '@/lib/platform/validation'
-import { resolveLocale } from '@/lib/i18n'
 import { AuthForm } from '@/components/auth/auth-form'
 import { publicPageMetadata } from '@/lib/platform/page-metadata'
 
@@ -23,9 +22,7 @@ export default async function ConfirmEmail({
       mode="confirm"
       initialEmail={user?.email}
       next={destination}
-      initialLocale={resolveLocale(
-        (await cookies()).get('komisio-locale')?.value,
-      )}
+      initialLocale={await requestLocale()}
     />
   )
 }

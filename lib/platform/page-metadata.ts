@@ -1,6 +1,6 @@
+import { requestLocale } from '@/lib/platform/request-locale'
 import type { Metadata } from 'next'
-import { cookies } from 'next/headers'
-import { dictionary, resolveLocale, type Dictionary } from '@/lib/i18n'
+import { dictionary, type Dictionary } from '@/lib/i18n'
 import { renderPlatformContext } from './context'
 
 type Title = (d: Dictionary, locale: string) => string
@@ -11,13 +11,12 @@ export async function platformPageMetadata(
   extra: Metadata = {},
 ): Promise<Metadata> {
   const ctx = await renderPlatformContext()
-  const locale =
-    ctx?.locale ?? resolveLocale((await cookies()).get('komisio-locale')?.value)
+  const locale = ctx?.locale ?? (await requestLocale())
   return { ...extra, title: title(dictionary(locale), locale) }
 }
 
 /** Authentication forms use the browser language before a profile is available. */
 export async function publicPageMetadata(title: Title): Promise<Metadata> {
-  const locale = resolveLocale((await cookies()).get('komisio-locale')?.value)
+  const locale = await requestLocale()
   return { title: title(dictionary(locale), locale) }
 }

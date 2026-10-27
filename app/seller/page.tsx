@@ -607,28 +607,34 @@ export default async function SellerPortal({
                   />
                 )}
 
-                <SellerEconomyForms
-                  view="notifications"
-                  key={`preferences:${account.tenantId}:${account.sellerId}`}
-                  tenantId={account.tenantId}
-                  sellerId={account.sellerId}
-                  currency={currency}
-                  locale={ctx.locale}
-                  availableOre={economy.balance.availableOre}
-                  thresholdOre={economy.thresholdOre}
-                  enabled={economy.automaticEmails}
-                  d={d}
-                  recovery={all.intake}
-                />
+                <section
+                  className="card seller-email-preferences"
+                  aria-labelledby="seller-email-title"
+                >
+                  <h2 id="seller-email-title">{d.emailPreferences}</h2>
+                  <SellerEconomyForms
+                    view="notifications"
+                    key={`preferences:${account.tenantId}:${account.sellerId}`}
+                    tenantId={account.tenantId}
+                    sellerId={account.sellerId}
+                    currency={currency}
+                    locale={ctx.locale}
+                    availableOre={economy.balance.availableOre}
+                    thresholdOre={economy.thresholdOre}
+                    enabled={economy.automaticEmails}
+                    d={d}
+                    recovery={all.intake}
+                  />
 
-                <StoreMailConsent
-                  locale={ctx.locale}
-                  key={`store-mail:${account.sellerId}:${mailConsent.id}`}
-                  tenantId={account.tenantId}
-                  sellerId={account.sellerId}
-                  current={mailConsent}
-                  d={all.storeMail}
-                />
+                  <StoreMailConsent
+                    recovery={all.intake}
+                    key={`store-mail:${account.sellerId}:${mailConsent.id}`}
+                    tenantId={account.tenantId}
+                    sellerId={account.sellerId}
+                    current={mailConsent}
+                    d={all.storeMail}
+                  />
+                </section>
 
                 <details
                   className="card seller-portal-fold"

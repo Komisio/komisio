@@ -965,33 +965,30 @@ small {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 2px;
+  font-family: Aptos, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   font-size: 27px;
-  font-weight: 600;
-  letter-spacing: -1.3px;
-  color: var(--green);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: #143e34;
 }
 .brand-mark {
-  display: inline-grid;
-  place-items: center;
-  background: var(--green);
-  color: white;
-  width: 31px;
-  height: 34px;
-  border-radius: 11px 3px 11px 3px;
-  font-family: Georgia, serif;
-  font-size: 26px;
-  line-height: 1;
+  display: block;
+  flex: none;
+  width: 48px;
+  height: 48px;
 }
-.brand-dot {
-  color: #98af77;
+.brand-compact {
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+.brand-compact .brand-mark {
+  width: 32px;
+  height: 32px;
 }
 .brand-light {
-  color: #fafcf2;
-}
-.brand-light .brand-mark {
-  background: #e0edc4;
-  color: var(--green);
+  color: #dcf0a4;
 }
 .eyebrow {
   font-size: 10px;
@@ -1179,7 +1176,7 @@ button.text-link:hover:not(:disabled) {
   background: #fff;
 }
 .auth-story {
-  background: #173c32;
+  background: #143e34;
   color: white;
   padding: 48px 58px;
   display: flex;

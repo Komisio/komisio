@@ -1,8 +1,5 @@
 import { itemStage } from '../../lib/engine/items'
-import {
-  itemFilterHref,
-  itemWeekCutoff,
-} from '../../lib/engine/item-filter-navigation'
+import { itemFilterHref } from '../../lib/engine/item-filter-navigation'
 import { expect, it } from 'vitest'
 import { itemFilters } from '../../lib/engine/item-directory'
 
@@ -88,11 +85,6 @@ it('removes just one filter and resets pagination while preserving sorting', () 
   expect(itemFilterHref({ category: 'Jackets' }, { category: null })).toBe(
     '/intake/items',
   )
-})
-
-it('uses seven Stockholm calendar days across midnight, DST and year end', () => {
-  expect(itemWeekCutoff(new Date('2026-10-24T22:30:00Z'))).toBe('2026-11-01')
-  expect(itemWeekCutoff(new Date('2026-12-31T23:30:00Z'))).toBe('2027-01-08')
 })
 
 it('accepts only the supported upcoming stock period window', () => {

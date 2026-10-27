@@ -2,10 +2,9 @@ import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
-import { itemWeekCutoff } from '../../lib/engine/item-filter-navigation'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('stock links and removable filter chips retain context across pages and quick filters', async ({
+test('stock links and removable filter chips retain context across pages, status and advanced filters', async ({
   page,
 }) => {
   const email = `filter-chips-${randomUUID()}@example.test`
@@ -71,24 +70,31 @@ test('stock links and removable filter chips retain context across pages and qui
         (el) => el.getBoundingClientRect().right <= window.innerWidth,
       ),
     ).toBe(true)
-    const quick = page.getByRole('navigation', {
-      name: d.items.directory.quickFilters,
-      exact: true,
-    })
-    await quick
-      .getByRole('link', { name: d.items.markdownWaiting, exact: true })
-      .click()
+    await expect(
+      page.getByRole('navigation', { name: 'Snabbfilter', exact: true }),
+    ).toHaveCount(0)
+    await page
+      .getByLabel(d.items.stage, { exact: true })
+      .selectOption('markdown_due')
     await expect(page).toHaveURL(/stage=markdown_due/)
     expect(new URL(page.url()).searchParams.get('q')).toBe('Coat')
-    await quick
-      .getByRole('link', {
-        name: d.items.directory.endsWithinWeek,
-        exact: true,
-      })
-      .click()
+    if (
+      (await page.locator('.inventory-advanced').getAttribute('open')) === null
+    )
+      await page.locator('.inventory-advanced summary').click()
+    await page
+      .getByLabel(d.items.directory.endsBefore, { exact: true })
+      .fill('2000-01-01')
+    await expect(page.locator('.inventory-row')).toHaveCount(0)
+    await page
+      .getByLabel(d.items.directory.endsBefore, { exact: true })
+      .fill('2099-12-31')
     await expect
       .poll(() => new URL(page.url()).searchParams.get('endsBefore'))
-      .toBe(itemWeekCutoff())
+      .toBe('2099-12-31')
+    await expect(page.locator('.inventory-row')).toHaveCount(25)
+    expect(new URL(page.url()).searchParams.get('stage')).toBe('markdown_due')
+    expect(new URL(page.url()).searchParams.get('q')).toBe('Coat')
     await expect(chips).toContainText(d.items.directory.endsBefore)
     await page
       .getByRole('link', { name: d.items.clearFilters, exact: true })

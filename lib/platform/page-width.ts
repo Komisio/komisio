@@ -1,5 +1,6 @@
 /** Opt in exact list/report routes. Nested details and new-entry pages stay narrow. */
 const widePages = new Set([
+  '/intake',
   '/intake/items',
   '/intake/stock',
   '/intake/sellers',

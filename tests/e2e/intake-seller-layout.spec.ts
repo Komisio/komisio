@@ -106,46 +106,84 @@ for (const locale of [
           expect((await search.boundingBox())!.height).toBeGreaterThanOrEqual(
             44,
           )
-          const placeholder = await search.evaluate((element) => {
-            const input = element as HTMLInputElement
-            const style = getComputedStyle(input)
-            const canvas = document.createElement('canvas')
-            const context = canvas.getContext('2d')!
-            context.font = style.font
-            return {
-              textWidth: context.measureText(input.placeholder).width,
-              availableWidth:
-                input.clientWidth -
-                parseFloat(style.paddingLeft) -
-                parseFloat(style.paddingRight) -
-                20,
-            }
-          })
-          expect(placeholder.textWidth).toBeLessThanOrEqual(
-            placeholder.availableWidth,
-          )
-          await expect(page.locator('#seller-search-hint')).toHaveText(
+          await expect(search).toHaveAccessibleName(d.sellersList.search)
+          await expect(search).toHaveAttribute(
+            'placeholder',
             d.sellersList.searchHint,
           )
-          const searchButton = page
-            .locator('form')
-            .filter({ has: search })
-            .getByRole('button', { name: d.intake.searchButton, exact: true })
-          expect(
-            (await searchButton.boundingBox())!.height,
-          ).toBeGreaterThanOrEqual(44)
-          const registration = page.locator('.intake-registration > summary')
+          await expect(page.locator('#seller-search-hint')).toHaveCount(0)
+          await expect(
+            page.getByRole('heading', { name: d.intake.find, exact: true }),
+          ).toHaveCount(1)
+          const widths = await page
+            .locator('.intake-overview')
+            .evaluate((element) => ({
+              page: element.getBoundingClientRect().width,
+              parent:
+                element.parentElement!.getBoundingClientRect().width -
+                parseFloat(
+                  getComputedStyle(element.parentElement!).paddingLeft,
+                ) -
+                parseFloat(
+                  getComputedStyle(element.parentElement!).paddingRight,
+                ),
+              tabs: element
+                .querySelector('.workspace-tablist')!
+                .getBoundingClientRect().width,
+              card: element
+                .querySelector('.intake-find-seller')!
+                .getBoundingClientRect().width,
+            }))
+          expect(widths.page).toBeCloseTo(widths.parent, 0)
+          if (viewport.width > 1000) {
+            const main = page.getByRole('main')
+            await expect(main).toHaveClass(/main--wide/)
+            // Read both edges in the same frame while the sidebar animates.
+            await expect
+              .poll(() =>
+                main.evaluate((element) => {
+                  const mainBox = element.getBoundingClientRect()
+                  const sidebarBox = document
+                    .querySelector('.sidebar')!
+                    .getBoundingClientRect()
+                  return Math.max(
+                    Math.abs(mainBox.left - sidebarBox.right),
+                    Math.abs(mainBox.right - innerWidth),
+                  )
+                }),
+              )
+              .toBeLessThanOrEqual(0.5)
+          }
+          expect(widths.tabs).toBeCloseTo(widths.page, 0)
+          expect(widths.card).toBeCloseTo(widths.page, 0)
+          await expect(
+            page.locator('form').filter({ has: search }).getByRole('button', {
+              name: d.intake.searchButton,
+              exact: true,
+            }),
+          ).toHaveCount(0)
+          expect((await search.boundingBox())!.height).toBeGreaterThanOrEqual(
+            44,
+          )
+          const registration = page.getByRole('link', {
+            name: d.intake.newSellerAction,
+            exact: true,
+          })
           await expect(registration).toHaveCount(1)
           expect(
             (await registration.boundingBox())!.height,
           ).toBeGreaterThanOrEqual(44)
-          await expect(
-            page.getByRole('link', { name: d.intake.newSeller, exact: true }),
-          ).toHaveCount(0)
-          if (locale === 'sv' && viewport.width === 768 && !collapsed)
+          await expect(page.locator('.intake-registration')).toHaveCount(0)
+          await expect(page.locator('#seller-name')).toHaveCount(0)
+          if (
+            locale === 'sv' &&
+            [1440, 320].includes(viewport.width) &&
+            !collapsed
+          )
             await page.screenshot({
-              path: testInfo.outputPath('seller-picker-ipad.png'),
+              path: testInfo.outputPath(`seller-picker-${viewport.width}.png`),
               fullPage: true,
+              caret: 'initial',
             })
         }
       }
@@ -156,6 +194,18 @@ for (const locale of [
       await expect(page.locator('.receiving-seller-context')).toContainText(
         'Synthetic Alexandersson-Lindgren',
       )
+      if (locale === 'sv') {
+        await page.goto('/intake')
+        await expect(search).toHaveValue('')
+        for (const width of [1920, 390]) {
+          await page.setViewportSize({ width, height: 1000 })
+          await page.screenshot({
+            path: testInfo.outputPath(`seller-search-${width}.png`),
+            fullPage: true,
+            caret: 'initial',
+          })
+        }
+      }
     } finally {
       await f.close()
     }

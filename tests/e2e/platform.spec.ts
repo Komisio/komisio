@@ -107,7 +107,7 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   expect(receipt.status()).toBe(200)
   const receiptId = (await receipt.json()).id
   const replayCommand = receipt.request().postDataJSON()
-  await expect(page.locator('.intake-bag')).toHaveCount(1)
+  await expect(page.locator('.received-bags tbody tr')).toHaveCount(1)
   const stale = await page.context().newPage()
   const stalePublisher = await page.context().newPage()
   try {
@@ -261,7 +261,7 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   await expect(page.getByRole('status')).toContainText(
     'Inlämningen är registrerad',
   )
-  await expect(page.locator('.intake-bag')).toHaveCount(1)
+  await expect(page.locator('.received-bags tbody tr')).toHaveCount(1)
   const receiptOrigin = page.url()
   await page
     .getByRole('status')
@@ -290,7 +290,7 @@ test('staff receives a bag, retries safely and prints a private label', async ({
     .click()
   await expect(page).toHaveURL(receiptOrigin)
   await page.reload()
-  await expect(page.locator('.intake-bag')).toHaveCount(1)
+  await expect(page.locator('.received-bags tbody tr')).toHaveCount(1)
   await expect(page.locator('#new-seller')).toContainText('Test Säljare')
   await expect(
     page.getByRole('heading', { name: 'Ta emot en inlämning' }),
@@ -321,7 +321,7 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   await expect(page.getByRole('status')).toContainText(
     'Inlämningen är registrerad',
   )
-  await expect(page.locator('.intake-bag')).toHaveCount(2)
+  await expect(page.locator('.received-bags tbody tr')).toHaveCount(2)
   await page.setViewportSize({ width: 390, height: 844 })
   await page.screenshot({
     path: 'test-results/intake-mobile.png',
@@ -1008,11 +1008,11 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
   })
   await page.goto(`/intake?seller=${sellerId}#bag-queue`)
   const queue = page.locator('#bag-queue')
-  await expect(queue.locator('.intake-bag')).toHaveCount(20)
+  await expect(queue.locator('tbody tr')).toHaveCount(20)
   await expect(queue).not.toContainText('Queue Beta')
   const ids = async () =>
     queue
-      .locator('.intake-bag a[href*="/inspect"]')
+      .locator('tbody tr a[href*="/inspect"]')
       .evaluateAll((links) =>
         links.map(
           (a) => new URL((a as HTMLAnchorElement).href).pathname.split('/')[3],
@@ -1022,48 +1022,49 @@ test('bag queue finds older receipts and keeps seller filters while paging', asy
   await queue
     .getByRole('link', { name: 'Äldre inlämningar', exact: true })
     .click()
-  await expect(queue.locator('.intake-bag')).toHaveCount(20)
+  await expect(queue.locator('tbody tr')).toHaveCount(20)
   await expect(page).toHaveURL(new RegExp(`seller=${sellerId}`))
   await expectDetailTarget(
-    queue.locator('.intake-bag a[href*="/inspect"]').first(),
+    queue.locator('tbody tr a[href*="/inspect"]').first(),
     '/intake/bags/' + expected[30] + '/inspect',
   )
   const second = await ids()
   await queue
     .getByRole('link', { name: 'Äldre inlämningar', exact: true })
     .click()
-  await expect(queue.locator('.intake-bag')).toHaveCount(11)
+  await expect(queue.locator('tbody tr')).toHaveCount(11)
   const third = await ids()
   expect([...first, ...second, ...third]).toEqual([...expected].reverse())
-  const oldestLabel = await queue
-    .locator('.intake-bag strong')
-    .last()
-    .innerText()
+  const oldestLabel = await queue.locator('tbody tr strong').last().innerText()
   const oldestNumber = oldestLabel.match(/K-(\d+)/)![1]
   await queue
     .getByRole('link', { name: 'Nyare inlämningar', exact: true })
     .click()
-  await expect(queue.locator('.intake-bag')).toHaveCount(20)
+  await expect(queue.locator('tbody tr')).toHaveCount(20)
   await expectDetailTarget(
-    queue.locator('.intake-bag a[href*="/inspect"]').first(),
+    queue.locator('tbody tr a[href*="/inspect"]').first(),
     '/intake/bags/' + expected[30] + '/inspect',
   )
   expect(await ids()).toEqual(second)
-  await queue.getByLabel('Sök på inlämningsnummer').fill(`K-${oldestNumber}`)
-  await queue.getByRole('button', { name: 'Hitta inlämning' }).click()
-  await expect(queue.locator('.intake-bag')).toHaveCount(1)
+  await queue
+    .getByLabel(d.intake.bagSearch, { exact: true })
+    .fill(`K-${oldestNumber}`)
+  await queue
+    .getByRole('button', { name: d.intake.searchButton, exact: true })
+    .click()
+  await expect(queue.locator('tbody tr')).toHaveCount(1)
   expect(await ids()).toEqual([expected[0]])
   await queue.screenshot({ path: 'test-results/bag-queue-single-desktop.png' })
   await page.setViewportSize({ width: 390, height: 844 })
   await queue.screenshot({ path: 'test-results/bag-queue-single-mobile.png' })
   await expect(page).not.toHaveURL(/older=/)
   await page.goto(`/intake?seller=${otherId}&bag=${oldestNumber}#bag-queue`)
-  await expect(queue.locator('.intake-bag')).toHaveCount(0)
+  await expect(queue.locator('tbody tr')).toHaveCount(0)
   await expect(queue).toContainText('Inga inlämningar matchar detta urval.')
   await queue
     .getByRole('link', { name: 'Visa alla säljares inlämningar' })
     .click()
-  await expect(queue.locator('.intake-bag')).toHaveCount(20)
+  await expect(queue.locator('tbody tr')).toHaveCount(20)
   await expect(queue).toContainText('Queue Beta')
   await page.setViewportSize({ width: 390, height: 844 })
   expect(
@@ -1180,7 +1181,7 @@ test('reception sources persist through authenticated API without a bag or GUI',
     ).status(),
   ).toBe(400)
   await page.goto('/intake')
-  await expect(page.locator('.intake-bag')).toHaveCount(0)
+  await expect(page.locator('.received-bags tbody tr')).toHaveCount(0)
 
   const priceSource = {
     id: crypto.randomUUID(),

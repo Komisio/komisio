@@ -68,6 +68,28 @@
 .inventory-cell-button[data-editing] {
   visibility: hidden;
 }
+/* Keep the currency edge identical for editable and read-only prices. */
+.inventory-table button.inventory-price-editor {
+  position: relative;
+  justify-content: flex-end;
+  max-width: none;
+  padding: 4px 0;
+  border: 0;
+  text-align: right;
+}
+.inventory-price-value {
+  display: block;
+  width: 100%;
+  padding-right: 22px;
+  white-space: nowrap;
+  text-align: right;
+}
+.inventory-price-editor > svg {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
 .inventory-cell-editor > input,
 .inventory-cell-editor > select {
   position: absolute;

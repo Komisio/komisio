@@ -1,9 +1,6 @@
 import { InventoryFooter } from '@/components/intake/inventory-table-shell'
 import { X } from 'lucide-react'
-import {
-  itemFilterHref,
-  itemWeekCutoff,
-} from '@/lib/engine/item-filter-navigation'
+import { itemFilterHref } from '@/lib/engine/item-filter-navigation'
 import { InventoryTable } from '@/components/intake/inventory-table'
 import {
   InventoryFilters,
@@ -321,21 +318,6 @@ export default async function Items({
             </div>
           </InventoryAdvanced>
         </InventoryFilters>
-        <nav className="inventory-filter-links" aria-label={t.quickFilters}>
-          <span className="muted">{t.quickFilters}</span>
-          <Link
-            className="inventory-filter-chip"
-            href={filterHref({ stage: 'markdown_due' })}
-          >
-            {d.markdownWaiting}
-          </Link>
-          <Link
-            className="inventory-filter-chip"
-            href={filterHref({ endsBefore: itemWeekCutoff() })}
-          >
-            {t.endsWithinWeek}
-          </Link>
-        </nav>
         {!!Object.keys(raw).length && (
           <nav className="inventory-filter-links" aria-label={t.activeFilters}>
             <span className="muted">{t.activeFilters}</span>

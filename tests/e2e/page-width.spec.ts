@@ -14,6 +14,7 @@ test('wide lists use desktop space while forms, details and mobile scrolling kee
     await f.commit()
     await page.setViewportSize({ width: 1920, height: 1080 })
     for (const path of [
+      '/intake',
       '/intake/items',
       '/intake/stock',
       '/intake/sellers',

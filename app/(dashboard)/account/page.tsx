@@ -8,6 +8,7 @@ import { NavigationLink as Link } from '@/components/platform/navigation-warning
 import { readMarketingConsent } from '@/lib/engine/marketing-consent'
 import { marketingConsentEnabled } from '@/lib/platform/marketing-consent'
 import { MarketingConsentForm } from '@/components/platform/marketing-consent-form'
+import './account.css'
 export default async function Account() {
   const ctx = await requirePlatform(false)
   const d = dictionary(ctx.locale)
@@ -15,7 +16,7 @@ export default async function Account() {
   const marketing = await readMarketingConsent(ctx.client)
   const marketingEnabled = marketingConsentEnabled()
   return (
-    <>
+    <div className="account-page">
       <div className="page-heading">
         <h1>{d.account}</h1>
         <p>{d.accountIntro}</p>
@@ -64,7 +65,7 @@ export default async function Account() {
           <SignOut d={d} />
         </div>
       )}
-    </>
+    </div>
   )
 }
 

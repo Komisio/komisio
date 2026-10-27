@@ -1,0 +1,56 @@
+.account-page {
+  width: 100%;
+  min-width: 0;
+}
+.account-page .page-heading {
+  text-align: left;
+  max-width: none;
+  margin: 0 0 24px;
+}
+.account-page .page-heading p {
+  margin: 12px 0 0;
+}
+.account-page .settings-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+}
+.account-page .settings-grid > .stack {
+  min-width: 0;
+  gap: 24px;
+}
+.account-page .settings-grid .card {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+}
+/* Seller accounts use the dashboard's no-store shell, not store onboarding. */
+.onboarding:has(> .account-page) {
+  padding: 32px 20px;
+}
+.onboarding:has(> .account-page) > .brand {
+  margin-bottom: 24px;
+}
+.onboarding:has(> .account-page) > .language-picker {
+  width: fit-content;
+  margin-bottom: 24px;
+}
+.onboarding:has(> .account-page) > .language-picker .language-options {
+  left: 0;
+  right: auto;
+}
+.onboarding:has(> .account-page) > .row {
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+@media (max-width: 1000px) {
+  .account-page .settings-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .account-page .settings-grid .card {
+    padding: 16px;
+  }
+}

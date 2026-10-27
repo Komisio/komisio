@@ -1252,3 +1252,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-27: #679 shares compact checkbox styling throughout item settings: 18px controls, inline labels and at least 44px label targets. Inherited fields, custom profiles and description requirements keep their existing behaviour.
 
 - 2026-10-27: #688 uses seller copy for safe seller/join auth destinations in all eight locales. Default login welcomes everyone and separates store signup from seller-link guidance. Invitations, verified email, MFA, destination validation and role-based routing remain unchanged.
+
+- 2026-10-27: #692 scopes account layout to its page: full-width stacked cards on narrow screens, aligned readable columns on desktop, even spacing and left-aligned headings/language controls in the no-store shell. Account fields, saves and other onboarding pages are unchanged.

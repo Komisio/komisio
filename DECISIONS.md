@@ -1239,3 +1239,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-26: #653 makes description optional by default; stores may require it for new registration. Missing titles use the store template and finally the item reference, without inventing source observations.
 - 2026-10-26: #653 fields inherit store defaults unless a type overrides them. Existing tenant profiles retain overrides; platform starter profiles inherit. Description requirements are store-wide.
 - 2026-10-26: #653 internal notes are append-only staff records, excluded from seller evidence, labels, customer documents and POS. Registration saves supplied notes atomically; edits use optimistic concurrency and request replay.
+
+- 2026-10-27: #681/#682 share seller cards, localized amounts and plain-language payout guidance. Store selection hides approved applications and keeps one-store direct entry. Existing verified identity, payout thresholds, permissions and immutable records remain unchanged.

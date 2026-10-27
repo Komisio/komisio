@@ -222,9 +222,17 @@ test('seller payout guidance explains unavailable balances, validates amounts an
           name: d.sellerPortal.request,
           exact: true,
         })
-        await expect(request).toContainText(d.sellerPortal.noPayoutBalance)
+        await expect(request.getByRole('progressbar')).toHaveAttribute(
+          'value',
+          '0',
+        )
         await expect(request.getByRole('textbox')).toHaveCount(0)
-        await expect(request.getByRole('button')).toHaveCount(0)
+        await expect(
+          request.getByRole('button', {
+            name: d.sellerPortal.request,
+            exact: true,
+          }),
+        ).toBeDisabled()
         expect(
           await page.evaluate(
             () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -252,7 +260,9 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     await page.reload()
     const request = page.locator('#portal-payout-request')
     await expect(request).toContainText(
-      sv.sellerPortal.payoutBelowThreshold.replace('{minimum}', '100.00 SEK'),
+      sv.sellerPortal.payoutRemaining
+        .replace('{remaining}', '50,00 kr')
+        .replace('{minimum}', '100,00 kr'),
     )
     await expect(request.getByRole('textbox')).toHaveCount(0)
     await adjust(15000)
@@ -301,7 +311,9 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     )
     await expect(request.getByRole('textbox')).toHaveCount(0)
     await expect(request).toContainText(
-      sv.sellerPortal.payoutBelowThreshold.replace('{minimum}', '100.00 SEK'),
+      sv.sellerPortal.payoutRemaining
+        .replace('{remaining}', '50,00 kr')
+        .replace('{minimum}', '100,00 kr'),
     )
     expect(
       (
@@ -383,11 +395,11 @@ test('seller payout guidance explains unavailable balances, validates amounts an
     await expect(input).toHaveValue('')
     const payoutList = page.locator('section.card').filter({
       has: page.getByRole('heading', {
-        name: sv.sellerPortal.payouts,
+        name: sv.sellerPortalWorkspace.previousPayouts,
         exact: true,
       }),
     })
-    await expect(payoutList).toContainText('100.00 SEK')
+    await expect(payoutList).toContainText('100,00 kr')
     await expect(payoutList).toContainText(sv.payouts.statuses.requested)
     await page.screenshot({
       path: testInfo.outputPath('seller-payout-guidance.png'),

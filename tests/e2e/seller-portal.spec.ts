@@ -12,12 +12,14 @@ test('seller reads own economy, requests payout and opts out without becoming st
   await expect(page).toHaveURL(/\/seller$/)
   await page.getByRole('link', { name: 'Komisio', exact: true }).click()
   await expect(page).toHaveURL(/\/seller$/)
-  await page.locator('.seller-header summary').click()
+  await page.locator('.seller-header .language-picker summary').click()
   await page.getByRole('button', { name: 'English', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('lang', 'en-GB')
   await page.reload()
-  await expect(page.locator('.seller-header summary')).toHaveText('English')
-  await page.locator('.seller-header summary').click()
+  await expect(
+    page.locator('.seller-header .language-picker summary'),
+  ).toHaveText('English')
+  await page.locator('.seller-header .language-picker summary').click()
   await page.getByRole('button', { name: 'Svenska', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('lang', 'sv-SE')
   const { Client } = createRequire(import.meta.url)('pg')
@@ -92,9 +94,7 @@ test('seller reads own economy, requests payout and opts out without becoming st
     await page
       .getByRole('tab', { name: d.sellerPortal.payouts, exact: true })
       .click()
-    await expect(
-      page.getByRole('heading', { name: /Tillg.*200/ }),
-    ).toBeVisible()
+    await expect(page.locator('.seller-balance')).toHaveText('200,00 kr')
     await page.getByLabel('Belopp i SEK').fill('100,00')
     await page
       .getByRole('button', { name: 'Begär utbetalning', exact: true })
@@ -102,7 +102,9 @@ test('seller reads own economy, requests payout and opts out without becoming st
     await expect(page.getByRole('status')).toHaveText(
       'Din begäran är registrerad. Butiken granskar och hanterar utbetalningen.',
     )
-    await expect(page.getByText(/Begärd av:/)).toBeVisible()
+    await expect(
+      page.getByText(d.payouts.statuses.requested, { exact: false }),
+    ).toBeVisible()
     await expect(
       page.getByRole('region', { name: 'Begär utbetalning', exact: true }),
     ).toHaveCount(1)

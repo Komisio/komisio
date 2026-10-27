@@ -208,8 +208,19 @@ for (const automatic of [false, true])
       await expect(sellerPage).toHaveURL(/\/seller$/)
       expect(attempts).toHaveLength(2)
       expect(attempts[1]).toEqual(attempts[0])
+      await expect(sellerPage.locator('.seller-header')).toBeVisible()
+      for (const width of [390, 1280]) {
+        await sellerPage.setViewportSize({ width, height: 900 })
+        await sellerPage.screenshot({
+          path: testInfo.outputPath(`stores-pending-${width}.png`),
+          fullPage: true,
+        })
+      }
+
       await expect(
-        sellerPage.getByText(d.pending, { exact: true }),
+        sellerPage.getByText(all.sellerPortalWorkspace.pending, {
+          exact: true,
+        }),
       ).toBeVisible()
       await expect(
         sellerPage.getByText(all.sellerPortal.empty, { exact: true }),

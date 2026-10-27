@@ -42,8 +42,9 @@ assistant's model usage, described in [pricing](PRICING.md).
 - **Local**: the developer's own stack.
 
 Promotion is by code, not by data: production runs the same main revision
-after it has been observed on staging for a period the owner sets (proposal:
-one working day). Migrations reach production through the same CI job as
+after that exact revision passes CI and staging release checks and is verified
+on staging. There is no fixed waiting period (owner decision, 2026-10-27,
+superseding the original C6 wait). Migrations reach production through the same CI job as
 staging, from a separate GitHub environment (`production-database`) whose
 job is manually approved by the owner (GitHub environment protection rule
 "required reviewers"). No data is ever copied between environments.
@@ -157,8 +158,9 @@ C2 trial length: answered by the same decision, three months and no grace
 needed because nothing becomes read-only; C3 what read-only blocks
 (the list above); C4 payment provider and methods (Stripe; card and
 invoice); C5 production domain and operating company on the Stripe account;
-C6 staging soak time before production (one working day) and who approves
-production migrations (the owner).
+C6 production readiness: CI and staging release checks must pass and the exact
+revision must be verified on staging; the owner approves production migrations.
+The owner removed the fixed staging waiting period on 2026-10-27.
 
 ## Delivered (slice 1, 2026-09-14)
 

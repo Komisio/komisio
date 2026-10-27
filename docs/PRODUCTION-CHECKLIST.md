@@ -93,8 +93,10 @@ Still owner-only, none of it blocking a store from working:
 3. P11 to P14: the legal texts, the drills and the smoke journey.
 4. Dedicated GitHub tokens instead of the owner's personal ones.
 
-Every later release follows the same path: merge to main, staging soak,
-dispatch `Production database`, approve.
+Every later release follows the same path: merge to main, pass CI and staging
+release checks, verify the exact revision on staging, dispatch `Production
+database`, approve. There is no fixed staging waiting period (owner decision,
+2026-10-27, superseding the original C6 wait).
 
 ## Verification for every release
 

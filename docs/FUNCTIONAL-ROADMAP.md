@@ -20,7 +20,8 @@ account-wide deletion remain separate work. Code availability does not mean this
 workflow has been deployed or that every GDPR request is fully resolved.
 
 PRs 270–322 are deployed to production. Subsequent improvements are delivered
-through staging and retain the production staging-observation gate.
+through staging and retain the production staging-verification gate, with no
+fixed waiting period (owner decision, 2026-10-27).
 Staff item and seller lists, seller-owned items and announced handovers
 support bounded search and pagination. Receiving supports contact-based
 seller lookup and direct item-label resolution. Seller handovers have an

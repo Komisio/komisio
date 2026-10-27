@@ -142,9 +142,10 @@ order by received_at desc limit 20;` for Stripe.
   did not answer in time (it may still have sent).
 - **Migration job failed**: read the step log; never run `migration
 repair`; fix forward with a new migration.
-- **Production release**: merge to main, let it sit on staging for the
-  soak period (C6, one working day), then GitHub, Actions, Production
-  database, Run workflow on `main`, and approve the environment. The step
+- **Production release**: merge to main, wait for CI and staging release checks
+  to pass, and verify the exact revision on staging. There is no fixed waiting
+  period (owner decision, 2026-10-27, superseding C6). Then GitHub, Actions,
+  Production database, Run workflow on `main`, and approve the environment. The step
   summary lists the applied versions; the deploy hook releases the
   application afterwards. Complete the authenticated route and runtime-error
   checks in PRODUCTION-CHECKLIST.md before reporting the release as verified;

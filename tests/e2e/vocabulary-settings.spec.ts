@@ -80,6 +80,16 @@ test('a new store starts with translated clothing types and five base attributes
     await expect(rows).toHaveCount(2)
     await expect(rows.nth(0)).toContainText('Jacket')
     await expect(rows.nth(1)).toContainText('Trousers')
+    await expect(page.locator('#vocabulary-types')).not.toContainText(
+      en.catalogueDeletion.shared,
+    )
+    await expect(page.locator('#vocabulary-types')).not.toContainText(
+      en.vocabularySettings.standard,
+    )
+    await page
+      .getByLabel(en.catalogueEditing.showInactive, { exact: true })
+      .check()
+    await expect(rows).toHaveCount(2)
     await expect(rows.nth(0)).toBeVisible()
     for (const field of ['Size', 'Colour', 'Brand', 'Material', 'Condition']) {
       await expect(rows.nth(0)).toContainText(field)

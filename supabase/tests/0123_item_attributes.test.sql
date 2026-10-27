@@ -16,6 +16,7 @@ select set_config('test.body',(current_store_policy(current_setting('test.tenant
 select publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),null,current_setting('test.body')::jsonb || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_margin","vatRatePercent":25}');
 
 -- A lamp: a reception that carries attributes no garment has.
+select set_item_type(current_setting('test.tenant')::uuid,'lamp','{"labels":{"en":"Lamp"},"inheritAttributes":true}');
 select set_config('test.session',gen_random_uuid()::text,true);
 select create_reception_session(current_setting('test.tenant')::uuid,current_setting('test.session')::uuid,current_setting('test.seller')::uuid);
 select set_config('test.src',gen_random_uuid()::text,true);

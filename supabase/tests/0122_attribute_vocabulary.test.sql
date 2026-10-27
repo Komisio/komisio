@@ -13,17 +13,12 @@ set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000a02","r
 select accept_invitation(repeat('d',64));
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000a01","role":"authenticated"}';
 
--- A brand new store already has a usable vocabulary: nobody administers
--- attributes before receiving their first lamp.
+-- A brand new store has its own clothing starters and the shared field library.
 select ok(jsonb_array_length(attribute_vocabulary(current_setting('test.tenant')::uuid)->'definitions')>=11,'the platform vocabulary is there from the start');
-select is((select count(*) from jsonb_array_elements(attribute_vocabulary(current_setting('test.tenant')::uuid)->'types') t where t->>'slug' in ('sweater','lamp')),2::bigint,'sweater and lamp are seeded');
--- Shared examples inherit the store defaults until explicitly customized.
-select set_config('test.lamp',(select t->'attributes' from jsonb_array_elements(attribute_vocabulary(current_setting('test.tenant')::uuid)->'types') t where t->>'slug'='lamp')::text,true);
-select set_config('test.sweater',(select t->'attributes' from jsonb_array_elements(attribute_vocabulary(current_setting('test.tenant')::uuid)->'types') t where t->>'slug'='sweater')::text,true);
-select ok(not(current_setting('test.lamp')::jsonb @> '[{"slug":"socket"}]'),'starter lamp inherits defaults without a socket');
-select ok(current_setting('test.lamp')::jsonb @> '[{"slug":"size"}]','starter lamp shares store size field');
-select ok(current_setting('test.sweater')::jsonb @> '[{"slug":"size"}]','a sweater asks for its size');
-select ok(not (current_setting('test.sweater')::jsonb @> '[{"slug":"socket"}]'),'and not for a socket');
+select is((select count(*) from jsonb_array_elements(attribute_vocabulary(current_setting('test.tenant')::uuid)->'types') t where t->>'slug' in ('sweater','lamp')),0::bigint,'unused shared examples are absent');
+select set_config('test.jacket',(select t->'attributes' from jsonb_array_elements(attribute_vocabulary(current_setting('test.tenant')::uuid)->'types') t where t->>'slug'='jacket')::text,true);
+select ok(current_setting('test.jacket')::jsonb @> '[{"slug":"size"}]','own starters inherit the store size field');
+select ok(not(current_setting('test.jacket')::jsonb @> '[{"slug":"socket"}]'),'own starters do not inherit lamp fields');
 -- A choice carries stable value ids, so navy is one colour and not three.
 select is((select d->>'data_type' from jsonb_array_elements(attribute_vocabulary(current_setting('test.tenant')::uuid)->'definitions') d where d->>'slug'='socket'),'choice','the socket is a choice');
 select ok((select d->'choices' from jsonb_array_elements(attribute_vocabulary(current_setting('test.tenant')::uuid)->'definitions') d where d->>'slug'='socket') @> '[{"id":"e27"}]','and its values have stable ids');

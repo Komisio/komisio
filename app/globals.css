@@ -2697,7 +2697,7 @@ button.text-link:hover:not(:disabled) {
 
 /* Intake paths and the bag workflow remain visible without pilot guidance. */
 .intake-overview {
-  max-width: 1200px;
+  min-width: 0;
 }
 .intake-paths {
   display: grid;
@@ -6353,8 +6353,7 @@ button.text-link:hover:not(:disabled) {
 
 /* Receiving starts with the seller; registration is an explicit alternative. */
 .intake-overview {
-  max-width: 1040px;
-  margin-inline: auto;
+  width: 100%;
 }
 .intake-overview .page-heading {
   margin-bottom: 20px;
@@ -6380,37 +6379,41 @@ button.text-link:hover:not(:disabled) {
 .intake-overview .intake-find-seller {
   padding: 24px;
 }
-.intake-find-seller > summary,
-.intake-registration > summary {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  list-style: none;
+.intake-find-seller > h2 {
+  margin: 0 0 16px;
   font-size: 19px;
-  font-weight: 600;
-  min-height: 44px;
-  cursor: pointer;
 }
-.intake-find-seller > summary::-webkit-details-marker,
-.intake-registration > summary::-webkit-details-marker {
-  display: none;
-}
-.intake-find-seller > summary svg,
-.intake-registration > summary svg {
-  flex-shrink: 0;
-}
-.intake-find-seller[open] > summary svg,
-.intake-registration[open] > summary svg {
-  transform: rotate(90deg);
-}
-.intake-find-seller .row {
-  gap: 12px;
+.intake-search-actions {
+  display: flex;
+  align-items: end;
   flex-wrap: wrap;
+  gap: 12px;
+}
+.intake-search-actions > form {
+  flex: 1 1 24rem;
+  min-width: 0;
+  margin: 0;
+}
+.intake-search-actions > a {
+  min-height: 44px;
+}
+.intake-find-seller form .row {
+  gap: 12px;
+  flex-wrap: nowrap;
 }
 .intake-find-seller .row > .scan-focus-field {
-  flex: 1 1 20rem;
-  width: 100%;
+  flex: 1 1 0;
   min-width: 0;
+}
+.intake-find-seller form button {
+  flex-shrink: 0;
+}
+.intake-registration-step {
+  display: grid;
+  gap: 16px;
+}
+.intake-registration-step > button {
+  justify-self: start;
 }
 .intake-find-seller > p {
   margin-block: 12px;
@@ -6454,26 +6457,6 @@ button.text-link:hover:not(:disabled) {
 }
 .intake-overview .intake-seller:hover {
   border-color: var(--green);
-}
-.intake-registration {
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  margin-block: 16px;
-  background: var(--white);
-}
-.intake-registration > summary {
-  padding: 12px 16px;
-  font-size: 16px;
-}
-.intake-registration > .receiving-panel {
-  border: 0;
-  margin: 0;
-  border-radius: 0 0 16px 16px;
-  padding-top: 0;
-  box-shadow: none;
-}
-.intake-registration .receiving-panel > h2 {
-  font-size: 18px;
 }
 .receiving-seller-context {
   display: flex;
@@ -6520,9 +6503,6 @@ button.text-link:hover:not(:disabled) {
     grid-template-columns: minmax(0, 1fr);
   }
   .intake-overview .intake-form {
-    padding: 20px 16px;
-  }
-  .intake-registration > summary {
     padding: 20px 16px;
   }
   .receiving-seller-context {

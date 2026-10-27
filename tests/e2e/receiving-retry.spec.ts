@@ -91,6 +91,20 @@ for (const action of ['registerSeller', 'receiveBag'] as const) {
           exact: true,
         })
         await expect(retry).toBeEnabled()
+        if (action === 'registerSeller') {
+          await expect(
+            page.getByRole('button', { name: d.cancel, exact: true }),
+          ).toBeDisabled()
+          // Changing the fragment cannot discard an uncertain registration.
+          await page.evaluate(() => {
+            window.history.pushState(null, '', '#seller-search')
+            window.dispatchEvent(new HashChangeEvent('hashchange'))
+          })
+          await expect(retry).toBeVisible()
+          await expect(
+            panel.getByLabel(d.intake.name, { exact: true }),
+          ).toHaveValue('Synthetic response retry seller')
+        }
         const refused =
           failure === 'lost-then-refused'
             ? page.waitForResponse(

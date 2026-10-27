@@ -1,10 +1,9 @@
 import { WorkingForm } from '@/components/platform/working-form'
 import { ScanFocusInput } from '@/components/platform/scan-focus'
-import { ChevronRight } from 'lucide-react'
 import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
-import { NewSellerDisclosure } from '@/components/intake/new-seller-disclosure'
+import { SellerSearchStep } from '@/components/intake/seller-search-step'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from '@/components/platform/working-link'
 import { notFound, redirect } from 'next/navigation'
@@ -19,7 +18,6 @@ import type {
   AgreementEvidence,
 } from '@/lib/engine/intake'
 import { ReceivingPanel } from '@/components/intake/receiving-panel'
-import { NewSellerLink } from '@/components/intake/new-seller-link'
 import {
   bagQueueNavigation,
   bagQueueHref,
@@ -157,120 +155,130 @@ export default async function Intake({
             anchors: ['bag-receiving', 'seller-search', 'new-seller'],
             content: (
               <div className="intake-grid" id="bag-receiving">
-                <details
-                  className="card intake-form intake-find-seller"
-                  open={!selected.data}
+                <SellerSearchStep
+                  key={active.id}
+                  cancelLabel={all.cancel}
+                  registration={
+                    !selected.data && active.role !== 'readonly'
+                      ? {
+                          tenantId: active.id,
+                          seller: null,
+                          d,
+                          details: all.sellerDetails,
+                          changeSellerLabel: all.quickIntake.changeSeller,
+                          agreement,
+                          agreements: all.agreements,
+                        }
+                      : null
+                  }
                 >
-                  <summary>
-                    <ChevronRight size={20} aria-hidden="true" />
-                    {d.find}
-                  </summary>
-                  <WorkingForm action="/intake#seller-search" className="field">
-                    <label htmlFor="seller-search">
-                      {all.sellersList.search}
-                    </label>
-                    <div className="row">
-                      <ScanFocusInput
-                        focusLabel={all.scanFocus}
-                        contextLabel={d.title}
-                        key={q}
-                        id="seller-search"
-                        type="search"
-                        placeholder={d.find}
-                        aria-describedby="seller-search-hint"
-                        name="q"
-                        defaultValue={q}
-                        maxLength={120}
-                      />
-                      <button className="btn btn-secondary">
-                        {d.searchButton}
-                      </button>
-                    </div>
-                    <small id="seller-search-hint">
-                      {all.sellersList.searchHint}
-                    </small>
-                  </WorkingForm>
-                  {selected.data ? (
-                    <p>
-                      <NewSellerLink className="text-link">
-                        {d.newSeller}
-                      </NewSellerLink>
-                    </p>
-                  ) : (
-                    <div id="new-seller">
-                      {active.role !== 'readonly' ? (
-                        <NewSellerDisclosure title={d.newSeller}>
-                          {receivingPanel}
-                        </NewSellerDisclosure>
-                      ) : (
-                        <p>{d.readOnly}</p>
-                      )}
-                    </div>
-                  )}
-                  {q && (
-                    <p>
-                      <Link className="text-link" href="/intake#seller-search">
-                        {all.sellersList.clear}
-                      </Link>
-                    </p>
-                  )}
-                  {sellers.total > 0 && (
-                    <p>
-                      <small>
-                        {all.sellersList.showingRange
-                          .replace('{from}', String(sellers.offset + 1))
-                          .replace(
-                            '{to}',
-                            String(sellers.offset + sellers.sellers.length),
-                          )
-                          .replace('{total}', String(sellers.total))}
-                      </small>
-                    </p>
-                  )}
-                  <ul className="intake-list intake-seller-results">
-                    {sellers.sellers.map((s) => (
-                      <li key={s.id}>
-                        <Link
-                          href={`/intake?seller=${s.id}#new-seller`}
-                          className="intake-seller"
-                          aria-current={
-                            selected.data?.id === s.id ? 'true' : undefined
-                          }
-                        >
-                          <strong title={s.name}>{s.name}</strong>
-                          <small title={s.email || s.phone || undefined}>
-                            {s.email || s.phone}
-                          </small>
-                          <span>{d.choose}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                  {sellers.sellers.length === 0 && <p>{d.noSellers}</p>}
-                  {sellerPages > 1 && (
-                    <nav
-                      className="row wrap"
-                      aria-label={all.sellersList.title}
-                    >
-                      {sellerPage > 1 && (
+                  <section
+                    className="card intake-form intake-find-seller"
+                    aria-labelledby="seller-search-heading"
+                  >
+                    <h2 id="seller-search-heading">{d.find}</h2>
+                    <div className="intake-search-actions">
+                      <WorkingForm
+                        action="/intake#seller-search"
+                        className="field"
+                      >
+                        <label htmlFor="seller-search" className="sr-only">
+                          {all.sellersList.search}
+                        </label>
+                        <div className="row">
+                          <ScanFocusInput
+                            focusLabel={all.scanFocus}
+                            contextLabel={d.title}
+                            key={q}
+                            id="seller-search"
+                            type="search"
+                            placeholder={all.sellersList.searchHint}
+                            name="q"
+                            defaultValue={q}
+                            maxLength={120}
+                          />
+                          <button className="btn btn-secondary">
+                            {d.searchButton}
+                          </button>
+                        </div>
+                      </WorkingForm>
+                      {active.role !== 'readonly' && (
                         <Link
                           className="btn btn-secondary"
-                          href={sellerPageHref(sellerPage - 1)}
+                          href={`/intake${q ? '?q=' + encodeURIComponent(q) : ''}#new-seller`}
                         >
-                          {all.sellersList.previousPage}
+                          {d.newSellerAction}
                         </Link>
                       )}
-                      {sellerPage < sellerPages && (
+                    </div>
+                    {q && (
+                      <p>
                         <Link
-                          className="btn btn-secondary"
-                          href={sellerPageHref(sellerPage + 1)}
+                          className="text-link"
+                          href="/intake#seller-search"
                         >
-                          {all.sellersList.nextPage}
+                          {all.sellersList.clear}
                         </Link>
-                      )}
-                    </nav>
-                  )}
-                </details>
+                      </p>
+                    )}
+                    {sellers.total > 0 && (
+                      <p>
+                        <small>
+                          {all.sellersList.showingRange
+                            .replace('{from}', String(sellers.offset + 1))
+                            .replace(
+                              '{to}',
+                              String(sellers.offset + sellers.sellers.length),
+                            )
+                            .replace('{total}', String(sellers.total))}
+                        </small>
+                      </p>
+                    )}
+                    <ul className="intake-list intake-seller-results">
+                      {sellers.sellers.map((s) => (
+                        <li key={s.id}>
+                          <Link
+                            href={`/intake?seller=${s.id}#new-seller`}
+                            className="intake-seller"
+                            aria-current={
+                              selected.data?.id === s.id ? 'true' : undefined
+                            }
+                          >
+                            <strong title={s.name}>{s.name}</strong>
+                            <small title={s.email || s.phone || undefined}>
+                              {s.email || s.phone}
+                            </small>
+                            <span>{d.choose}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    {sellers.sellers.length === 0 && <p>{d.noSellers}</p>}
+                    {sellerPages > 1 && (
+                      <nav
+                        className="row wrap"
+                        aria-label={all.sellersList.title}
+                      >
+                        {sellerPage > 1 && (
+                          <Link
+                            className="btn btn-secondary"
+                            href={sellerPageHref(sellerPage - 1)}
+                          >
+                            {all.sellersList.previousPage}
+                          </Link>
+                        )}
+                        {sellerPage < sellerPages && (
+                          <Link
+                            className="btn btn-secondary"
+                            href={sellerPageHref(sellerPage + 1)}
+                          >
+                            {all.sellersList.nextPage}
+                          </Link>
+                        )}
+                      </nav>
+                    )}
+                  </section>
+                </SellerSearchStep>
                 {selected.data && (
                   <div id="new-seller">
                     {agreement && (

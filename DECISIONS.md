@@ -1259,3 +1259,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-27: #692 scopes account layout to its page: full-width stacked cards on narrow screens, aligned readable columns on desktop, even spacing and left-aligned headings/language controls in the no-store shell. Account fields, saves and other onboarding pages are unchanged.
 
 - 2026-10-27: The owner removes the fixed staging wait, superseding C6. Production requires green CI and staging checks, verification of the exact revision on staging, and the existing owner-authorized workflow/environment approval. Production route/runtime verification remains required.
+
+- 2026-10-27: #699 makes intake seller search full-width with one heading and a localized hint placeholder. Registration moves to a separate step, empty on every opening without search prefill; existing validation, duplicate checks, selection and uncertain-request retry remain intact.

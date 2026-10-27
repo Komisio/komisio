@@ -35,6 +35,7 @@ test('the counter is warned about an existing seller before a second record', as
     await page.screenshot({
       path: 'private/intake-overview-desktop.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 390, height: 844 })
     expect(
@@ -45,9 +46,12 @@ test('the counter is warned about an existing seller before a second record', as
     await page.screenshot({
       path: 'private/intake-overview-mobile.png',
       fullPage: true,
+      caret: 'initial',
     })
     await page.setViewportSize({ width: 1280, height: 900 })
-    await page.locator('.intake-registration > summary').click()
+    await page
+      .getByRole('link', { name: d.intake.newSellerAction, exact: true })
+      .click()
     const form = page
       .getByRole('heading', { name: d.intake.newSeller })
       .locator('..')

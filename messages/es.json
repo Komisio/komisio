@@ -293,6 +293,7 @@
     "search": "Buscar por nombre",
     "searchButton": "Buscar",
     "newSeller": "Registrar depositante",
+    "newSellerAction": "Nuevo depositante",
     "name": "Nombre del depositante",
     "email": "Correo electrónico",
     "phone": "Teléfono",

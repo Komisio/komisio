@@ -1,7 +1,7 @@
+import { requestLocale } from '@/lib/platform/request-locale'
 import { publicPageMetadata } from '@/lib/platform/page-metadata'
-import { cookies } from 'next/headers'
 import { AuthForm } from '@/components/auth/auth-form'
-import { resolveLocale, isLocale } from '@/lib/i18n'
+import { isLocale } from '@/lib/i18n'
 import { marketingConsentEnabled } from '@/lib/platform/marketing-consent'
 import { legalBaseUrl } from '@/lib/platform/legal'
 import { registrationStoreForNext } from '@/lib/platform/registration-store'
@@ -19,9 +19,7 @@ export default async function Register({
       next={query.next}
       registrationStoreName={await registrationStoreForNext(query.next)}
       initialLocale={
-        isLocale(query.locale)
-          ? query.locale
-          : resolveLocale((await cookies()).get('komisio-locale')?.value)
+        isLocale(query.locale) ? query.locale : await requestLocale()
       }
     />
   )

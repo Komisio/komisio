@@ -72,7 +72,7 @@ export function ReceivingPanel({
     focusName()
     window.addEventListener('hashchange', focusName)
     return () => window.removeEventListener('hashchange', focusName)
-  }, [seller])
+  }, [seller, ready])
   const pending = useRef<Record<string, unknown> | null>(null)
   // A later refusal cannot settle an earlier request whose reply was lost.
   const uncertain = useRef(false)

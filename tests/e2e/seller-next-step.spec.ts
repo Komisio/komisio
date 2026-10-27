@@ -129,7 +129,12 @@ test('seller sees the next price step, days left and what happens at period end'
     ).toBe(true)
     const cells = items.locator('table.seller-items td')
     await expect(cells).toHaveCount(4)
-    for (const cell of await cells.all()) {
+    // On mobile the status cell contributes its children to the shared grid.
+    // Check the painted fields rather than the display:contents wrapper.
+    await expect(items.locator('.seller-item-badge')).toBeVisible()
+    for (const cell of await items
+      .locator('.seller-item-identity, .seller-item-price, .seller-item-date')
+      .all()) {
       expect((await cell.boundingBox())?.width ?? 0).toBeGreaterThan(80)
     }
     expect(

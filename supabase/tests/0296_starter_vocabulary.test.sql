@@ -19,7 +19,7 @@ select is(attribute_vocabulary(current_setting('test.tenant')::uuid),current_set
 select set_item_type(current_setting('test.tenant')::uuid,'jacket','{"labels":{"en":"My jackets"},"attributes":[{"slug":"description","sort":1}]}');
 select create_tenant('Starter store','starter-store','f0000000-0000-4000-8000-000000002963');
 select is((select t->'labels'->>'en' from jsonb_array_elements(attribute_vocabulary(current_setting('test.tenant')::uuid)->'types') t where t->>'slug'='jacket'),'My jackets','retry preserves later store customizations');
-select ok((select bool_and(active) from item_types where tenant_id is null and slug in ('lamp','sweater')),'existing platform examples stay intact for older stores');
+select is((select count(*) from item_types where tenant_id is null),0::bigint,'shared types are hidden from direct store reads');
 select ok((select not has_function_privilege('authenticated',p.oid,'execute') from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='komisio_private' and p.proname='seed_store_vocabulary'),'initializer is not a callable user command');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000002962","role":"authenticated"}';
 select throws_ok(format('select attribute_vocabulary(%L)',current_setting('test.tenant')),'42501','FORBIDDEN','starter setup preserves tenant access control');

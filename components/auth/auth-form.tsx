@@ -58,6 +58,11 @@ export function AuthForm({
     requested.startsWith('/update-password')
       ? '/'
       : requested
+  const sellerContext =
+    destination === '/seller' ||
+    destination.startsWith('/seller/') ||
+    destination.startsWith('/join/')
+  const invited = destination.startsWith('/invite/')
   function changeLocale(value: Locale) {
     setLocale(value)
     document.cookie = `komisio-locale=${value};path=/;SameSite=Lax`
@@ -205,8 +210,8 @@ export function AuthForm({
             <span />
           </div>
           <div className="eyebrow">Komisio</div>
-          <h1>{d.tagline}</h1>
-          <p>{d.help}</p>
+          <h1>{sellerContext ? d.sellerAuth.headline : d.tagline}</h1>
+          <p>{sellerContext ? d.sellerAuth.description : d.help}</p>
         </div>
         <small>Komisio · Open source</small>
       </aside>
@@ -252,23 +257,26 @@ export function AuthForm({
             destination.startsWith('/join/')
               ? d.selfRegistration.joinLogin
               : mode === 'register'
-                ? d.registerIntro
+                ? sellerContext
+                  ? d.sellerAuth.registerIntro
+                  : d.registerIntro
                 : mode === 'login'
-                  ? d.loginIntro
+                  ? sellerContext
+                    ? d.sellerAuth.loginIntro
+                    : d.loginIntro
                   : mode === 'confirm'
                     ? d.sellerAccess.confirmHint
                     : mode === 'password'
                       ? d.sellerAccess.passwordHint
                       : d.passwordHint}
           </p>
-          {destination.startsWith('/invite/') &&
-            (mode === 'register' || mode === 'login') && (
-              <p className="notice">
-                {mode === 'register'
-                  ? d.invitedRegisterIntro
-                  : d.invitedLoginIntro}
-              </p>
-            )}
+          {invited && (mode === 'register' || mode === 'login') && (
+            <p className="notice">
+              {mode === 'register'
+                ? d.invitedRegisterIntro
+                : d.invitedLoginIntro}
+            </p>
+          )}
           {!registrationSent && (
             <form method="post" onSubmit={submit}>
               {mode !== 'password' && (
@@ -360,13 +368,20 @@ export function AuthForm({
           <p className="auth-footer">
             {mode === 'login' ? (
               <>
-                {d.noAccount}{' '}
+                {sellerContext
+                  ? d.sellerAuth.noAccount
+                  : invited
+                    ? d.noAccount
+                    : d.storeAccountPrompt}{' '}
                 <Link
                   className="text-link"
                   href={`/register?next=${encodeURIComponent(destination)}`}
                 >
                   {d.register}
                 </Link>
+                {!sellerContext && !invited && (
+                  <span className="auth-seller-hint">{d.sellerLinkHint}</span>
+                )}
               </>
             ) : mode === 'register' ? (
               <>

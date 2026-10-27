@@ -55,8 +55,17 @@ test('standard item questions and choices use every UI language on a phone', asy
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
   try {
-    // These legacy profiles exercise translated choice values. New stores
-    // start with clothing basics, so activate the test profiles explicitly.
+    // Legacy stores retain copied profiles after #680. Build that fixture
+    // explicitly: new stores no longer contain hidden platform type copies.
+    await f.db.query('reset role')
+    const legacyTypes = (
+      await f.db.query(`
+        select t.slug,t.labels,
+          (select jsonb_agg(jsonb_build_object('slug',a.attribute_slug,'sort',a.sort,'expected',a.expected))
+           from item_type_attributes a where a.tenant_id is null and a.type_slug=t.slug) attributes
+        from item_types t where t.tenant_id is null and t.slug in ('lamp','sweater')`)
+    ).rows
+    await f.db.query('set local role authenticated')
     await f.db.query(
       `
       select set_attribute_definition($1,slug,jsonb_build_object(
@@ -64,14 +73,12 @@ test('standard item questions and choices use every UI language on a phone', asy
       from attribute_definitions where tenant_id=$1 and slug in ('fit','height_cm','socket','max_wattage','dimmable')`,
       [f.tenant],
     )
-    await f.db.query(
-      `
-      select set_item_type($1,t.slug,jsonb_build_object('labels',t.labels,'active',true,'attributes',
-        (select jsonb_agg(jsonb_build_object('slug',a.attribute_slug,'sort',a.sort,'expected',a.expected))
-         from item_type_attributes a where a.tenant_id=$1 and a.type_slug=t.slug)))
-      from item_types t where t.tenant_id=$1 and t.slug in ('lamp','sweater')`,
-      [f.tenant],
-    )
+    for (const type of legacyTypes)
+      await f.db.query('select set_item_type($1,$2,$3)', [
+        f.tenant,
+        type.slug,
+        { labels: type.labels, active: true, attributes: type.attributes },
+      ])
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
     for (const [

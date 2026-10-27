@@ -1247,3 +1247,10 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-27: #687 groups seller notification and store-news preferences in one card with compact checkboxes and save-on-change. Each retains its existing endpoint, audit and request replay; uncertain results require retry and stale consent requires reload.
 
 - 2026-10-27: Login language hints are session fallbacks only: explicit browser preference wins, then authenticated profile, then entry hint, then Swedish. Entry hints never overwrite saved preferences; existing store-registration language behaviour stays unchanged.
+- 2026-10-27: #680 makes item types store-owned. Copy used shared types and profiles under the same tenant/slug, preserving historical references and overrides; hide unused shared types. New stores seed only Jacket/Trousers. Shared attributes remain available.
+
+- 2026-10-27: #679 shares compact checkbox styling throughout item settings: 18px controls, inline labels and at least 44px label targets. Inherited fields, custom profiles and description requirements keep their existing behaviour.
+
+- 2026-10-27: #688 uses seller copy for safe seller/join auth destinations in all eight locales. Default login welcomes everyone and separates store signup from seller-link guidance. Invitations, verified email, MFA, destination validation and role-based routing remain unchanged.
+
+- 2026-10-27: #692 scopes account layout to its page: full-width stacked cards on narrow screens, aligned readable columns on desktop, even spacing and left-aligned headings/language controls in the no-store shell. Account fields, saves and other onboarding pages are unchanged.

@@ -97,6 +97,12 @@ for (const automatic of [false, true])
         .getByRole('link', { name: all.login, exact: true })
         .click()
       await expect(sellerPage).toHaveURL(/\/login\?next=/)
+      await expect(sellerPage.locator('.auth-story')).toContainText(
+        all.sellerAuth.headline,
+      )
+      await expect(sellerPage.locator('.auth-footer')).toContainText(
+        all.sellerAuth.noAccount,
+      )
       await expect(sellerPage.locator('.registration-store-name')).toHaveText(
         d.storeContext.replace('{store}', 'P2 browser store'),
       )
@@ -113,6 +119,9 @@ for (const automatic of [false, true])
         .getByRole('link', { name: all.register, exact: true })
         .click()
       await expect(sellerPage).toHaveURL(/\/register\?next=/)
+      await expect(sellerPage.locator('.auth-story')).not.toContainText(
+        all.help,
+      )
       await expect(sellerPage.locator('.registration-store-name')).toHaveText(
         d.storeContext.replace('{store}', 'P2 browser store'),
       )

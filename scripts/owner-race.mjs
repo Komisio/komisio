@@ -54,6 +54,10 @@ import {
 } from './catalogue-backfill-fixture.mjs'
 import { raceAcceptance, raceStagedAcceptance } from './acceptance-race.mjs'
 import pg from 'pg'
+import {
+  prepareStoreItemTypes,
+  verifyStoreItemTypes,
+} from './store-item-types-backfill-fixture.mjs'
 import { randomUUID } from 'node:crypto'
 import { readFile, readdir } from 'node:fs/promises'
 import { setTimeout as pause } from 'node:timers/promises'
@@ -105,6 +109,10 @@ try {
       file === '20261026090000_registration_categories.sql'
         ? await prepareRegistrationCategories(setup)
         : null
+    const storeItemTypes =
+      file === '20261027120000_store_owned_item_types.sql'
+        ? await prepareStoreItemTypes(setup)
+        : null
     await setup.query(
       await readFile(
         new URL(`../supabase/migrations/${file}`, import.meta.url),
@@ -114,6 +122,17 @@ try {
     if (backfill) await verifyCategoryBackfill(setup, backfill)
     if (registrationCategories)
       await verifyRegistrationCategories(setup, registrationCategories)
+    if (storeItemTypes) {
+      await verifyStoreItemTypes(setup, storeItemTypes)
+      await setup.query(
+        await readFile(
+          new URL(`../supabase/migrations/${file}`, import.meta.url),
+          'utf8',
+        ),
+      )
+      await verifyStoreItemTypes(setup, storeItemTypes)
+      await setup.query('drop table public.type_migration_fixture_settings')
+    }
   }
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceRegistrationCategory({ setup, connectionString: parsed.toString() })

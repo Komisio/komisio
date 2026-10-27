@@ -193,6 +193,10 @@ test('settings creates an attribute safely and reception renders only the select
     await editor
       .getByLabel(d.quickIntake.typeName, { exact: true })
       .fill('Synthetic bench')
+    await expect(
+      editor.getByLabel(t.inheritDefaults, { exact: true }),
+    ).toBeChecked()
+    await editor.getByLabel(t.inheritDefaults, { exact: true }).uncheck()
     await editor.getByLabel('Synthetic width', { exact: true }).check()
     await page.setViewportSize({ width: 390, height: 844 })
     expect(

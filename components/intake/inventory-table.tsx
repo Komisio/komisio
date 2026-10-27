@@ -105,7 +105,7 @@ export function InventoryTable({
             {header('category', all.quickIntake.category)}
             <th scope="col">{all.quickIntake.itemType}</th>
             {header('price', all.quickIntake.price, true)}
-            <th scope="col">
+            <th scope="col" className="inventory-indicator-cell">
               <span className="sr-only">{t.details}</span>
             </th>
             <th scope="col">{all.itemWorkflow.group}</th>
@@ -126,6 +126,7 @@ export function InventoryTable({
               item={i}
               tenantId={tenantId}
               currency={currency}
+              locale={locale}
               write={write}
               types={types
                 .filter(

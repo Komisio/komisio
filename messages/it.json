@@ -1340,8 +1340,6 @@
       "sortDesc": "Ordine decrescente",
       "activeFilters": "Filtri attivi",
       "removeFilter": "Rimuovi {filter}",
-      "quickFilters": "Filtri rapidi",
-      "endsWithinWeek": "Periodo termina entro 7 giorni da oggi",
       "periodWindow": "Periodo di vendita",
       "categoryChoiceHint": "Scegli una categoria dall’elenco del negozio."
     },

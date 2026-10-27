@@ -1340,8 +1340,6 @@
       "sortDesc": "Sort descending",
       "activeFilters": "Active filters",
       "removeFilter": "Remove {filter}",
-      "quickFilters": "Quick filters",
-      "endsWithinWeek": "Period ends by 7 days from today",
       "periodWindow": "Sale period",
       "categoryChoiceHint": "Choose a category from the store list."
     },

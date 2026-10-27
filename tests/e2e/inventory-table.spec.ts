@@ -163,7 +163,7 @@ test('inventory sorts all results, combines advanced filters and previews defaul
     const rows = page.locator('.inventory-row')
     await expect(rows).toHaveCount(25)
     await expect(rows.first().locator('.inventory-price')).toHaveText(
-      '10.00 SEK',
+      '10,00 kr',
     )
     await expect(page.locator('.inventory-advanced')).not.toHaveAttribute(
       'open',
@@ -216,7 +216,7 @@ test('inventory sorts all results, combines advanced filters and previews defaul
       .getByRole('link', { name: d.items.nextPage, exact: true })
       .click()
     await expect(rows.first().locator('.inventory-price')).toHaveText(
-      '35.00 SEK',
+      '35,00 kr',
     )
     await page
       .getByRole('link', {
@@ -225,7 +225,7 @@ test('inventory sorts all results, combines advanced filters and previews defaul
       })
       .click()
     await expect(rows.first().locator('.inventory-price')).toHaveText(
-      '66.00 SEK',
+      '66,00 kr',
     )
     await expect
       .poll(() => new URL(page.url()).searchParams.has('page'))
@@ -251,7 +251,7 @@ test('inventory sorts all results, combines advanced filters and previews defaul
       .selectOption('consignment')
     await expect(rows).toHaveCount(6)
     await expect(rows.first().locator('.inventory-price')).toHaveText(
-      '35.00 SEK',
+      '35,00 kr',
     )
     await expect(page.locator('.inventory-advanced')).toHaveAttribute(
       'open',

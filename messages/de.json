@@ -1340,8 +1340,6 @@
       "sortDesc": "Absteigend sortieren",
       "activeFilters": "Aktive Filter",
       "removeFilter": "{filter} entfernen",
-      "quickFilters": "Schnellfilter",
-      "endsWithinWeek": "Verkaufszeitraum endet spätestens in 7 Tagen",
       "periodWindow": "Verkaufszeitraum",
       "categoryChoiceHint": "Wählen Sie eine Kategorie aus der Liste des Geschäfts."
     },

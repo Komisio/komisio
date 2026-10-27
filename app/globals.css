@@ -6662,6 +6662,11 @@ button.text-link:hover:not(:disabled) {
 .inventory-price {
   font-weight: 600;
 }
+.inventory-table .inventory-indicator-cell {
+  width: 54px;
+  min-width: 54px;
+  max-width: 54px;
+}
 .inventory-date {
   white-space: nowrap;
   color: var(--muted);
@@ -6697,7 +6702,7 @@ button.text-link:hover:not(:disabled) {
   display: flex;
   align-items: center;
   gap: 2px;
-  min-width: 62px;
+  min-width: 30px;
 }
 .inventory-icon {
   display: inline-flex;

@@ -4,7 +4,7 @@ import { useEffect, type ReactNode } from 'react'
 import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react'
 import { InventoryItemLink } from './inventory-item-link'
 import type { DirectoryItem } from '@/lib/engine/item-directory'
-import type { Dictionary } from '@/lib/i18n'
+import type { Dictionary, Locale } from '@/lib/i18n'
 import { useItemQuickEdit } from './use-item-quick-edit'
 import {
   InventorySelectItem,
@@ -15,6 +15,7 @@ export function InventoryEditableRow({
   item,
   tenantId,
   currency,
+  locale,
   write,
   types,
   groups,
@@ -26,6 +27,7 @@ export function InventoryEditableRow({
   item: DirectoryItem
   tenantId: string
   currency: string
+  locale: Locale
   write: boolean
   types: { id: string; name: string }[]
   groups: { id: string; name: string }[]
@@ -167,6 +169,7 @@ export function InventoryEditableRow({
             item.currentPriceOre === null ? null : String(item.currentPriceOre)
           }
           currency={currency}
+          locale={locale}
           title={current.title}
           write={
             write &&

@@ -81,7 +81,7 @@ test('inline price replays once without a reason, while drop-off title editing s
       page.getByRole('combobox', { name: d.activeTenant, exact: true }),
     ).toBeEnabled()
     await expect(dialog).not.toBeVisible()
-    await expect(row.locator('.inventory-price')).toContainText('149.95 SEK')
+    await expect(row.locator('.inventory-price')).toContainText('149,95 kr')
     expect(sent).toHaveLength(2)
     expect(sent[1]).toEqual(sent[0])
     expect(
@@ -128,7 +128,7 @@ test('inline price replays once without a reason, while drop-off title editing s
       .click()
     await expect(dialog).not.toBeVisible()
     await expect(received.locator('.inventory-price')).toContainText(
-      '125.00 SEK',
+      '125,00 kr',
     )
     expect(
       (
@@ -181,7 +181,7 @@ test('inline price refuses a stale list and bulk price permits an omitted reason
     await dialog
       .getByRole('button', { name: d.intake.reload, exact: true })
       .click()
-    await expect(row.locator('.inventory-price')).toContainText('180.00 SEK')
+    await expect(row.locator('.inventory-price')).toContainText('180,00 kr')
     await row.getByRole('checkbox').check()
     await page
       .getByRole('button', { name: d.itemLifecycleBatch.title, exact: true })

@@ -1340,8 +1340,6 @@
       "sortDesc": "Sortera fallande",
       "activeFilters": "Aktiva filter",
       "removeFilter": "Ta bort {filter}",
-      "quickFilters": "Snabbfilter",
-      "endsWithinWeek": "Säljperiod slutar senast om 7 dagar",
       "periodWindow": "Säljperiod",
       "categoryChoiceHint": "Välj en kategori från butikens lista."
     },

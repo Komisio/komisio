@@ -1340,8 +1340,6 @@
       "sortDesc": "Lajittele laskevasti",
       "activeFilters": "Käytössä olevat suodattimet",
       "removeFilter": "Poista {filter}",
-      "quickFilters": "Pikasuodattimet",
-      "endsWithinWeek": "Myyntiaika päättyy viimeistään 7 päivän kuluttua",
       "periodWindow": "Myyntiaika",
       "categoryChoiceHint": "Valitse kategoria myymälän luettelosta."
     },

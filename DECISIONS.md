@@ -1263,3 +1263,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-27: #699 makes intake seller search full-width with one heading and a localized hint placeholder. Registration moves to a separate step, empty on every opening without search prefill; existing validation, duplicate checks, selection and uncertain-request retry remain intact.
 
 - 2026-10-27: #700 presents received bags in a full-width table with compact mobile rows, labeled status badges and filter chips. Row clicks open review; label links stay separate. Existing newest-first reads, search, seller/status filters and cursor paging are unchanged.
+
+- 2026-10-27: #702 removes redundant inventory quick-filter links; dropdown and advanced filters remain. Prices share a reserved edit-icon slot and localized currency formatting with the seller portal. Photo indicators keep a separate fixed-width column; monetary values and writes are unchanged.

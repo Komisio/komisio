@@ -12,11 +12,3 @@ export function itemFilterHref(
   const query = params.toString()
   return '/intake/items' + (query ? '?' + query : '')
 }
-
-/** Calendar-day cutoff matching the existing Stockholm endsBefore read filter. */
-export function itemWeekCutoff(now = new Date()) {
-  const day = now.toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' })
-  const date = new Date(day + 'T12:00:00Z')
-  date.setUTCDate(date.getUTCDate() + 7)
-  return date.toISOString().slice(0, 10)
-}

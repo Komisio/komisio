@@ -3,7 +3,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Pencil } from 'lucide-react'
 import { useRouter } from '@/components/platform/use-working-router'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
-import type { Dictionary } from '@/lib/i18n'
+import type { Dictionary, Locale } from '@/lib/i18n'
+import { economyFormat } from '@/lib/intake/economy-format'
 import { formatOre } from '@/lib/engine/items'
 import { setItemPriceCommand } from '@/lib/engine/lifecycle'
 import { useIntakeAction } from './use-intake-action'
@@ -18,6 +19,7 @@ export function ItemPriceCell({
   itemId,
   priceOre,
   currency,
+  locale,
   title,
   write,
   d,
@@ -26,6 +28,7 @@ export function ItemPriceCell({
   itemId: string
   priceOre: string | null
   currency: string
+  locale: Locale
   title: string
   write: boolean
   d: Dictionary
@@ -38,7 +41,10 @@ export function ItemPriceCell({
   } | null>(null)
   const current = confirmed?.base === priceOre ? confirmed.value : priceOre
   const button = useRef<HTMLButtonElement>(null)
-  const display = current === null ? '—' : `${formatOre(current)} ${currency}`
+  const display =
+    current === null
+      ? '—'
+      : economyFormat(locale).money(Number(current), currency)
   function close() {
     setEditing(null)
     requestAnimationFrame(() => button.current?.focus())
@@ -50,15 +56,15 @@ export function ItemPriceCell({
           type="button"
           ref={button}
           disabled={!ready}
-          className="inventory-cell-button"
+          className="inventory-cell-button inventory-price-editor"
           aria-label={`${d.priceEdit.title}: ${title}`}
           onClick={() => setEditing(current)}
         >
-          {display}
+          <span className="inventory-price-value">{display}</span>
           <Pencil size={12} aria-hidden="true" />
         </button>
       ) : (
-        display
+        <span className="inventory-price-value">{display}</span>
       )}
       {confirmed && (
         <span role="status" className="sr-only">

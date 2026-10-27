@@ -128,7 +128,19 @@ test('seller saves bank details and owner explicitly reviews the payout destinat
       'K!' + randomBytes(16).toString('hex'),
       '/seller',
     )
+    // Confirmation streams the single-store redirect. Let it finish before
+    // opening a deep link, otherwise it can replace the requested fragment.
+    await expect(sellerPage).toHaveURL(`/seller?seller=${f.seller}`)
+    await expect(
+      sellerPage.getByRole('tab', { name: d.sellerPortal.items, exact: true }),
+    ).toBeEnabled()
     await sellerPage.goto(`/seller?seller=${f.seller}#seller-workspace-payouts`)
+    await expect(
+      sellerPage.getByRole('tab', {
+        name: d.sellerPortal.payouts,
+        exact: true,
+      }),
+    ).toHaveAttribute('aria-selected', 'true')
     await sellerPage.locator('#portal-bank summary').click()
     await sellerPage
       .getByLabel(d.sellerBank.holder, { exact: true })

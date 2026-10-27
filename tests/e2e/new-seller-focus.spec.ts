@@ -13,7 +13,11 @@ test('intake registration opens empty each time, without search prefill', async 
   try {
     await f.commit()
     await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto('/intake?q=search-only%40example.test')
+    await page.goto('/intake')
+    await page.locator('#seller-search').fill('search-only@example.test')
+    await expect(
+      page.getByText(d.intake.noSellers, { exact: true }),
+    ).toBeVisible()
     const name = page.getByRole('textbox', { name: d.intake.name, exact: true })
     await expect(name).not.toBeVisible()
     const open = page.getByRole('link', {

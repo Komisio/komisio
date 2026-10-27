@@ -4,6 +4,99 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
+test('seller search applies text entered before hydration', async ({
+  page,
+}) => {
+  const email = `early-search-${randomUUID()}@example.test`
+  await register(page, email, 'K!' + randomBytes(16).toString('hex'))
+  const f = await p2Fixture(email)
+  let release!: () => void
+  const held = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  try {
+    await f.commit()
+    await page.route('**/_next/static/**', async (route) => {
+      if (new URL(route.request().url()).pathname.endsWith('.js')) await held
+      await route.continue()
+    })
+    await page.goto('/intake', { waitUntil: 'commit' })
+    const search = page.locator('#seller-search')
+    await search.fill('Before hydration')
+    release()
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('q'))
+      .toBe('Before hydration')
+    await expect(search).toHaveValue('Before hydration')
+    await expect(search).toBeFocused()
+    await expect(
+      page.getByText(d.intake.noSellers, { exact: true }),
+    ).toBeVisible()
+  } finally {
+    release()
+    await page.unrouteAll({ behavior: 'wait' })
+    await f.close()
+  }
+})
+
+test('live seller search preserves newer text and cursor when an older response arrives', async ({
+  page,
+}) => {
+  const email = `live-search-${randomUUID()}@example.test`
+  await register(page, email, 'K!' + randomBytes(16).toString('hex'))
+  const f = await p2Fixture(email)
+  let release!: () => void
+  const held = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  let received!: () => void
+  const responseReady = new Promise<void>((resolve) => {
+    received = resolve
+  })
+  try {
+    await f.commit()
+    await page.goto('/intake?state=unstarted#seller-search')
+    const search = page.locator('#seller-search')
+    const historyLength = await page.evaluate(() => history.length)
+    await page.route('**/intake?**', async (route) => {
+      if (new URL(route.request().url()).searchParams.get('q') !== 'Synth')
+        return route.continue()
+      const response = await route.fetch()
+      received()
+      await held
+      await route.fulfill({ response })
+    })
+    await search.fill('Synth')
+    await responseReady
+    await search.press('End')
+    await search.pressSequentially('etic')
+    await search.press('ArrowLeft')
+    release()
+    await expect
+      .poll(() => new URL(page.url()).searchParams.get('q'))
+      .toBe('Synthetic')
+    await expect(page.locator('.intake-seller-results li')).toHaveCount(1)
+    await expect(search).toHaveValue('Synthetic')
+    await expect(search).toBeFocused()
+    expect(
+      await search.evaluate((input: HTMLInputElement) => input.selectionStart),
+    ).toBe(8)
+    expect(new URL(page.url()).searchParams.get('state')).toBe('unstarted')
+    expect(await page.evaluate(() => history.length)).toBe(historyLength)
+    await search.fill('')
+    await expect
+      .poll(() => new URL(page.url()).searchParams.has('q'))
+      .toBe(false)
+    await expect(search).toBeFocused()
+    expect(await page.evaluate(() => history.length)).toBe(historyLength)
+    expect(new URL(page.url()).hash).toBe('#seller-search')
+  } finally {
+    release()
+    await page.unrouteAll({ behavior: 'wait' })
+    await f.close()
+  }
+})
+
 test('bag intake finds all sellers by contact and focuses reception without skipping required agreement', async ({
   page,
 }, testInfo) => {
@@ -55,17 +148,30 @@ test('bag intake finds all sellers by contact and focuses reception without skip
     await expect
       .poll(() => new URL(page.url()).searchParams.get('q'))
       .toBe('Paged')
+    const historyLength = await page.evaluate(() => history.length)
     await search.fill('0708765432')
-    await page
-      .locator('form')
-      .filter({ has: search })
-      .getByRole('button')
-      .click()
+    const scrollBefore = await page.evaluate(() => window.scrollY)
     await expect(rows).toHaveCount(1)
     await expect(rows.first()).toContainText('ZZ Intake target')
+    await expect(search).toBeFocused()
+    // A shorter mobile page may clamp scrolling at its new bottom edge.
+    const scroll = await page.evaluate(() => ({
+      y: window.scrollY,
+      max: Math.max(0, document.documentElement.scrollHeight - innerHeight),
+    }))
+    expect(scroll.y).toBeCloseTo(Math.min(scrollBefore, scroll.max), 0)
+    await expect(search).toBeInViewport()
+    expect(await page.evaluate(() => history.length)).toBe(historyLength)
+    expect(new URL(page.url()).hash).toBe('#seller-search')
     await expect
       .poll(() => new URL(page.url()).searchParams.has('sellerPage'))
       .toBe(false)
+    await page.goBack()
+    await expect(search).toHaveValue('Paged')
+    await expect(rows).toHaveCount(5)
+    await page.goForward()
+    await expect(search).toHaveValue('0708765432')
+    await expect(rows).toHaveCount(1)
     await rows.getByRole('link').click()
     await expect(page).toHaveURL('/intake?seller=' + target + '#new-seller')
     const receiving = page.locator('#new-seller')
@@ -127,16 +233,9 @@ test('bag intake finds all sellers by contact and focuses reception without skip
       .click()
     await expect(search).toBeInViewport()
     await search.fill('intake-target@example.test')
-    await page
-      .locator('form')
-      .filter({ has: search })
-      .getByRole('button')
-      .click()
     await expect(rows).toHaveCount(1)
     await expect(rows).toContainText('ZZ Intake target')
-    await page
-      .getByRole('link', { name: d.sellersList.clear, exact: true })
-      .click()
+    await search.fill('')
     await expect(search).toHaveValue('')
     await expect(rows).toHaveCount(12)
     await page.goto('/intake?q=Paged&sellerPage=999')
@@ -145,15 +244,23 @@ test('bag intake finds all sellers by contact and focuses reception without skip
       .poll(() => new URL(page.url()).searchParams.get('sellerPage'))
       .toBe('5')
     await search.fill('No matching intake seller')
-    await page
-      .locator('form')
-      .filter({ has: search })
-      .getByRole('button')
-      .click()
+    await search.press('Enter')
     await expect(rows).toHaveCount(0)
     await expect(
       page.getByText(d.intake.noSellers, { exact: true }),
     ).toBeVisible()
+    await page
+      .getByRole('link', { name: d.intake.newSellerAction, exact: true })
+      .click()
+    await expect(page.getByLabel(d.intake.name, { exact: true })).toHaveValue(
+      '',
+    )
+    await expect(page.getByLabel(d.intake.email, { exact: true })).toHaveValue(
+      '',
+    )
+    await expect(page.getByLabel(d.intake.phone, { exact: true })).toHaveValue(
+      '',
+    )
   } finally {
     await f.close()
   }

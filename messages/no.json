@@ -2566,8 +2566,7 @@
     "amount": "Beløp i {currency}",
     "threshold": "Minste utbetaling",
     "notice": "En forespørsel flytter ingen penger. Butikken går gjennom og håndterer betalingen.",
-    "emails": "Automatiske e-poster fra butikken",
-    "save": "Lagre e-postvalg",
+    "emails": "Varene og utbetalingene dine",
     "saved": "Lagret.",
     "error": "Kunne ikke lagre. Kontroller beløpet og last inn på nytt for gjeldende saldo.",
     "recent": "De siste 100 vises her.",
@@ -2627,7 +2626,8 @@
     "forSaleUntil": "Til salgs til",
     "soldOn": "Solgt",
     "endedOn": "Avsluttet",
-    "payoutRemaining": "{remaining} igjen til minste utbetaling på {minimum}."
+    "payoutRemaining": "{remaining} igjen til minste utbetaling på {minimum}.",
+    "emailPreferences": "Varsler på e-post"
   },
   "plans": {
     "heading": "Abonnement",
@@ -4764,8 +4764,7 @@
     "done": "Behandlingen er ferdig. Se resultatene nedenfor.",
     "skipped": "Hoppet over etter endrede opplysninger eller samtykke",
     "consentTitle": "E-post fra butikken",
-    "consentLabel": "Motta nyheter og informasjon på e-post fra butikken",
-    "consentHint": "Valgfritt. Endre valget her eller via lenken i e-posten. Varsler om varene dine og utbetalinger påvirkes ikke.",
+    "consentLabel": "Nyheter og informasjon fra butikken",
     "save": "Lagre",
     "saved": "Lagret",
     "unsubscribe": "Avslutt butikkens e-postutsendelser",

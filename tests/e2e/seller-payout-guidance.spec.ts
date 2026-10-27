@@ -62,9 +62,6 @@ test('payout and preference retries keep separate payloads after unconfirmed rep
       .getByRole('tab', { name: sv.sellerPortalWorkspace.details, exact: true })
       .click()
     await checkbox.uncheck()
-    await preferences
-      .getByRole('button', { name: sv.sellerPortal.save, exact: true })
-      .click()
     await expect(preferences.getByRole('alert')).toHaveText(
       sv.sellerPortal.preferenceError,
     )
@@ -351,16 +348,13 @@ test('seller payout guidance explains unavailable balances, validates amounts an
       .click()
     const emails = page.getByRole('checkbox', { name: sv.sellerPortal.emails })
     const nextPreference = !(await emails.isChecked())
-    await emails.setChecked(nextPreference)
     const preferenceSaved = page.waitForResponse(
       (response) =>
         response.url().endsWith('/api/seller/economy') &&
         response.request().method() === 'POST' &&
         response.request().postDataJSON()?.action === 'notifications',
     )
-    await page
-      .getByRole('button', { name: sv.sellerPortal.save, exact: true })
-      .click()
+    await emails.setChecked(nextPreference)
     expect((await preferenceSaved).ok()).toBe(true)
     await expect(page.getByRole('status')).toHaveText(sv.sellerPortal.saved)
     await expect(emails).toBeChecked({ checked: nextPreference })

@@ -2566,8 +2566,7 @@
     "amount": "Belopp i {currency}",
     "threshold": "Minsta utbetalning",
     "notice": "En begäran flyttar inga pengar. Butiken granskar och hanterar utbetalningen.",
-    "emails": "Automatiska e-postmeddelanden från butiken",
-    "save": "Spara mejlval",
+    "emails": "Dina varor och utbetalningar",
     "saved": "Sparat.",
     "error": "Begäran kunde inte sparas. Kontrollera beloppet och ladda om för aktuellt saldo.",
     "recent": "De senaste 100 visas här.",
@@ -2627,7 +2626,8 @@
     "forSaleUntil": "Till försäljning till",
     "soldOn": "Såld",
     "endedOn": "Avslutad",
-    "payoutRemaining": "{remaining} kvar till minsta utbetalning på {minimum}."
+    "payoutRemaining": "{remaining} kvar till minsta utbetalning på {minimum}.",
+    "emailPreferences": "Avisering via e-post"
   },
   "plans": {
     "heading": "Plan",
@@ -4764,8 +4764,7 @@
     "done": "Utskicket är genomgånget. Se resultat nedan.",
     "skipped": "Hoppades över efter ändrade uppgifter eller samtycke",
     "consentTitle": "Mejl från butiken",
-    "consentLabel": "Få nyheter och information via mejl från butiken",
-    "consentHint": "Valfritt. Du kan ändra dig här eller via länken i mejlet. Aviseringar om dina varor och utbetalningar påverkas inte.",
+    "consentLabel": "Nyheter och information från butiken",
     "save": "Spara",
     "saved": "Sparat",
     "unsubscribe": "Avsluta butikens mejlutskick",

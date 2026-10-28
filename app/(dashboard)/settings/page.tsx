@@ -26,7 +26,11 @@ import { readStorePolicy } from '@/lib/engine/store-policy'
 import { z } from 'zod'
 import { StorePolicyForm } from '@/components/intake/store-policy-form'
 import { StoreProfileForm } from '@/components/intake/store-profile-form'
-import { readStoreProfile } from '@/lib/engine/store-profile'
+import { StoreAppVisibilityForm } from '@/components/intake/store-app-visibility'
+import {
+  readStoreAppVisibility,
+  readStoreProfile,
+} from '@/lib/engine/store-profile'
 import { PrinterForm } from '@/components/intake/printer-form'
 import {
   readLabelFormats,
@@ -147,6 +151,10 @@ export default async function Settings({
   const profile =
     (intake && tab === 'profile') || tab === 'credits'
       ? await readStoreProfile(ctx.client, active.id)
+      : null
+  const appVisibility =
+    intake && tab === 'profile'
+      ? await readStoreAppVisibility(ctx.client, active.id)
       : null
   const [printers, jobs, formats, devices, templates] =
     intake && tab === 'printing'
@@ -287,6 +295,15 @@ export default async function Settings({
           current={profile}
           editable={manages}
           locale={ctx.locale}
+          d={d}
+        />
+      )}
+      {tab === 'profile' && appVisibility && (
+        <StoreAppVisibilityForm
+          key={active.id}
+          tenantId={active.id}
+          current={appVisibility}
+          editable={manages}
           d={d}
         />
       )}

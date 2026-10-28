@@ -1269,3 +1269,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-27: #705 filters intake sellers after 275 ms of typing using URL replacement, resetting seller pagination. Input focus, selection and scroll remain stable; Enter and no-JS form submission remain available. Registration stays separate and empty on opening.
 
 - 2026-10-28: #710 moves intake/receipt agreement evidence into status tabs, opens the label after confirmed receipt, simplifies label/review layouts and adds store-currency price suffixes. Evidence requirements, frozen receipt facts, processing actions and safe retries stay unchanged.
+
+- 2026-10-28: Owner adds a store setting "Show the store in the mobile app", off by default. Owner/admin change it as versioned rows; anon public_app_stores() lists id, name and slug of visible stores only, replacing the earlier app's test-store code.

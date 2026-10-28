@@ -99,3 +99,31 @@ export async function readPublicStoreProfile(
   if (result.error) throw new Error('REQUEST_FAILED')
   return publicProfile.parse(result.data)
 }
+
+// Whether the store appears in the mobile app's store picker. Hidden until
+// an owner or admin opts in; each change names the current version.
+export const setStoreAppVisibilityCommand = z.strictObject({
+  action: z.literal('setStoreAppVisibility'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  expectedCurrentId: z.uuid().nullable(),
+  visible: z.boolean(),
+})
+const appVisibility = z.object({
+  id: z.uuid().nullable(),
+  // 0 before the first change; each change is the previous version plus one.
+  version: z.number().int().min(0),
+  visible: z.boolean(),
+})
+export type StoreAppVisibility = z.infer<typeof appVisibility>
+
+export async function readStoreAppVisibility(
+  client: SupabaseClient,
+  tenantInput: string,
+) {
+  const result = await client.rpc('store_app_visibility', {
+    p_tenant: z.uuid().parse(tenantInput),
+  })
+  if (result.error) throw new Error('FORBIDDEN')
+  return appVisibility.parse(result.data)
+}

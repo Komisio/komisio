@@ -1,7 +1,7 @@
 -- Store visibility in the mobile app: owner or admin chooses whether the store
 -- appears in the app's store picker. Every change is a new version naming the
 -- current one. Stores are hidden until they opt in; the public read lists only
--- name and slug of stores whose current version is visible.
+-- id, name and slug of stores whose current version is visible.
 create table public.store_app_visibility_settings (
  id uuid primary key,
  tenant_id uuid not null references public.tenants(id),

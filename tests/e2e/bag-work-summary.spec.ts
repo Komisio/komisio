@@ -5,7 +5,7 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import { readFileSync } from 'node:fs'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('handover progress includes registered items and opens unfinished work', async ({
+test('handover review omits progress counts while retaining registered items and unfinished work', async ({
   page,
 }, info) => {
   const email = `bag-progress-${randomUUID()}@example.test`
@@ -55,8 +55,11 @@ test('handover progress includes registered items and opens unfinished work', as
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto(`/intake/bags/${bag}/inspect`)
     const summary = page.getByRole('region', { name: d.bagProgress.title })
-    await expect(summary.locator('[data-bag-count=accepted]')).toHaveText('2')
-    await expect(summary.locator('[data-bag-count=receptions]')).toHaveText('1')
+    await expect(summary).toHaveCount(0)
+    await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(2)
+    await expect(
+      page.getByRole('button', { name: d.bagProcessing.complete, exact: true }),
+    ).toBeDisabled()
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(320)
@@ -77,10 +80,11 @@ test('handover progress includes registered items and opens unfinished work', as
           ),
         ).bagProgress.title,
       })
-      await expect(translated.locator('[data-bag-count=accepted]')).toHaveText(
-        '2',
-      )
-      await expect(translated.getByRole('link')).toHaveCount(1)
+      await expect(translated).toHaveCount(0)
+      await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(2)
+      await expect(
+        page.locator(`a[href^="/intake/reception/${pending}"]`),
+      ).toBeVisible()
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
       ).toBeLessThanOrEqual(320)
@@ -91,13 +95,13 @@ test('handover progress includes registered items and opens unfinished work', as
         { name: 'komisio-locale', value: 'sv', url: 'http://127.0.0.1:3000' },
       ])
     await page.reload()
-    await expect(summary).toBeVisible()
+    await expect(summary).toHaveCount(0)
     await page.screenshot({
       path: info.outputPath('progress-mobile.png'),
       fullPage: true,
       caret: 'initial',
     })
-    await summary
+    await page
       .getByRole('link', { name: d.bagProgress.resumeReception, exact: false })
       .click()
     await expect(page).toHaveURL(
@@ -119,9 +123,16 @@ test('handover progress includes registered items and opens unfinished work', as
       )
     })
     await page.goto(`/intake/bags/${bag}/inspect`)
-    await expect(summary.locator('[data-bag-count=accepted]')).toHaveText('3')
-    await expect(summary.locator('[data-bag-count=receptions]')).toHaveText('0')
-    await expect(summary.getByRole('link')).toHaveCount(0)
+    await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(3)
+    await expect(
+      page.getByRole('link', {
+        name: d.bagProgress.resumeReception,
+        exact: false,
+      }),
+    ).toHaveCount(0)
+    await expect(
+      page.getByRole('button', { name: d.bagProcessing.complete, exact: true }),
+    ).toBeEnabled()
     await expect(
       page
         .getByRole('region', { name: d.bagProcessing.title, exact: true })

@@ -150,7 +150,10 @@
       "emptyPreview": "Avtalstexten visas här när du skriver.",
       "newVersionHint": "Utgå från det aktiva avtalet. Publicering skapar en ny aktiv version som behöver godkännas på nytt.",
       "firstVersionHint": "Skriv avtalet på ett språk. Fler språk läggs till efter publicering."
-    }
+    },
+    "tabLabel": "Avtal",
+    "tabApproved": "godkänt",
+    "tabMissing": "ej godkänt"
   },
   "quickIntake": {
     "typeInlineIntro": "Varutypen sparas för hela butiken.",

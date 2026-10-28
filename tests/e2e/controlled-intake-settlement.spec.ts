@@ -62,13 +62,11 @@ test('controlled journey: receive, register, label, sell and approve a settlemen
     await receiving
       .getByRole('button', { name: d.intake.saveBag, exact: true })
       .click()
-    await expect(receiving.getByRole('status')).toContainText(d.intake.saved)
+    await expect(page).toHaveURL((url) =>
+      /^\/intake\/bags\/[0-9a-f-]{36}$/.test(url.pathname),
+    )
     await noOverflow()
-    const bagHref = await receiving
-      .getByRole('status')
-      .locator('a[href^="/intake/bags/"]')
-      .getAttribute('href')
-    const bagId = new URL(bagHref!, page.url()).pathname.split('/')[3]
+    const bagId = new URL(page.url()).pathname.split('/')[3]
     const bags = (
       await f.db.query(
         'select id,seller_id from bag_receipts where tenant_id=$1',

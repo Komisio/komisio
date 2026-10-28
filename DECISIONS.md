@@ -1267,3 +1267,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-27: #702 removes redundant inventory quick-filter links; dropdown and advanced filters remain. Prices share a reserved edit-icon slot and localized currency formatting with the seller portal. Photo indicators keep a separate fixed-width column; monetary values and writes are unchanged.
 
 - 2026-10-27: #705 filters intake sellers after 275 ms of typing using URL replacement, resetting seller pagination. Input focus, selection and scroll remain stable; Enter and no-JS form submission remain available. Registration stays separate and empty on opening.
+
+- 2026-10-28: #710 moves intake/receipt agreement evidence into status tabs, opens the label after confirmed receipt, simplifies label/review layouts and adds store-currency price suffixes. Evidence requirements, frozen receipt facts, processing actions and safe retries stay unchanged.

@@ -150,7 +150,10 @@
       "emptyPreview": "Sopimusteksti näkyy tässä kirjoittaessasi.",
       "newVersionHint": "Käytä aktiivista sopimusta pohjana. Julkaisu luo uuden aktiivisen version, joka on hyväksyttävä uudelleen.",
       "firstVersionHint": "Kirjoita sopimus yhdellä kielellä. Lisää muita kieliä julkaisun jälkeen."
-    }
+    },
+    "tabLabel": "Sopimus",
+    "tabApproved": "hyväksytty",
+    "tabMissing": "ei hyväksytty"
   },
   "quickIntake": {
     "typeInlineIntro": "Tuotetyyppi tallennetaan koko myymälälle.",

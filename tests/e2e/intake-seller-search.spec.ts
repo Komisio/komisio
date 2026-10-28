@@ -178,10 +178,12 @@ test('bag intake finds all sellers by contact and focuses reception without skip
     await expect
       .poll(async () => (await receiving.boundingBox())?.y ?? 9999)
       .toBeLessThan(100)
-    await expect(page.locator('.agreement-at-intake')).toHaveAttribute(
-      'open',
-      '',
-    )
+    const agreementTab = page.getByRole('tab', {
+      name: `${d.agreements.tabLabel} — ${d.agreements.tabMissing}`,
+      exact: true,
+    })
+    await expect(agreementTab).toHaveAttribute('data-status', 'missing')
+    await expect(page.locator('.agreement-at-intake')).toBeHidden()
     await expect(
       receiving.getByRole('button', { name: d.intake.saveBag, exact: true }),
     ).toBeDisabled()
@@ -196,7 +198,15 @@ test('bag intake finds all sellers by contact and focuses reception without skip
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true)
-    const evidenceForm = receiving.locator('.agreement-evidence-form')
+    await receiving
+      .getByLabel(d.intake.note, { exact: true })
+      .fill('Synthetic received item')
+    await receiving.getByLabel(d.intake.custody, { exact: true }).check()
+    await receiving
+      .getByRole('link', { name: `${d.agreements.tabLabel} →`, exact: true })
+      .click()
+    await expect(agreementTab).toHaveAttribute('aria-selected', 'true')
+    const evidenceForm = page.locator('.agreement-evidence-form')
     await evidenceForm
       .getByLabel(d.agreements.reference, { exact: true })
       .fill('Synthetic paper evidence')
@@ -207,19 +217,27 @@ test('bag intake finds all sellers by contact and focuses reception without skip
       .getByRole('button', { name: d.agreements.record, exact: true })
       .click()
     await expect(
+      page.getByRole('tab', {
+        name: `${d.agreements.tabLabel} — ${d.agreements.tabApproved}`,
+        exact: true,
+      }),
+    ).toHaveAttribute('data-status', 'approved')
+    await page.getByRole('tab').first().click()
+    await expect(
       receiving.getByRole('button', { name: d.intake.saveBag, exact: true }),
     ).toBeEnabled()
     await expect(
-      receiving.getByRole('heading', { name: d.intake.receive, exact: true }),
-    ).toBeInViewport()
-    await receiving
-      .getByLabel(d.intake.note, { exact: true })
-      .fill('Synthetic received item')
-    await receiving.getByLabel(d.intake.custody, { exact: true }).check()
+      receiving.getByLabel(d.intake.note, { exact: true }),
+    ).toHaveValue('Synthetic received item')
+    await expect(
+      receiving.getByLabel(d.intake.custody, { exact: true }),
+    ).toBeChecked()
     await receiving
       .getByRole('button', { name: d.intake.saveBag, exact: true })
       .click()
-    await expect(receiving.getByRole('status')).toContainText(d.intake.saved)
+    await expect(page).toHaveURL((url) =>
+      /^\/intake\/bags\/[0-9a-f-]{36}$/.test(url.pathname),
+    )
     expect(
       (
         await f.db.query(
@@ -228,6 +246,9 @@ test('bag intake finds all sellers by contact and focuses reception without skip
         )
       ).rows[0].n,
     ).toBe(1)
+    await page
+      .getByRole('link', { name: d.returnNavigation.back, exact: true })
+      .click()
     await receiving
       .getByRole('link', { name: d.quickIntake.changeSeller, exact: true })
       .click()

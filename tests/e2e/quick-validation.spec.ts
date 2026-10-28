@@ -54,7 +54,7 @@ test('quick intake focuses invalid fields without sending or discarding a partia
       await expect(price).toBeFocused()
       await expect(price).toBeInViewport()
       await expect(price).toHaveAccessibleDescription(
-        d.quickIntake.priceInvalid,
+        `${d.quickIntake.priceInvalid} SEK`,
       )
       await expect(price).toHaveAttribute('aria-invalid', 'true')
       await expect(description).not.toHaveAttribute('aria-invalid', 'true')

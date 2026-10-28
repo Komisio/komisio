@@ -1,7 +1,8 @@
 import { BackLink } from '@/components/platform/back-link'
 import type { ItemSort } from '@/lib/engine/item-directory'
 import { readBagProcessing } from '@/lib/engine/bag-processing'
-import { BagWorkSummary } from './bag-work-summary'
+import { BagProcessing } from './bag-processing'
+import { readBagWorkSummary } from '@/lib/engine/bag-work-summary'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { BagRegisteredItems } from './bag-registered-items'
 import { redirect } from 'next/navigation'
@@ -79,9 +80,10 @@ export async function BagReception({
   const href = (page: number, nextSort = sort, nextDirection = direction) =>
     `/intake/bags/${bagId}/inspect?itemSort=${nextSort}&itemDirection=${nextDirection}&itemPage=${page}#bag-registered`
   if (itemPage > pages) redirect(href(pages))
-  const [groups, categories] = await Promise.all([
+  const [groups, categories, progress] = await Promise.all([
     readAssortmentGroups(client, tenantId),
     readItemCategories(client, tenantId),
+    readBagWorkSummary(client, tenantId, bagId),
   ])
   return (
     <div className="bag-reception-page">
@@ -101,16 +103,31 @@ export async function BagReception({
           </Link>
         )}
       </header>
-      <BagWorkSummary
-        client={client}
-        tenantId={tenantId}
-        bagId={bagId}
-        locale={locale}
-        processing={processing}
-        readonly={readonly}
-      />
+      {progress ? (
+        <BagProcessing
+          key={`${bagId}:${processing.version}`}
+          tenantId={tenantId}
+          bagId={bagId}
+          locale={locale}
+          current={processing}
+          pending={progress.receptions > 0}
+          d={d}
+          readonly={readonly}
+        />
+      ) : (
+        <p role="status">{d.bagProgress.unavailable}</p>
+      )}
+      {progress?.nextReception && (
+        <Link
+          className="text-link"
+          href={`/intake/reception/${progress.nextReception}`}
+        >
+          {d.bagProgress.resumeReception} →
+        </Link>
+      )}
       {!readonly && processing.state === 'open' && (
         <QuickReception
+          currency={received.currency}
           scanFocusLabel={d.scanFocus}
           key={bagId}
           tenantId={tenantId}

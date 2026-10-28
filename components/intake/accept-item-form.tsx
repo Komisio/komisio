@@ -1,4 +1,5 @@
 'use client'
+import { PriceInput } from './price-input'
 import { useRef, useState } from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
@@ -16,6 +17,8 @@ import {
 /** Commercial acceptance of one origin. SQL rechecks every precondition and freezes terms. */
 export function AcceptItemForm({
   tenantId,
+  currency,
+  locale,
   originKind,
   originId,
   originRevision,
@@ -27,6 +30,8 @@ export function AcceptItemForm({
   returnTo,
 }: {
   tenantId: string
+  currency: string
+  locale: string
   originKind: OriginKind
   originId: string
   originRevision: number | null
@@ -104,7 +109,9 @@ export function AcceptItemForm({
           <label htmlFor={field}>
             {originKind === 'purchase' ? d.purchaseSalePrice : d.price}
           </label>
-          <input
+          <PriceInput
+            currency={currency}
+            locale={locale}
             ref={priceRef}
             id={field}
             name="price"

@@ -150,7 +150,10 @@
       "emptyPreview": "El texto del contrato aparece aquí mientras escribe.",
       "newVersionHint": "Parta del contrato activo. Al publicar se crea una nueva versión activa que requiere una nueva aceptación.",
       "firstVersionHint": "Escriba el contrato en un idioma. Añada más idiomas después de publicarlo."
-    }
+    },
+    "tabLabel": "Acuerdo",
+    "tabApproved": "aprobado",
+    "tabMissing": "no aprobado"
   },
   "quickIntake": {
     "typeInlineIntro": "El tipo de artículo se guarda para toda la tienda.",

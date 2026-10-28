@@ -150,7 +150,10 @@
       "emptyPreview": "Der Vertragstext erscheint hier während der Eingabe.",
       "newVersionHint": "Nutzen Sie den aktiven Vertrag als Vorlage. Die Veröffentlichung erstellt eine neue aktive Version, die erneut akzeptiert werden muss.",
       "firstVersionHint": "Schreiben Sie den Vertrag in einer Sprache. Weitere Sprachen können Sie nach der Veröffentlichung hinzufügen."
-    }
+    },
+    "tabLabel": "Vereinbarung",
+    "tabApproved": "genehmigt",
+    "tabMissing": "nicht genehmigt"
   },
   "quickIntake": {
     "typeInlineIntro": "Der Warentyp wird für das gesamte Geschäft gespeichert.",

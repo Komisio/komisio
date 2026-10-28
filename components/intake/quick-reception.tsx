@@ -1,4 +1,5 @@
 'use client'
+import { PriceInput } from './price-input'
 import { ScanFocusButton, useScanFocus } from '@/components/platform/scan-focus'
 import {
   categoryChoices,
@@ -176,6 +177,7 @@ export function QuickReception({
   groups = [],
   categories = [],
   lang,
+  currency,
   scanFocusLabel,
   d,
   bagId,
@@ -193,6 +195,7 @@ export function QuickReception({
   groups?: { id: string; name: string }[]
   categories?: ItemCategory[]
   lang: string
+  currency: string
   scanFocusLabel: string
   d: Dictionary['quickIntake']
   bagId?: string
@@ -1070,7 +1073,9 @@ export function QuickReception({
                 </div>
                 <div className="field quick-price-field">
                   <label htmlFor="quick-price">{d.price}</label>
-                  <input
+                  <PriceInput
+                    currency={currency}
+                    locale={lang}
                     id="quick-price"
                     required
                     aria-invalid={invalidPrice || undefined}

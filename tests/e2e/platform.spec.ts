@@ -81,6 +81,12 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   expect(denied.status()).toBe(409)
   expect((await denied.json()).error).toBe('AGREEMENT_REQUIRED')
   await page
+    .getByRole('tab', {
+      name: `${d.agreements.tabLabel} — ${d.agreements.tabMissing}`,
+      exact: true,
+    })
+    .click()
+  await page
     .getByLabel('Hänvisning till underlag', { exact: true })
     .fill('TEST-PAPPER-1, fiktivt underlag')
   await page
@@ -90,12 +96,18 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     .getByRole('button', { name: 'Registrera underlag', exact: true })
     .click()
   await expect(
-    page.getByRole('button', { name: 'Bekräfta mottagandet' }),
-  ).toBeEnabled()
-  await page.locator('.agreement-at-intake > summary').click()
+    page.getByRole('tab', {
+      name: `${d.agreements.tabLabel} — ${d.agreements.tabApproved}`,
+      exact: true,
+    }),
+  ).toHaveAttribute('data-status', 'approved')
   await expect(
     page.getByText('Underlag finns för aktuell version', { exact: true }),
   ).toBeVisible()
+  await page.getByRole('tab').first().click()
+  await expect(
+    page.getByRole('button', { name: 'Bekräfta mottagandet' }),
+  ).toBeEnabled()
   await page
     .getByLabel('Jag bekräftar att inlämningen', { exact: false })
     .check()
@@ -107,7 +119,9 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
   expect(receipt.status()).toBe(200)
   const receiptId = (await receipt.json()).id
   const replayCommand = receipt.request().postDataJSON()
-  await expect(page.locator('.received-bags tbody tr')).toHaveCount(1)
+  await expect(page).toHaveURL(
+    (url) => url.pathname === `/intake/bags/${receiptId}`,
+  )
   const stale = await page.context().newPage()
   const stalePublisher = await page.context().newPage()
   try {
@@ -177,7 +191,12 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     expect(replay.status()).toBe(200)
     expect((await replay.json()).id).toBe(receiptId)
     await page.goto(`/intake/bags/${receiptId}`)
-    await page.getByText('Avtal vid mottagningen', { exact: true }).click()
+    await page
+      .getByRole('tab', {
+        name: `${d.agreements.tabLabel} — ${d.agreements.tabApproved}`,
+        exact: true,
+      })
+      .click()
     await expect(
       page.getByRole('link', { name: 'TEST Villkor 1 · Version 1' }),
     ).toBeVisible()
@@ -189,11 +208,17 @@ test('versioned agreement evidence gates new receipts and preserves old ones', a
     await expect(page.locator('.bag-label')).not.toContainText('TEST-PAPPER-1')
     await page.goto(sellerUrl)
     await expect(
-      page.getByText('Underlag saknas för aktuell version', { exact: true }),
-    ).toBeVisible()
-    await expect(
       page.getByRole('button', { name: 'Bekräfta mottagandet' }),
     ).toBeDisabled()
+    await page
+      .getByRole('tab', {
+        name: `${d.agreements.tabLabel} — ${d.agreements.tabMissing}`,
+        exact: true,
+      })
+      .click()
+    await expect(
+      page.getByText('Underlag saknas för aktuell version', { exact: true }),
+    ).toBeVisible()
     await page.setViewportSize({ width: 390, height: 844 })
     await page.screenshot({
       path: 'test-results/agreement-intake-mobile.png',
@@ -234,6 +259,7 @@ test('staff receives a bag, retries safely and prints a private label', async ({
     .getByLabel('Kännetecken på inlämningen (valfritt)')
     .fill('Blå tygpåse')
   await page.getByRole('checkbox').check()
+  const receiptOrigin = page.url()
   const saved = page.waitForResponse(
     (r) => r.url().endsWith('/api/intake') && r.request().method() === 'POST',
   )
@@ -258,15 +284,9 @@ test('staff receives a bag, retries safely and prints a private label', async ({
   })
   expect(stale.status()).toBe(409)
   expect(original.tenantId).toBe(tenantId)
-  await expect(page.getByRole('status')).toContainText(
-    'Inlämningen är registrerad',
+  await expect(page).toHaveURL(
+    (url) => url.pathname === `/intake/bags/${original.requestId}`,
   )
-  await expect(page.locator('.received-bags tbody tr')).toHaveCount(1)
-  const receiptOrigin = page.url()
-  await page
-    .getByRole('status')
-    .getByRole('link', { name: 'Visa etikett' })
-    .click()
   await expect(page.locator('.bag-label')).toContainText(
     'E2E Mottagning av inlämning',
   )
@@ -279,7 +299,9 @@ test('staff receives a bag, retries safely and prints a private label', async ({
       document.body.dataset.printed = 'yes'
     }
   })
-  await page.getByRole('button', { name: 'Skriv ut etikett' }).click()
+  await page
+    .getByRole('button', { name: d.intake.browserPrint, exact: true })
+    .click()
   await expect(page.locator('body')).toHaveAttribute('data-printed', 'yes')
   await page.emulateMedia({ media: 'print' })
   await expect(page.locator('.bag-label')).toBeVisible()
@@ -290,7 +312,9 @@ test('staff receives a bag, retries safely and prints a private label', async ({
     .click()
   await expect(page).toHaveURL(receiptOrigin)
   await page.reload()
+  await page.getByRole('tab', { name: d.intake.queue, exact: true }).click()
   await expect(page.locator('.received-bags tbody tr')).toHaveCount(1)
+  await page.getByRole('tab').first().click()
   await expect(page.locator('#new-seller')).toContainText('Test Säljare')
   await expect(
     page.getByRole('heading', { name: 'Ta emot en inlämning' }),
@@ -318,9 +342,14 @@ test('staff receives a bag, retries safely and prints a private label', async ({
     page.getByLabel('Kännetecken på inlämningen (valfritt)'),
   ).toBeDisabled()
   await page.getByRole('button', { name: 'Försök igen' }).click()
-  await expect(page.getByRole('status')).toContainText(
-    'Inlämningen är registrerad',
+  await expect(page).toHaveURL((url) =>
+    /^\/intake\/bags\/[0-9a-f-]{36}$/.test(url.pathname),
   )
+  await page
+    .getByRole('link', { name: d.returnNavigation.back, exact: true })
+    .click()
+  await expect(page).toHaveURL((url) => url.pathname === '/intake')
+  await page.getByRole('tab', { name: d.intake.queue, exact: true }).click()
   await expect(page.locator('.received-bags tbody tr')).toHaveCount(2)
   await page.setViewportSize({ width: 390, height: 844 })
   await page.screenshot({

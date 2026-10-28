@@ -65,7 +65,9 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
       description: element.getAttribute('aria-describedby'),
     }))
     await expect(price).toHaveAttribute('aria-invalid', 'true')
-    await expect(price).toHaveAccessibleDescription(d.quickIntake.priceInvalid)
+    await expect(price).toHaveAccessibleDescription(
+      `${d.quickIntake.priceInvalid} SEK`,
+    )
 
     for (let index = 0; index < 20; index++) {
       if (index === 5) {
@@ -208,7 +210,9 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
     }
     await page.reload()
     await expect(page.locator('.bag-inventory .inventory-row')).toHaveCount(10)
-    await expect(page.locator('[data-bag-count="accepted"]')).toHaveText('10')
+    await expect(
+      page.getByRole('region', { name: d.bagProgress.title }),
+    ).toHaveCount(0)
     await expect(
       page
         .getByRole('region', { name: d.bagProcessing.title, exact: true })

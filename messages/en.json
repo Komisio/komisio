@@ -150,7 +150,10 @@
       "emptyPreview": "The agreement text appears here as you type.",
       "newVersionHint": "Start from the active agreement. Publishing creates a new active version that requires new acceptance.",
       "firstVersionHint": "Write the agreement in one language. Add more languages after publishing."
-    }
+    },
+    "tabLabel": "Agreement",
+    "tabApproved": "approved",
+    "tabMissing": "not approved"
   },
   "quickIntake": {
     "typeInlineIntro": "The product type is saved for the whole store.",

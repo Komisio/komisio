@@ -150,7 +150,10 @@
       "emptyPreview": "Avtaleteksten vises her når du skriver.",
       "newVersionHint": "Ta utgangspunkt i den aktive avtalen. Publisering oppretter en ny aktiv versjon som må godkjennes på nytt.",
       "firstVersionHint": "Skriv avtalen på ett språk. Legg til flere språk etter publisering."
-    }
+    },
+    "tabLabel": "Avtale",
+    "tabApproved": "godkjent",
+    "tabMissing": "ikke godkjent"
   },
   "quickIntake": {
     "typeInlineIntro": "Varetypen lagres for hele butikken.",

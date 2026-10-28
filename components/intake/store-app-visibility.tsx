@@ -5,6 +5,35 @@ import type { Dictionary } from '@/lib/i18n'
 import type { StoreAppVisibility } from '@/lib/engine/store-profile'
 import { useIntakeAction } from './use-intake-action'
 
+/**
+ * The checkbox draft and the version it was edited against. A refresh that
+ * brings a newer version replaces an unedited draft; an edited one keeps its
+ * original version, so saving it is refused as stale instead of being
+ * silently applied on top of someone else's change.
+ */
+export type VisibilityDraft = {
+  base: string | null
+  baseVisible: boolean
+  visible: boolean
+}
+export function syncVisibilityDraft(
+  draft: VisibilityDraft,
+  current: StoreAppVisibility,
+  locked: boolean,
+): VisibilityDraft {
+  if (
+    draft.base === current.id ||
+    locked ||
+    draft.visible !== draft.baseVisible
+  )
+    return draft
+  return {
+    base: current.id,
+    baseVisible: current.visible,
+    visible: current.visible,
+  }
+}
+
 export function StoreAppVisibilityForm({
   tenantId,
   current,
@@ -19,7 +48,14 @@ export function StoreAppVisibilityForm({
   const t = d.storeProfile
   const action = useIntakeAction(d.intake)
   const router = useRouter()
-  const [visible, setVisible] = useState(current.visible)
+  const [draft, setDraft] = useState<VisibilityDraft>(() => ({
+    base: current.id,
+    baseVisible: current.visible,
+    visible: current.visible,
+  }))
+  const synced = syncVisibilityDraft(draft, current, action.locked)
+  if (synced !== draft) setDraft(synced)
+  const visible = synced.visible
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [saved, setSaved] = useState(false)
   return (
@@ -35,10 +71,12 @@ export function StoreAppVisibilityForm({
               action: 'setStoreAppVisibility',
               tenantId,
               requestId,
-              expectedCurrentId: current.id,
+              expectedCurrentId: synced.base,
               visible,
             })
           ) {
+            // The saved row's id is the request id: the refreshed version.
+            setDraft({ base: requestId, baseVisible: visible, visible })
             setSaved(true)
             setRequestId(crypto.randomUUID())
             router.refresh()
@@ -53,7 +91,7 @@ export function StoreAppVisibilityForm({
             aria-describedby="store-app-hint"
             onChange={(e) => {
               setSaved(false)
-              setVisible(e.target.checked)
+              setDraft({ ...synced, visible: e.target.checked })
             }}
           />
           {t.appLabel}
@@ -64,7 +102,7 @@ export function StoreAppVisibilityForm({
             disabled={
               action.busy ||
               action.needsReload ||
-              (visible === current.visible && !action.locked)
+              (visible === synced.baseVisible && !action.locked)
             }
           >
             {t.appSave}

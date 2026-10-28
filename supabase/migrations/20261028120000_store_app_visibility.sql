@@ -48,11 +48,12 @@ begin
  return p_id;
 end $$;
 
--- The app's store picker before sign-in: name and slug only, nothing about
--- members, sellers or setting history.
+-- The app's store picker before sign-in: id, name and slug only, nothing about
+-- members, sellers or setting history. The id matches my_seller_accounts after
+-- sign-in, so the app can open the chosen store's seller account.
 create function public.public_app_stores() returns jsonb
 language sql stable security definer set search_path='' as $$
- select coalesce(jsonb_agg(jsonb_build_object('name',t.name,'slug',t.slug) order by t.name,t.slug),'[]'::jsonb)
+ select coalesce(jsonb_agg(jsonb_build_object('id',t.id,'name',t.name,'slug',t.slug) order by t.name,t.slug),'[]'::jsonb)
  from public.tenants t
  where (select s.visible from public.store_app_visibility_settings s where s.tenant_id=t.id order by s.version desc limit 1)
 $$;

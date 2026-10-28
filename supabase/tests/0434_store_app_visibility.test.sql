@@ -31,7 +31,7 @@ select throws_ok($$select store_app_visibility(current_setting('test.tenant')::u
 select throws_ok($$select set_store_app_visibility(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.v1')::uuid,false)$$,'42501','FORBIDDEN','non-members cannot change the setting');
 -- Public read lists only visible stores, with name and slug only.
 set local role anon;
-select is(public_app_stores(),'[{"name":"Synthetic app store","slug":"app-store"}]'::jsonb,'anonymous app lists only the visible store');
+select is(public_app_stores(),jsonb_build_array(jsonb_build_object('id',current_setting('test.tenant'),'name','Synthetic app store','slug','app-store')),'anonymous app lists only the visible store');
 select throws_ok($$select store_app_visibility(current_setting('test.tenant')::uuid)$$,'42501',null,'anonymous cannot read the setting');
 select throws_ok($$select set_store_app_visibility(current_setting('test.tenant')::uuid,gen_random_uuid(),null,true)$$,'42501',null,'anonymous cannot change the setting');
 -- Hiding again follows the latest version.

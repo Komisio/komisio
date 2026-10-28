@@ -706,6 +706,7 @@
     "store.flow.updated": "Butik · Butiksflöde · Ändring",
     "store_guide.saved": "Butiksguide · Sparande",
     "store_mail.auto_setting": "Butiksutskick · Automatisk körning · Ändring",
+    "store_app.visibility": "Mobilappen · Butikens synlighet · Ändring",
     "store_mail.confirmed": "Butiksutskick · Bekräftelse",
     "store_policy.published": "Butikspolicyn uppdaterades",
     "store_profile.published": "Butiksprofil · Publicering",
@@ -1193,7 +1194,12 @@
     "country": "Land",
     "countryHelp": "Butikens land bestämmer valutan för köp av AI-krediter.",
     "noHours": "Inga tider angivna",
-    "hoursHint": "Markera de dagar du vill ange tider för. Om du avmarkerar en dag publiceras inga tider för den."
+    "hoursHint": "Markera de dagar du vill ange tider för. Om du avmarkerar en dag publiceras inga tider för den.",
+    "appTitle": "Mobilappen",
+    "appHint": "När det här är på visas butiken i butikslistan i Komisios mobilapp, så att säljare kan hitta den och logga in. Där visas bara butikens namn.",
+    "appLabel": "Visa butik i mobilappen",
+    "appSave": "Spara",
+    "appSaved": "Sparat."
   },
   "storePolicy": {
     "markdowns": "Prissänkningar",

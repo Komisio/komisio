@@ -706,6 +706,7 @@
     "store.flow.updated": "Store · Store workflow · Change",
     "store_guide.saved": "Store guide · Saved",
     "store_mail.auto_setting": "Store email · Automatic run · Change",
+    "store_app.visibility": "Mobile app · Store visibility · Change",
     "store_mail.confirmed": "Store email · Confirmation",
     "store_policy.published": "The store policy was updated",
     "store_profile.published": "Store profile · Publication",
@@ -1193,7 +1194,12 @@
     "country": "Country",
     "countryHelp": "The store country determines the currency for AI credit purchases.",
     "noHours": "No hours set",
-    "hoursHint": "Select the days you want to enter hours for. Deselecting a day removes its hours from the published profile."
+    "hoursHint": "Select the days you want to enter hours for. Deselecting a day removes its hours from the published profile.",
+    "appTitle": "Mobile app",
+    "appHint": "When this is on, the store appears in the store list of the Komisio mobile app, so sellers can find it and sign in. Only the store name is shown there.",
+    "appLabel": "Show the store in the mobile app",
+    "appSave": "Save",
+    "appSaved": "Saved."
   },
   "storePolicy": {
     "markdowns": "Markdowns",

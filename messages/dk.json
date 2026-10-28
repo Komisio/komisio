@@ -706,6 +706,7 @@
     "store.flow.updated": "Butik · Butiksflow · Ændring",
     "store_guide.saved": "Butiksguide · Gemt",
     "store_mail.auto_setting": "Butikspost · Automatisk kørsel · Ændring",
+    "store_app.visibility": "Mobilappen · Butikkens synlighed · Ændring",
     "store_mail.confirmed": "Butikspost · Bekræftelse",
     "store_policy.published": "Butikkens regler blev opdateret",
     "store_profile.published": "Butiksprofil · Udgivelse",
@@ -1193,7 +1194,12 @@
     "country": "Land",
     "countryHelp": "Butikkens land bestemmer valutaen for køb af AI-kreditter.",
     "noHours": "Ingen tider angivet",
-    "hoursHint": "Vælg de dage, du vil angive tider for. Hvis du fravælger en dag, offentliggøres ingen tider for den."
+    "hoursHint": "Vælg de dage, du vil angive tider for. Hvis du fravælger en dag, offentliggøres ingen tider for den.",
+    "appTitle": "Mobilappen",
+    "appHint": "Når dette er slået til, vises butikken i butikslisten i Komisios mobilapp, så sælgere kan finde den og logge ind. Der vises kun butikkens navn.",
+    "appLabel": "Vis butikken i mobilappen",
+    "appSave": "Gem",
+    "appSaved": "Gemt."
   },
   "storePolicy": {
     "markdowns": "Prisnedsættelser",

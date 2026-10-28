@@ -706,6 +706,7 @@
     "store.flow.updated": "Geschäft · Geschäftsablauf · Änderung",
     "store_guide.saved": "Geschäftsleitfaden · Speicherung",
     "store_mail.auto_setting": "Geschäfts-E-Mail · Automatischer Lauf · Änderung",
+    "store_app.visibility": "Mobile App · Sichtbarkeit des Geschäfts · Änderung",
     "store_mail.confirmed": "Geschäfts-E-Mail · Bestätigung",
     "store_policy.published": "Die Geschäftsregeln wurden aktualisiert",
     "store_profile.published": "Geschäftsprofil · Veröffentlichung",
@@ -1193,7 +1194,12 @@
     "country": "Land",
     "countryHelp": "Das Land des Stores bestimmt die Währung für den Kauf von KI-Credits.",
     "noHours": "Keine Zeiten angegeben",
-    "hoursHint": "Wählen Sie die Tage, für die Sie Zeiten angeben möchten. Für abgewählte Tage werden keine Zeiten veröffentlicht."
+    "hoursHint": "Wählen Sie die Tage, für die Sie Zeiten angeben möchten. Für abgewählte Tage werden keine Zeiten veröffentlicht.",
+    "appTitle": "Mobile App",
+    "appHint": "Wenn dies aktiviert ist, erscheint das Geschäft in der Geschäftsliste der Komisio-App, damit Verkäufer es finden und sich anmelden können. Dort wird nur der Name des Geschäfts angezeigt.",
+    "appLabel": "Geschäft in der mobilen App anzeigen",
+    "appSave": "Speichern",
+    "appSaved": "Gespeichert."
   },
   "storePolicy": {
     "markdowns": "Preissenkungen",

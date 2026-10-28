@@ -25,7 +25,7 @@ begin
  perform komisio_private.require_identity();
  if coalesce(public.tenant_role(p_tenant),'') not in ('owner','admin','staff','readonly') then raise exception 'FORBIDDEN' using errcode='42501'; end if;
  select * into s from public.store_app_visibility_settings where tenant_id=p_tenant order by version desc limit 1;
- return jsonb_build_object('id',s.id,'visible',coalesce(s.visible,false));
+ return jsonb_build_object('id',s.id,'version',coalesce(s.version,0),'visible',coalesce(s.visible,false));
 end $$;
 
 create function public.set_store_app_visibility(p_tenant uuid,p_id uuid,p_expected uuid,p_visible boolean) returns uuid

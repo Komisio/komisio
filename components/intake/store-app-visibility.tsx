@@ -6,15 +6,27 @@ import type { StoreAppVisibility } from '@/lib/engine/store-profile'
 import { useIntakeAction } from './use-intake-action'
 
 /**
- * The checkbox draft and the version it was edited against. A refresh that
- * brings a newer version replaces an unedited draft; an edited one keeps its
- * original version, so saving it is refused as stale instead of being
- * silently applied on top of someone else's change.
+ * The checkbox draft and the version it was edited against. Only a newer
+ * version replaces an unedited draft: props from before a confirmed save are
+ * older than the saved version and are ignored until the refresh catches up.
+ * An edited or in-flight draft keeps its version, so saving it against a
+ * newer change is refused as stale instead of being silently rebased.
  */
 export type VisibilityDraft = {
-  base: string | null
+  baseId: string | null
+  baseVersion: number
   baseVisible: boolean
   visible: boolean
+}
+export function initialVisibilityDraft(
+  current: StoreAppVisibility,
+): VisibilityDraft {
+  return {
+    baseId: current.id,
+    baseVersion: current.version,
+    baseVisible: current.visible,
+    visible: current.visible,
+  }
 }
 export function syncVisibilityDraft(
   draft: VisibilityDraft,
@@ -22,15 +34,23 @@ export function syncVisibilityDraft(
   locked: boolean,
 ): VisibilityDraft {
   if (
-    draft.base === current.id ||
     locked ||
-    draft.visible !== draft.baseVisible
+    draft.visible !== draft.baseVisible ||
+    current.version <= draft.baseVersion
   )
     return draft
+  return initialVisibilityDraft(current)
+}
+/** A confirmed save is the next version, and the request id is its id. */
+export function savedVisibilityDraft(
+  draft: VisibilityDraft,
+  requestId: string,
+): VisibilityDraft {
   return {
-    base: current.id,
-    baseVisible: current.visible,
-    visible: current.visible,
+    baseId: requestId,
+    baseVersion: draft.baseVersion + 1,
+    baseVisible: draft.visible,
+    visible: draft.visible,
   }
 }
 
@@ -48,11 +68,7 @@ export function StoreAppVisibilityForm({
   const t = d.storeProfile
   const action = useIntakeAction(d.intake)
   const router = useRouter()
-  const [draft, setDraft] = useState<VisibilityDraft>(() => ({
-    base: current.id,
-    baseVisible: current.visible,
-    visible: current.visible,
-  }))
+  const [draft, setDraft] = useState(() => initialVisibilityDraft(current))
   const synced = syncVisibilityDraft(draft, current, action.locked)
   if (synced !== draft) setDraft(synced)
   const visible = synced.visible
@@ -71,12 +87,11 @@ export function StoreAppVisibilityForm({
               action: 'setStoreAppVisibility',
               tenantId,
               requestId,
-              expectedCurrentId: synced.base,
+              expectedCurrentId: synced.baseId,
               visible,
             })
           ) {
-            // The saved row's id is the request id: the refreshed version.
-            setDraft({ base: requestId, baseVisible: visible, visible })
+            setDraft(savedVisibilityDraft(synced, requestId))
             setSaved(true)
             setRequestId(crypto.randomUUID())
             router.refresh()

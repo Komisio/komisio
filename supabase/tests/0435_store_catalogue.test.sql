@@ -35,12 +35,15 @@ select pg_temp.catalogue_item('Synthetic lamp') as lamp \gset
 select pg_temp.catalogue_item('Synthetic sold chair') as sold \gset
 select pg_temp.catalogue_item('Synthetic ended vase') as ended \gset
 select pg_temp.catalogue_item('Synthetic expired bag') as expired \gset
+select pg_temp.catalogue_item('Synthetic expired marked-down scarf') as markdown_expired \gset
 -- Transaction-local fixture time travel only; production history stays immutable.
 reset role;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=now()-interval '43 days' where id=:'expired';
 update public.items set accepted_at=now()-interval '1 day' where id=:'coat';
 update public.items set accepted_at=now()-interval '1 hour' where id=:'lamp';
+-- A markdown left unapplied past the period end: the lifecycle reports markdown_due.
+update public.items set accepted_at=now()-interval '43 days',terms=jsonb_set(terms,'{markdownSteps}','[{"afterDays":21,"percent":20}]') where id=:'markdown_expired';
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 select end_sale_period(:'tenant',gen_random_uuid(),:'ended','charity','Synthetic handover');
@@ -55,6 +58,10 @@ select change_item_photo(:'tenant',gen_random_uuid(),:'coat',0,'add',current_set
 select change_item_photo(:'tenant',gen_random_uuid(),:'coat',1,'add',current_setting('test.photo')::uuid);
 select change_item_photo(:'tenant',gen_random_uuid(),:'coat',2,'remove',current_setting('test.gone')::uuid);
 select change_item_photo(:'tenant',gen_random_uuid(),:'sold',0,'add',current_setting('test.soldphoto')::uuid);
+select gen_random_uuid() as scarfphoto \gset
+select :'tenant'||'/'||:'markdown_expired'||'/'||:'scarfphoto'||'.jpg' as scarfpath \gset
+insert into storage.objects(bucket_id,name) values('item-photos',:'scarfpath');
+select change_item_photo(:'tenant',gen_random_uuid(),:'markdown_expired',0,'add',:'scarfphoto');
 -- A quick-received item inherits its reception photo.
 select create_reception_session(:'tenant',gen_random_uuid(),:'consignor') as session \gset
 select gen_random_uuid() as inherited \gset
@@ -94,11 +101,17 @@ select throws_like(format('select store_catalogue_item(%L,%L)',:'tenant',:'sold'
 select throws_like(format('select store_catalogue_item(%L,%L)',:'tenant',:'ended'),'%ITEM_NOT_FOUND%','ended items are not readable');
 select throws_like(format('select store_catalogue_item(%L,%L)',:'tenant',:'expired'),'%ITEM_NOT_FOUND%','items past their period are not readable');
 select throws_like(format('select store_catalogue_item(%L,%L)',:'tenant',gen_random_uuid()),'%ITEM_NOT_FOUND%','unknown items are not readable');
+reset role;
+select is(komisio_private.item_lifecycle(:'tenant',:'markdown_expired')->>'stage','markdown_due','fixture: expired item still has a due markdown');
+set local role authenticated;
+select throws_like(format('select store_catalogue_item(%L,%L)',:'tenant',:'markdown_expired'),'%ITEM_NOT_FOUND%','an expired item with a due markdown is not readable');
 
 -- Photo downloads follow the same listing.
 select is(catalogue_photo_access('item-photos',:'path'),true,'seller may download a current photo of an item for sale');
 select is((select count(*) from storage.objects where bucket_id='item-photos' and name=:'path'),1::bigint,'storage policy admits the current photo');
 select is((select count(*) from storage.objects where bucket_id='item-photos' and name in (:'gone',:'soldpath')),0::bigint,'detached and sold photos stay closed');
+select is(catalogue_photo_access('item-photos',:'scarfpath'),false,'photos of an expired item with a due markdown stay closed');
+select is((select count(*) from storage.objects where bucket_id='item-photos' and name=:'scarfpath'),0::bigint,'storage policy refuses the expired item photo');
 select is((:'page'::jsonb)->'items'->0->'photo'->>'bucket','reception-photos','inherited reception photo is listed');
 select is((select count(*) from storage.objects where bucket_id='reception-photos' and name=:'reception_path'),1::bigint,'storage policy admits an inherited reception photo');
 select is(catalogue_photo_access('reception-photos',:'path'),false,'photo is matched with its bucket');

@@ -23,14 +23,16 @@ language sql stable security definer set search_path='' as $$
 $$;
 
 -- Lifecycle facts of an item for sale, or null. Consignment items are for sale
--- in the active stages; store-owned items until sold or ended, as in the stock
--- report. An item without a price is never listed.
+-- in the active stages and before their resolved period end (a due markdown
+-- can outlast the period); store-owned items until sold or ended, as in the
+-- stock report. An item without a price is never listed.
 create function komisio_private.catalogue_listing(p_tenant uuid,p_item uuid) returns jsonb
 language plpgsql stable security definer set search_path='' as $$
 declare f jsonb:=komisio_private.item_lifecycle(p_tenant,p_item);
 begin
  if (f->>'sold')::boolean or (f->>'ended')::boolean or f->>'currentPriceOre' is null then return null; end if;
- if f->>'ownership'='consignment' and f->>'stage' not in ('on_sale','markdown_due','period_ending') then return null; end if;
+ if f->>'ownership'='consignment' and (f->>'stage' not in ('on_sale','markdown_due','period_ending')
+  or (f->>'periodEnd')::timestamptz<=now()) then return null; end if;
  return f;
 end $$;
 

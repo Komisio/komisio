@@ -13,6 +13,7 @@ reset role;
 insert into tenant_members(tenant_id,user_id,role) values (current_setting('test.tenant')::uuid,'d4340000-0000-4000-8000-000000000002','staff');
 set local role authenticated;
 select is(store_app_visibility(current_setting('test.tenant')::uuid)->>'visible','false','stores are hidden from the app by default');
+select is((store_app_visibility(current_setting('test.tenant')::uuid)->>'version')::integer,0,'no version before the first change');
 select is(public_app_stores(),'[]'::jsonb,'no store is listed before opting in');
 -- Publish, replay, conflict, stale.
 select set_config('test.v1',gen_random_uuid()::text,true);
@@ -22,6 +23,7 @@ select throws_like($$select set_store_app_visibility(current_setting('test.tenan
 select throws_like($$select set_store_app_visibility(current_setting('test.tenant')::uuid,gen_random_uuid(),null,false)$$,'%PROFILE_CHANGED%','change without naming the current version refused');
 select throws_like($$select set_store_app_visibility(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.v1')::uuid,null)$$,'%INVALID_INPUT%','visibility is required');
 select is(store_app_visibility(current_setting('test.tenant')::uuid)->>'id',current_setting('test.v1'),'read names the current version');
+select is((store_app_visibility(current_setting('test.tenant')::uuid)->>'version')::integer,1,'read carries the version number');
 -- Roles.
 set local "request.jwt.claims"='{"sub":"d4340000-0000-4000-8000-000000000002","role":"authenticated"}';
 select is(store_app_visibility(current_setting('test.tenant')::uuid)->>'visible','true','staff reads the setting');

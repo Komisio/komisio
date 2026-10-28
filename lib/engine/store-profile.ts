@@ -111,6 +111,8 @@ export const setStoreAppVisibilityCommand = z.strictObject({
 })
 const appVisibility = z.object({
   id: z.uuid().nullable(),
+  // 0 before the first change; each change is the previous version plus one.
+  version: z.number().int().min(0),
   visible: z.boolean(),
 })
 export type StoreAppVisibility = z.infer<typeof appVisibility>

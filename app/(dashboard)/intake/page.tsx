@@ -114,6 +114,7 @@ export default async function Intake({
       expectedAgreementId={agreement?.id ?? null}
       agreement={agreement}
       agreements={all.agreements}
+      agreementLink={{ href: '#intake-agreement', label: a.tabLabel }}
       agreementBlocked={Boolean(
         selected.data &&
         (agreement?.required_before_receipt ||
@@ -247,7 +248,6 @@ export default async function Intake({
                             <small title={s.email || s.phone || undefined}>
                               {s.email || s.phone}
                             </small>
-                            <span>{d.choose}</span>
                           </Link>
                         </li>
                       ))}
@@ -280,79 +280,6 @@ export default async function Intake({
                 </SellerSearchStep>
                 {selected.data && (
                   <div id="new-seller">
-                    {agreement && (
-                      <details
-                        className="card intake-form agreement-at-intake"
-                        open={Boolean(
-                          !evidence &&
-                          (agreement.required_before_receipt ||
-                            policy.policy.agreementRequiredFor.includes(
-                              'bag_receipt',
-                            )),
-                        )}
-                      >
-                        <summary>{a.evidenceHeading}</summary>
-                        <p>
-                          <strong>
-                            {agreement.title} · {a.version} {agreement.version}
-                          </strong>
-                          <br />
-                          {a.language}:{' '}
-                          {
-                            localeNames[
-                              resolveLocale(undefined, agreement.language)
-                            ]
-                          }
-                        </p>
-                        <p>
-                          {agreement.required_before_receipt
-                            ? a.required
-                            : a.optional}
-                        </p>
-                        <details>
-                          <summary>{a.view}</summary>
-                          <div
-                            className="agreement-text"
-                            lang={intlLocale(agreement.language)}
-                          >
-                            {agreement.body}
-                          </div>
-                        </details>
-                        <p>{evidence ? a.available : a.missing}</p>
-                        {evidence ? (
-                          <p>
-                            {evidence.source === 'seller_portal'
-                              ? all.sellerAgreement.accepted
-                              : a.staffRecorded}
-                            :{' '}
-                            {new Date(evidence.recorded_at).toLocaleString(
-                              intlLocale(ctx.locale),
-                              { timeZone: 'Europe/Stockholm' },
-                            )}
-                            <br />
-                            {evidence.reference} ·{' '}
-                            {
-                              localeNames[
-                                agreement.translations?.find(
-                                  (t) => t.id === evidence.translation_id,
-                                )?.language ?? agreement.language
-                              ]
-                            }
-                          </p>
-                        ) : (
-                          active.role !== 'readonly' && (
-                            <EvidenceRecorder
-                              key={`${active.id}:${selected.data.id}:${agreement.id}`}
-                              tenantId={active.id}
-                              sellerId={selected.data.id}
-                              agreementId={agreement.id}
-                              agreement={agreement}
-                              d={all}
-                            />
-                          )
-                        )}
-                      </details>
-                    )}
                     {active.role !== 'readonly' ? (
                       receivingPanel
                     ) : (
@@ -363,6 +290,84 @@ export default async function Intake({
               </div>
             ),
           },
+          ...(selected.data
+            ? [
+                {
+                  id: 'agreement',
+                  label: a.tabLabel,
+                  status: {
+                    approved: Boolean(evidence),
+                    label: evidence ? a.tabApproved : a.tabMissing,
+                  },
+                  content: agreement ? (
+                    <section className="card intake-form agreement-at-intake">
+                      <h2>{a.evidenceHeading}</h2>
+                      <p>
+                        <strong>
+                          {agreement.title} · {a.version} {agreement.version}
+                        </strong>
+                        <br />
+                        {a.language}:{' '}
+                        {
+                          localeNames[
+                            resolveLocale(undefined, agreement.language)
+                          ]
+                        }
+                      </p>
+                      <p>
+                        {agreement.required_before_receipt
+                          ? a.required
+                          : a.optional}
+                      </p>
+                      <details>
+                        <summary>{a.view}</summary>
+                        <div
+                          className="agreement-text"
+                          lang={intlLocale(agreement.language)}
+                        >
+                          {agreement.body}
+                        </div>
+                      </details>
+                      <p>{evidence ? a.available : a.missing}</p>
+                      {evidence ? (
+                        <p>
+                          {evidence.source === 'seller_portal'
+                            ? all.sellerAgreement.accepted
+                            : a.staffRecorded}
+                          :{' '}
+                          {new Date(evidence.recorded_at).toLocaleString(
+                            intlLocale(ctx.locale),
+                            { timeZone: 'Europe/Stockholm' },
+                          )}
+                          <br />
+                          {evidence.reference} ·{' '}
+                          {
+                            localeNames[
+                              agreement.translations?.find(
+                                (t) => t.id === evidence.translation_id,
+                              )?.language ?? agreement.language
+                            ]
+                          }
+                        </p>
+                      ) : (
+                        active.role !== 'readonly' && (
+                          <EvidenceRecorder
+                            key={`${active.id}:${selected.data.id}:${agreement.id}`}
+                            tenantId={active.id}
+                            sellerId={selected.data.id}
+                            agreementId={agreement.id}
+                            agreement={agreement}
+                            d={all}
+                          />
+                        )
+                      )}
+                    </section>
+                  ) : (
+                    <p>{a.none}</p>
+                  ),
+                },
+              ]
+            : []),
           {
             id: 'queue',
             label: d.queue,

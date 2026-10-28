@@ -150,7 +150,10 @@
       "emptyPreview": "Aftaleteksten vises her, mens du skriver.",
       "newVersionHint": "Tag udgangspunkt i den aktive aftale. Udgivelse opretter en ny aktiv version, som skal godkendes igen.",
       "firstVersionHint": "Skriv aftalen på ét sprog. Tilføj flere sprog efter udgivelse."
-    }
+    },
+    "tabLabel": "Aftale",
+    "tabApproved": "godkendt",
+    "tabMissing": "ikke godkendt"
   },
   "quickIntake": {
     "typeInlineIntro": "Varetypen gemmes for hele butikken.",

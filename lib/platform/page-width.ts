@@ -1,4 +1,4 @@
-/** Opt in exact list/report routes. Nested details and new-entry pages stay narrow. */
+/** Opt in lists/reports and the drop-off review workspace; other details stay narrow. */
 const widePages = new Set([
   '/intake',
   '/intake/items',
@@ -23,5 +23,8 @@ const widePages = new Set([
 ])
 
 export function pageWidth(pathname: string): 'wide' | 'reading' {
-  return widePages.has(pathname) ? 'wide' : 'reading'
+  return widePages.has(pathname) ||
+    /^\/intake\/bags\/[^/]+\/inspect$/.test(pathname)
+    ? 'wide'
+    : 'reading'
 }

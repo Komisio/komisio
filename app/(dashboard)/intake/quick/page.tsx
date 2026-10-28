@@ -1,3 +1,4 @@
+import { readStoreCurrency } from '@/lib/engine/money'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import { FormHelpHeading } from '@/components/help/form-help-heading'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
@@ -26,7 +27,7 @@ export default async function QuickIntake() {
   })
   const profile =
     (policy.data?.policy?.intakeProfile as string | undefined) ?? 'quick'
-  const [sellers, printers, assistance, vocabulary, agreement] =
+  const [sellers, printers, assistance, vocabulary, agreement, currency] =
     await Promise.all([
       readSellersOverview(ctx.client, a.id, '', 12),
       readPrinters(ctx.client, a.id),
@@ -41,6 +42,7 @@ export default async function QuickIntake() {
         .order('version', { ascending: false })
         .limit(1)
         .maybeSingle(),
+      readStoreCurrency(ctx.client, a.id),
     ])
   if (agreement.error) throw new Error('Unable to read current agreement')
   const [groups, categories] = await Promise.all([
@@ -64,6 +66,7 @@ export default async function QuickIntake() {
         </p>
       ) : (
         <QuickReception
+          currency={currency}
           scanFocusLabel={all.scanFocus}
           key={a.id}
           tenantId={a.id}

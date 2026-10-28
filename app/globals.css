@@ -643,6 +643,7 @@ summary {
   margin-bottom: 24px;
   overflow-wrap: anywhere;
 }
+.bag-label h1,
 .bag-label h2 {
   font-size: 32px;
   margin: 16px 0;
@@ -687,6 +688,8 @@ summary {
   --paper: #f7f8f5;
   --control-line: #788e7d;
   --white: #fff;
+  --status-danger: #8f2828;
+  --status-danger-background: #fff0ed;
 }
 .accounting-routing-grid {
   display: grid;
@@ -3217,7 +3220,11 @@ button.text-link:hover:not(:disabled) {
 }
 
 .bag-reception-page {
-  max-width: 1100px;
+  width: 100%;
+  min-width: 0;
+}
+.bag-reception-page .quick-reception {
+  max-width: none;
 }
 .bag-quick-reception {
   grid-template-columns: 1fr;
@@ -6424,7 +6431,7 @@ button.text-link:hover:not(:disabled) {
 }
 .intake-overview .intake-seller {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   gap: 4px 16px;
   margin: 0;
   border-color: var(--line);
@@ -6443,17 +6450,10 @@ button.text-link:hover:not(:disabled) {
 .intake-overview .intake-seller small {
   grid-column: 1;
 }
-.intake-overview .intake-seller > span {
-  grid-column: 2;
-  grid-row: 1 / 3;
-  align-self: center;
-  color: var(--green);
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.intake-overview .intake-seller:hover {
+.intake-overview .intake-seller:hover,
+.intake-overview .intake-seller:focus-visible {
   border-color: var(--green);
+  background: var(--mint);
 }
 .receiving-seller-context {
   display: flex;
@@ -8326,6 +8326,51 @@ button.text-link:hover:not(:disabled) {
 }
 .workspace-tabpanel[hidden] {
   display: none;
+}
+.workspace-tablist > button[data-status] {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.workspace-tablist > button[data-status='approved'] {
+  background: var(--mint);
+  color: var(--green);
+  border-color: var(--green);
+}
+.workspace-tablist > button[data-status='missing'] {
+  background: var(--status-danger-background);
+  color: var(--status-danger);
+  border-color: var(--status-danger);
+}
+.workspace-tablist > button[data-status][aria-selected='true'] {
+  box-shadow: inset 0 -3px currentColor;
+}
+.price-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.price-input > input {
+  width: 160px;
+  max-width: 160px;
+  min-width: 0;
+}
+.price-input > span {
+  flex-shrink: 0;
+}
+@media print {
+  .bag-label-page .workspace-tablist {
+    display: none;
+  }
+}
+/* Match Tailwind's important base-layer hidden rule for browser printing. */
+@layer base {
+  @media print {
+    .bag-label-page #bag-label-print {
+      display: block !important;
+    }
+  }
 }
 .workspace-tabpanel:not([hidden]) {
   display: grid;

@@ -78,16 +78,12 @@ for (const locale of [
             .toBeLessThanOrEqual(viewport.width)
           const geometry = await row.evaluate((element) => {
             const name = element.querySelector('strong')!
-            const action = element.querySelector('span')!
             const box = element.getBoundingClientRect()
             const nameBox = name.getBoundingClientRect()
-            const actionBox = action.getBoundingClientRect()
             return {
               nameHeight: nameBox.height,
               lineHeight: Number.parseFloat(getComputedStyle(name).lineHeight),
               nameWidth: nameBox.width,
-              actionRight: actionBox.right,
-              rowRight: box.right,
               rowWidth: box.width,
               listWidth: element.closest('ul')!.clientWidth,
               height: box.height,
@@ -97,7 +93,7 @@ for (const locale of [
             geometry.lineHeight + 1,
           )
           expect(geometry.nameWidth).toBeGreaterThan(60)
-          expect(geometry.actionRight).toBeLessThanOrEqual(geometry.rowRight)
+          await expect(row).not.toContainText(d.intake.choose)
           // A single result must still use the entire list, not half a two-column grid.
           expect(geometry.rowWidth).toBeGreaterThanOrEqual(
             geometry.listWidth - 8,
@@ -189,7 +185,11 @@ for (const locale of [
       }
       // Match a real iPad tap in the WebKit project, including pointer/focus handling.
       if (testInfo.project.use.hasTouch) await row.tap()
-      else await row.click()
+      else {
+        await row.focus()
+        await expect(row).toBeFocused()
+        await row.press('Enter')
+      }
       await expect(page).toHaveURL(`/intake?seller=${seller}#new-seller`)
       await expect(page.locator('.receiving-seller-context')).toContainText(
         'Synthetic Alexandersson-Lindgren',

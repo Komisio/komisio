@@ -10,6 +10,7 @@ import {
   useUnsavedChanges,
 } from '@/components/platform/navigation-warning'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
+import { detailFromOrigin } from '@/lib/platform/return-navigation'
 import type { SellerChoice } from '@/lib/intake/seller-search'
 import type { Dictionary } from '@/lib/i18n'
 import type { Seller } from '@/lib/engine/intake'
@@ -30,6 +31,7 @@ export function ReceivingPanel({
   changeSellerLabel,
   expectedAgreementId = null,
   agreementBlocked = false,
+  agreementLink,
   registrationDestination = 'receiving',
   agreement,
   agreements,
@@ -47,6 +49,7 @@ export function ReceivingPanel({
   expectedAgreementId?: string | null
   registrationDestination?: 'receiving' | 'seller'
   agreementBlocked?: boolean
+  agreementLink?: { href: string; label: string }
   agreement?: AgreementSummary | null
   agreements?: Dictionary['agreements']
   onLockChange?: (locked: boolean) => void
@@ -85,13 +88,18 @@ export function ReceivingPanel({
     onLockChange?.(busy || locked)
   }, [busy, locked, onLockChange])
   const [error, setError] = useState('')
-  const [bagId, setBagId] = useState('')
   const [needsReload, setNeedsReload] = useState(false)
   // Sellers already registered with the typed details; null until checked.
   const [matches, setMatches] = useState<SellerMatches['matches'] | null>(null)
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (busy || needsReload || (agreementBlocked && !pending.current)) return
+    if (
+      busy ||
+      needsReload ||
+      (seller && confirmed) ||
+      (agreementBlocked && !pending.current)
+    )
+      return
     const form = event.currentTarget
     const fields = new FormData(form)
     const command =
@@ -161,7 +169,6 @@ export function ReceivingPanel({
     setLocked(true)
     setBusy(true)
     setError('')
-    setBagId('')
     try {
       const response = await fetch('/api/intake', {
         method: 'POST',
@@ -220,7 +227,15 @@ export function ReceivingPanel({
       setConfirmed(true)
       form.reset()
       resetDirty()
-      if (seller) setBagId(result.id)
+      if (seller)
+        router.push(
+          detailFromOrigin(
+            `/intake/bags/${result.id}`,
+            window.location.pathname +
+              window.location.search +
+              window.location.hash,
+          ),
+        )
       else if (onRegistered)
         onRegistered({
           id: result.id,
@@ -401,7 +416,16 @@ export function ReceivingPanel({
             </ul>
           </div>
         )}
-        {seller && agreementBlocked && <p>{d.agreementRequired}</p>}
+        {seller && agreementBlocked && (
+          <p>
+            {d.agreementRequired}{' '}
+            {agreementLink && (
+              <Link className="text-link" href={agreementLink.href}>
+                {agreementLink.label} →
+              </Link>
+            )}
+          </p>
+        )}
         {needsReload && (
           <a
             className="text-link"
@@ -418,7 +442,11 @@ export function ReceivingPanel({
         <Button
           type="submit"
           disabled={
-            !ready || busy || needsReload || (agreementBlocked && !locked)
+            !ready ||
+            busy ||
+            needsReload ||
+            Boolean(seller && confirmed) ||
+            (agreementBlocked && !locked)
           }
         >
           {busy
@@ -432,14 +460,6 @@ export function ReceivingPanel({
                   : d.saveSeller}
         </Button>
       </form>
-      {bagId && (
-        <div role="status" className="intake-success">
-          <p>{d.saved}</p>
-          <Link className="text-link" href={`/intake/bags/${bagId}`}>
-            {d.label}
-          </Link>
-        </div>
-      )}
     </section>
   )
 }

@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from '@/components/ui/workspace-tabs'
 import { BackLink } from '@/components/platform/back-link'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
@@ -59,86 +60,104 @@ export default async function BagLabel({
       <BackLink className="text-link no-print" href="/intake">
         {dictionary(ctx.locale).returnNavigation.back}
       </BackLink>
-      <div className="page-heading no-print">
-        <h1>{d.label}</h1>
-      </div>
-      <div className="bag-label-workspace">
-        <section className="bag-label-preview">
-          <h2 className="no-print">{d.labelPreview}</h2>
-          <article className="bag-label">
-            <strong>{ctx.active!.name}</strong>
-            <h2>
-              {d.bag} K-{bag.reference}
-            </h2>
-            <p>
-              {d.receivedAt}:{' '}
-              {new Date(bag.received_at).toLocaleDateString(
-                intlLocale(ctx.locale),
-                { timeZone: 'Europe/Stockholm' },
-              )}
-            </p>
-            <p>{d.awaiting}</p>
-          </article>
-        </section>
-        <section className="card bag-label-print no-print">
-          <h2>{d.print}</h2>
-          {hasPrinter ? (
-            <>
-              <PrintJobButton
-                tenantId={ctx.active!.id}
-                printers={printers}
-                kind="bag"
-                referenceKind="bag_receipt"
-                referenceId={id}
-                d={{ ...printing, queue: d.print }}
-                intake={d}
-                compact
-              />
-              <details className="bag-label-alternative">
-                <summary>{d.otherPrint}</summary>
-                <PrintLabel label={d.browserPrint} />
-              </details>
-            </>
-          ) : (
-            <PrintLabel label={d.print} />
-          )}
-        </section>
-      </div>
-      <div className="bag-label-next no-print">
-        <Link className="text-link" href={`/intake/bags/${id}/inspect`}>
-          {dictionary(ctx.locale).inspection.title} →
-        </Link>
-      </div>
-      <details className="card bag-label-agreement no-print">
-        <summary>{a.receiptAgreement}</summary>
-        <div className="intake-form">
-          {version.data ? (
-            <>
-              <Link
-                className="text-link"
-                href={`/intake/agreements?version=${version.data.id}`}
-              >
-                {version.data.title} · {a.version} {version.data.version}
-              </Link>
-              <p>
-                {evidence.data
-                  ? `${a.staffRecorded}: ${evidence.data.reference}`
-                  : a.noEvidence}
-              </p>
-            </>
-          ) : (
-            <p>
-              {policy.policy.agreementRequiredFor.length === 0
-                ? a.optionalReceiptAgreement
-                : a.noReceiptAgreement}
-            </p>
-          )}
-          <details>
-            <summary>{a.evidenceHelp}</summary>
-            <p>{a.evidenceNote}</p>
-          </details>
-        </div>
-      </details>
+      <WorkspaceTabs
+        id="bag-label"
+        label={d.bag}
+        tabs={[
+          {
+            id: 'print',
+            label: d.queueLabel,
+            content: (
+              <>
+                <div className="bag-label-workspace">
+                  <section className="bag-label-preview">
+                    <article className="bag-label">
+                      <strong>{ctx.active!.name}</strong>
+                      <h1>
+                        {d.bag} K-{bag.reference}
+                      </h1>
+                      <p>
+                        {d.receivedAt}:{' '}
+                        {new Date(bag.received_at).toLocaleDateString(
+                          intlLocale(ctx.locale),
+                          { timeZone: 'Europe/Stockholm' },
+                        )}
+                      </p>
+                    </article>
+                  </section>
+                  <section className="card bag-label-print no-print">
+                    <h2>{d.print}</h2>
+                    {hasPrinter ? (
+                      <>
+                        <PrintJobButton
+                          tenantId={ctx.active!.id}
+                          printers={printers}
+                          kind="bag"
+                          referenceKind="bag_receipt"
+                          referenceId={id}
+                          d={{ ...printing, queue: d.print }}
+                          intake={d}
+                          compact
+                        />
+                        <div className="bag-label-alternative">
+                          <PrintLabel label={d.browserPrint} />
+                        </div>
+                      </>
+                    ) : (
+                      <PrintLabel label={d.browserPrint} />
+                    )}
+                  </section>
+                </div>
+                <div className="bag-label-next no-print">
+                  <Link
+                    className="text-link"
+                    href={`/intake/bags/${id}/inspect`}
+                  >
+                    {dictionary(ctx.locale).inspection.title} →
+                  </Link>
+                </div>
+              </>
+            ),
+          },
+          {
+            id: 'agreement',
+            label: a.tabLabel,
+            status: {
+              approved: Boolean(evidence.data),
+              label: evidence.data ? a.tabApproved : a.tabMissing,
+            },
+            content: (
+              <section className="card bag-label-agreement no-print">
+                <h2>{a.receiptAgreement}</h2>
+                <div className="intake-form">
+                  {version.data ? (
+                    <>
+                      <Link
+                        className="text-link"
+                        href={`/intake/agreements?version=${version.data.id}`}
+                      >
+                        {version.data.title} · {a.version}{' '}
+                        {version.data.version}
+                      </Link>
+                      <p>
+                        {evidence.data
+                          ? `${a.staffRecorded}: ${evidence.data.reference}`
+                          : a.noEvidence}
+                      </p>
+                    </>
+                  ) : (
+                    <p>
+                      {policy.policy.agreementRequiredFor.length === 0
+                        ? a.optionalReceiptAgreement
+                        : a.noReceiptAgreement}
+                    </p>
+                  )}
+                </div>
+              </section>
+            ),
+          },
+        ]}
+      />
     </div>
   )
 }

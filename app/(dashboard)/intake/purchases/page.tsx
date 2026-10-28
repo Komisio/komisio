@@ -227,6 +227,8 @@ export default async function Purchases({
                               </div>
                             ) : active.role !== 'readonly' ? (
                               <AcceptItemForm
+                                currency={currency}
+                                locale={ctx.locale}
                                 compact
                                 tenantId={active.id}
                                 originKind="purchase"

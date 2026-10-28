@@ -557,6 +557,8 @@ export default async function Reception({
                 <p role="status">{all.items.acceptBlocked}</p>
               ) : write ? (
                 <AcceptItemForm
+                  currency={policy.policy.currency ?? 'SEK'}
+                  locale={ctx.locale}
                   returnTo={intakeHref}
                   key={`${tenant.id}:${id.data}`}
                   tenantId={tenant.id}

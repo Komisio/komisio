@@ -1,5 +1,7 @@
 'use client'
 
+import { Check, TriangleAlert } from 'lucide-react'
+
 import {
   createContext,
   useEffect,
@@ -45,6 +47,7 @@ export function WorkspaceTabs({
     id: string
     label: string
     notice?: string
+    status?: { approved: boolean; label: string }
     content: ReactNode
     anchors?: string[]
   }[]
@@ -148,8 +151,19 @@ export function WorkspaceTabs({
               type="button"
               disabled={!ready || searching}
               role="tab"
+              data-status={
+                tab.status
+                  ? tab.status.approved
+                    ? 'approved'
+                    : 'missing'
+                  : undefined
+              }
               aria-label={
-                tab.notice ? `${tab.label} — ${tab.notice}` : undefined
+                tab.status
+                  ? `${tab.label} — ${tab.status.label}`
+                  : tab.notice
+                    ? `${tab.label} — ${tab.notice}`
+                    : undefined
               }
               aria-selected={selected === tab.id}
               aria-controls={`${id}-${tab.id}`}
@@ -173,6 +187,12 @@ export function WorkspaceTabs({
                 }
               }}
             >
+              {tab.status &&
+                (tab.status.approved ? (
+                  <Check size={18} aria-hidden="true" />
+                ) : (
+                  <TriangleAlert size={18} aria-hidden="true" />
+                ))}
               {tab.label}
               {tab.notice && (
                 <span aria-hidden="true" title={tab.notice}>

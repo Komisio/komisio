@@ -706,6 +706,7 @@
     "store.flow.updated": "Negozio · Flusso negozio · Modifica",
     "store_guide.saved": "Guida negozio · Salvataggio",
     "store_mail.auto_setting": "Email negozio · Esecuzione automatica · Modifica",
+    "store_app.visibility": "App mobile · Visibilità del negozio · Modifica",
     "store_mail.confirmed": "Email negozio · Conferma",
     "store_policy.published": "Le regole del negozio sono state aggiornate",
     "store_profile.published": "Profilo negozio · Pubblicazione",
@@ -1193,7 +1194,12 @@
     "country": "Paese",
     "countryHelp": "Il paese del negozio determina la valuta per l'acquisto dei crediti AI.",
     "noHours": "Nessun orario indicato",
-    "hoursHint": "Seleziona i giorni per cui vuoi indicare gli orari. Deselezionando un giorno, i suoi orari non verranno pubblicati."
+    "hoursHint": "Seleziona i giorni per cui vuoi indicare gli orari. Deselezionando un giorno, i suoi orari non verranno pubblicati.",
+    "appTitle": "App mobile",
+    "appHint": "Se attivo, il negozio compare nell'elenco dei negozi dell'app mobile di Komisio, così i venditori possono trovarlo e accedere. Lì viene mostrato solo il nome del negozio.",
+    "appLabel": "Mostra il negozio nell'app mobile",
+    "appSave": "Salva",
+    "appSaved": "Salvato."
   },
   "storePolicy": {
     "markdowns": "Ribassi",

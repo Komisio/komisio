@@ -706,6 +706,7 @@
     "store.flow.updated": "Myymälä · Myymälän työnkulku · Muutos",
     "store_guide.saved": "Myymäläopas · Tallennus",
     "store_mail.auto_setting": "Myymälän sähköposti · Automaattinen ajo · Muutos",
+    "store_app.visibility": "Mobiilisovellus · Myymälän näkyvyys · Muutos",
     "store_mail.confirmed": "Myymälän sähköposti · Vahvistus",
     "store_policy.published": "Myymälän käytäntö päivitettiin",
     "store_profile.published": "Myymäläprofiili · Julkaisu",
@@ -1193,7 +1194,12 @@
     "country": "Maa",
     "countryHelp": "Kaupan maa määrittää AI-krediittiostojen valuutan.",
     "noHours": "Aikoja ei ole annettu",
-    "hoursHint": "Valitse päivät, joille haluat antaa ajat. Jos poistat päivän valinnan, sen aikoja ei julkaista."
+    "hoursHint": "Valitse päivät, joille haluat antaa ajat. Jos poistat päivän valinnan, sen aikoja ei julkaista.",
+    "appTitle": "Mobiilisovellus",
+    "appHint": "Kun tämä on päällä, myymälä näkyy Komision mobiilisovelluksen myymäläluettelossa, jotta myyjät löytävät sen ja voivat kirjautua sisään. Siellä näytetään vain myymälän nimi.",
+    "appLabel": "Näytä myymälä mobiilisovelluksessa",
+    "appSave": "Tallenna",
+    "appSaved": "Tallennettu."
   },
   "storePolicy": {
     "markdowns": "Alennukset",

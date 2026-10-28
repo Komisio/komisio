@@ -706,6 +706,7 @@
     "store.flow.updated": "Tienda · Flujo de tienda · Cambio",
     "store_guide.saved": "Guía de tienda · Guardado",
     "store_mail.auto_setting": "Correo de tienda · Ejecución automática · Cambio",
+    "store_app.visibility": "Aplicación móvil · Visibilidad de la tienda · Cambio",
     "store_mail.confirmed": "Correo de tienda · Confirmación",
     "store_policy.published": "Se actualizó la política de la tienda",
     "store_profile.published": "Perfil de tienda · Publicación",
@@ -1193,7 +1194,12 @@
     "country": "País",
     "countryHelp": "El país de la tienda determina la moneda para las compras de créditos de IA.",
     "noHours": "Sin horario indicado",
-    "hoursHint": "Selecciona los días para los que quieras indicar un horario. Si desmarcas un día, no se publicará su horario."
+    "hoursHint": "Selecciona los días para los que quieras indicar un horario. Si desmarcas un día, no se publicará su horario.",
+    "appTitle": "Aplicación móvil",
+    "appHint": "Si está activado, la tienda aparece en la lista de tiendas de la aplicación móvil de Komisio, para que los vendedores la encuentren e inicien sesión. Allí solo se muestra el nombre de la tienda.",
+    "appLabel": "Mostrar la tienda en la aplicación móvil",
+    "appSave": "Guardar",
+    "appSaved": "Guardado."
   },
   "storePolicy": {
     "markdowns": "Rebajas",

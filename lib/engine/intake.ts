@@ -59,7 +59,10 @@ import {
   publishAccountingMapCommand,
   exportDayCloseCommand,
 } from './accounting'
-import { publishStoreProfileCommand } from './store-profile'
+import {
+  publishStoreProfileCommand,
+  setStoreAppVisibilityCommand,
+} from './store-profile'
 import { receiveHandoverCommand } from './handovers'
 import { z } from 'zod'
 import { agreementApproval } from './agreement-workspace'
@@ -110,6 +113,7 @@ export const intakeCommand = z.discriminatedUnion('action', [
   publishAccountingMapCommand,
   exportDayCloseCommand,
   publishStoreProfileCommand,
+  setStoreAppVisibilityCommand,
   receiveHandoverCommand,
   acceptItemCommand,
   recordSaleCommand,
@@ -386,6 +390,13 @@ export async function executeIntake(client: SupabaseClient, input: unknown) {
         p_id: c.requestId,
         p_expected_current: c.expectedCurrentId,
         p_profile: c.profile,
+      })
+    case 'setStoreAppVisibility':
+      return client.rpc('set_store_app_visibility', {
+        p_tenant: c.tenantId,
+        p_id: c.requestId,
+        p_expected: c.expectedCurrentId,
+        p_visible: c.visible,
       })
     case 'publishAccountingMap':
       return client.rpc('publish_accounting_map', {

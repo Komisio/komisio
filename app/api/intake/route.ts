@@ -63,6 +63,7 @@ export async function POST(request: Request) {
         'registerPrinter',
         'publishAccountingMap',
         'publishStoreProfile',
+        'setStoreAppVisibility',
       ].includes(parsed.data.action) &&
       !['owner', 'admin'].includes(ctx.active.role)
     )

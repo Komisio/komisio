@@ -73,24 +73,42 @@ for (const mode of ['bag', 'quick'] as const) {
       await expect(page).toHaveURL(new RegExp(intake))
       if (mode === 'bag') {
         const listing = `${intake}?itemSort=title&itemDirection=desc&itemPage=1`
-        await page.goto(listing)
-        await page.locator('.inventory-open-item').click()
-        await expect(page).toHaveURL(/\/intake\/items\/[0-9a-f-]{36}/)
-        await page.reload()
-        await expect(back).toHaveAttribute(
-          'href',
-          `${listing}#inventory-item-${itemId}`,
-        )
-        await back.click()
-        await expect(page).toHaveURL(
-          new URL(`${listing}#inventory-item-${itemId}`, page.url()).href,
-        )
-        await expect(page.locator('.inventory-row')).toBeInViewport()
-        await expect(page.locator('#quick-description')).not.toBeFocused()
-        await page.reload()
-        // Reload must not re-arm an unrelated editor either. The explicit
-        // return link's scroll position is checked above before reloading.
-        await expect(page.locator('#quick-description')).not.toBeFocused()
+        // Exercise the visible listing at both supported viewport sizes;
+        // streamed hidden markup must not be mistaken for another user link.
+        for (const width of [320, 1280]) {
+          await page.setViewportSize({ width, height: 800 })
+          await page.goto(listing)
+          await page
+            .getByRole('link', {
+              name: `${d.inventoryWorkspace.open}: Synthetic navigation item`,
+              exact: true,
+            })
+            .click()
+          await expect(page).toHaveURL(/\/intake\/items\/[0-9a-f-]{36}/)
+          await page.reload()
+          await expect(back).toHaveAttribute(
+            'href',
+            `${listing}#inventory-item-${itemId}`,
+          )
+          await back.click()
+          await expect(page).toHaveURL(
+            new URL(`${listing}#inventory-item-${itemId}`, page.url()).href,
+          )
+          await expect(
+            page.getByRole('row').filter({
+              has: page.getByRole('link', {
+                name: `${d.inventoryWorkspace.open}: Synthetic navigation item`,
+                exact: true,
+              }),
+            }),
+          ).toBeInViewport()
+          await expect(page.locator('#quick-description')).not.toBeFocused()
+          await page.reload()
+          // Reload must not re-arm an unrelated editor either. The explicit
+          // return link's scroll position is checked above before reloading.
+          await expect(page.locator('#quick-description')).not.toBeFocused()
+        }
+        await page.setViewportSize({ width: 320, height: 800 })
         // The stepwise registration page for a bag item also returns to its bag.
         await page.goto(`/intake/reception/${session}`)
         await expect(back).toHaveAttribute('href', intake)

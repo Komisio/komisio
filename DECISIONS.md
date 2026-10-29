@@ -1272,3 +1272,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-28: Owner adds a store setting "Show the store in the mobile app", off by default. Owner/admin change it as versioned rows; anon public_app_stores() lists id, name and slug of visible stores only, replacing the earlier app's test-store code.
 - 2026-10-28: Store catalogue for the mobile app: one seller account of an app-visible store reads items for sale (title, price, fixed facts, current photos) via store_catalogue(_item); photos open to it only while listed. No seller, terms or history exposed.
+- 2026-10-29: #725 projects inherited catalogue photos only through existing metadata-free seller JPEG derivatives; missing derivatives are omitted and originals remain staff-only. Exact listing/MFA and authenticated download/info guards apply. Ship compatible mobile descriptors first.

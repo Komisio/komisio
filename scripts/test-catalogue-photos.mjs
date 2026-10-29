@@ -75,18 +75,20 @@ async function allowed(app, photo) {
   assert.ifError((await bucket.info(photo.path)).error)
   const downloaded = await bucket.download(photo.path)
   assert.ifError(downloaded.error)
-  assert.equal(
-    (await sharp(Buffer.from(await downloaded.data.arrayBuffer())).metadata())
-      .width,
-    20,
-  )
+  const bytes = Buffer.from(await downloaded.data.arrayBuffer())
+  const metadata = await sharp(bytes).metadata()
+  assert.equal(metadata.width, 20)
+  assert.equal(metadata.exif, undefined, 'seller image has no EXIF')
+  assert.equal(metadata.xmp, undefined, 'seller image has no XMP')
+  assert.equal(metadata.icc, undefined, 'seller image has no ICC')
+  return bytes
 }
 try {
   async function identity(prefix) {
     const user = randomUUID(),
       email = `${prefix}-${user}@example.test`,
       password = randomUUID() + 'aA!3'
-    // Auth setup only; all domain/photo operations below use their engines.
+    // Auth setup only; domain operations below use their engines.
     await db.query(
       `insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at,confirmation_token,recovery_token,email_change_token_new,email_change)
       values($1,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',$2,extensions.crypt($3,extensions.gen_salt('bf')),now(),'{"provider":"email","providers":["email"]}','{}',now(),now(),'','','','')`,
@@ -147,6 +149,7 @@ try {
   const bytes = await sharp({
     create: { width: 20, height: 12, channels: 3, background: '#145a93' },
   })
+    .withExif({ IFD0: { Artist: 'Synthetic private fixture metadata' } })
     .jpeg()
     .toBuffer()
   const source = await uploadReceptionPhoto(
@@ -183,11 +186,26 @@ try {
     },
     bytes,
   )
-  const photos = changed.state.photos
-  assert.equal(photos.length, 2)
-  const direct = photos.find((p) => p.id === photoId)
-  const inherited = photos.find((p) => p.id === inheritedId)
-  assert.ok(direct && inherited)
+  const staffPhotos = changed.state.photos
+  assert.equal(staffPhotos.length, 2)
+  const direct = staffPhotos.find((p) => p.id === photoId)
+  const original = staffPhotos.find((p) => p.id === inheritedId)
+  assert.ok(direct && original)
+  const inherited = {
+    id: inheritedId,
+    bucket: 'seller-reception-photos',
+    path: `${tenant}/${session}/${inheritedId}.jpg`,
+  }
+  const photos = [inherited, direct]
+  const originalRead = await owner.app.storage
+    .from(original.bucket)
+    .download(original.path)
+  assert.ifError(originalRead.error)
+  assert.ok(
+    (await sharp(Buffer.from(await originalRead.data.arrayBuffer())).metadata())
+      .exif,
+    'fixture original retains its metadata for staff',
+  )
   for (const photo of photos) await denied(reader.app, photo, 'hidden store')
   await visible(true)
   const page = await reader.app.rpc('store_catalogue_item', {
@@ -196,9 +214,20 @@ try {
   })
   assert.ifError(page.error)
   assert.equal(page.data.photos.length, 2)
+  assert.deepEqual(page.data.photos, photos)
+  assert.equal(
+    page.data.photos[0].id,
+    changed.state.defaultPhotoId,
+    'default photo stays first',
+  )
+  await denied(reader.app, original, 'originals stay private even while listed')
   const anon = client()
   for (const photo of photos) {
-    await allowed(reader.app, photo)
+    assert.deepEqual(
+      await allowed(reader.app, photo),
+      await allowed(owner.app, photo),
+      'seller receives exact safe derivative bytes',
+    )
     await denied(outsider.app, photo, 'unrelated identity')
     await denied(anon, photo, 'anonymous')
     const bucket = reader.app.storage.from(photo.bucket)
@@ -219,6 +248,53 @@ try {
       'seller cannot enumerate storage objects',
     )
   }
+  // A legacy upload with no pre-existing derivative is omitted, not exposed or
+  // backfilled by a read. Deliberately upload only the original fixture bytes.
+  const legacySession = randomUUID(),
+    legacyId = randomUUID()
+  await rpc('create_reception_session', {
+    p_tenant: tenant,
+    p_id: legacySession,
+    p_seller: consignor,
+  })
+  const legacyPath = `${tenant}/${legacySession}/${legacyId}.jpg`
+  const legacyUpload = await owner.app.storage
+    .from('reception-photos')
+    .upload(legacyPath, bytes, {
+      contentType: 'image/jpeg',
+      upsert: false,
+      cacheControl: '0',
+    })
+  assert.ifError(legacyUpload.error)
+  await rpc('save_reception_sources', {
+    p_tenant: tenant,
+    p_request: randomUUID(),
+    p_session: legacySession,
+    p_expected: 0,
+    p_sources: [
+      { id: legacyId, kind: 'photo', reference: legacyPath, observation: '' },
+    ],
+  })
+  const legacyItem = await rpc('quick_receive', {
+    p_tenant: tenant,
+    p_request: randomUUID(),
+    p_session: legacySession,
+    p_seller: consignor,
+    p_expected: 1,
+    p_facts: { description: 'Synthetic legacy photo item' },
+    p_price_ore: 25000,
+  })
+  const legacyDetail = await reader.app.rpc('store_catalogue_item', {
+    p_tenant: tenant,
+    p_item: legacyItem.itemId,
+  })
+  assert.ifError(legacyDetail.error)
+  assert.deepEqual(legacyDetail.data.photos, [])
+  await denied(
+    reader.app,
+    { bucket: 'reception-photos', path: legacyPath },
+    'legacy original is not a fallback',
+  )
   // Enroll and verify a real factor; an old aal1 token must stop working.
   const oldSession = client(reader.token)
   const factor = await reader.app.auth.mfa.enroll({
@@ -265,7 +341,7 @@ try {
   })
   await denied(verifiedReader, inherited, 'item sold')
   console.log(
-    'PASS: real local Storage info/download for item and inherited photos; anonymous/foreign/MFA denial; signing, bulk signing and listing denied; hiding/detaching/selling revoke subsequent reads; staff access unchanged. Synthetic local fixtures only.',
+    'PASS: real local Storage metadata-free item/inherited derivatives and exact bytes; originals remain private, missing derivative omitted; anonymous/foreign/MFA denial; signing, bulk signing and listing denied; hiding/detaching/selling revoke subsequent reads; staff original access unchanged. Synthetic local fixtures only.',
   )
 } finally {
   try {

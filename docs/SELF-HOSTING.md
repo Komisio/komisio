@@ -38,6 +38,41 @@ changing the worker identity creates a new cutover. Existing claims and message
 history remain intact. Check provider evidence for unknown outcomes; do not delete
 claims, resend them, or backdate activation to recover an uncertain delivery.
 
+## Mobile seller commands
+
+`POST /api/mobile/v1/seller` is an opt-in bearer-token endpoint for the Expo
+seller app. Set both `KOMISIO_INTAKE_ENABLED=true` and
+`KOMISIO_MOBILE_API_ENABLED=true` only after verifying the intended release.
+The API uses the configured public Supabase project key and the caller's access
+token; it neither accepts browser-cookie identity nor needs a service-role key.
+It validates verified email, password-recovery state, MFA and the exact seller
+account before invoking the existing engine. Staff membership alone grants no
+access through this endpoint. Existing browser portal routes are unchanged.
+
+Native clients send `Authorization: Bearer <access-token>` and JSON without an
+Origin header. For a web build, set `KOMISIO_MOBILE_ALLOWED_ORIGINS` to a comma-
+separated list of exact HTTPS origins, with no path, trailing slash or wildcard.
+HTTP is accepted only for explicitly listed loopback origins, such as
+`http://127.0.0.1:8082`, for local tests. An empty setting permits native clients
+only. Preflight allows POST and Authorization/Content-Type; no credentialed CORS
+is enabled. Origin is an additional browser restriction, never identity proof.
+
+The strict actions are `requestPayout` (integer `amountOre`), `saveBank`
+(`expected` version and the existing bank details shape), and `acceptAgreement`
+(`agreementId`, optional exact `translationId`). Each includes `tenantId`,
+`sellerId` and a UUID `requestId`. Input is capped at 8 KiB of streamed UTF-8 JSON.
+Payout approval/payment and staff bank review are not exposed.
+
+Clients must persist an immutable pending command and its request ID until its
+outcome is known. Retry a timeout or HTTP 503 with exactly that command; do not
+create a replacement payout request or substitute newer bank/agreement data.
+Safe 409 responses identify conflicts or current engine preconditions. A 200
+returns `{ok:true,id}`; agreement acceptance may return existing equivalent
+evidence with a different ID. HTTP 401 requires sign-in; `MFA_REQUIRED` requires
+verification and `PASSWORD_UPDATE_REQUIRED` requires completing recovery.
+There is no new financial rule or database grant in this transport. Code-level
+checks do not establish native-client or hosted verification.
+
 ## Verified local setup
 
 The application runs without an AI key, paid API or hosted Supabase project.

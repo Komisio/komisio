@@ -2,6 +2,8 @@ begin;
 \ir bag-reception-fixture.inc
 create extension if not exists pgtap with schema extensions;
 select no_plan();
+-- Emulate the operation assigned by Storage, not an HTTP caller header.
+select set_config('storage.operation','storage.object.get_authenticated',true);
 insert into auth.users(id,email,email_confirmed_at) values
  ('d4350000-0000-4000-8000-000000000001','catalogue-owner@example.test',now()),
  ('d4350000-0000-4000-8000-000000000002','catalogue-reader@example.test',now()),
@@ -114,6 +116,34 @@ select is(catalogue_photo_access('item-photos',:'scarfpath'),false,'photos of an
 select is((select count(*) from storage.objects where bucket_id='item-photos' and name=:'scarfpath'),0::bigint,'storage policy refuses the expired item photo');
 select is((:'page'::jsonb)->'items'->0->'photo'->>'bucket','reception-photos','inherited reception photo is listed');
 select is((select count(*) from storage.objects where bucket_id='reception-photos' and name=:'reception_path'),1::bigint,'storage policy admits an inherited reception photo');
+-- Info is the authenticated CDN preflight; listing/signing must not turn the
+-- temporary catalogue grant into a persistent unauthenticated capability.
+select set_config('storage.operation','object.get_authenticated_info',true);
+select is(catalogue_photo_access('item-photos',:'path'),true,'unprefixed authenticated info permits current item photo');
+select is(catalogue_photo_access('reception-photos',:'reception_path'),true,'unprefixed authenticated info permits inherited photo');
+select set_config('storage.operation','storage.object.get_authenticated_info',true);
+select is(catalogue_photo_access('item-photos',:'path'),true,'prefixed authenticated info permits current item photo');
+select is(catalogue_photo_access('reception-photos',:'reception_path'),true,'prefixed authenticated info permits inherited photo');
+select set_config('storage.operation','object.get_authenticated',true);
+select is(catalogue_photo_access('item-photos',:'path'),true,'unprefixed authenticated download permits current item photo');
+select is(catalogue_photo_access('reception-photos',:'reception_path'),true,'unprefixed authenticated download permits inherited photo');
+select set_config('test.current_photo',:'path',true),set_config('test.inherited_photo',:'reception_path',true);
+create function pg_temp.denied_catalogue_operations() returns setof text language plpgsql as $$
+declare op text;
+begin
+ foreach op in array array['storage.object.sign','object.sign','storage.object.list','object.list','storage.object.get_public','object.get_signed','object.upload','unknown',''] loop
+  perform set_config('storage.operation',op,true);
+  return next is(public.catalogue_photo_access('item-photos',current_setting('test.current_photo')),false,'item catalogue hook denies operation: '||op);
+  return next is(public.catalogue_photo_access('reception-photos',current_setting('test.inherited_photo')),false,'inherited catalogue hook denies operation: '||op);
+  return next is((select count(*) from storage.objects where (bucket_id='item-photos' and name=current_setting('test.current_photo')) or (bucket_id='reception-photos' and name=current_setting('test.inherited_photo'))),0::bigint,'seller storage policies deny operation: '||op);
+ end loop;
+end $$;
+select * from pg_temp.denied_catalogue_operations();
+-- A user-controlled request header cannot supply the trusted Storage operation.
+select set_config('request.headers','{"storage.operation":"storage.object.get_authenticated"}',true);
+select is(catalogue_photo_access('item-photos',:'path'),false,'forged HTTP operation header cannot grant access');
+select set_config('request.headers','{}',true);
+select set_config('storage.operation','storage.object.get_authenticated',true);
 select is(catalogue_photo_access('reception-photos',:'path'),false,'photo is matched with its bucket');
 select is(catalogue_photo_access('item-photos','not/a/path.jpg'),false,'malformed paths are refused');
 select throws_like(format($$insert into storage.objects(bucket_id,name) values('item-photos',%L)$$,:'tenant'||'/'||:'coat'||'/'||gen_random_uuid()||'.jpg'),'%row-level security%','sellers still cannot upload item photos');
@@ -141,5 +171,11 @@ select set_store_app_visibility(:'tenant',gen_random_uuid(),current_setting('tes
 set local "request.jwt.claims"='{"sub":"d4350000-0000-4000-8000-000000000002","role":"authenticated"}';
 select throws_ok($$select store_catalogue_item(current_setting('test.tenant')::uuid,null)$$,'42501','FORBIDDEN','hiding the store closes the catalogue');
 select is((select count(*) from storage.objects where bucket_id='item-photos' and name=:'path'),0::bigint,'hiding the store closes photos');
+-- The correction narrows only the catalogue seller grant; staff retains its
+-- existing independent item/reception photo access even for a hidden store.
+set local "request.jwt.claims"='{"sub":"d4350000-0000-4000-8000-000000000001","role":"authenticated"}';
+select set_config('storage.operation','storage.object.sign',true);
+select is((select count(*) from storage.objects where bucket_id='item-photos' and name=:'path'),1::bigint,'existing staff item-photo permissions remain unchanged');
+select is((select count(*) from storage.objects where bucket_id='reception-photos' and name=:'reception_path'),1::bigint,'existing staff reception-photo permissions remain unchanged');
 select * from finish();
 rollback;

@@ -30,6 +30,7 @@
     "test:concurrency": "node scripts/owner-race.mjs",
     "backup:exercise": "node scripts/backup-exercise.mjs",
     "test:seller-photos": "node --import tsx scripts/test-seller-photos.mjs",
+    "test:catalogue-photos": "node --import tsx scripts/test-catalogue-photos.mjs",
     "test:seller-submissions": "node --import tsx scripts/test-seller-submissions.mjs",
     "help:build": "node scripts/build-help-content.mjs",
     "prebuild": "node scripts/build-help-content.mjs --check"

@@ -1272,3 +1272,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-10-28: Owner adds a store setting "Show the store in the mobile app", off by default. Owner/admin change it as versioned rows; anon public_app_stores() lists id, name and slug of visible stores only, replacing the earlier app's test-store code.
 - 2026-10-28: Store catalogue for the mobile app: one seller account of an app-visible store reads items for sale (title, price, fixed facts, current photos) via store_catalogue(_item); photos open to it only while listed. No seller, terms or history exposed.
+- 2026-10-29: #723 restricts the catalogue seller photo hook to authenticated Storage download/info operations. Signing, listing and unknown operations are denied; existing staff access and seller identity/MFA, visible-store and current-for-sale checks remain unchanged.

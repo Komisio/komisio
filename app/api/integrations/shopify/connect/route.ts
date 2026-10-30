@@ -4,7 +4,7 @@ import { platformContext } from '@/lib/platform/context'
 import { startShopifyConnection } from '@/lib/engine/shopify-connection'
 import { shopDomain } from '@/extensions/shopify/auth'
 
-export const STATE_COOKIE = 'komisio-shopify-state'
+import { STATE_COOKIE } from '@/extensions/shopify/cookies'
 
 /** Starts the Shopify authorisation for the active store and a named shop; owner or admin. */
 export async function GET(request: Request) {

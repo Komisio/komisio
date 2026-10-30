@@ -4766,7 +4766,8 @@
       "receptions": "Registreringar",
       "proposals": "Förslag",
       "settings": "Inställningar"
-    }
+    },
+    "deactivateHint": "Välj Redigera och avmarkera ”Kan väljas för nya varor” för att inaktivera posten. Historiken finns kvar."
   },
   "storeMail": {
     "title": "Mejla säljare",

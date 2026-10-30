@@ -4766,7 +4766,8 @@
       "receptions": "Registrations",
       "proposals": "Proposals",
       "settings": "Settings"
-    }
+    },
+    "deactivateHint": "Choose Edit and clear “Available for new items” to deactivate this entry. Its history is kept."
   },
   "storeMail": {
     "title": "Email sellers",

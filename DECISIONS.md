@@ -1277,3 +1277,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-28: #717 adds exact own-item detail and an expiring filter for the existing period_ending stage. Both reuse seller identity/MFA and existing lifecycle, price and date facts; no new financial rule, photos, staff notes or Storage access.
 - 2026-10-29: #723 restricts the catalogue seller photo hook to authenticated Storage download/info operations. Signing, listing and unknown operations are denied; existing staff access and seller identity/MFA, visible-store and current-for-sale checks remain unchanged.
 - 2026-10-29: #725 projects inherited catalogue photos only through existing metadata-free seller JPEG derivatives; missing derivatives are omitted and originals remain staff-only. Exact listing/MFA and authenticated download/info guards apply. Ship compatible mobile descriptors first.
+
+- 2026-10-30: #732 allows repair or retirement of existing item-type name collisions. Unchanged colliding translations may remain during edits; new collisions and reactivation with collisions are rejected. Tenant locks, stale-edit checks and historical deletion protection remain.

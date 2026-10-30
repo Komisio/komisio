@@ -4772,7 +4772,8 @@
       "receptions": "Erfassungen",
       "proposals": "Vorschläge",
       "settings": "Einstellungen"
-    }
+    },
+    "deactivateHint": "Wähle Bearbeiten und deaktiviere die Auswahl für neue Artikel. Der Eintrag wird inaktiv; seine Historie bleibt erhalten."
   },
   "storeMail": {
     "title": "Verkäufern mailen",

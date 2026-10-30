@@ -4766,7 +4766,8 @@
       "receptions": "Registreringer",
       "proposals": "Forslag",
       "settings": "Innstillinger"
-    }
+    },
+    "deactivateHint": "Velg Rediger og fjern avkrysningen for nye varer for å deaktivere oppføringen. Historikken beholdes."
   },
   "storeMail": {
     "title": "Send e-post til selgere",

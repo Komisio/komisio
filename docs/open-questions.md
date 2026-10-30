@@ -836,6 +836,12 @@ groups, including store-created defaults. Any current or historical reference
 blocks deletion with usage information. Shared platform records are excluded;
 this does not authorize merging, reassignment or deletion of item history.
 
+Duplicate item-type repair (#732, 2026-10-30): existing translated-name
+collisions must not block renaming another translation or deactivating the
+type. New conflicting labels and reactivation with collisions remain rejected.
+Used duplicates are retired through the existing inactive setting; historical
+references still prevent deletion. No merging or reassignment is introduced.
+
 Inspection drafts (resolved 2026-10-15, #458): the owner explicitly permits deleting all inspection revisions, including accepted source descriptions, without snapshots or conversion to items. Existing items keep IDs, prices, terms and later corrections. New bag items use direct reception.
 
 Unused seller-agreement deletion (resolved in owner issue #490): an owner or admin may permanently remove a version only when nothing links it. Links are acceptance evidence, bag receipts, reception reviews, frozen item terms and sale lines. Translations of that version are removed with it and are not themselves a link. The previous version becomes current when the latest unused version is removed. Version numbers are not reused. Evidence and linked versions stay immutable. Correction of mistaken evidence that does exist remains open above.

@@ -28,6 +28,19 @@ test('catalogue editing follows existing items and retains inactive choices', as
         JSON.stringify([{ slug: 'description', expected: true, sort: 0 }]),
       ])
     ).rows[0].create_item_type
+    // Historical settings can contain duplicate translations. Changing the
+    // Swedish name must not require renaming every other language first.
+    for (const typeSlug of [slug, 'legacy_duplicate']) {
+      await f.db.query('select set_item_type($1,$2,$3)', [
+        f.tenant,
+        typeSlug,
+        {
+          labels: { sv: 'Synthetic type', en: 'Legacy duplicate' },
+          active: true,
+          attributes: [{ slug: 'description', expected: true, sort: 0 }],
+        },
+      ])
+    }
     await f.db.query('select classify_items($1,$2,$3,$4,null)', [
       f.tenant,
       randomUUID(),
@@ -76,11 +89,34 @@ test('catalogue editing follows existing items and retains inactive choices', as
     await page.goto(`/intake/items/${item}`)
     await expect(page.getByText('Ytterkläder', { exact: true })).toBeVisible()
     await page.goto('/settings?tab=vocabulary#vocabulary-types')
+    // Both types intentionally look identical; the first is used by this item.
+    const typeRows = page.getByRole('row').filter({
+      has: page.getByRole('rowheader', { name: 'Synthetic type', exact: true }),
+    })
+    await expect(typeRows).toHaveCount(2)
+    // Stable slug ordering places the created custom type before legacy_duplicate.
+    const usedRow = typeRows.first()
+    await usedRow
+      .getByRole('button', {
+        name: `${d.catalogueDeletion.remove}: Synthetic type`,
+        exact: true,
+      })
+      .click()
+    await usedRow
+      .getByRole('button', {
+        name: d.catalogueDeletion.confirmAction,
+        exact: true,
+      })
+      .click()
+    await expect(usedRow.getByRole('alert')).toContainText(
+      d.catalogueDeletion.deactivateHint,
+    )
     await page
       .getByRole('row')
       .filter({
         has: page.getByRole('rowheader').filter({ hasText: 'Synthetic type' }),
       })
+      .first()
       .getByRole('button', { name: d.catalogueEditing.edit, exact: true })
       .click()
     const typeEditor = page.getByRole('form', {

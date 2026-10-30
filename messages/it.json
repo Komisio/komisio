@@ -4766,7 +4766,8 @@
       "receptions": "Registrazioni",
       "proposals": "Proposte",
       "settings": "Impostazioni"
-    }
+    },
+    "deactivateHint": "Scegli Modifica e deseleziona l’opzione per i nuovi articoli per disattivare questa voce. La cronologia viene conservata."
   },
   "storeMail": {
     "title": "Invia email ai venditori",

@@ -90,7 +90,7 @@ select store_catalogue(:'tenant','',0) as page \gset
 select is((:'page'::jsonb)->>'total','3','only unsold, unended items inside their period are listed');
 select is((:'page'::jsonb)->>'currency','SEK','page carries the store currency');
 select is((select array_agg(x->>'title' order by n) from jsonb_array_elements((:'page'::jsonb)->'items') with ordinality e(x,n)),array['Synthetic quick shirt','Synthetic lamp','Synthetic wool coat'],'newest first');
-select is((select array_agg(k order by k) from jsonb_object_keys((:'page'::jsonb)->'items'->2) k),array['category','id','photo','priceOre','title'],'list rows carry no seller, terms or history');
+select is((select array_agg(k order by k) from jsonb_object_keys((:'page'::jsonb)->'items'->2) k),array['category','facts','id','photo','priceOre','title'],'list rows carry no seller, terms or history');
 select is(((:'page'::jsonb)->'items'->2->>'priceOre')::bigint,25000::bigint,'current price is listed');
 select is((:'page'::jsonb)->'items'->2->'photo'->>'path',:'path','default photo is the current one');
 select is((:'page'::jsonb)->'items'->1->'photo','null'::jsonb,'item without photos has none');
@@ -98,6 +98,9 @@ select is(store_catalogue(:'tenant','wool',0)->>'total','1','search matches titl
 select is(store_catalogue(:'tenant','',30)->'items','[]'::jsonb,'later pages may be empty');
 select throws_like($$select store_catalogue(current_setting('test.tenant')::uuid,'',-1)$$,'%INVALID_INPUT%','negative offset refused');
 select store_catalogue_item(:'tenant',:'coat') as detail \gset
+select is((:'page'::jsonb)->'items'->2->'facts',(:'detail'::jsonb)->'facts','list facts equal the safe detail projection');
+select ok((:'page'::jsonb)->'items'->2->'facts' @> '[{"slug":"brand","value":"Synthetic brand"},{"slug":"size","value":"M"}]'::jsonb,'list includes recorded brand and size');
+select ok(not exists(select 1 from jsonb_array_elements((:'page'::jsonb)->'items') i cross join lateral jsonb_array_elements(i->'facts') f where f->>'slug' not in ('category','brand','size','color','material','condition')),'only descriptive allowlisted facts appear in rows');
 select is((select array_agg(k order by k) from jsonb_object_keys(:'detail'::jsonb) k),array['currency','facts','id','photos','priceOre','title'],'detail carries no seller, terms or history');
 select is((:'detail'::jsonb)->'facts',jsonb_build_array(
  jsonb_build_object('slug','category','value','Jackets'),jsonb_build_object('slug','brand','value','Synthetic brand'),

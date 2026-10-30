@@ -5,7 +5,7 @@ import {
   completeShopifyConnection,
   shopifyErrorCode,
 } from '@/lib/engine/shopify-connection'
-import { STATE_COOKIE } from '../connect/route'
+import { STATE_COOKIE } from '@/extensions/shopify/cookies'
 import { ShopifyAuthFailure } from '@/extensions/shopify/auth'
 
 /** Shopify returns here with a code; the shop is verified before anything is stored. */

@@ -4772,7 +4772,8 @@
       "receptions": "Kirjaukset",
       "proposals": "Ehdotukset",
       "settings": "Asetukset"
-    }
+    },
+    "deactivateHint": "Valitse Muokkaa ja poista uusien tuotteiden valintamerkki, jotta merkintä poistuu käytöstä. Historia säilyy."
   },
   "storeMail": {
     "title": "Lähetä sähköpostia myyjille",

@@ -59,6 +59,9 @@ export function DeleteCatalogueRecord({
       } else {
         setMessage(
           t.inUse +
+            (kind === 'category' || kind === 'type'
+              ? ' ' + t.deactivateHint
+              : '') +
             ' ' +
             Object.entries(result.data.usage)
               .map(

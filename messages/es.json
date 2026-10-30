@@ -4772,7 +4772,8 @@
       "receptions": "Registros",
       "proposals": "Propuestas",
       "settings": "Configuración"
-    }
+    },
+    "deactivateHint": "Elige Editar y desmarca la opción para artículos nuevos para desactivar esta entrada. Se conserva su historial."
   },
   "storeMail": {
     "title": "Enviar correo a vendedores",

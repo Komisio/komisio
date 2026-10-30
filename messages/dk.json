@@ -4766,7 +4766,8 @@
       "receptions": "Registreringer",
       "proposals": "Forslag",
       "settings": "Indstillinger"
-    }
+    },
+    "deactivateHint": "Vælg Rediger, og fjern markeringen for nye varer for at deaktivere posten. Historikken bevares."
   },
   "storeMail": {
     "title": "Send e-mail til sælgere",

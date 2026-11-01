@@ -1,5 +1,8 @@
 'use client'
-import { RegistrationSettings } from './registration-settings'
+import {
+  RegistrationSettings,
+  type RegistrationFeedback,
+} from './registration-settings'
 import { DeleteCatalogueRecord } from './delete-catalogue-record'
 
 import { useState } from 'react'
@@ -36,6 +39,8 @@ export function VocabularySettings({
 }) {
   const t = d.vocabularySettings
   const [vocabulary, setVocabulary] = useState(initial)
+  const [registrationFeedback, setRegistrationFeedback] =
+    useState<RegistrationFeedback>({ notice: '', message: '' })
   const [categories, setCategories] = useState(initialCategories)
   const [typeSearch, setTypeSearch] = useState('')
   const [showInactiveTypes, setShowInactiveTypes] = useState(false)
@@ -363,6 +368,7 @@ export function VocabularySettings({
           {
             id: 'registration',
             label: d.registration.title,
+            notice: registrationFeedback.notice || undefined,
             content: (
               <RegistrationSettings
                 tenantId={tenantId}
@@ -371,11 +377,21 @@ export function VocabularySettings({
                 editable={editable}
                 d={d}
                 onSaved={setVocabulary}
+                onFeedbackChange={setRegistrationFeedback}
               />
             ),
           },
         ]}
       />
+      <p
+        className="sr-only"
+        role="status"
+        aria-label={d.registration.title}
+        aria-atomic="true"
+      >
+        {registrationFeedback.message &&
+          `${d.registration.title}: ${registrationFeedback.message}`}
+      </p>
     </section>
   )
 }

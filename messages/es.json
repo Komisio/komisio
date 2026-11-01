@@ -4712,7 +4712,7 @@
     "vocabulary": [
       "Una categoría es una división amplia, como Ropa. Un tipo de artículo es más específico, como Chaqueta.",
       "Los atributos describen el artículo, como talla y color. Los grupos de surtido son colecciones propias, como Vintage.",
-      "Empieza con las opciones que usáis a menudo. Aquí creas opciones para los artículos, no los artículos en sí. Cada pestaña tiene más ejemplos."
+      "Empieza con las opciones que usáis a menudo. Aquí creas opciones para los artículos, no los artículos en sí."
     ],
     "store": [
       "Aquí puedes cambiar el nombre de la tienda y consultar la suscripción.",
@@ -5295,6 +5295,8 @@
         "condition": "Estado",
         "material": "Material"
       }
-    }
+    },
+    "unsaved": "Cambios sin guardar",
+    "saving": "Guardando…"
   }
 }

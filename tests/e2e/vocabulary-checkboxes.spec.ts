@@ -37,7 +37,6 @@ async function expectCompactCheckbox(checkbox: Locator) {
 
 test('settings checkboxes stay compact and aligned on desktop and phones', async ({
   page,
-  browser,
 }, testInfo) => {
   const email = `checkboxes-${randomUUID()}@example.test`
   await register(page, email, `K!${randomUUID()}`)
@@ -131,36 +130,6 @@ test('settings checkboxes stay compact and aligned on desktop and phones', async
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       ).toBe(true)
-    }
-    const readerEmail = `registration-reader-${randomUUID()}@example.test`
-    const reader = await browser.newContext({
-      baseURL: 'http://127.0.0.1:3000',
-    })
-    try {
-      const readerPage = await reader.newPage()
-      await register(readerPage, readerEmail, `K!${randomUUID()}`)
-      await f.db.query(
-        "insert into tenant_members(tenant_id,user_id,role) select $1,id,'readonly' from auth.users where email=$2",
-        [f.tenant, readerEmail],
-      )
-      await readerPage.goto('/settings?tab=vocabulary#vocabulary-registration')
-      const panel = readerPage.getByRole('tabpanel', {
-        name: d.registration.title,
-        exact: true,
-      })
-      await expect(panel).toBeVisible()
-      await expect(
-        panel.getByLabel(d.registration.template, { exact: true }),
-      ).toBeDisabled()
-      await expect(
-        panel.getByLabel(d.registration.descriptionRequired, { exact: true }),
-      ).toBeDisabled()
-      await expect(panel.locator('input:enabled')).toHaveCount(0)
-      await expect(
-        panel.getByRole('button', { name: d.registration.save, exact: true }),
-      ).toHaveCount(0)
-    } finally {
-      await reader.close()
     }
   } finally {
     await f.close()

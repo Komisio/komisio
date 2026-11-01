@@ -1,5 +1,5 @@
 'use client'
-import { useId, useRef, useState, useSyncExternalStore } from 'react'
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import {
   attributeVocabulary,
   labelOf,
@@ -19,6 +19,8 @@ const subscribe = () => () => {}
 const clientReady = () => true
 const serverReady = () => false
 
+export type RegistrationFeedback = { notice: string; message: string }
+
 export function RegistrationSettings({
   tenantId,
   vocabulary,
@@ -26,6 +28,7 @@ export function RegistrationSettings({
   editable,
   d,
   onSaved,
+  onFeedbackChange,
 }: {
   tenantId: string
   vocabulary: AttributeVocabulary
@@ -33,6 +36,7 @@ export function RegistrationSettings({
   editable: boolean
   d: Dictionary
   onSaved: (v: AttributeVocabulary) => void
+  onFeedbackChange: (feedback: RegistrationFeedback) => void
 }) {
   const t = d.registration,
     prefix = useId()
@@ -50,6 +54,16 @@ export function RegistrationSettings({
     ),
     running = useRef(false)
   const dirty = JSON.stringify(settings) !== JSON.stringify(record.settings)
+  const notice = busy
+    ? t.saving
+    : locked && message
+      ? message
+      : dirty || locked
+        ? t.unsaved
+        : ''
+  useEffect(() => {
+    onFeedbackChange({ notice, message: busy ? t.saving : message })
+  }, [onFeedbackChange, notice, message, busy, t.saving])
   useUnsavedChanges(dirty || locked ? d.leaveUnsaved : null, prefix)
   async function save() {
     if (running.current || refused) return
@@ -232,7 +246,7 @@ export function RegistrationSettings({
           {locked ? t.retry : t.save}
         </Button>
       )}
-      <p role="status">{message}</p>
+      <p>{message}</p>
     </section>
   )
 }

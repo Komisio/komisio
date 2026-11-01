@@ -25,10 +25,9 @@ test('store defaults generate a searchable title and keep notes private, includi
     await settings
       .getByLabel(d.registration.template, { exact: true })
       .fill('TEST {brand} {size}')
-    const registrationTab = page.getByRole('tab', {
-      name: d.registration.title,
-      exact: true,
-    })
+    const registrationTab = page
+      .getByRole('tab')
+      .filter({ hasText: d.registration.title })
     // Keyboard navigation uses the same mounted panels: a draft survives a tab switch.
     await registrationTab.focus()
     await registrationTab.press('Home')
@@ -43,7 +42,9 @@ test('store defaults generate a searchable title and keep notes private, includi
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
-    await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await expect(
+      page.getByRole('status', { name: d.registration.title, exact: true }),
+    ).toHaveText(`${d.registration.title}: ${d.registration.saved}`)
     await page.reload()
     await expect(registrationTab).toHaveAttribute('aria-selected', 'true')
     await expect(
@@ -123,7 +124,9 @@ test('store defaults generate a searchable title and keep notes private, includi
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
-    await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await expect(
+      page.getByRole('status', { name: d.registration.title, exact: true }),
+    ).toHaveText(`${d.registration.title}: ${d.registration.saved}`)
     await page.goto('/intake/quick')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
     await expect(page.locator('#quick-description')).toHaveAttribute(

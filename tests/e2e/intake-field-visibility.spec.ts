@@ -75,7 +75,9 @@ test('store visibility controls quick and bag intake, keeps required questions a
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
-    await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await expect(
+      page.getByRole('status', { name: d.registration.title, exact: true }),
+    ).toHaveText(`${d.registration.title}: ${d.registration.saved}`)
     await page.reload()
     await expect(
       visibility.getByLabel(d.registration.visibility.fields.photo, {
@@ -134,7 +136,9 @@ test('store visibility controls quick and bag intake, keeps required questions a
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
-    await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await expect(
+      page.getByRole('status', { name: d.registration.title, exact: true }),
+    ).toHaveText(`${d.registration.title}: ${d.registration.saved}`)
     await page.goto(`/intake/bags/${bag}/inspect`)
     await page.locator('#quick-item-type').selectOption(slug)
     await expect(page.locator('#quick-brand')).toBeVisible()
@@ -184,7 +188,9 @@ test('store visibility controls quick and bag intake, keeps required questions a
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
-    await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await expect(
+      page.getByRole('status', { name: d.registration.title, exact: true }),
+    ).toHaveText(`${d.registration.title}: ${d.registration.saved}`)
     await page.goto('/intake/quick')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
     await expect(page.locator('#quick-description')).toHaveAttribute(

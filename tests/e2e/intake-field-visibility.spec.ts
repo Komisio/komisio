@@ -48,7 +48,7 @@ test('store visibility controls quick and bag intake, keeps required questions a
       await expect(page.locator(selector)).toBeVisible()
     await expect(page.locator('#quick-photo')).toBeAttached()
 
-    await page.goto('/settings?tab=vocabulary')
+    await page.goto('/settings?tab=vocabulary#vocabulary-registration')
     const settings = page
       .locator('section')
       .filter({
@@ -75,7 +75,9 @@ test('store visibility controls quick and bag intake, keeps required questions a
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
-    await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await expect(
+      page.getByRole('status', { name: d.registration.title, exact: true }),
+    ).toHaveText(`${d.registration.title}: ${d.registration.saved}`)
     await page.reload()
     await expect(
       visibility.getByLabel(d.registration.visibility.fields.photo, {
@@ -127,14 +129,16 @@ test('store visibility controls quick and bag intake, keeps required questions a
     ])
       expect(commands[0]).not.toHaveProperty(field)
 
-    await page.goto('/settings?tab=vocabulary')
+    await page.goto('/settings?tab=vocabulary#vocabulary-registration')
     await visibility
       .getByLabel(d.registration.visibility.fields.itemType, { exact: true })
       .check()
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
-    await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await expect(
+      page.getByRole('status', { name: d.registration.title, exact: true }),
+    ).toHaveText(`${d.registration.title}: ${d.registration.saved}`)
     await page.goto(`/intake/bags/${bag}/inspect`)
     await page.locator('#quick-item-type').selectOption(slug)
     await expect(page.locator('#quick-brand')).toBeVisible()
@@ -163,7 +167,7 @@ test('store visibility controls quick and bag intake, keeps required questions a
     expect(commands[1].bagId).toBe(bag)
     expect(commands[1]).not.toHaveProperty('internalNote')
 
-    await page.goto('/settings?tab=vocabulary')
+    await page.goto('/settings?tab=vocabulary#vocabulary-registration')
     await settings
       .getByLabel(d.registration.descriptionRequired, { exact: true })
       .check()
@@ -184,7 +188,9 @@ test('store visibility controls quick and bag intake, keeps required questions a
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
-    await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await expect(
+      page.getByRole('status', { name: d.registration.title, exact: true }),
+    ).toHaveText(`${d.registration.title}: ${d.registration.saved}`)
     await page.goto('/intake/quick')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
     await expect(page.locator('#quick-description')).toHaveAttribute(

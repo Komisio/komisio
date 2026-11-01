@@ -4706,7 +4706,7 @@
     "vocabulary": [
       "A category is a broad division, such as Clothing. An item type is more specific, such as Jacket.",
       "Attributes describe an item, such as size and colour. Assortment groups are your own collections, such as Vintage.",
-      "Start with the choices you use often. Here you create choices for items, not the items themselves. Each tab has more examples."
+      "Start with the choices you use often. Here you create choices for items, not the items themselves."
     ],
     "store": [
       "Change the store’s name and view its subscription here.",
@@ -5289,6 +5289,8 @@
         "condition": "Condition",
         "material": "Material"
       }
-    }
+    },
+    "unsaved": "Unsaved changes",
+    "saving": "Saving…"
   }
 }

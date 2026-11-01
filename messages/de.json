@@ -4712,7 +4712,7 @@
     "vocabulary": [
       "Eine Kategorie ist eine grobe Einteilung, etwa Kleidung. Ein Artikeltyp ist genauer, etwa Jacke.",
       "Attribute beschreiben den Artikel, etwa Größe und Farbe. Sortimentsgruppen sind eigene Zusammenstellungen, etwa Vintage.",
-      "Beginnen Sie mit häufig genutzten Auswahlmöglichkeiten. Hier erstellen Sie Auswahlmöglichkeiten für Artikel, nicht die Artikel selbst. Jeder Tab enthält weitere Beispiele."
+      "Beginnen Sie mit häufig genutzten Auswahlmöglichkeiten. Hier erstellen Sie Auswahlmöglichkeiten für Artikel, nicht die Artikel selbst."
     ],
     "store": [
       "Hier ändern Sie den Namen des Geschäfts und sehen Ihr Abonnement.",
@@ -5295,6 +5295,8 @@
         "condition": "Zustand",
         "material": "Material"
       }
-    }
+    },
+    "unsaved": "Ungespeicherte Änderungen",
+    "saving": "Wird gespeichert…"
   }
 }

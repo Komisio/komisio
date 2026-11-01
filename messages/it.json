@@ -4706,7 +4706,7 @@
     "vocabulary": [
       "Una categoria è una suddivisione ampia, come Abbigliamento. Un tipo di articolo è più specifico, come Giacca.",
       "Gli attributi descrivono l’articolo, come taglia e colore. I gruppi di assortimento sono raccolte personalizzate, come Vintage.",
-      "Inizia con le scelte che usate spesso. Qui crei opzioni per gli articoli, non gli articoli stessi. Ogni scheda contiene altri esempi."
+      "Inizia con le scelte che usate spesso. Qui crei opzioni per gli articoli, non gli articoli stessi."
     ],
     "store": [
       "Qui puoi cambiare il nome del negozio e vedere l’abbonamento.",
@@ -5289,6 +5289,8 @@
         "condition": "Condizioni",
         "material": "Materiale"
       }
-    }
+    },
+    "unsaved": "Modifiche non salvate",
+    "saving": "Salvataggio…"
   }
 }

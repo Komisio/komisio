@@ -4712,7 +4712,7 @@
     "vocabulary": [
       "Kategoria on laaja ryhmä, kuten Vaatteet. Tuotetyyppi on tarkempi, kuten Takki.",
       "Ominaisuudet kuvaavat tuotetta, esimerkiksi koko ja väri. Valikoimaryhmät ovat omia kokoelmia, kuten Vintage.",
-      "Aloita usein käytetyistä valinnoista. Täällä luot tuotteiden valintoja, et itse tuotteita. Jokaisella välilehdellä on lisää esimerkkejä."
+      "Aloita usein käytetyistä valinnoista. Täällä luot tuotteiden valintoja, et itse tuotteita."
     ],
     "store": [
       "Täällä voit muuttaa liikkeen nimeä ja tarkastella tilausta.",
@@ -5295,6 +5295,8 @@
         "condition": "Kunto",
         "material": "Materiaali"
       }
-    }
+    },
+    "unsaved": "Tallentamattomia muutoksia",
+    "saving": "Tallennetaan…"
   }
 }

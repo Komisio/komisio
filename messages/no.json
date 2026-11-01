@@ -4706,7 +4706,7 @@
     "vocabulary": [
       "Kategori er en bred inndeling, for eksempel Klær. Varetype er mer spesifikk, for eksempel Jakke.",
       "Attributter er opplysninger om varen, som størrelse og farge. Sortimentsgrupper er egne samlinger, for eksempel Vintage.",
-      "Start med valgene dere bruker ofte. Her lager du valg for varene, ikke selve varene. Hver fane har flere eksempler."
+      "Start med valgene dere bruker ofte. Her lager du valg for varene, ikke selve varene."
     ],
     "store": [
       "Her kan du endre butikkens navn og se abonnementet.",
@@ -5289,6 +5289,8 @@
         "condition": "Tilstand",
         "material": "Materiale"
       }
-    }
+    },
+    "unsaved": "Ulagrede endringer",
+    "saving": "Lagrer…"
   }
 }

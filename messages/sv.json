@@ -4706,7 +4706,7 @@
     "vocabulary": [
       "Kategori är en bred indelning, till exempel Kläder. Varutyp är mer specifik, till exempel Jacka.",
       "Attribut är uppgifter om varan, som storlek och färg. Sortimentsgrupper är egna samlingar, till exempel Vintage.",
-      "Börja med de val ni använder ofta. Här skapar du val för varorna, inte själva varorna. Varje flik har fler exempel."
+      "Börja med de val ni använder ofta. Här skapar du val för varorna, inte själva varorna."
     ],
     "store": [
       "Här kan du ändra butikens namn och se abonnemanget.",
@@ -5289,6 +5289,8 @@
         "condition": "Skick",
         "material": "Material"
       }
-    }
+    },
+    "unsaved": "Osparade ändringar",
+    "saving": "Sparar…"
   }
 }

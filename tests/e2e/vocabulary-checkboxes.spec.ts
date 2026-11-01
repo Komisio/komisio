@@ -44,11 +44,37 @@ test('settings checkboxes stay compact and aligned on desktop and phones', async
   try {
     await f.commit()
     await page.goto('/settings?tab=vocabulary')
+    const tabs = page.getByRole('tablist', { name: d.vocabularySettings.title })
+    await expect(tabs.getByRole('tab')).toHaveText([
+      d.vocabularySettings.categories,
+      d.vocabularySettings.types,
+      d.vocabularySettings.attributes,
+      d.vocabularySettings.groups,
+      d.registration.title,
+    ])
+    await expect(
+      page.getByRole('heading', { name: d.registration.title, exact: true }),
+    ).toBeHidden()
     for (const width of [1280, 390, 320]) {
       await page.setViewportSize({ width, height: 900 })
+      await tabs
+        .getByRole('tab', { name: d.registration.title, exact: true })
+        .click()
       await expectCompactCheckbox(
         page.getByLabel(d.registration.descriptionRequired, { exact: true }),
       )
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+      ).toBe(true)
+      await tabs.scrollIntoViewIfNeeded()
+      await page.screenshot({
+        path: testInfo.outputPath(`registration-tab-${width}.png`),
+      })
+      await tabs
+        .getByRole('tab', { name: d.vocabularySettings.types, exact: true })
+        .click()
       await page
         .getByRole('button', { name: d.quickIntake.createType, exact: true })
         .click()

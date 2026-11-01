@@ -149,6 +149,10 @@
   gap: 8px 16px;
   margin-top: 12px;
 }
+.registration-visibility > small {
+  display: block;
+  margin-top: 8px;
+}
 .vocabulary-settings .checkbox-label {
   display: flex;
   align-items: center;

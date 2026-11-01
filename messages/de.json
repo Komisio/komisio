@@ -5275,6 +5275,26 @@
     "saved": "Gespeichert.",
     "invalid": "Felder und Platzhalter im Titel prüfen.",
     "changed": "Die Daten wurden geändert oder der Zugriff fehlt. Seite neu laden.",
-    "uncertain": "Die Antwort konnte nicht bestätigt werden. Mit denselben Angaben erneut versuchen."
+    "uncertain": "Die Antwort konnte nicht bestätigt werden. Mit denselben Angaben erneut versuchen.",
+    "visibility": {
+      "title": "Bei der Annahme anzeigen",
+      "hint": "Wähle die Felder für die Schnellannahme und die Erfassung von Artikeln aus einer Einlieferung. Pflichtfragen des Artikeltyps werden immer angezeigt.",
+      "priceLocked": "Der Preis wird immer angezeigt und muss eingegeben werden.",
+      "descriptionLocked": "Die Beschreibung wird angezeigt, weil sie erforderlich ist.",
+      "fields": {
+        "price": "Preis",
+        "description": "Beschreibung",
+        "internalNote": "Interne Notiz",
+        "photo": "Foto",
+        "assortment": "Sortimentsgruppe",
+        "itemType": "Artikeltyp",
+        "category": "Kategorie",
+        "brand": "Marke",
+        "size": "Größe",
+        "color": "Farbe",
+        "condition": "Zustand",
+        "material": "Material"
+      }
+    }
   }
 }

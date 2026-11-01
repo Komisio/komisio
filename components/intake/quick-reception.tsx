@@ -35,11 +35,12 @@ import {
   uploadedPhoto,
   type PhotoSource,
 } from '@/lib/intake/quick-photo-results'
+import { labelOf, type AttributeVocabulary } from '@/lib/engine/attributes'
 import {
-  labelOf,
-  questionsFor,
-  type AttributeVocabulary,
-} from '@/lib/engine/attributes'
+  intakeVisibility,
+  visibleIntakeQuestions,
+  visibleIntakeFacts,
+} from '@/lib/intake/intake-field-visibility'
 
 type Seller = { id: string; name: string; contact: string | null }
 type Printer = { id: string; name: string }
@@ -266,10 +267,14 @@ export function QuickReception({
   // The description leads the form; other questions follow profile order. Changing the type
   // changes the questions; answers to questions the new type does not ask are
   // dropped rather than sent for an item they do not describe.
-  const typeQuestions = questionsFor(vocabulary, itemType)
-  const questions = typeQuestions.filter(
-    (q) => q.definition.slug !== 'category',
-  )
+  const visible = intakeVisibility(vocabulary, itemType)
+  const effectiveType = visible('itemType') ? itemType : null
+  const questions = visibleIntakeQuestions(vocabulary, effectiveType)
+  const hasDetails =
+    visible('assortment') ||
+    visible('itemType') ||
+    visible('category') ||
+    questions.some((q) => q.definition.slug !== 'description')
   const descriptionRequired =
     vocabulary.registration?.settings.descriptionRequired ?? false
   const [internalNote, setInternalNote] = useState('')
@@ -612,16 +617,7 @@ export function QuickReception({
       ore === null
     )
       return null
-    const asked = new Set(questions.map((q) => q.definition.slug))
-    const cleaned = Object.fromEntries(
-      Object.entries(facts)
-        .map(([k, v]) => [k, v.trim()] as const)
-        .filter(
-          ([k, v]) =>
-            k !== 'category' &&
-            (k === 'description' || (v !== '' && (asked.has(k) || !itemType))),
-        ),
-    )
+    const cleaned = visibleIntakeFacts(facts, questions)
     requestId.current ??= crypto.randomUUID()
     return {
       ...(bagId ? { bagId } : {}),
@@ -633,10 +629,10 @@ export function QuickReception({
       sessionId: session?.id ?? reception.current?.sessionId ?? null,
       expectedRevision: session?.revision ?? 0,
       facts: cleaned,
-      internalNote,
-      itemType,
-      assortment: assortment || null,
-      categoryId: categoryId || null,
+      ...(visible('internalNote') ? { internalNote } : {}),
+      ...(visible('itemType') ? { itemType: effectiveType } : {}),
+      ...(visible('assortment') ? { assortment: assortment || null } : {}),
+      ...(visible('category') ? { categoryId: categoryId || null } : {}),
       priceOre: ore,
     }
   }
@@ -1056,21 +1052,25 @@ export function QuickReception({
                 {questions
                   .filter((q) => q.definition.slug === 'description')
                   .map((q) => question(q.definition))}
-                <div className="field">
-                  <label htmlFor="quick-internal-note">{d.internalNote}</label>
-                  <textarea
-                    id="quick-internal-note"
-                    rows={2}
-                    maxLength={2000}
-                    value={internalNote}
-                    disabled={busy || !!done || uncertain}
-                    onChange={(e) => setInternalNote(e.target.value)}
-                    aria-describedby="quick-internal-note-hint"
-                  />
-                  <small id="quick-internal-note-hint">
-                    {d.internalNoteHint}
-                  </small>
-                </div>
+                {visible('internalNote') && (
+                  <div className="field">
+                    <label htmlFor="quick-internal-note">
+                      {d.internalNote}
+                    </label>
+                    <textarea
+                      id="quick-internal-note"
+                      rows={2}
+                      maxLength={2000}
+                      value={internalNote}
+                      disabled={busy || !!done || uncertain}
+                      onChange={(e) => setInternalNote(e.target.value)}
+                      aria-describedby="quick-internal-note-hint"
+                    />
+                    <small id="quick-internal-note-hint">
+                      {d.internalNoteHint}
+                    </small>
+                  </div>
+                )}
                 <div className="field quick-price-field">
                   <label htmlFor="quick-price">{d.price}</label>
                   <PriceInput
@@ -1094,182 +1094,208 @@ export function QuickReception({
                   )}
                 </div>
               </div>
-              <div className="quick-workspace">
-                <div className="quick-facts">
-                  <div className="field">
-                    <label htmlFor="quick-assortment">{d.assortment}</label>
-                    <select
-                      id="quick-assortment"
-                      value={assortment}
-                      disabled={busy || !!done || uncertain}
-                      onChange={(e) => setAssortment(e.target.value)}
-                    >
-                      <option value="">{d.noAssortment}</option>
-                      {groups.map((g) => (
-                        <option key={g.id} value={g.id}>
-                          {g.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="field">
-                    <label htmlFor="quick-item-type">{d.itemType}</label>
-                    <select
-                      id="quick-item-type"
-                      value={itemType ?? ''}
-                      disabled={busy || !!done || uncertain || creatingType}
-                      onChange={(e) => {
-                        if (e.target.value === '__create__')
-                          setCreatingType(true)
-                        else selectType(e.target.value || null)
-                      }}
-                      onKeyDown={(event) => {
-                        itemTypeEnter.current = event.key === 'Enter'
-                      }}
-                      onKeyUp={() => {
-                        itemTypeEnter.current = false
-                      }}
-                      onBlur={() => {
-                        itemTypeEnter.current = false
-                      }}
-                    >
-                      <option value="">{d.itemTypeNone}</option>
-                      {activeTypes.map((t) => (
-                        <option key={t.slug} value={t.slug}>
-                          {labelOf(t, lang)}
-                        </option>
-                      ))}
-                      {canManageTypes && (
-                        <option value="__create__">{d.createType}</option>
+              {(hasDetails || visible('photo')) && (
+                <div
+                  className="quick-workspace"
+                  data-photo={visible('photo')}
+                  data-facts={hasDetails}
+                >
+                  {hasDetails && (
+                    <div className="quick-facts">
+                      {visible('assortment') && (
+                        <div className="field">
+                          <label htmlFor="quick-assortment">
+                            {d.assortment}
+                          </label>
+                          <select
+                            id="quick-assortment"
+                            value={assortment}
+                            disabled={busy || !!done || uncertain}
+                            onChange={(e) => setAssortment(e.target.value)}
+                          >
+                            <option value="">{d.noAssortment}</option>
+                            {groups.map((g) => (
+                              <option key={g.id} value={g.id}>
+                                {g.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                       )}
-                    </select>
-                  </div>
-                  <div className="field">
-                    <label htmlFor="quick-category">{d.category}</label>
-                    <select
-                      id="quick-category"
-                      value={categoryId}
-                      disabled={busy || !!done || uncertain}
-                      onChange={(e) => {
-                        setCategoryId(e.target.value)
-                        setCategoryTouched(true)
-                      }}
-                    >
-                      <option value="">{d.noCategory}</option>
-                      {categoryOptions.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  {creatingType && canManageTypes && (
-                    <CreateItemType
-                      compact
-                      initiallyOpen
-                      initialFields={vocabulary.types
-                        .find((t) => t.slug === itemType)
-                        ?.attributes.map((a) => a.slug)}
-                      tenantId={tenantId}
-                      vocabulary={vocabulary}
-                      lang={lang}
-                      disabled={busy || uncertain}
-                      d={d}
-                      settings={typeSettings}
-                      onClose={closeType}
-                      onSelect={(profile) => {
-                        setVocabulary((v) => ({
-                          ...v,
-                          types: [
-                            ...v.types.filter((t) => t.slug !== profile.slug),
-                            profile,
-                          ],
-                        }))
-                        setItemType(profile.slug)
-                        setCategoryId(profile.suggested_category_id ?? '')
-                      }}
-                    />
-                  )}
-                  <div className="quick-fields">
-                    {questions
-                      .filter((q) => q.definition.slug !== 'description')
-                      .map((q) => question(q.definition))}
-                  </div>
-                </div>
-                <div className="quick-photo-panel">
-                  <div className="field quick-photo-field">
-                    <label
-                      htmlFor="quick-photo"
-                      className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
-                    >
-                      {photoUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={photoUrl} alt={d.photo} />
-                      ) : (
-                        <>
-                          <Camera
-                            size={22}
-                            strokeWidth={1.5}
-                            aria-hidden="true"
+                      {visible('itemType') && (
+                        <div className="field">
+                          <label htmlFor="quick-item-type">{d.itemType}</label>
+                          <select
+                            id="quick-item-type"
+                            value={itemType ?? ''}
+                            disabled={
+                              busy || !!done || uncertain || creatingType
+                            }
+                            onChange={(e) => {
+                              if (e.target.value === '__create__')
+                                setCreatingType(true)
+                              else selectType(e.target.value || null)
+                            }}
+                            onKeyDown={(event) => {
+                              itemTypeEnter.current = event.key === 'Enter'
+                            }}
+                            onKeyUp={() => {
+                              itemTypeEnter.current = false
+                            }}
+                            onBlur={() => {
+                              itemTypeEnter.current = false
+                            }}
+                          >
+                            <option value="">{d.itemTypeNone}</option>
+                            {activeTypes.map((t) => (
+                              <option key={t.slug} value={t.slug}>
+                                {labelOf(t, lang)}
+                              </option>
+                            ))}
+                            {canManageTypes && (
+                              <option value="__create__">{d.createType}</option>
+                            )}
+                          </select>
+                        </div>
+                      )}
+                      {visible('category') && (
+                        <div className="field">
+                          <label htmlFor="quick-category">{d.category}</label>
+                          <select
+                            id="quick-category"
+                            value={categoryId}
+                            disabled={busy || !!done || uncertain}
+                            onChange={(e) => {
+                              setCategoryId(e.target.value)
+                              setCategoryTouched(true)
+                            }}
+                          >
+                            <option value="">{d.noCategory}</option>
+                            {categoryOptions.map((c) => (
+                              <option key={c.id} value={c.id}>
+                                {c.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+                      {visible('itemType') &&
+                        creatingType &&
+                        canManageTypes && (
+                          <CreateItemType
+                            compact
+                            initiallyOpen
+                            initialFields={vocabulary.types
+                              .find((t) => t.slug === itemType)
+                              ?.attributes.map((a) => a.slug)}
+                            tenantId={tenantId}
+                            vocabulary={vocabulary}
+                            lang={lang}
+                            disabled={busy || uncertain}
+                            d={d}
+                            settings={typeSettings}
+                            onClose={closeType}
+                            onSelect={(profile) => {
+                              setVocabulary((v) => ({
+                                ...v,
+                                types: [
+                                  ...v.types.filter(
+                                    (t) => t.slug !== profile.slug,
+                                  ),
+                                  profile,
+                                ],
+                              }))
+                              setItemType(profile.slug)
+                              setCategoryId(profile.suggested_category_id ?? '')
+                            }}
                           />
-                          <span>{d.addPhoto}</span>
-                        </>
+                        )}
+                      <div className="quick-fields">
+                        {questions
+                          .filter((q) => q.definition.slug !== 'description')
+                          .map((q) => question(q.definition))}
+                      </div>
+                    </div>
+                  )}
+                  {visible('photo') && (
+                    <div className="quick-photo-panel">
+                      <div className="field quick-photo-field">
+                        <label
+                          htmlFor="quick-photo"
+                          className={`quick-photo-picker${!ready || busy || session || uncertain || photoUnresolved ? ' is-disabled' : ''}${photoUnresolved ? ' is-uncertain' : ''}`}
+                        >
+                          {photoUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={photoUrl} alt={d.photo} />
+                          ) : (
+                            <>
+                              <Camera
+                                size={22}
+                                strokeWidth={1.5}
+                                aria-hidden="true"
+                              />
+                              <span>{d.addPhoto}</span>
+                            </>
+                          )}
+                        </label>
+                        <input
+                          id="quick-photo"
+                          className="quick-photo-input"
+                          ref={fileInput}
+                          type="file"
+                          accept="image/jpeg,image/png"
+                          capture="environment"
+                          disabled={
+                            !ready ||
+                            busy ||
+                            !!session ||
+                            uncertain ||
+                            photoUnresolved
+                          }
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) void onPhoto(file)
+                          }}
+                        />
+                        <small>
+                          {assistance ? d.photoHintAi : d.photoHint}
+                        </small>
+                      </div>
+                      {(message || stage === 'uploading') && (
+                        <p className="quick-status">
+                          {stage === 'uploading' ? d.busy : message}
+                        </p>
                       )}
-                    </label>
-                    <input
-                      id="quick-photo"
-                      className="quick-photo-input"
-                      ref={fileInput}
-                      type="file"
-                      accept="image/jpeg,image/png"
-                      capture="environment"
-                      disabled={
-                        !ready ||
-                        busy ||
-                        !!session ||
-                        uncertain ||
-                        photoUnresolved
-                      }
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (file) void onPhoto(file)
-                      }}
-                    />
-                    <small>{assistance ? d.photoHintAi : d.photoHint}</small>
-                  </div>
-                  {(message || stage === 'uploading') && (
-                    <p className="quick-status">
-                      {stage === 'uploading' ? d.busy : message}
-                    </p>
-                  )}
-                  {photoError && (
-                    <p role="alert" className="error quick-photo-alert">
-                      {photoError}
-                    </p>
-                  )}
-                  {photoUnresolved && (
-                    // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
-                    <div className="row wrap">
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        disabled={busy}
-                        onClick={() => void runPhoto()}
-                      >
-                        {d.retry}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        disabled={busy}
-                        onClick={() => window.location.reload()}
-                      >
-                        {d.reload}
-                      </Button>
+                      {photoError && (
+                        <p role="alert" className="error quick-photo-alert">
+                          {photoError}
+                        </p>
+                      )}
+                      {photoUnresolved && (
+                        // Recovery sits next to the photo it concerns; two actions wrap on a 320px phone.
+                        <div className="row wrap">
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            disabled={busy}
+                            onClick={() => void runPhoto()}
+                          >
+                            {d.retry}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            disabled={busy}
+                            onClick={() => window.location.reload()}
+                          >
+                            {d.reload}
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-              </div>
+              )}
               <div className="quick-finish">
                 {printers.length > 0 && (
                   <div className="field">

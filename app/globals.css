@@ -2538,6 +2538,9 @@ button.text-link:hover:not(:disabled) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
+.quick-fields > .field:only-child {
+  grid-column: 1 / -1;
+}
 .quick-description {
   grid-column: 1 / -1;
 }
@@ -5742,7 +5745,7 @@ button.text-link:hover:not(:disabled) {
 /* Keep the essential entry fields together, with optional details below. */
 .quick-essential {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 180px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   align-items: start;
   gap: 20px;
 }
@@ -9827,4 +9830,14 @@ button.text-link:hover:not(:disabled) {
   .received-bags .directory-cell-value {
     min-width: 0;
   }
+}
+
+/* Intake columns collapse with the store's visible fields. */
+.quick-workspace[data-photo='false'] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'facts';
+}
+.quick-workspace[data-facts='false'] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'photo';
 }

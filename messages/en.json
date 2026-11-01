@@ -5269,6 +5269,26 @@
     "saved": "Saved.",
     "invalid": "Check the fields and title placeholders.",
     "changed": "The data changed or access is unavailable. Reload before continuing.",
-    "uncertain": "The response could not be confirmed. Retry with the same information."
+    "uncertain": "The response could not be confirmed. Retry with the same information.",
+    "visibility": {
+      "title": "Show at intake",
+      "hint": "Choose the fields shown in quick intake and when registering items from a drop-off. Required item-type questions are always shown.",
+      "priceLocked": "Price is always shown and must be entered.",
+      "descriptionLocked": "Description is shown because it is required.",
+      "fields": {
+        "price": "Price",
+        "description": "Description",
+        "internalNote": "Internal note",
+        "photo": "Photo",
+        "assortment": "Assortment group",
+        "itemType": "Item type",
+        "category": "Category",
+        "brand": "Brand",
+        "size": "Size",
+        "color": "Colour",
+        "condition": "Condition",
+        "material": "Material"
+      }
+    }
   }
 }

@@ -5275,6 +5275,26 @@
     "saved": "Tallennettu.",
     "invalid": "Tarkista kentät ja otsikon paikkamerkit.",
     "changed": "Tiedot ovat muuttuneet tai käyttöoikeus puuttuu. Lataa sivu uudelleen.",
-    "uncertain": "Vastausta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla."
+    "uncertain": "Vastausta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
+    "visibility": {
+      "title": "Näytä vastaanotossa",
+      "hint": "Valitse pikavastaanotossa ja tuontierän tuotteiden rekisteröinnissä näytettävät kentät. Tuotetyypin pakolliset kysymykset näytetään aina.",
+      "priceLocked": "Hinta näytetään aina ja se on täytettävä.",
+      "descriptionLocked": "Kuvaus näytetään, koska se on pakollinen.",
+      "fields": {
+        "price": "Hinta",
+        "description": "Kuvaus",
+        "internalNote": "Sisäinen huomautus",
+        "photo": "Kuva",
+        "assortment": "Valikoimaryhmä",
+        "itemType": "Tuotetyyppi",
+        "category": "Luokka",
+        "brand": "Merkki",
+        "size": "Koko",
+        "color": "Väri",
+        "condition": "Kunto",
+        "material": "Materiaali"
+      }
+    }
   }
 }

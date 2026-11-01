@@ -143,6 +143,11 @@ test('staff registers a business, safely retries, filters its directory and sees
     ).toBeVisible()
     const item = randomUUID(),
       review = randomUUID()
+    // Reuse the sale's Stockholm date even across a month boundary or midnight.
+    const saleAt = new Date(Date.now() - 86400000)
+    const saleDay = saleAt.toLocaleDateString('sv-SE', {
+      timeZone: 'Europe/Stockholm',
+    })
     await f.asActor(f.actor, async () => {
       const bag = (
         await f.db.query(
@@ -167,11 +172,12 @@ test('staff registers a business, safely retries, filters its directory and sees
         [f.tenant, item, review],
       )
       await f.db.query(
-        "select record_sale($1,$2,'manual',$3,now()-interval '1 day','SEK',$4)",
+        "select record_sale($1,$2,'manual',$3,$4::timestamptz,'SEK',$5)",
         [
           f.tenant,
           randomUUID(),
           `business-${item}`,
+          saleAt.toISOString(),
           JSON.stringify([{ itemId: item, priceOre: 25000 }]),
         ],
       )
@@ -190,7 +196,7 @@ test('staff registers a business, safely retries, filters its directory and sees
     await page.screenshot({
       path: testInfo.outputPath('business-directory-ipad.png'),
     })
-    await page.goto('/intake/economy')
+    await page.goto(`/intake/economy?from=${saleDay}&to=${saleDay}`)
     await page
       .getByText(d.sellerDetails.business.report, { exact: true })
       .click()
@@ -217,16 +223,12 @@ test('staff registers a business, safely retries, filters its directory and sees
       }),
     ).toHaveCount(0)
 
-    const yesterday = new Date(Date.now() - 86400000).toLocaleDateString(
-      'sv-SE',
-      { timeZone: 'Europe/Stockholm' },
-    )
     await f.asActor(f.actor, async () => {
       const close = (
         await f.db.query('select generate_day_close($1,$2,$3) id', [
           f.tenant,
           randomUUID(),
-          yesterday,
+          saleDay,
         ])
       ).rows[0].id
       await f.db.query('select publish_accounting_map($1,$2,null,$3)', [
@@ -259,10 +261,10 @@ test('staff registers a business, safely retries, filters its directory and sees
       .filter({ has: page.locator('#statement-from') })
     await statementForm
       .getByLabel(d.statements.from, { exact: true })
-      .fill(yesterday)
+      .fill(saleDay)
     await statementForm
       .getByLabel(d.statements.to, { exact: true })
-      .fill(yesterday)
+      .fill(saleDay)
     await statementForm.getByRole('checkbox').check()
     await statementForm
       .getByRole('button', { name: d.statements.issue, exact: true })

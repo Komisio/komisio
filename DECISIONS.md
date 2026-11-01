@@ -1281,3 +1281,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-30: #730 includes existing allowlisted catalogue detail facts in paginated list rows, after limiting. Seller/MFA, store visibility and photo guards stay unchanged. Mobile may show three concise facts with a branded missing-photo placeholder in list rows.
 
 - 2026-10-30: #732 allows repair or retirement of existing item-type name collisions. Unchanged colliding translations may remain during edits; new collisions and reactivation with collisions are rejected. Tenant locks, stale-edit checks and historical deletion protection remain.
+- 2026-11-01: #737 adds default-visible intake field preferences to versioned store registration settings. Price and required description stay visible; expected type questions override hiding. Hidden values are omitted from shared quick/bag intake, without changing acceptance rules or permissions.

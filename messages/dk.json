@@ -5269,6 +5269,26 @@
     "saved": "Gemt.",
     "invalid": "Kontrollér felterne og titlens pladsholdere.",
     "changed": "Oplysningerne er ændret, eller adgang mangler. Genindlæs siden.",
-    "uncertain": "Svaret kunne ikke bekræftes. Prøv igen med de samme oplysninger."
+    "uncertain": "Svaret kunne ikke bekræftes. Prøv igen med de samme oplysninger.",
+    "visibility": {
+      "title": "Vis ved modtagelse",
+      "hint": "Vælg felterne i hurtig modtagelse og ved registrering fra en indlevering. Varetypens obligatoriske spørgsmål vises altid.",
+      "priceLocked": "Pris vises altid og skal udfyldes.",
+      "descriptionLocked": "Beskrivelse vises, fordi den er obligatorisk.",
+      "fields": {
+        "price": "Pris",
+        "description": "Beskrivelse",
+        "internalNote": "Intern note",
+        "photo": "Foto",
+        "assortment": "Sortimentsgruppe",
+        "itemType": "Varetype",
+        "category": "Kategori",
+        "brand": "Mærke",
+        "size": "Størrelse",
+        "color": "Farve",
+        "condition": "Stand",
+        "material": "Materiale"
+      }
+    }
   }
 }

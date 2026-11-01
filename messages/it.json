@@ -5269,6 +5269,26 @@
     "saved": "Salvato.",
     "invalid": "Controlla i campi e i segnaposto del titolo.",
     "changed": "I dati sono cambiati o manca l’accesso. Ricarica la pagina.",
-    "uncertain": "Impossibile confermare la risposta. Riprova con gli stessi dati."
+    "uncertain": "Impossibile confermare la risposta. Riprova con gli stessi dati.",
+    "visibility": {
+      "title": "Mostra alla ricezione",
+      "hint": "Scegli i campi della ricezione rapida e della registrazione degli articoli di una consegna. Le domande obbligatorie del tipo di articolo sono sempre visibili.",
+      "priceLocked": "Il prezzo è sempre visibile e deve essere inserito.",
+      "descriptionLocked": "La descrizione è visibile perché è obbligatoria.",
+      "fields": {
+        "price": "Prezzo",
+        "description": "Descrizione",
+        "internalNote": "Nota interna",
+        "photo": "Foto",
+        "assortment": "Gruppo di assortimento",
+        "itemType": "Tipo di articolo",
+        "category": "Categoria",
+        "brand": "Marca",
+        "size": "Taglia",
+        "color": "Colore",
+        "condition": "Condizioni",
+        "material": "Materiale"
+      }
+    }
   }
 }

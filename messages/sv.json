@@ -5269,6 +5269,26 @@
     "saved": "Sparat.",
     "invalid": "Kontrollera fälten och titelns platshållare.",
     "changed": "Uppgifterna har ändrats eller åtkomst saknas. Ladda om sidan innan du fortsätter.",
-    "uncertain": "Svaret kunde inte bekräftas. Försök igen med samma uppgifter."
+    "uncertain": "Svaret kunde inte bekräftas. Försök igen med samma uppgifter.",
+    "visibility": {
+      "title": "Visa vid mottagning",
+      "hint": "Välj vilka fält som visas i snabb mottagning och vid registrering ur en inlämning. Varutypens obligatoriska frågor visas alltid.",
+      "priceLocked": "Pris visas alltid och måste fyllas i.",
+      "descriptionLocked": "Beskrivning visas eftersom den är obligatorisk.",
+      "fields": {
+        "price": "Pris",
+        "description": "Beskrivning",
+        "internalNote": "Intern anteckning",
+        "photo": "Foto",
+        "assortment": "Sortimentsgrupp",
+        "itemType": "Varutyp",
+        "category": "Kategori",
+        "brand": "Märke",
+        "size": "Storlek",
+        "color": "Färg",
+        "condition": "Skick",
+        "material": "Material"
+      }
+    }
   }
 }

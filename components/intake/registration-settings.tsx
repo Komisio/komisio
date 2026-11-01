@@ -7,6 +7,8 @@ import {
 } from '@/lib/engine/attributes'
 import {
   defaultRegistration,
+  hideableIntakeFields,
+  intakeFieldVisible,
   registrationCommand,
 } from '@/lib/engine/registration'
 import type { Dictionary } from '@/lib/i18n'
@@ -111,11 +113,71 @@ export function RegistrationSettings({
               setSettings({
                 ...settings,
                 descriptionRequired: e.target.checked,
+                ...(e.target.checked
+                  ? {
+                      hiddenFields: (settings.hiddenFields ?? []).filter(
+                        (field) => field !== 'description',
+                      ),
+                    }
+                  : {}),
               })
             }
           />
           {t.descriptionRequired}
         </label>
+        <fieldset
+          className="registration-visibility"
+          aria-describedby={`${prefix}-visibility-hint`}
+        >
+          <legend>{t.visibility.title}</legend>
+          <p id={`${prefix}-visibility-hint`}>{t.visibility.hint}</p>
+          <div className="vocabulary-field-choices">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked
+                disabled
+                aria-describedby={`${prefix}-price-locked`}
+              />
+              {t.visibility.fields.price}
+            </label>
+            {hideableIntakeFields.map((field) => (
+              <label className="checkbox-label" key={field}>
+                <input
+                  type="checkbox"
+                  checked={intakeFieldVisible(settings, field)}
+                  disabled={
+                    field === 'description' && settings.descriptionRequired
+                  }
+                  aria-describedby={
+                    field === 'description' && settings.descriptionRequired
+                      ? `${prefix}-description-locked`
+                      : undefined
+                  }
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      hiddenFields: e.target.checked
+                        ? (settings.hiddenFields ?? []).filter(
+                            (f) => f !== field,
+                          )
+                        : [...(settings.hiddenFields ?? []), field],
+                    })
+                  }
+                />
+                {t.visibility.fields[field]}
+              </label>
+            ))}
+          </div>
+          <small id={`${prefix}-price-locked`}>
+            {t.visibility.priceLocked}
+          </small>
+          {settings.descriptionRequired && (
+            <small id={`${prefix}-description-locked`}>
+              {t.visibility.descriptionLocked}
+            </small>
+          )}
+        </fieldset>
         <div className="field">
           <label htmlFor={`${prefix}-template`}>{t.template}</label>
           <input

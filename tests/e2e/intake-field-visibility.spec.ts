@@ -48,7 +48,7 @@ test('store visibility controls quick and bag intake, keeps required questions a
       await expect(page.locator(selector)).toBeVisible()
     await expect(page.locator('#quick-photo')).toBeAttached()
 
-    await page.goto('/settings?tab=vocabulary')
+    await page.goto('/settings?tab=vocabulary#vocabulary-registration')
     const settings = page
       .locator('section')
       .filter({
@@ -127,7 +127,7 @@ test('store visibility controls quick and bag intake, keeps required questions a
     ])
       expect(commands[0]).not.toHaveProperty(field)
 
-    await page.goto('/settings?tab=vocabulary')
+    await page.goto('/settings?tab=vocabulary#vocabulary-registration')
     await visibility
       .getByLabel(d.registration.visibility.fields.itemType, { exact: true })
       .check()
@@ -163,7 +163,7 @@ test('store visibility controls quick and bag intake, keeps required questions a
     expect(commands[1].bagId).toBe(bag)
     expect(commands[1]).not.toHaveProperty('internalNote')
 
-    await page.goto('/settings?tab=vocabulary')
+    await page.goto('/settings?tab=vocabulary#vocabulary-registration')
     await settings
       .getByLabel(d.registration.descriptionRequired, { exact: true })
       .check()

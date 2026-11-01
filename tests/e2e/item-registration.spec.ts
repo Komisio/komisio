@@ -12,7 +12,7 @@ test('store defaults generate a searchable title and keep notes private, includi
   const f = await p2Fixture(email)
   try {
     await f.commit()
-    await page.goto('/settings?tab=vocabulary')
+    await page.goto('/settings?tab=vocabulary#vocabulary-registration')
     const settings = page
       .locator('section')
       .filter({
@@ -25,10 +25,30 @@ test('store defaults generate a searchable title and keep notes private, includi
     await settings
       .getByLabel(d.registration.template, { exact: true })
       .fill('TEST {brand} {size}')
+    const registrationTab = page.getByRole('tab', {
+      name: d.registration.title,
+      exact: true,
+    })
+    // Keyboard navigation uses the same mounted panels: a draft survives a tab switch.
+    await registrationTab.focus()
+    await registrationTab.press('Home')
+    await expect(settings).toBeHidden()
+    await page
+      .getByRole('tab', { name: d.vocabularySettings.categories, exact: true })
+      .press('End')
+    await expect(registrationTab).toBeFocused()
+    await expect(
+      settings.getByLabel(d.registration.template, { exact: true }),
+    ).toHaveValue('TEST {brand} {size}')
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
     await expect(settings.getByRole('status')).toHaveText(d.registration.saved)
+    await page.reload()
+    await expect(registrationTab).toHaveAttribute('aria-selected', 'true')
+    await expect(
+      settings.getByLabel(d.registration.template, { exact: true }),
+    ).toHaveValue('TEST {brand} {size}')
     await page.goto('/intake/quick')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
     await expect(page.locator('#quick-description')).not.toHaveAttribute(
@@ -96,7 +116,7 @@ test('store defaults generate a searchable title and keep notes private, includi
     expect(label.title).toBe('TEST Synthetic M')
     expect(JSON.stringify(label)).not.toContain('PRIVATE')
     // Changing the global requirement affects the no-type form as well.
-    await page.goto('/settings?tab=vocabulary')
+    await page.goto('/settings?tab=vocabulary#vocabulary-registration')
     await settings
       .getByLabel(d.registration.descriptionRequired, { exact: true })
       .check()

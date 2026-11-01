@@ -68,14 +68,6 @@ export function VocabularySettings({
         <h2>{t.title}</h2>
         <p>{t.intro}</p>
       </div>
-      <RegistrationSettings
-        tenantId={tenantId}
-        vocabulary={vocabulary}
-        locale={locale}
-        editable={editable}
-        d={d}
-        onSaved={setVocabulary}
-      />
       <WorkspaceTabs
         id="vocabulary"
         initial="types"
@@ -365,6 +357,20 @@ export function VocabularySettings({
                 initial={groups}
                 editable={editable}
                 d={d}
+              />
+            ),
+          },
+          {
+            id: 'registration',
+            label: d.registration.title,
+            content: (
+              <RegistrationSettings
+                tenantId={tenantId}
+                vocabulary={vocabulary}
+                locale={locale}
+                editable={editable}
+                d={d}
+                onSaved={setVocabulary}
               />
             ),
           },

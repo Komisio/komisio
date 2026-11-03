@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-03: #747 adds Save and next to quick/bag intake, retaining context and a saved-item summary. Continue only after accepted-price and optional print-queue confirmation; uncertain attempts retain their action and identity. No engine or physical-print rules change.
+
 - 2026-11-03: #745 places optional internal notes after item details and before completion controls in shared quick/bag registration. Existing store visibility, note privacy, saving and retry behavior remain unchanged.
 
 The fixed staging wait in the historical C6 entries is superseded by the

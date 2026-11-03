@@ -50,7 +50,10 @@ function panel(page: Page) {
     }),
     preview: panel.locator('.quick-photo-picker img'),
     input: page.locator('#quick-photo'),
-    submit: page.locator('.quick-finish').getByRole('button'),
+    submit: page.getByRole('button', {
+      name: d.quickIntake.submit,
+      exact: true,
+    }),
   }
 }
 
@@ -71,6 +74,9 @@ async function expectUnresolved(
   await expect(p.preview).toBeVisible()
   await expect(p.input).toBeDisabled()
   await expect(p.submit).toBeDisabled()
+  await expect(
+    page.getByRole('button', { name: d.quickIntake.saveAndNext, exact: true }),
+  ).toBeDisabled()
   // The new native form must not turn unresolved photos into photoless items.
   const price = page.getByLabel(d.quickIntake.price, { exact: true })
   await price.fill('120')

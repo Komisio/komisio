@@ -10,7 +10,7 @@ import { useWorkActivity } from '@/components/platform/work-activity'
 import { ReceivingPanel } from './receiving-panel'
 import { QuickSellerAgreement } from './quick-seller-agreement'
 import type { AgreementSummary } from './seller-agreement-fields'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import {
   NavigationLink as Link,
   useNavigationWarning,
@@ -163,8 +163,8 @@ type PhotoAttempt = {
 
 /**
  * One screen: seller, photo, facts (filled by the assistant when the store
- * has one), price, printer. "Ready for the shelf" makes the item and queues
- * the label. The seller and printer stay selected for the next garment.
+ * has one), price, printer. Saving makes the item and queues the label.
+ * The seller and printer stay selected for the next garment.
  */
 export function QuickReception({
   tenantId,
@@ -278,6 +278,15 @@ export function QuickReception({
   const descriptionRequired =
     vocabulary.registration?.settings.descriptionRequired ?? false
   const [internalNote, setInternalNote] = useState('')
+  const [lastSaved, setLastSaved] = useState<{
+    reference: string
+    itemId: string
+    sessionId: string
+    price: NonNullable<QuickReceiveResult['price']>
+    sellerName: string
+    description: string
+    labelQueued: boolean
+  } | null>(null)
   const activeTypes = vocabulary.types.filter((t) => t.active)
   const categoryOptions = categoryChoices(
     categories.filter((c) => c.active),
@@ -305,6 +314,7 @@ export function QuickReception({
   const attempt = useRef<{
     command: Record<string, unknown>
     printerId: string
+    continueAfterSave: boolean
   } | null>(null)
   const [uncertain, setUncertain] = useState(false)
   const [stale, setStale] = useState(false)
@@ -359,11 +369,12 @@ export function QuickReception({
     }
   }, [])
   const descriptionInput = useRef<HTMLTextAreaElement>(null)
+  const priceInput = useRef<HTMLInputElement>(null)
   const itemScan = useScanFocus(
-    descriptionInput,
+    visible('description') ? descriptionInput : priceInput,
     ready && stage === 'idle' && !!seller && !done && !uncertain,
   )
-  const { focusNext: focusNextDescription } = itemScan
+  const { focusNext: focusNextField } = itemScan
   const fileInput = useRef<HTMLInputElement>(null)
   const itemHeading = useRef<HTMLHeadingElement>(null)
   const doneHeading = useRef<HTMLHeadingElement>(null)
@@ -371,15 +382,21 @@ export function QuickReception({
   useEffect(() => {
     // Only an explicit seller selection or Next item moves the user's place.
     // A touch session that already used the field can continue typing/scanning.
-    if (!focusNextItem.current || !seller || done || !itemHeading.current)
+    if (
+      !focusNextItem.current ||
+      !seller ||
+      done ||
+      !ready ||
+      stage !== 'idle' ||
+      !itemHeading.current
+    )
       return
     focusNextItem.current = false
-    if (!focusNextDescription())
-      itemHeading.current.focus({ preventScroll: true })
+    if (!focusNextField()) itemHeading.current.focus({ preventScroll: true })
     itemHeading.current.scrollIntoView({ block: 'start', behavior: 'instant' })
-  }, [seller, done, focusNextDescription])
+  }, [seller, done, ready, stage, focusNextField])
   useEffect(() => {
-    // "Ready for the shelf" unmounts the button that had focus. Move focus to
+    // A completed save unmounts the button that had focus. Move focus to
     // the confirmation heading so completion is announced and the next Tab
     // reaches "Next item" instead of starting over from the page top.
     if (!done || !doneHeading.current) return
@@ -423,7 +440,7 @@ export function QuickReception({
 
   async function runPrint() {
     const command = pendingPrint.current
-    if (!command || printing.current || printIssue === 'refused') return
+    if (!command || printing.current || printIssue === 'refused') return false
     printing.current = true
     setStage('printing')
     setPrintIssue(null)
@@ -435,6 +452,7 @@ export function QuickReception({
       pendingPrint.current = null
       setMessage(d.printed)
       doneHeading.current?.focus({ preventScroll: true })
+      return true
     } catch (error) {
       setPrintIssue(
         error instanceof RequestFailure &&
@@ -444,6 +462,7 @@ export function QuickReception({
           : 'uncertain',
       )
       setMessage(d.printFailed)
+      return false
     } finally {
       printing.current = false
       setStage('idle')
@@ -637,7 +656,7 @@ export function QuickReception({
     }
   }
 
-  async function submit() {
+  async function submit(continueAfterSave: boolean) {
     if (running.current || !sellerId || photoUnresolved) return
     // A lost reply is retried with the very command that was sent, never with
     // whatever the fields hold now.
@@ -658,10 +677,11 @@ export function QuickReception({
         })
         return
       }
-      current = { command, printerId }
+      current = { command, printerId, continueAfterSave }
       attempt.current = current
     }
     running.current = true
+    setLastSaved(null)
     setError('')
     setStage('saving')
     try {
@@ -681,6 +701,7 @@ export function QuickReception({
         printJobId,
         price: result.price,
       })
+      let labelConfirmed = !printJobId
       if (printJobId) {
         pendingPrint.current = {
           tenantId,
@@ -691,8 +712,22 @@ export function QuickReception({
           referenceId: result.itemId,
           copies: 1,
         }
-        await runPrint()
+        labelConfirmed = await runPrint()
       } else setMessage('')
+      // Queue confirmation is not physical printing. Keep the full recovery
+      // view whenever the accepted price or label queue outcome is unavailable.
+      if (current.continueAfterSave && result.price && labelConfirmed) {
+        setLastSaved({
+          reference: result.reference,
+          itemId: result.itemId,
+          sessionId: result.sessionId,
+          price: result.price,
+          sellerName: seller?.name ?? '',
+          description: facts.description ?? '',
+          labelQueued: !!printJobId,
+        })
+        resetItem()
+      }
       if (bagId) {
         // A saved item sorts first; keep the confirmation visible while refreshing that page.
         const url = new URL(window.location.href)
@@ -732,6 +767,10 @@ export function QuickReception({
 
   function next() {
     if (running.current || printing.current) return
+    resetItem()
+  }
+
+  function resetItem() {
     focusNextItem.current = true
     attempt.current = null
     requestId.current = null
@@ -753,6 +792,12 @@ export function QuickReception({
     setMessage('')
     setError('')
     setValidationRequested(false)
+  }
+
+  function guardTypeEnter(event: MouseEvent<HTMLButtonElement>) {
+    // Suppress only the implicit click from Enter in the type list.
+    if (itemTypeEnter.current && event.detail === 0) event.preventDefault()
+    itemTypeEnter.current = false
   }
 
   useWorkActivity(stage !== 'idle')
@@ -847,10 +892,25 @@ export function QuickReception({
       </div>
     )
   }
+  const savedSummary = lastSaved
+    ? [
+        d.savedNext,
+        lastSaved.reference,
+        lastSaved.sellerName,
+        new Intl.NumberFormat(intlLocale(lang), {
+          style: 'currency',
+          currency: lastSaved.price.currency,
+          currencyDisplay: 'code',
+        }).format(Number(lastSaved.price.amount)),
+        lastSaved.labelQueued ? d.printed : '',
+      ]
+        .filter(Boolean)
+        .join(' · ')
+    : ''
   return (
     <div className={`quick-reception${bagId ? ' bag-quick-reception' : ''}`}>
       <span className="sr-only" role="status" aria-live="polite">
-        {stage === 'uploading' ? d.busy : message}
+        {stage === 'uploading' ? d.busy : message || savedSummary}
       </span>
       {!bagId && (
         <>
@@ -895,6 +955,7 @@ export function QuickReception({
                     )
                       return
                     setSeller(null)
+                    setLastSaved(null)
                     setRegistered(false)
                     setRegistering(false)
                     setAgreementGuard({ dirty: false, locked: false })
@@ -1039,13 +1100,48 @@ export function QuickReception({
             >
               {d.garment}
             </h2>
+            {lastSaved && (
+              <div className="quick-last-saved">
+                <div>
+                  <p>
+                    <Check aria-hidden="true" />
+                    <strong>{d.savedNext}</strong>
+                  </p>
+                  <p>
+                    {lastSaved.reference} · {lastSaved.sellerName} ·{' '}
+                    {new Intl.NumberFormat(intlLocale(lang), {
+                      style: 'currency',
+                      currency: lastSaved.price.currency,
+                      currencyDisplay: 'code',
+                    }).format(Number(lastSaved.price.amount))}
+                    {lastSaved.description && ` · ${lastSaved.description}`}
+                  </p>
+                  {lastSaved.labelQueued && <small>{d.printed}</small>}
+                </div>
+                <Link
+                  className="text-link"
+                  href={itemFromListHref(
+                    lastSaved.itemId,
+                    bagId
+                      ? `/intake/bags/${bagId}/inspect`
+                      : `/intake/reception/${lastSaved.sessionId}`,
+                  )}
+                >
+                  {d.openItem}
+                </Link>
+              </div>
+            )}
             <form
               className="quick-item-form"
               noValidate
               onSubmit={(event) => {
                 event.preventDefault()
                 if (creatingType) return
-                void submit()
+                const button = (event.nativeEvent as SubmitEvent).submitter
+                void submit(
+                  !(button instanceof HTMLButtonElement) ||
+                    button.value !== 'review',
+                )
               }}
             >
               <div className="quick-essential">
@@ -1055,6 +1151,7 @@ export function QuickReception({
                 <div className="field quick-price-field">
                   <label htmlFor="quick-price">{d.price}</label>
                   <PriceInput
+                    ref={priceInput}
                     currency={currency}
                     locale={lang}
                     id="quick-price"
@@ -1325,13 +1422,9 @@ export function QuickReception({
                   // photoless item.
                   disabled={busy || photoUnresolved || creatingType}
                   type="submit"
-                  onClick={(event) => {
-                    // Suppress only the implicit click from Enter in the type
-                    // list. Explicit pointer or assistive activations still work.
-                    if (itemTypeEnter.current && event.detail === 0)
-                      event.preventDefault()
-                    itemTypeEnter.current = false
-                  }}
+                  name="afterSave"
+                  value="next"
+                  onClick={guardTypeEnter}
                   className="quick-submit"
                 >
                   {stage === 'saving'
@@ -1340,8 +1433,21 @@ export function QuickReception({
                       ? d.printing
                       : uncertain
                         ? d.retry
-                        : d.submit}
+                        : d.saveAndNext}
                 </Button>
+                {!uncertain && (
+                  <Button
+                    type="submit"
+                    name="afterSave"
+                    value="review"
+                    variant="secondary"
+                    className="quick-save-only"
+                    disabled={busy || photoUnresolved || creatingType}
+                    onClick={guardTypeEnter}
+                  >
+                    {d.submit}
+                  </Button>
+                )}
               </div>
               {error && (
                 <p role="alert" className="error">

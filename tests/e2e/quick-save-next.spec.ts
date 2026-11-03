@@ -174,7 +174,13 @@ for (const mode of ['quick', 'bag']) {
       ).toBe(true)
     } finally {
       releaseRefresh()
-      await f.close()
+      try {
+        // The second save also refreshes the bag. Drain its handler before
+        // Playwright closes this page and starts the next test.
+        await page.unrouteAll({ behavior: 'wait' })
+      } finally {
+        await f.close()
+      }
     }
   })
 }

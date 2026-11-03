@@ -12,17 +12,22 @@ routes:
   - path: /intake/reception/[id]
 taskLinks:
   - href: /intake
-    label: Öppna mottagningen
+    label: Ta emot – registrera senare
+  - href: /intake/quick
+    label: Registrera varor direkt
   - href: /intake/flow
     label: Butikens arbetsflöde
   - href: /help/labels
     label: Märk rätt inlämning eller vara
 externalLinks: []
-lastReviewed: 2026-10-20
+lastReviewed: 2026-11-03
 machineTranslated: false
 ---
 
 Börja med rätt butik och inlämnare\. Registrera det som faktiskt har kommit in och fortsätt sedan med varorna\.
+
+- **Registrera varor direkt**: beskriv och prissätt en vara i taget när du tar emot den.
+- **Ta emot – registrera senare**: ta emot en påse, kartong eller ett föremål och återkom till inlämningen för att registrera varorna.
 
 1. Kontrollera vald butik och sök efter den befintliga inlämnaren innan du skapar en ny\. Följ butikens avtalskrav och lokala rutiner\.
 2. En föranmälan betyder inte att varorna är mottagna\. Bekräfta mottagningen först när varorna finns hos er\. Använd den befintliga inlämningen när du fortsätter arbetet\.
@@ -31,4 +36,4 @@ Börja med rätt butik och inlämnare\. Registrera det som faktiskt har kommit i
 
 > Antalet registrerade varor visar sparade uppgifter, inte att hela inlämningen är färdigbehandlad\. Kontrollera även de fysiska varorna\. Hjälpen ändrar inga uppgifter; be behörig personal utföra åtgärder som du saknar tillgång till\.
 
-Välj en valfri kategori i Snabb mottagning eller när du registrerar en vara från en inlämning. Varutypens förval kan ändras för varje vara. Redigera varutypen för att välja en föreslagen kategori från butikens lista. Kategorin är ett separat val, inte en attributfråga.
+Välj en valfri kategori i Registrera varor direkt eller när du registrerar en vara från en inlämning. Varutypens förval kan ändras för varje vara. Redigera varutypen för att välja en föreslagen kategori från butikens lista. Kategorin är ett separat val, inte en attributfråga.

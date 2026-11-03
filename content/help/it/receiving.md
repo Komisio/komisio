@@ -12,17 +12,22 @@ routes:
   - path: /intake/reception/[id]
 taskLinks:
   - href: /intake
-    label: Apri ricezione
+    label: Ricevi ora, registra dopo
+  - href: /intake/quick
+    label: Registra gli articoli ora
   - href: /intake/flow
     label: Flusso di lavoro del negozio
   - href: /help/labels
     label: Etichettare la consegna o l’articolo corretto
 externalLinks: []
-lastReviewed: 2026-10-20
+lastReviewed: 2026-11-03
 machineTranslated: false
 ---
 
 Inizia dal negozio e dal conferente corretti\. Registra ciò che è arrivato fisicamente, poi elabora gli articoli\.
+
+- **Registra gli articoli ora**: descrivi e assegna un prezzo a ogni articolo al momento della ricezione.
+- **Ricevi ora, registra dopo**: ricevi una borsa, una scatola o un singolo oggetto e riapri la consegna in seguito per registrare gli articoli.
 
 1. Controlla il negozio selezionato e cerca il conferente esistente prima di crearne uno nuovo\. Segui i requisiti contrattuali e le procedure locali del negozio\.
 2. Un preavviso non significa che gli articoli siano stati ricevuti\. Conferma la ricezione solo quando sono presso di voi\. Continua il lavoro dalla consegna esistente\.
@@ -31,4 +36,4 @@ Inizia dal negozio e dal conferente corretti\. Registra ciò che è arrivato fis
 
 > Il numero di articoli registrati descrive dati salvati, non il completamento dell’intera consegna\. Controlla anche gli articoli fisici\. La guida non modifica dati; chiedi al personale autorizzato di eseguire le azioni a cui non hai accesso\.
 
-Scegli una categoria facoltativa nella ricezione rapida o quando registri un articolo da una consegna. Puoi cambiare la categoria predefinita del tipo per ogni articolo. Modifica il tipo di articolo per scegliere una categoria suggerita dall’elenco del negozio. La categoria è una scelta separata, non una domanda sugli attributi.
+Scegli una categoria facoltativa nella registrazione diretta o quando registri un articolo da una consegna. Puoi cambiare la categoria predefinita del tipo per ogni articolo. Modifica il tipo di articolo per scegliere una categoria suggerita dall’elenco del negozio. La categoria è una scelta separata, non una domanda sugli attributi.

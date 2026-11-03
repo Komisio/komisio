@@ -1291,3 +1291,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-03: Inventory defaults to item, price, seller and status with selection/photo/ownership indicators; six extra columns are optional per store/browser, shared by bag lists. Hidden fields stay mounted for safe retries; keyboard editing skips them (#749).
 
 - 2026-11-03: Inventory titles open items via real links retaining list context; separate pencils edit names with existing concurrency/retry rules. Eligible item details expose Change price beside the price through the existing guarded price dialog (#750).
+
+- 2026-11-03: Receiving entry points distinguish Register items now from Receive now, register later, with short visible hints for any goods. Existing routes and custody/acceptance rules stay unchanged; switching methods guards unsaved work in both directions (#753).

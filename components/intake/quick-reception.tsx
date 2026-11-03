@@ -1052,25 +1052,6 @@ export function QuickReception({
                 {questions
                   .filter((q) => q.definition.slug === 'description')
                   .map((q) => question(q.definition))}
-                {visible('internalNote') && (
-                  <div className="field">
-                    <label htmlFor="quick-internal-note">
-                      {d.internalNote}
-                    </label>
-                    <textarea
-                      id="quick-internal-note"
-                      rows={2}
-                      maxLength={2000}
-                      value={internalNote}
-                      disabled={busy || !!done || uncertain}
-                      onChange={(e) => setInternalNote(e.target.value)}
-                      aria-describedby="quick-internal-note-hint"
-                    />
-                    <small id="quick-internal-note-hint">
-                      {d.internalNoteHint}
-                    </small>
-                  </div>
-                )}
                 <div className="field quick-price-field">
                   <label htmlFor="quick-price">{d.price}</label>
                   <PriceInput
@@ -1294,6 +1275,23 @@ export function QuickReception({
                       )}
                     </div>
                   )}
+                </div>
+              )}
+              {visible('internalNote') && (
+                <div className="field">
+                  <label htmlFor="quick-internal-note">{d.internalNote}</label>
+                  <textarea
+                    id="quick-internal-note"
+                    rows={2}
+                    maxLength={2000}
+                    value={internalNote}
+                    disabled={busy || !!done || uncertain}
+                    onChange={(e) => setInternalNote(e.target.value)}
+                    aria-describedby="quick-internal-note-hint"
+                  />
+                  <small id="quick-internal-note-hint">
+                    {d.internalNoteHint}
+                  </small>
                 </div>
               )}
               <div className="quick-finish">

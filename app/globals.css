@@ -2568,6 +2568,43 @@ button.text-link:hover:not(:disabled) {
 .quick-finish > .field:first-child {
   flex: 0 1 220px;
 }
+.quick-save-only {
+  min-height: 48px;
+}
+.quick-last-saved {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--mint);
+  overflow-wrap: anywhere;
+}
+.quick-last-saved > div {
+  flex: 1 1 15rem;
+  min-width: 0;
+}
+.quick-last-saved p {
+  margin: 0;
+}
+.quick-last-saved p:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.quick-last-saved svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.quick-last-saved > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
 .quick-done {
   border-color: #8db59a;
   background: #f3f8f3;

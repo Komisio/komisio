@@ -9,7 +9,7 @@ that have not chosen.
 
 | Profile    | What the staff does                                                                                     | What the seller does                                       |
 | ---------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `quick`    | Seller, photo, facts (assistant fills them when configured), price, "Ready for the shelf"               | Nothing per garment; the signed agreement covers the terms |
+| `quick`    | Seller, photo, facts (assistant fills them when configured), price, "Save and next"                     | Nothing per garment; the signed agreement covers the terms |
 | `standard` | As quick; the item is held until the seller approves the price (planned: the review link is sent after) | Approves the price through the personal link               |
 | `full`     | The step-by-step reception with source revisions, review versions, personal link, custody, acceptance   | Approves each review in the app                            |
 
@@ -48,16 +48,26 @@ audit); without a provider the screen says so and the staff fills them in.
 ## Surface
 
 `/intake/quick` (owner, admin, staff), linked from the top of the receiving
-page. Seller search, camera input, facts, price, printer, result card with
-the reference and "Next garment" that keeps the seller and the printer.
+page. Seller search, camera input, facts, price and printer share one form.
+"Save and next" prepares the next item after confirmed acceptance, accepted-price
+evidence and any requested label queue confirmation. It keeps the seller, item
+type and printer, clears item-specific fields and the photo, and shows a compact
+saved-item summary with its reference, seller, accepted price and item link.
+"Save item" instead opens the full confirmation with an explicit "Next item".
+Both actions use the same engine operation. The continuation choice is frozen
+with an uncertain request; retrying cannot change its purpose or create a second
+item. Missing accepted-price evidence and unresolved label queue responses stay
+on the full confirmation/recovery view. A queued label is not proof of printing.
 
 Fine-pointer devices focus seller search on arrival and the description after
-seller selection or "Next garment". Explicit section or item links keep their
+seller selection or the next item (price when the description is hidden).
+Explicit section or item links keep their
 destination instead of moving arrival focus to an unrelated editor. Touch devices
 show a translated "Scan / type" button; initial loading does not open the keyboard.
-Completion still focuses the confirmation heading before staff explicitly choose
-the next item. That action restores description focus on touch too if the field
-was already used. The shared
+"Save item" focuses the confirmation heading before staff explicitly choose
+the next item. "Save and next" restores entry focus directly and announces the
+saved-item summary. Next-item focus also works on touch if the field was already
+used. The shared
 `useScanFocus` helper also serves label lookup, receiving, manual sales and stocktake;
 it does not capture global keystrokes or add or sell items automatically.
 
@@ -70,6 +80,9 @@ still binding, readonly refused) and `tests/e2e/quick-intake.spec.ts` (a
 garment without a photo to an accepted item and the next-garment reset).
 `tests/e2e/scan-focus.spec.ts` covers fine-pointer and touch focus, scan loops,
 preserved navigation, tab keyboard behavior and delayed-response focus guards.
+`tests/e2e/quick-save-next.spec.ts` covers consecutive quick/bag items, photo reset,
+fresh request identities, retained printer, saved summaries, missing-price and
+print-queue recovery, lost replies and focus with a hidden description.
 
 ## Not in this slice
 

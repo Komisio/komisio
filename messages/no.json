@@ -177,7 +177,7 @@
       "agreementAccepted": "Godkjent",
       "agreementPending": "Ikke godkjent"
     },
-    "title": "Hurtigmottak",
+    "title": "Registrer varer nå",
     "intro": "Beskrivelse og pris er nok. Legg til et bilde eller flere opplysninger om du vil.",
     "seller": "Innleverer",
     "searchSeller": "Finn innleverer",
@@ -273,7 +273,7 @@
     "priceInvalid": "Angi en pris over 0 og høyst 999 999,99. Bruk høyst to desimaler.",
     "savedPriceUnavailable": "Varen er godkjent, men den lagrede prisen kunne ikke leses. Åpne varen for å kontrollere prisen.",
     "formHelp": {
-      "label": "Hjelp med rask mottak",
+      "label": "Hjelp med direkte registrering",
       "steps": [
         "Velg innleverer og registrer én vare om gangen.",
         "Fyll inn beskrivelse, kategori og pris. Kontroller eventuelle KI-forslag.",
@@ -290,7 +290,7 @@
     "internalNoteHint": "Kun for ansatte. Vises ikke til selgeren og tas ikke med på etiketter, salgsoversikter eller i kassadata."
   },
   "intake": {
-    "quickLink": "Hurtigmottak: én skjerm per plagg",
+    "quickLink": "Registrer varer nå",
     "exportSellerData": "Last ned alle data om denne innlevereren (JSON)",
     "title": "Mottak",
     "intro": "Ta imot en innlevering nå og gå gjennom varene senere. En innlevering er varene en selger leverer ved samme anledning.",
@@ -357,7 +357,7 @@
     "matchPhone": "samme telefon",
     "matchName": "samme navn",
     "overviewIntro": "Ta imot en vare nå, eller registrer en innlevering for gjennomgang senere.",
-    "quickHint": "Beskrivelse og pris er nok. Bilde er valgfritt.",
+    "quickHint": "Beskriv og pris én vare om gangen, ved mottak.",
     "labelPreview": "Forhåndsvisning",
     "otherPrint": "Annen skriver eller PDF",
     "browserPrint": "Åpne utskriftsdialog",
@@ -615,7 +615,7 @@
     "item.period_extended": "Vare · Salgsperiode · Forlengelse",
     "item.photos_changed": "Vare · Varebilder · Endring",
     "item.price_set": "Vare · Pris · Lagring",
-    "item.quick_received": "Vare · Hurtigmottak · Mottak",
+    "item.quick_received": "Vare · Direkte registrering · Mottak",
     "item.transferred_in": "Vare · Overføring inn",
     "item.transferred_out": "Vare · Overføring ut",
     "item_type.set": "Varetype · Lagring",
@@ -3360,9 +3360,9 @@
     "notice": "Returnerte varer er utelatt. Prisene er det denne butikken registrerte; ingenting hentes utenfra."
   },
   "nav": {
-    "quickShort": "Ta imot",
+    "quickShort": "Registrer",
     "receiving": "Mottak",
-    "receiveBag": "Ta imot en innlevering",
+    "receiveBag": "Ta imot nå – registrer senere",
     "selfDropOff": "Egen innlevering",
     "goods": "Varer",
     "sellers": "Innleverere",
@@ -3613,7 +3613,7 @@
     "item": "Vare fra innleveringen",
     "save": "Lagre vare",
     "next": "Neste vare fra innleveringen",
-    "registered": "Varer fra hurtigmottak",
+    "registered": "Direkte registrerte varer",
     "empty": "Ingen varer registrert ennå.",
     "back": "Til innleveringen",
     "limit": "Viser de 50 sist registrerte varene.",
@@ -3918,7 +3918,7 @@
     "itemsHint": "Finn og administrer butikkens varer.",
     "salesHint": "Se registrerte salg.",
     "snapshot": "Butikkens status",
-    "receiptHint": "Ta imot nå, gå gjennom varene senere."
+    "receiptHint": "Ta imot en pose, eske eller enkeltgjenstand nå. Registrer varene senere."
   },
   "auditHint": "De 12 siste registrerte hendelsene i butikken.",
   "otherActivity": "Annen butikkhendelse",
@@ -4737,7 +4737,7 @@
     "categories": [
       "Lag brede kategorier, som Klær, Hjem og interiør eller Bøker, for å organisere varene.",
       "Skriv inn kategorinavnet. Legg til oversettelser hvis dere bruker flere språk; egne navn oversettes ikke automatisk.",
-      "Velg en valgfri kategori i Hurtigmottak eller når du registrerer en vare fra en innlevering. Varetypens standardvalg kan endres for hver vare."
+      "Velg en valgfri kategori i Registrer varer nå eller når du registrerer en vare fra en innlevering. Varetypens standardvalg kan endres for hver vare."
     ],
     "types": [
       "Lag varetyper som Jakke eller Bukse. Varetypen styrer hvilke opplysninger personalet fyller inn ved mottak.",
@@ -5280,7 +5280,7 @@
     "uncertain": "Svaret kunne ikke bekreftes. Prøv igjen med de samme opplysningene.",
     "visibility": {
       "title": "Vis ved mottak",
-      "hint": "Velg feltene som vises i hurtigmottak og ved registrering fra en innlevering. Obligatoriske spørsmål for varetypen vises alltid.",
+      "hint": "Velg feltene som vises ved direkte registrering og ved registrering fra en innlevering. Obligatoriske spørsmål for varetypen vises alltid.",
       "priceLocked": "Pris vises alltid og må fylles ut.",
       "descriptionLocked": "Beskrivelse vises fordi den er obligatorisk.",
       "fields": {

@@ -6420,6 +6420,12 @@ button.text-link:hover:not(:disabled) {
   grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
+.intake-method-hint {
+  margin: 0;
+  max-width: 65ch;
+  color: var(--muted);
+  line-height: 1.5;
+}
 .intake-overview .intake-find-seller {
   padding: 24px;
 }

@@ -14,7 +14,7 @@ import { readAttributeVocabulary } from '@/lib/engine/attributes'
 import type { AgreementSummary } from '@/components/intake/seller-agreement-fields'
 import { QuickReception } from '@/components/intake/quick-reception'
 
-/** Quick reception: seller, photo, facts, price, label; one screen per garment. */
+/** Quick reception: seller, photo, facts, price, label; one screen per item. */
 export default async function QuickIntake() {
   if (process.env.KOMISIO_INTAKE_ENABLED !== 'true') notFound()
   const ctx = await requirePlatform()
@@ -54,9 +54,10 @@ export default async function QuickIntake() {
       <div className="intake-header">
         <FormHelpHeading title={d.title} level={1} help={d.formHelp} />
         <Link className="text-link" href="/intake">
-          {all.intake.back}
+          {all.nav.receiveBag}
         </Link>
       </div>
+      <p className="intake-method-hint">{all.intake.quickHint}</p>
       {profile === 'full' ? (
         <p className="intake-notice">
           {d.profileFull}{' '}

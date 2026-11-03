@@ -177,7 +177,7 @@
       "agreementAccepted": "Aceptado",
       "agreementPending": "Sin aceptar"
     },
-    "title": "Recepción rápida",
+    "title": "Registrar artículos ahora",
     "intro": "Basta con una descripción y un precio. La foto y los demás datos son opcionales.",
     "seller": "Depositante",
     "searchSeller": "Buscar depositante",
@@ -273,7 +273,7 @@
     "priceInvalid": "Introduce un precio superior a 0 y como máximo de 999.999,99. Usa como máximo dos decimales.",
     "savedPriceUnavailable": "El artículo está aceptado, pero no se pudo leer el precio guardado. Abre el artículo para comprobar el precio.",
     "formHelp": {
-      "label": "Ayuda para la recepción rápida",
+      "label": "Ayuda para el registro directo",
       "steps": [
         "Selecciona al consignador y registra un artículo cada vez.",
         "Introduce descripción, categoría y precio. Revisa las sugerencias de IA.",
@@ -290,7 +290,7 @@
     "internalNoteHint": "Solo para el personal. No se muestra al vendedor ni se incluye en etiquetas, resúmenes de venta o datos del TPV."
   },
   "intake": {
-    "quickLink": "Recepción rápida: una pantalla por prenda",
+    "quickLink": "Registrar artículos ahora",
     "exportSellerData": "Descargar todos los datos de este depositante (JSON)",
     "title": "Recepción",
     "intro": "Recibe una entrega ahora y revisa los artículos más tarde. Una entrega incluye los artículos que un vendedor deja en una misma ocasión.",
@@ -357,7 +357,7 @@
     "matchPhone": "mismo teléfono",
     "matchName": "mismo nombre",
     "overviewIntro": "Recibe un artículo ahora o registra una entrega para revisarla más tarde.",
-    "quickHint": "Basta con una descripción y un precio. La foto es opcional.",
+    "quickHint": "Describe y pon precio a cada artículo al recibirlo.",
     "labelPreview": "Vista previa",
     "otherPrint": "Otra impresora o PDF",
     "browserPrint": "Abrir diálogo de impresión",
@@ -615,7 +615,7 @@
     "item.period_extended": "Artículo · Periodo de venta · Prórroga",
     "item.photos_changed": "Artículo · Fotos del artículo · Cambio",
     "item.price_set": "Artículo · Precio · Guardado",
-    "item.quick_received": "Artículo · Recepción rápida · Recepción",
+    "item.quick_received": "Artículo · Registro directo · Recepción",
     "item.transferred_in": "Artículo · Traslado de entrada",
     "item.transferred_out": "Artículo · Traslado de salida",
     "item_type.set": "Tipo de artículo · Guardado",
@@ -3360,9 +3360,9 @@
     "notice": "Los artículos devueltos se excluyen. Los precios son los que registró esta tienda; no se obtiene nada del exterior."
   },
   "nav": {
-    "quickShort": "Recibir",
+    "quickShort": "Registrar",
     "receiving": "Recepción",
-    "receiveBag": "Recibir una entrega",
+    "receiveBag": "Recibir ahora, registrar después",
     "selfDropOff": "Entrega por el depositante",
     "goods": "Artículos",
     "sellers": "Depositantes",
@@ -3613,7 +3613,7 @@
     "item": "Artículo de la entrega",
     "save": "Guardar artículo",
     "next": "Siguiente artículo de la entrega",
-    "registered": "Artículos de recepción rápida",
+    "registered": "Artículos registrados directamente",
     "empty": "Todavía no hay artículos registrados.",
     "back": "Volver a la entrega",
     "limit": "Se muestran los últimos 50 artículos registrados.",
@@ -3924,7 +3924,7 @@
     "itemsHint": "Busca y gestiona los artículos de la tienda.",
     "salesHint": "Consulta las ventas registradas.",
     "snapshot": "Estado de la tienda",
-    "receiptHint": "Recibe ahora, revisa los artículos después."
+    "receiptHint": "Recibe una bolsa, caja u objeto individual ahora. Registra los artículos después."
   },
   "auditHint": "Los 12 eventos registrados más recientes de la tienda.",
   "otherActivity": "Otro evento de la tienda",
@@ -4743,7 +4743,7 @@
     "categories": [
       "Crea categorías amplias, como Ropa, Hogar y decoración o Libros, para organizar los artículos.",
       "Introduce el nombre de la categoría. Añade traducciones si usáis varios idiomas; los nombres propios no se traducen automáticamente.",
-      "Elige una categoría opcional en la recepción rápida o al registrar un artículo de una entrega. Puedes cambiar la categoría predeterminada del tipo para cada artículo."
+      "Elige una categoría opcional en Registrar artículos ahora o al registrar un artículo de una entrega. Puedes cambiar la opción predeterminada del tipo de artículo para cada artículo."
     ],
     "types": [
       "Crea tipos como Chaqueta o Pantalones. El tipo determina qué datos rellena el personal al recibir el artículo.",
@@ -5286,7 +5286,7 @@
     "uncertain": "No se pudo confirmar la respuesta. Reintenta con los mismos datos.",
     "visibility": {
       "title": "Mostrar en la recepción",
-      "hint": "Elige los campos de la recepción rápida y del registro de artículos de una entrega. Las preguntas obligatorias del tipo de artículo siempre se muestran.",
+      "hint": "Elige los campos del registro directo y del registro de artículos de una entrega. Las preguntas obligatorias del tipo de artículo siempre se muestran.",
       "priceLocked": "El precio siempre se muestra y debe rellenarse.",
       "descriptionLocked": "La descripción se muestra porque es obligatoria.",
       "fields": {

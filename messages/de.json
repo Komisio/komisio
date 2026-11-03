@@ -177,7 +177,7 @@
       "agreementAccepted": "Akzeptiert",
       "agreementPending": "Nicht akzeptiert"
     },
-    "title": "Schnellannahme",
+    "title": "Artikel direkt erfassen",
     "intro": "Beschreibung und Preis genügen. Foto und weitere Angaben sind optional.",
     "seller": "Einlieferer",
     "searchSeller": "Einlieferer suchen",
@@ -273,7 +273,7 @@
     "priceInvalid": "Geben Sie einen Preis über 0 und höchstens 999.999,99 ein. Verwenden Sie höchstens zwei Nachkommastellen.",
     "savedPriceUnavailable": "Der Artikel ist angenommen, aber der gespeicherte Preis konnte nicht gelesen werden. Öffnen Sie den Artikel, um den Preis zu prüfen.",
     "formHelp": {
-      "label": "Hilfe zur Schnellannahme",
+      "label": "Hilfe zur direkten Erfassung",
       "steps": [
         "Wählen Sie den Einlieferer und erfassen Sie jeweils einen Artikel.",
         "Geben Sie Beschreibung, Kategorie und Preis ein. Prüfen Sie etwaige KI-Vorschläge.",
@@ -290,7 +290,7 @@
     "internalNoteHint": "Nur für Mitarbeitende. Wird Verkäufern nicht angezeigt und nicht auf Etiketten, Verkaufsübersichten oder in Kassendaten ausgegeben."
   },
   "intake": {
-    "quickLink": "Schnellannahme: ein Bildschirm pro Kleidungsstück",
+    "quickLink": "Artikel direkt erfassen",
     "exportSellerData": "Alle Daten zu diesem Einlieferer herunterladen (JSON)",
     "title": "Annahme",
     "intro": "Nehmen Sie eine Einlieferung an und prüfen Sie die Artikel später. Eine Einlieferung umfasst die Waren, die ein Verkäufer bei einem Besuch abgibt.",
@@ -357,7 +357,7 @@
     "matchPhone": "gleiche Telefonnummer",
     "matchName": "gleicher Name",
     "overviewIntro": "Nehmen Sie einen Artikel direkt an oder erfassen Sie eine Einlieferung zur späteren Durchsicht.",
-    "quickHint": "Beschreibung und Preis genügen. Ein Foto ist optional.",
+    "quickHint": "Beschreiben und bepreisen Sie jeden Artikel direkt bei der Annahme.",
     "labelPreview": "Vorschau",
     "otherPrint": "Anderer Drucker oder PDF",
     "browserPrint": "Druckdialog öffnen",
@@ -615,7 +615,7 @@
     "item.period_extended": "Artikel · Verkaufszeitraum · Verlängerung",
     "item.photos_changed": "Artikel · Artikelfotos · Änderung",
     "item.price_set": "Artikel · Preis · Speicherung",
-    "item.quick_received": "Artikel · Schnellannahme · Empfang",
+    "item.quick_received": "Artikel · Direkte Erfassung · Annahme",
     "item.transferred_in": "Artikel · Eingehender Transfer",
     "item.transferred_out": "Artikel · Ausgehender Transfer",
     "item_type.set": "Artikeltyp · Speicherung",
@@ -3360,9 +3360,9 @@
     "notice": "Zurückgegebene Artikel sind ausgeschlossen. Preise sind das, was dieser Store erfasst hat; nichts wird von außen abgerufen."
   },
   "nav": {
-    "quickShort": "Annehmen",
+    "quickShort": "Erfassen",
     "receiving": "Annahme",
-    "receiveBag": "Einlieferung annehmen",
+    "receiveBag": "Jetzt annehmen – später erfassen",
     "selfDropOff": "Selbstabgabe",
     "goods": "Ware",
     "sellers": "Einlieferer",
@@ -3613,7 +3613,7 @@
     "item": "Artikel aus der Einlieferung",
     "save": "Artikel speichern",
     "next": "Nächster Artikel aus der Einlieferung",
-    "registered": "Artikel aus der Schnellannahme",
+    "registered": "Direkt erfasste Artikel",
     "empty": "Noch keine Artikel erfasst.",
     "back": "Zurück zur Einlieferung",
     "limit": "Die 50 zuletzt erfassten Artikel werden angezeigt.",
@@ -3924,7 +3924,7 @@
     "itemsHint": "Artikel im Laden finden und verwalten.",
     "salesHint": "Erfasste Verkäufe ansehen.",
     "snapshot": "Stand im Laden",
-    "receiptHint": "Jetzt annehmen, Artikel später prüfen."
+    "receiptHint": "Nehmen Sie eine Tasche, einen Karton oder einen einzelnen Gegenstand an. Erfassen Sie die Artikel später."
   },
   "auditHint": "Die 12 zuletzt erfassten Ereignisse im Geschäft.",
   "otherActivity": "Anderes Ereignis im Geschäft",
@@ -4743,7 +4743,7 @@
     "categories": [
       "Erstellen Sie grobe Kategorien wie Kleidung, Wohnen oder Bücher, um Artikel zu ordnen.",
       "Geben Sie den Kategorienamen ein. Ergänzen Sie bei Bedarf Übersetzungen; eigene Namen werden nicht automatisch übersetzt.",
-      "Wählen Sie bei der Schnellannahme oder beim Erfassen eines Artikels aus einer Abgabe optional eine Kategorie. Die Vorgabe des Artikeltyps lässt sich für jeden Artikel ändern."
+      "Wählen Sie unter Artikel direkt erfassen oder beim Erfassen eines Artikels aus einer Einlieferung optional eine Kategorie. Die Vorgabe des Artikeltyps lässt sich für jeden Artikel ändern."
     ],
     "types": [
       "Erstellen Sie Artikeltypen wie Jacke oder Hose. Der Typ bestimmt, welche Angaben bei der Annahme ausgefüllt werden.",
@@ -5286,7 +5286,7 @@
     "uncertain": "Die Antwort konnte nicht bestätigt werden. Mit denselben Angaben erneut versuchen.",
     "visibility": {
       "title": "Bei der Annahme anzeigen",
-      "hint": "Wähle die Felder für die Schnellannahme und die Erfassung von Artikeln aus einer Einlieferung. Pflichtfragen des Artikeltyps werden immer angezeigt.",
+      "hint": "Wähle die Felder für die direkte Erfassung und die Erfassung von Artikeln aus einer Einlieferung. Pflichtfragen des Artikeltyps werden immer angezeigt.",
       "priceLocked": "Der Preis wird immer angezeigt und muss eingegeben werden.",
       "descriptionLocked": "Die Beschreibung wird angezeigt, weil sie erforderlich ist.",
       "fields": {

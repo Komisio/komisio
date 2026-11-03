@@ -8,6 +8,7 @@ import { SellerSearchStep } from '@/components/intake/seller-search-step'
 import { SellerSearch } from '@/components/intake/seller-search'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import Link from '@/components/platform/working-link'
+import { NavigationLink } from '@/components/platform/navigation-warning'
 import { notFound, redirect } from 'next/navigation'
 import { readSellersOverviewPage } from '@/lib/engine/sellers'
 import { z } from 'zod'
@@ -107,6 +108,7 @@ export default async function Intake({
     <ReceivingPanel
       key={`${active.id}:${selected.data?.id ?? 'new'}`}
       tenantId={active.id}
+      leaveUnsaved={all.leaveUnsaved}
       seller={selected.data as Seller | null}
       d={d}
       details={all.sellerDetails}
@@ -138,9 +140,9 @@ export default async function Intake({
             {all.submissions.queue}
           </Link>
         )}
-        <Link className="text-link" href="/intake/quick">
+        <NavigationLink className="text-link" href="/intake/quick">
           {all.quickIntake.title} <span aria-hidden="true">→</span>
-        </Link>
+        </NavigationLink>
       </nav>
       <WorkspaceTabs
         id="intake"
@@ -157,6 +159,9 @@ export default async function Intake({
             anchors: ['bag-receiving', 'seller-search', 'new-seller'],
             content: (
               <div className="intake-grid" id="bag-receiving">
+                <p className="intake-method-hint">
+                  {all.dashboard.receiptHint}
+                </p>
                 <SellerSearchStep
                   key={active.id}
                   cancelLabel={all.cancel}
@@ -164,6 +169,7 @@ export default async function Intake({
                     !selected.data && active.role !== 'readonly'
                       ? {
                           tenantId: active.id,
+                          leaveUnsaved: all.quickIntake.workspace.leaveSeller,
                           seller: null,
                           d,
                           details: all.sellerDetails,

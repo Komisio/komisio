@@ -12,17 +12,22 @@ routes:
   - path: /intake/reception/[id]
 taskLinks:
   - href: /intake
-    label: Abrir recepción
+    label: Recibir ahora, registrar después
+  - href: /intake/quick
+    label: Registrar artículos ahora
   - href: /intake/flow
     label: Flujo de trabajo de la tienda
   - href: /help/labels
     label: Etiquetar la entrega o el artículo correcto
 externalLinks: []
-lastReviewed: 2026-10-20
+lastReviewed: 2026-11-03
 machineTranslated: false
 ---
 
 Empieza con la tienda y el consignante correctos\. Registra lo que ha llegado físicamente y después procesa los artículos\.
+
+- **Registrar artículos ahora**: describe y pon precio a cada artículo al recibirlo.
+- **Recibir ahora, registrar después**: recibe una bolsa, caja u objeto individual y vuelve a la entrega después para registrar los artículos.
 
 1. Comprueba la tienda seleccionada y busca al consignante existente antes de crear uno nuevo\. Sigue los requisitos de acuerdos y las rutinas de la tienda\.
 2. Un aviso previo no significa que los artículos se hayan recibido\. Confirma la recepción solo cuando estén en la tienda\. Continúa el trabajo desde la entrega existente\.
@@ -31,4 +36,4 @@ Empieza con la tienda y el consignante correctos\. Registra lo que ha llegado f�
 
 > El número de artículos registrados describe datos guardados, no la finalización de toda la entrega\. Comprueba también los artículos físicos\. La ayuda no modifica datos; pide al personal autorizado que realice las acciones a las que no tienes acceso\.
 
-Elige una categoría opcional en la recepción rápida o al registrar un artículo de una entrega. Puedes cambiar la categoría predeterminada del tipo para cada artículo. Edita el tipo de artículo para elegir una categoría sugerida de la lista de la tienda. La categoría es una selección independiente, no una pregunta de atributo.
+Elige una categoría opcional en la registro directo o al registrar un artículo de una entrega. Puedes cambiar la categoría predeterminada del tipo para cada artículo. Edita el tipo de artículo para elegir una categoría sugerida de la lista de la tienda. La categoría es una selección independiente, no una pregunta de atributo.

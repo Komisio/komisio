@@ -12,17 +12,22 @@ routes:
   - path: /intake/reception/[id]
 taskLinks:
   - href: /intake
-    label: Open receiving
+    label: Receive now, register later
+  - href: /intake/quick
+    label: Register items now
   - href: /intake/flow
     label: Store workflow
   - href: /help/labels
     label: Label the correct drop-off or item
 externalLinks: []
-lastReviewed: 2026-10-20
+lastReviewed: 2026-11-03
 machineTranslated: false
 ---
 
 Start with the correct store and consignor\. Record what has physically arrived, then work through the items\.
+
+- **Register items now**: describe and price each item as you receive it.
+- **Receive now, register later**: receive a bag, box or individual object, then return to the drop-off to register its items.
 
 1. Check the selected store and search for the existing consignor before creating another\. Follow the store’s agreement requirements and local routines\.
 2. An announcement does not mean goods have been received\. Confirm receiving only once the goods are with you\. Reuse the existing drop\-off when continuing the work\.
@@ -31,4 +36,4 @@ Start with the correct store and consignor\. Record what has physically arrived,
 
 > Registered\-item counts describe saved records, not completion of the entire drop\-off\. Check the physical goods too\. Help changes no records; ask authorized staff to perform actions you cannot access\.
 
-Choose an optional category in Quick reception or when registering an item from a drop-off. You can override the item type default for each item. Edit the item type to select a suggested category from the store list. Category is a separate choice, not an attribute question.
+Choose an optional category in Register items now or when registering an item from a drop-off. You can override the item type default for each item. Edit the item type to select a suggested category from the store list. Category is a separate choice, not an attribute question.

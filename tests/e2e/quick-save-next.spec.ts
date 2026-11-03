@@ -151,6 +151,10 @@ for (const mode of ['quick', 'bag']) {
       await expect(saved).toContainText('Synthetic second item')
       await expect(saved).not.toContainText('Synthetic first item')
       await expect(description).toBeFocused()
+      if (bag)
+        await expect(page.locator('#bag-registered')).toContainText(
+          'Synthetic second item',
+        )
       expect(commands).toHaveLength(2)
       expect(commands[1].requestId).not.toBe(commands[0].requestId)
       expect(commands[1].sellerId).toBe(f.seller)
@@ -175,7 +179,7 @@ for (const mode of ['quick', 'bag']) {
     } finally {
       releaseRefresh()
       try {
-        // The second save also refreshes the bag. Drain its handler before
+        // Drain any delayed refresh left by an earlier assertion failure before
         // Playwright closes this page and starts the next test.
         await page.unrouteAll({ behavior: 'wait' })
       } finally {

@@ -1,3 +1,4 @@
+import { showInventoryColumns } from '../helpers/inventory-columns'
 import { test, expect } from '@playwright/test'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -14,6 +15,7 @@ test('blank row space opens the item while row controls keep their own actions',
     const item = await f.item('Synthetic clickable item')
     await f.commit()
     await page.goto('/intake/items')
+    await showInventoryColumns(page)
     const row = page.locator('.inventory-row')
     await row.getByRole('checkbox').check()
     await expect(row.getByRole('checkbox')).toBeChecked()
@@ -71,6 +73,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
     ])
     await f.commit()
     await page.goto('/intake/items')
+    await showInventoryColumns(page)
     const rows = page.locator('.inventory-table tbody tr')
     const all = page.getByRole('checkbox', {
       name: d.itemWorkflow.selectAll,
@@ -268,7 +271,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
         ).rows[0].n,
       ),
     ).toBe(10)
-    await page.unroute('**/api/items/row')
+    await page.unrouteAll({ behavior: 'wait' })
     await page.screenshot({
       path: testInfo.outputPath('inventory-cells.png'),
       fullPage: true,

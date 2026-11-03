@@ -179,7 +179,11 @@ export function useItemQuickEdit({
       void save(undefined, true)
     }
     if (event.key === 'Tab') {
-      const fields: Field[] = ['title', 'category', 'itemType', 'assortment']
+      const fields = (
+        ['title', 'category', 'itemType', 'assortment'] as Field[]
+      ).filter(
+        (candidate) => buttons.current[candidate]?.getClientRects().length,
+      )
       const next = fields[fields.indexOf(field) + (event.shiftKey ? -1 : 1)]
       if (next) {
         event.preventDefault()

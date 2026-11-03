@@ -94,6 +94,33 @@ test('inventory prices align across photo, sold and editable rows in all locales
           ])
         await page.setViewportSize({ width: 1920, height: 1000 })
         await page.goto('/intake/items?sort=title&direction=asc')
+        const picker = page.locator('.inventory-column-picker')
+        await expect(picker.locator('summary')).toHaveText(
+          d.items.directory.columns.title,
+        )
+        await picker.locator('summary').click()
+        for (const label of [
+          d.quickIntake.category,
+          d.quickIntake.itemType,
+          d.itemWorkflow.group,
+          d.itemSync.title,
+          d.items.directory.registered,
+          d.items.directory.periodEnd,
+        ])
+          await expect(
+            picker.getByRole('checkbox', {
+              name: d.items.directory.columns.show.replace('{column}', label),
+              exact: true,
+            }),
+          ).toBeVisible()
+        await picker.getByRole('checkbox').first().check()
+        await picker
+          .getByRole('button', {
+            name: d.items.directory.columns.reset,
+            exact: true,
+          })
+          .click()
+        await picker.locator('summary').click()
         const rows = page.locator('.inventory-row')
         await expect(rows).toHaveCount(4)
         // With no active criteria there is no filter-chip row left.

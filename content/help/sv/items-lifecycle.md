@@ -16,7 +16,7 @@ taskLinks:
   - href: /help/labels
     label: Hjälp med etiketter
 externalLinks: []
-lastReviewed: 2026-10-20
+lastReviewed: 2026-11-03
 machineTranslated: false
 ---
 
@@ -26,6 +26,8 @@ Hitta och redigera varor, välj flera åt gången och följ upp priser och sälj
 1. Sök eller filtrera fram varorna. Öppna en vara för bilder, historik och fler detaljer.
 2. Använd redigeringen i tabellen för namn, kategori, varutyp och sortimentsgrupp.
 3. Markera en eller flera rader för de gemensamma åtgärder som visas, till exempel ändring av flera varor eller etiketter på A4.
+
+Standardvyn visar vara, pris, säljare och status. Öppna **Kolumner** för att visa fler uppgifter. Valet sparas för butiken i din webbläsare och används även i inlämningens varulista.
 
 Kategorier, varutyper, attribut och sortimentsgrupper hanteras under butikens Varuinställningar. Ändrad visningstext ersätter inte äldre avtals- eller försäljningsunderlag.
 

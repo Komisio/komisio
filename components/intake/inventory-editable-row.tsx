@@ -1,7 +1,7 @@
 'use client'
 import { ItemPriceCell } from './item-price-cell'
 import { useEffect, type ReactNode } from 'react'
-import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react'
+import { Check, LoaderCircle } from 'lucide-react'
 import { InventoryItemLink } from './inventory-item-link'
 import type { DirectoryItem } from '@/lib/engine/item-directory'
 import type { Dictionary, Locale } from '@/lib/i18n'
@@ -103,15 +103,19 @@ export function InventoryEditableRow({
       </td>
       <th scope="row">
         <div className="inventory-item-heading">
-          {cell('title', d.items.item)}
-          <InventoryItemLink
-            className="inventory-open-item"
-            itemId={item.id}
-            aria-label={`${w.open}: ${current.title || d.items.item}`}
-            title={w.open}
-          >
-            <ArrowUpRight size={15} aria-hidden="true" />
-          </InventoryItemLink>
+          {cell(
+            'title',
+            d.items.item,
+            undefined,
+            <InventoryItemLink
+              className="inventory-item-link inventory-open-item"
+              itemId={item.id}
+              aria-label={`${w.open}: ${current.title || d.items.item}`}
+              title={w.open}
+            >
+              {current.title || d.items.item}
+            </InventoryItemLink>,
+          )}
           {(busy || state === 'saved') && (
             <span className="inventory-save-indicator" title={message}>
               {busy ? (

@@ -23,6 +23,7 @@ export function ItemPriceCell({
   title,
   write,
   d,
+  presentation = 'cell',
 }: {
   tenantId: string
   itemId: string
@@ -32,6 +33,7 @@ export function ItemPriceCell({
   title: string
   write: boolean
   d: Dictionary
+  presentation?: 'cell' | 'detail'
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [editing, setEditing] = useState<string | null>(null)
@@ -49,22 +51,47 @@ export function ItemPriceCell({
     setEditing(null)
     requestAnimationFrame(() => button.current?.focus())
   }
+  const trigger =
+    write && current !== null ? (
+      <button
+        type="button"
+        ref={button}
+        disabled={!ready}
+        className={
+          presentation === 'detail'
+            ? 'btn btn-secondary item-detail-change-price'
+            : 'inventory-cell-button inventory-price-editor'
+        }
+        aria-label={`${d.priceEdit.title}: ${title}`}
+        onClick={() => setEditing(current)}
+      >
+        {presentation === 'detail' ? (
+          <>
+            <Pencil size={15} aria-hidden="true" />
+            {d.priceEdit.title}
+          </>
+        ) : (
+          <>
+            <span className="inventory-price-value">{display}</span>
+            <Pencil size={12} aria-hidden="true" />
+          </>
+        )}
+      </button>
+    ) : null
   return (
     <>
-      {write && current !== null ? (
-        <button
-          type="button"
-          ref={button}
-          disabled={!ready}
-          className="inventory-cell-button inventory-price-editor"
-          aria-label={`${d.priceEdit.title}: ${title}`}
-          onClick={() => setEditing(current)}
-        >
-          <span className="inventory-price-value">{display}</span>
-          <Pencil size={12} aria-hidden="true" />
-        </button>
+      {presentation === 'detail' ? (
+        <div className="item-detail-price-control">
+          <p className="item-detail-price">
+            <span>{d.items.currentPrice}</span>
+            <strong>
+              {current === null ? '—' : `${formatOre(current)} ${currency}`}
+            </strong>
+          </p>
+          {trigger}
+        </div>
       ) : (
-        <span className="inventory-price-value">{display}</span>
+        (trigger ?? <span className="inventory-price-value">{display}</span>)
       )}
       {confirmed && (
         <span role="status" className="sr-only">

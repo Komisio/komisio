@@ -124,6 +124,47 @@
   background: var(--mint);
   color: var(--ink);
 }
+.inventory-title-editor {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.inventory-item-heading .inventory-open-item {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  height: auto;
+  min-height: 32px;
+  align-content: center;
+  color: inherit;
+}
+.inventory-item-heading .inventory-open-item:hover {
+  text-decoration: underline;
+}
+.inventory-title-editor[data-editing] > a {
+  visibility: hidden;
+}
+.inventory-table button.inventory-title-edit {
+  flex: 0 0 32px;
+  width: 32px;
+  justify-content: center;
+  cursor: pointer;
+}
+.inventory-title-edit > svg {
+  margin: 0;
+  opacity: 0.7;
+}
+@media (pointer: coarse) {
+  .inventory-table button.inventory-title-edit {
+    flex-basis: 44px;
+    width: 44px;
+    min-height: 44px;
+  }
+  .inventory-item-heading .inventory-open-item {
+    min-height: 44px;
+  }
+}
 .inventory-save-indicator {
   display: inline-flex;
   color: var(--ink);

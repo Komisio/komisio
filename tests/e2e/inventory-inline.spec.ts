@@ -20,7 +20,7 @@ test('blank row space opens the item while row controls keep their own actions',
     await row.getByRole('checkbox').check()
     await expect(row.getByRole('checkbox')).toBeChecked()
     await expect(page).toHaveURL(/\/intake\/items$/)
-    await row.locator('.inventory-item-link').click()
+    await row.locator('.inventory-title-edit').click()
     await expect(
       row.getByRole('textbox', { name: d.items.item, exact: true }),
     ).toBeFocused()
@@ -156,29 +156,30 @@ test('inventory workspace selects page items and saves cells with safe retry and
     await expect(toolbar).toHaveCount(0)
 
     const row = rows.first(),
-      name = row.locator('.inventory-item-link')
+      name = row.locator('.inventory-item-link'),
+      editName = row.locator('.inventory-title-edit')
     const original = await name.innerText()
     const commands: Record<string, unknown>[] = []
     page.on('request', (request) => {
       if (request.url().endsWith('/api/items/row'))
         commands.push(request.postDataJSON())
     })
-    await name.click()
+    await editName.click()
     await row
       .getByRole('textbox', { name: d.items.item, exact: true })
       .fill('Cancelled title')
     await page.keyboard.press('Escape')
     await expect(name).toHaveText(original)
-    await expect(name).toBeFocused()
+    await expect(editName).toBeFocused()
     expect(commands).toHaveLength(0)
-    await name.click()
+    await editName.click()
     await page.keyboard.press('Tab')
     await expect(
       row.getByRole('combobox', { name: d.quickIntake.category, exact: true }),
     ).toBeFocused()
     await page.keyboard.press('Escape')
     expect(commands).toHaveLength(0)
-    await name.click()
+    await editName.click()
     await row
       .getByRole('textbox', { name: d.items.item, exact: true })
       .fill(' ')
@@ -188,13 +189,13 @@ test('inventory workspace selects page items and saves cells with safe retry and
     )
     expect(commands).toHaveLength(0)
     await page.keyboard.press('Escape')
-    await name.click()
+    await editName.click()
     await row
       .getByRole('textbox', { name: d.items.item, exact: true })
       .fill('Synthetic edited coat')
     await page.keyboard.press('Enter')
     await expect(name).toHaveText('Synthetic edited coat')
-    await expect(name).toBeFocused()
+    await expect(editName).toBeFocused()
     await row
       .getByRole('button', {
         name: new RegExp(
@@ -243,7 +244,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
         retries.length === 1 ? { status: 503, json: {} } : { response },
       )
     })
-    await name.click()
+    await editName.click()
     await row
       .getByRole('textbox', { name: d.items.item, exact: true })
       .fill('Synthetic retry coat')
@@ -299,7 +300,7 @@ test('inventory workspace selects page items and saves cells with safe retry and
       .getByRole('button', { name: d.printing.close, exact: true })
       .click()
     await page.setViewportSize({ width: 1440, height: 1000 })
-    await name.click()
+    await editName.click()
     await row
       .getByRole('textbox', { name: d.items.item, exact: true })
       .fill('Stale title')

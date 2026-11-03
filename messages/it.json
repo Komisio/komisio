@@ -177,7 +177,7 @@
       "agreementAccepted": "Accettato",
       "agreementPending": "Non accettato"
     },
-    "title": "Ricezione rapida",
+    "title": "Registra gli articoli ora",
     "intro": "Bastano descrizione e prezzo. Foto e altri dettagli sono facoltativi.",
     "seller": "Conferente",
     "searchSeller": "Trova conferente",
@@ -208,7 +208,9 @@
     "price": "Prezzo",
     "printer": "Stampante etichette",
     "noPrinter": "Nessuna etichetta",
-    "submit": "Pronto per lo scaffale",
+    "submit": "Salva articolo",
+    "saveAndNext": "Salva e continua",
+    "savedNext": "Salvato. Puoi registrare il prossimo articolo.",
     "busy": "Salvataggio…",
     "printing": "Stampa in corso…",
     "fillIn": "Servono una descrizione e un prezzo superiore a zero.",
@@ -271,7 +273,7 @@
     "priceInvalid": "Inserisci un prezzo superiore a 0 e non oltre 999.999,99. Usa al massimo due decimali.",
     "savedPriceUnavailable": "Articolo accettato, ma non è stato possibile leggere il prezzo salvato. Apri articolo per controllare il prezzo.",
     "formHelp": {
-      "label": "Aiuto per la ricezione rapida",
+      "label": "Aiuto per la registrazione diretta",
       "steps": [
         "Seleziona il conferente e registra un articolo alla volta.",
         "Inserisci descrizione, categoria e prezzo. Controlla gli eventuali suggerimenti IA.",
@@ -288,7 +290,7 @@
     "internalNoteHint": "Solo per il personale. Non viene mostrata al venditore né inclusa nelle etichette, nei riepiloghi di vendita o nei dati del POS."
   },
   "intake": {
-    "quickLink": "Ricezione rapida: una schermata per capo",
+    "quickLink": "Registra gli articoli ora",
     "exportSellerData": "Scarica tutti i dati di questo conferente (JSON)",
     "title": "Accettazione",
     "intro": "Ricevi una consegna ora ed esamina gli articoli più tardi. Una consegna comprende gli articoli che un venditore porta nella stessa occasione.",
@@ -355,7 +357,7 @@
     "matchPhone": "stesso telefono",
     "matchName": "stesso nome",
     "overviewIntro": "Ricevi subito un articolo o registra una consegna da esaminare più tardi.",
-    "quickHint": "Bastano descrizione e prezzo. La foto è facoltativa.",
+    "quickHint": "Descrivi e assegna un prezzo a ogni articolo al momento della ricezione.",
     "labelPreview": "Anteprima",
     "otherPrint": "Altra stampante o PDF",
     "browserPrint": "Apri finestra di stampa",
@@ -613,7 +615,7 @@
     "item.period_extended": "Articolo · Periodo di vendita · Proroga",
     "item.photos_changed": "Articolo · Foto articolo · Modifica",
     "item.price_set": "Articolo · Prezzo · Salvataggio",
-    "item.quick_received": "Articolo · Ricezione rapida · Ricezione",
+    "item.quick_received": "Articolo · Registrazione diretta · Ricezione",
     "item.transferred_in": "Articolo · Trasferimento in entrata",
     "item.transferred_out": "Articolo · Trasferimento in uscita",
     "item_type.set": "Tipo di articolo · Salvataggio",
@@ -1350,7 +1352,13 @@
       "activeFilters": "Filtri attivi",
       "removeFilter": "Rimuovi {filter}",
       "periodWindow": "Periodo di vendita",
-      "categoryChoiceHint": "Scegli una categoria dall’elenco del negozio."
+      "categoryChoiceHint": "Scegli una categoria dall’elenco del negozio.",
+      "columns": {
+        "title": "Colonne",
+        "core": "Articolo, prezzo, venditore e stato sono sempre visibili.",
+        "show": "Mostra colonna: {column}",
+        "reset": "Ripristina colonne"
+      }
     },
     "title": "Articoli",
     "item": "Articolo",
@@ -3352,9 +3360,9 @@
     "notice": "Gli articoli resi sono esclusi. I prezzi sono quelli registrati da questo negozio; nulla viene recuperato dall'esterno."
   },
   "nav": {
-    "quickShort": "Ricevi",
+    "quickShort": "Registra",
     "receiving": "Ricezione",
-    "receiveBag": "Ricevi una consegna",
+    "receiveBag": "Ricevi ora, registra dopo",
     "selfDropOff": "Consegna autonoma",
     "goods": "Merce",
     "sellers": "Conferenti",
@@ -3605,7 +3613,7 @@
     "item": "Articolo dalla consegna",
     "save": "Salva articolo",
     "next": "Articolo successivo dalla consegna",
-    "registered": "Articoli da ricezione rapida",
+    "registered": "Articoli registrati direttamente",
     "empty": "Nessun articolo ancora registrato.",
     "back": "Torna alla consegna",
     "limit": "Sono mostrati gli ultimi 50 articoli registrati.",
@@ -3910,7 +3918,7 @@
     "itemsHint": "Trova e gestisci gli articoli del negozio.",
     "salesHint": "Consulta le vendite registrate.",
     "snapshot": "Situazione del negozio",
-    "receiptHint": "Ricevi ora, controlla gli articoli dopo."
+    "receiptHint": "Ricevi una borsa, una scatola o un singolo oggetto ora. Registra gli articoli dopo."
   },
   "auditHint": "I 12 eventi registrati più recenti del negozio.",
   "otherActivity": "Altro evento del negozio",
@@ -4729,7 +4737,7 @@
     "categories": [
       "Crea categorie ampie come Abbigliamento, Casa e arredamento o Libri per organizzare gli articoli.",
       "Inserisci il nome della categoria. Aggiungi traduzioni se usate più lingue; i nomi personalizzati non vengono tradotti automaticamente.",
-      "Scegli una categoria facoltativa nella ricezione rapida o quando registri un articolo da una consegna. Puoi cambiare la categoria predefinita del tipo per ogni articolo."
+      "Scegli una categoria facoltativa in Registra gli articoli ora o quando registri un articolo da una consegna. Puoi modificare la scelta predefinita del tipo per ogni articolo."
     ],
     "types": [
       "Crea tipi come Giacca o Pantaloni. Il tipo determina quali dati vengono compilati durante la ricezione.",
@@ -5272,7 +5280,7 @@
     "uncertain": "Impossibile confermare la risposta. Riprova con gli stessi dati.",
     "visibility": {
       "title": "Mostra alla ricezione",
-      "hint": "Scegli i campi della ricezione rapida e della registrazione degli articoli di una consegna. Le domande obbligatorie del tipo di articolo sono sempre visibili.",
+      "hint": "Scegli i campi della registrazione diretta e della registrazione degli articoli di una consegna. Le domande obbligatorie del tipo di articolo sono sempre visibili.",
       "priceLocked": "Il prezzo è sempre visibile e deve essere inserito.",
       "descriptionLocked": "La descrizione è visibile perché è obbligatoria.",
       "fields": {

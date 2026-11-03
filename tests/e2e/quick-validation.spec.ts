@@ -63,15 +63,9 @@ test('quick intake focuses invalid fields without sending or discarding a partia
     expect(requests).toBe(0)
     await price.fill('150,50')
     await price.press('Enter')
-    const done = page.getByRole('region', {
-      name: d.quickIntake.done,
-      exact: true,
-    })
-    await expect(done).toContainText('150,50')
+    await expect(page.locator('.quick-last-saved')).toContainText('150,50')
     expect(requests).toBe(1)
-    await page
-      .getByRole('button', { name: d.quickIntake.next, exact: true })
-      .click()
+    await expect(description).toBeFocused()
     await expect(description).not.toHaveAttribute('aria-invalid', 'true')
     await expect(price).not.toHaveAttribute('aria-invalid', 'true')
     await expect(

@@ -1,7 +1,7 @@
 'use client'
 import { ItemPriceCell } from './item-price-cell'
 import { useEffect, type ReactNode } from 'react'
-import { ArrowUpRight, Check, LoaderCircle } from 'lucide-react'
+import { Check, LoaderCircle } from 'lucide-react'
 import { InventoryItemLink } from './inventory-item-link'
 import type { DirectoryItem } from '@/lib/engine/item-directory'
 import type { Dictionary, Locale } from '@/lib/i18n'
@@ -103,15 +103,19 @@ export function InventoryEditableRow({
       </td>
       <th scope="row">
         <div className="inventory-item-heading">
-          {cell('title', d.items.item)}
-          <InventoryItemLink
-            className="inventory-open-item"
-            itemId={item.id}
-            aria-label={`${w.open}: ${current.title || d.items.item}`}
-            title={w.open}
-          >
-            <ArrowUpRight size={15} aria-hidden="true" />
-          </InventoryItemLink>
+          {cell(
+            'title',
+            d.items.item,
+            undefined,
+            <InventoryItemLink
+              className="inventory-item-link inventory-open-item"
+              itemId={item.id}
+              aria-label={`${w.open}: ${current.title || d.items.item}`}
+              title={w.open}
+            >
+              {current.title || d.items.item}
+            </InventoryItemLink>,
+          )}
           {(busy || state === 'saved') && (
             <span className="inventory-save-indicator" title={message}>
               {busy ? (
@@ -159,8 +163,12 @@ export function InventoryEditableRow({
           </button>
         )}
       </th>
-      <td>{cell('category', d.quickIntake.category, categories)}</td>
-      <td>{cell('itemType', d.quickIntake.itemType, types)}</td>
+      <td data-inventory-column="category">
+        {cell('category', d.quickIntake.category, categories)}
+      </td>
+      <td data-inventory-column="itemType">
+        {cell('itemType', d.quickIntake.itemType, types)}
+      </td>
       <td className="inventory-number inventory-price" data-row-control>
         <ItemPriceCell
           tenantId={tenantId}
@@ -179,7 +187,9 @@ export function InventoryEditableRow({
         />
       </td>
       <td className="inventory-indicator-cell">{indicators}</td>
-      <td>{cell('assortment', t.group, groups)}</td>
+      <td data-inventory-column="assortment">
+        {cell('assortment', t.group, groups)}
+      </td>
       {children}
     </tr>
   )

@@ -9,6 +9,7 @@ import { currentItemEnd } from '@/lib/engine/item-period'
 import { ItemPeriodCorrection } from '@/components/intake/item-period-correction'
 import { searchSaleItems } from '@/lib/engine/sale-search'
 import { ItemPhotoGallery } from '@/components/intake/item-photo-gallery'
+import { ItemPriceCell } from '@/components/intake/item-price-cell'
 import { ItemDetailWorkspace } from '@/components/intake/item-detail-workspace'
 import { ArrowLeft } from 'lucide-react'
 import { itemReturnHref, isIntakeReturn } from '@/lib/intake/item-return'
@@ -192,12 +193,22 @@ export default async function Item({
         }
         price={
           currentPrice !== null ? (
-            <p className="item-detail-price">
-              <span>{d.currentPrice}</span>
-              <strong>
-                {formatOre(currentPrice)} {label?.currency ?? currency}
-              </strong>
-            </p>
+            <ItemPriceCell
+              presentation="detail"
+              tenantId={active.id}
+              itemId={item.id}
+              priceOre={String(currentPrice)}
+              currency={label?.currency ?? currency}
+              locale={ctx.locale}
+              title={snapshot.title || d.item}
+              write={
+                ['owner', 'admin', 'staff'].includes(active.role) &&
+                ['on_sale', 'markdown_due', 'period_ending'].includes(
+                  snapshot.stage,
+                )
+              }
+              d={all}
+            />
           ) : null
         }
         metadata={

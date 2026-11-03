@@ -27,10 +27,8 @@ test('inline price replays once without a reason, while drop-off title editing s
       .last()
       .getByRole('columnheader')
       .allTextContents()
-    expect(headers.slice(1, 5).map((s) => s.trim())).toEqual([
+    expect(headers.slice(1, 3).map((s) => s.trim())).toEqual([
       d.items.item,
-      d.quickIntake.category,
-      d.quickIntake.itemType,
       d.quickIntake.price,
     ])
     await row
@@ -94,7 +92,7 @@ test('inline price replays once without a reason, while drop-off title editing s
     ).toBe(1)
     await page.goto(`/intake/bags/${bag}/inspect#bag-registered`)
     const received = page.locator(`#inventory-item-${item}`)
-    await received.locator('.inventory-item-link').click()
+    await received.locator('.inventory-title-edit').click()
     const description = received.getByRole('textbox', {
       name: d.items.item,
       exact: true,

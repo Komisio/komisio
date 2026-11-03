@@ -5,6 +5,16 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
+function saveOrRetry(page: Page) {
+  return page
+    .getByRole('button', { name: d.quickIntake.submit, exact: true })
+    .or(
+      page
+        .locator('.quick-finish')
+        .getByRole('button', { name: d.quickIntake.retry, exact: true }),
+    )
+}
+
 type Saved = { itemId: string; reference: string; sessionId: string }
 
 /**
@@ -53,8 +63,8 @@ test('retrying a lost quick-reception response does not register another item', 
     await description.fill('Synthetic retry chair')
     await price.fill('250')
     const lost = await loseFirstReply(page)
-    const submit = page.locator('.quick-finish').getByRole('button')
-    await price.press('Enter')
+    const submit = saveOrRetry(page)
+    await submit.press('Enter')
     const alert = page.locator('.quick-item').getByRole('alert')
     await expect(alert).toHaveText(d.quickIntake.uncertain)
     expect(lost.firstStatus()).toBe(200)
@@ -189,7 +199,7 @@ test('a refusal after a lost reply does not unfreeze the attempt', async ({
         })
       return route.continue()
     })
-    const submit = page.locator('.quick-finish').getByRole('button')
+    const submit = saveOrRetry(page)
     const alert = page.locator('.quick-item').getByRole('alert')
     await submit.click()
     await expect(alert).toHaveText(d.quickIntake.uncertain)
@@ -248,7 +258,7 @@ test('a damaged success reply keeps the attempt frozen until the item is confirm
         body: JSON.stringify(saved).slice(0, 12),
       })
     })
-    const submit = page.locator('.quick-finish').getByRole('button')
+    const submit = saveOrRetry(page)
     await submit.click()
     await expect(page.locator('.quick-item').getByRole('alert')).toHaveText(
       d.quickIntake.uncertain,
@@ -299,7 +309,7 @@ test('a stale-picture refusal offers a reload while the fields stay editable', a
         body: JSON.stringify({ error: 'RECEPTION_CHANGED' }),
       })
     })
-    const submit = page.locator('.quick-finish').getByRole('button')
+    const submit = saveOrRetry(page)
     await submit.click()
     await expect(page.locator('.quick-item').getByRole('alert')).toHaveText(
       d.quickIntake.errors.RECEPTION_CHANGED,
@@ -366,7 +376,7 @@ test('a known refusal leaves the fields correctable under the same request id', 
       statuses.push(response.status())
       await route.fulfill({ response })
     })
-    const submit = page.locator('.quick-finish').getByRole('button')
+    const submit = saveOrRetry(page)
     await submit.click()
     await expect(page.locator('.quick-item').getByRole('alert')).toHaveText(
       d.quickIntake.errors.INVALID_INPUT,
@@ -453,16 +463,14 @@ for (const withPhoto of [false, true])
           buffer: bytes,
         })
         expect((await sourceSaved).status()).toBe(200)
-        await expect(
-          page.locator('.quick-finish').getByRole('button'),
-        ).toBeEnabled()
+        await expect(saveOrRetry(page)).toBeEnabled()
       }
       await page
         .getByLabel(d.quickIntake.description, { exact: true })
         .fill('Synthetic bag retry scarf')
       await page.getByLabel(d.quickIntake.price, { exact: true }).fill('60')
       const lost = await loseFirstReply(page)
-      const submit = page.locator('.quick-finish').getByRole('button')
+      const submit = saveOrRetry(page)
       await submit.click()
       await expect(page.locator('.quick-item').getByRole('alert')).toHaveText(
         d.quickIntake.uncertain,

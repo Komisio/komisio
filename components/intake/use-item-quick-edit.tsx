@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState, type KeyboardEvent } from 'react'
+import { useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { Pencil } from 'lucide-react'
 import { useUnsavedChanges } from '@/components/platform/navigation-warning'
 import { useRouter } from '@/components/platform/use-working-router'
@@ -179,7 +179,11 @@ export function useItemQuickEdit({
       void save(undefined, true)
     }
     if (event.key === 'Tab') {
-      const fields: Field[] = ['title', 'category', 'itemType', 'assortment']
+      const fields = (
+        ['title', 'category', 'itemType', 'assortment'] as Field[]
+      ).filter(
+        (candidate) => buttons.current[candidate]?.getClientRects().length,
+      )
       const next = fields[fields.indexOf(field) + (event.shiftKey ? -1 : 1)]
       if (next) {
         event.preventDefault()
@@ -198,6 +202,7 @@ export function useItemQuickEdit({
       active?: boolean
       aliases?: string[]
     }[],
+    display?: ReactNode,
   ) {
     const active = edit?.field === field
     // Translate current presentation without changing the optimistic snapshot
@@ -234,15 +239,20 @@ export function useItemQuickEdit({
           ? (options.find((option) => option.id === current[field])?.name ??
             '—')
           : current[field] || '—'
-    if (!write) return <span className="inventory-cell-text">{shown}</span>
+    if (!write)
+      return display ?? <span className="inventory-cell-text">{shown}</span>
     return (
-      <div className="inventory-cell-editor">
+      <div
+        className={`inventory-cell-editor${display ? ' inventory-title-editor' : ''}`}
+        data-editing={active || undefined}
+      >
+        {display}
         <button
           type="button"
           ref={(node) => {
             buttons.current[field] = node
           }}
-          className={`inventory-cell-button${field === 'title' ? ' inventory-item-link' : ''}`}
+          className={`inventory-cell-button${display ? ' inventory-title-edit' : field === 'title' ? ' inventory-item-link' : ''}`}
           data-editing={active || undefined}
           aria-label={`${t.editRow} ${label}: ${shown}`}
           aria-disabled={
@@ -251,7 +261,7 @@ export function useItemQuickEdit({
           title={w.cellHint}
           onClick={() => open(field)}
         >
-          <span>{shown}</span>
+          {!display && <span>{shown}</span>}
           <Pencil size={12} aria-hidden="true" />
         </button>
         {active &&

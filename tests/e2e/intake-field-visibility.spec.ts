@@ -5,6 +5,88 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import { hideableIntakeFields } from '../../lib/engine/registration'
 import d from '../../messages/sv.json' with { type: 'json' }
 
+for (const mode of ['quick', 'bag'] as const) {
+  test(`${mode} intake keeps description and price together, then saves the optional note after item details`, async ({
+    page,
+  }) => {
+    const email = `note-placement-${randomUUID()}@example.test`
+    await register(page, email, `K!${randomUUID()}`)
+    const f = await p2Fixture(email)
+    try {
+      const bag = (
+        await f.db.query(
+          'select receive_bag_with_agreement($1,$2,$3,$4,$5) id',
+          [
+            f.tenant,
+            randomUUID(),
+            f.seller,
+            'Synthetic note layout',
+            f.agreement,
+          ],
+        )
+      ).rows[0].id
+      await f.commit()
+      await page.goto(
+        mode === 'quick' ? '/intake/quick' : `/intake/bags/${bag}/inspect`,
+      )
+      if (mode === 'quick')
+        await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
+      const description = page.locator('#quick-description')
+      const price = page.locator('#quick-price')
+      const note = page.getByLabel(d.quickIntake.internalNote, { exact: true })
+      await description.fill('Synthetic note layout item')
+      await description.press('Tab')
+      await expect(price).toBeFocused()
+      await price.fill('125')
+      await note.fill('Synthetic staff-only handling note')
+      for (const width of [1360, 390]) {
+        await page.setViewportSize({ width, height: 900 })
+        const details = await page.locator('.quick-workspace').boundingBox()
+        const noteBox = await note.boundingBox()
+        const finish = await page.locator('.quick-finish').boundingBox()
+        expect(noteBox!.y).toBeGreaterThan(details!.y + details!.height)
+        expect(finish!.y).toBeGreaterThan(noteBox!.y + noteBox!.height)
+        expect(
+          await page.evaluate(() => document.documentElement.scrollWidth),
+        ).toBeLessThanOrEqual(width)
+        await expect(note).toHaveValue('Synthetic staff-only handling note')
+        await page.locator('.quick-item').screenshot({
+          path: test.info().outputPath(`note-${width}.png`),
+        })
+      }
+      await page
+        .getByRole('button', {
+          name: mode === 'quick' ? d.quickIntake.submit : d.bagIntake.save,
+          exact: true,
+        })
+        .click()
+      await expect(
+        page.getByRole('region', { name: d.quickIntake.done, exact: true }),
+      ).toBeVisible()
+      const { id } = (
+        await f.db.query('select id from items where tenant_id=$1', [f.tenant])
+      ).rows[0]
+      const saved = await f.asActor(f.actor, async () =>
+        f.db.query("select item_internal_note($1,'item',$2)->>'note' note", [
+          f.tenant,
+          id,
+        ]),
+      )
+      expect(saved.rows[0].note).toBe('Synthetic staff-only handling note')
+      await page
+        .getByRole('button', {
+          name: mode === 'quick' ? d.quickIntake.next : d.bagIntake.next,
+          exact: true,
+        })
+        .click()
+      await expect(description).toBeFocused()
+      await expect(note).toHaveValue('')
+    } finally {
+      await f.close()
+    }
+  })
+}
+
 test('store visibility controls quick and bag intake, keeps required questions and omits hidden values', async ({
   page,
 }) => {

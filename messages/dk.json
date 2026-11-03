@@ -177,7 +177,7 @@
       "agreementAccepted": "Godkendt",
       "agreementPending": "Ikke godkendt"
     },
-    "title": "Hurtig modtagelse",
+    "title": "Registrer varer nu",
     "intro": "Beskrivelse og pris er nok. Tilføj et billede eller flere oplysninger, hvis du vil.",
     "seller": "Indleverer",
     "searchSeller": "Find indleverer",
@@ -208,7 +208,9 @@
     "price": "Pris",
     "printer": "Mærkatprinter",
     "noPrinter": "Ingen mærkat",
-    "submit": "Klar til hylden",
+    "submit": "Gem vare",
+    "saveAndNext": "Gem og næste",
+    "savedNext": "Gemt – klar til næste vare.",
     "busy": "Gemmer…",
     "printing": "Udskriver…",
     "fillIn": "Der kræves en beskrivelse og en pris over nul.",
@@ -271,7 +273,7 @@
     "priceInvalid": "Angiv en pris over 0 og højst 999.999,99. Brug højst to decimaler.",
     "savedPriceUnavailable": "Varen er godkendt, men den gemte pris kunne ikke læses. Åbn varen for at kontrollere prisen.",
     "formHelp": {
-      "label": "Hjælp til hurtig modtagelse",
+      "label": "Hjælp til direkte registrering",
       "steps": [
         "Vælg indleverer, og registrer én vare ad gangen.",
         "Udfyld beskrivelse, kategori og pris. Kontrollér eventuelle AI-forslag.",
@@ -288,7 +290,7 @@
     "internalNoteHint": "Kun for personale. Vises ikke til sælgeren og medtages ikke på etiketter, salgsoversigter eller i kassadata."
   },
   "intake": {
-    "quickLink": "Hurtig modtagelse: én skærm pr. stykke tøj",
+    "quickLink": "Registrer varer nu",
     "exportSellerData": "Download alle data om denne indleverer (JSON)",
     "title": "Indlevering",
     "intro": "Modtag en indlevering nu og gennemgå varerne senere. En indlevering er de varer en sælger afleverer på én gang.",
@@ -355,7 +357,7 @@
     "matchPhone": "samme telefon",
     "matchName": "samme navn",
     "overviewIntro": "Modtag en vare nu, eller registrer en indlevering til gennemgang senere.",
-    "quickHint": "Beskrivelse og pris er nok. Billede er valgfrit.",
+    "quickHint": "Beskriv og prissæt én vare ad gangen ved modtagelsen.",
     "labelPreview": "Forhåndsvisning",
     "otherPrint": "Anden printer eller PDF",
     "browserPrint": "Åbn udskriftsdialog",
@@ -613,7 +615,7 @@
     "item.period_extended": "Vare · Salgsperiode · Forlængelse",
     "item.photos_changed": "Vare · Varebilleder · Ændring",
     "item.price_set": "Vare · Pris · Gemt",
-    "item.quick_received": "Vare · Hurtig modtagelse · Modtagelse",
+    "item.quick_received": "Vare · Direkte registrering · Modtagelse",
     "item.transferred_in": "Vare · Overførsel ind",
     "item.transferred_out": "Vare · Overførsel ud",
     "item_type.set": "Varetype · Gemt",
@@ -1350,7 +1352,13 @@
       "activeFilters": "Aktive filtre",
       "removeFilter": "Fjern {filter}",
       "periodWindow": "Salgsperiode",
-      "categoryChoiceHint": "Vælg en kategori fra butikkens liste."
+      "categoryChoiceHint": "Vælg en kategori fra butikkens liste.",
+      "columns": {
+        "title": "Kolonner",
+        "core": "Vare, pris, sælger og status vises altid.",
+        "show": "Vis kolonne: {column}",
+        "reset": "Nulstil kolonner"
+      }
     },
     "title": "Varer",
     "item": "Vare",
@@ -3352,9 +3360,9 @@
     "notice": "Returnerede varer er udeladt. Priserne er dem, denne butik har registreret; intet hentes udefra."
   },
   "nav": {
-    "quickShort": "Modtag",
+    "quickShort": "Registrer",
     "receiving": "Modtagelse",
-    "receiveBag": "Modtag en indlevering",
+    "receiveBag": "Modtag nu – registrer senere",
     "selfDropOff": "Selvaflevering",
     "goods": "Varer",
     "sellers": "Indleverere",
@@ -3605,7 +3613,7 @@
     "item": "Vare fra indleveringen",
     "save": "Gem vare",
     "next": "Næste vare fra indleveringen",
-    "registered": "Varer fra hurtig modtagelse",
+    "registered": "Direkte registrerede varer",
     "empty": "Ingen varer registreret endnu.",
     "back": "Til indleveringen",
     "limit": "Viser de 50 senest registrerede varer.",
@@ -3910,7 +3918,7 @@
     "itemsHint": "Find og administrer butikkens varer.",
     "salesHint": "Se registrerede salg.",
     "snapshot": "Butikkens status",
-    "receiptHint": "Modtag nu, gennemgå varerne senere."
+    "receiptHint": "Modtag en pose, kasse eller enkelt genstand nu. Registrer varerne senere."
   },
   "auditHint": "De 12 senest registrerede hændelser i butikken.",
   "otherActivity": "Anden butikshændelse",
@@ -4729,7 +4737,7 @@
     "categories": [
       "Opret brede kategorier som Tøj, Bolig og indretning eller Bøger for at organisere varerne.",
       "Angiv kategorinavnet. Tilføj oversættelser, hvis I bruger flere sprog; egne navne oversættes ikke automatisk.",
-      "Vælg en valgfri kategori i Hurtig modtagelse eller ved registrering af en vare fra en indlevering. Varetypens standardvalg kan ændres for hver vare."
+      "Vælg en valgfri kategori i Registrer varer nu eller ved registrering af en vare fra en indlevering. Varetypens standardvalg kan ændres for hver vare."
     ],
     "types": [
       "Opret varetyper som Jakke eller Bukser. Varetypen bestemmer, hvilke oplysninger personalet udfylder ved modtagelse.",
@@ -5272,7 +5280,7 @@
     "uncertain": "Svaret kunne ikke bekræftes. Prøv igen med de samme oplysninger.",
     "visibility": {
       "title": "Vis ved modtagelse",
-      "hint": "Vælg felterne i hurtig modtagelse og ved registrering fra en indlevering. Varetypens obligatoriske spørgsmål vises altid.",
+      "hint": "Vælg felterne ved direkte registrering og ved registrering fra en indlevering. Varetypens obligatoriske spørgsmål vises altid.",
       "priceLocked": "Pris vises altid og skal udfyldes.",
       "descriptionLocked": "Beskrivelse vises, fordi den er obligatorisk.",
       "fields": {

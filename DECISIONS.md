@@ -1,5 +1,9 @@
 # Decision Log
 
+- 2026-11-03: #747 adds Save and next to quick/bag intake, retaining context and a saved-item summary. Continue only after accepted-price and optional print-queue confirmation; uncertain attempts retain their action and identity. No engine or physical-print rules change.
+
+- 2026-11-03: #745 places optional internal notes after item details and before completion controls in shared quick/bag registration. Existing store visibility, note privacy, saving and retry behavior remain unchanged.
+
 The fixed staging wait in the historical C6 entries is superseded by the
 2026-10-27 production-readiness decision below. See CLAUDE.md for the current rule.
 
@@ -1283,3 +1287,9 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-10-30: #732 allows repair or retirement of existing item-type name collisions. Unchanged colliding translations may remain during edits; new collisions and reactivation with collisions are rejected. Tenant locks, stale-edit checks and historical deletion protection remain.
 - 2026-11-01: #737 adds default-visible intake field preferences to versioned store registration settings. Price and required description stay visible; expected type questions override hiding. Hidden values are omitted from shared quick/bag intake, without changing acceptance rules or permissions.
 - 2026-11-01: #742 places registration settings in the fifth vocabulary tab, with a direct link and retained drafts. Tab notices identify unsaved edits and unconfirmed saves; status announcements remain available across tabs. Save behavior and read-only permissions remain unchanged.
+
+- 2026-11-03: Inventory defaults to item, price, seller and status with selection/photo/ownership indicators; six extra columns are optional per store/browser, shared by bag lists. Hidden fields stay mounted for safe retries; keyboard editing skips them (#749).
+
+- 2026-11-03: Inventory titles open items via real links retaining list context; separate pencils edit names with existing concurrency/retry rules. Eligible item details expose Change price beside the price through the existing guarded price dialog (#750).
+
+- 2026-11-03: Receiving entry points distinguish Register items now from Receive now, register later, with short visible hints for any goods. Existing routes and custody/acceptance rules stay unchanged; switching methods guards unsaved work in both directions (#753).

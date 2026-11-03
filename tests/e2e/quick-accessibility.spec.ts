@@ -71,7 +71,11 @@ test('Enter in price registers once while description Enter stays a newline', as
     const price = page.getByLabel(d.quickIntake.price, { exact: true })
     await price.fill('120')
     await price.press('Enter')
-    await expect(page.locator('.quick-done h2')).toBeFocused()
+    await expect(page.locator('.quick-last-saved')).toContainText(
+      d.quickIntake.savedNext,
+    )
+    await expect(description).toBeFocused()
+    await expect(description).toHaveValue('')
     expect(requests).toBe(1)
     expect(
       (
@@ -177,7 +181,10 @@ test('an in-flight keyboard save ignores another form submission', async ({
       .evaluate((form) => (form as HTMLFormElement).requestSubmit())
     expect(requests).toBe(1)
     release()
-    await expect(page.locator('.quick-done h2')).toBeFocused()
+    await expect(page.locator('.quick-last-saved')).toContainText(
+      d.quickIntake.savedNext,
+    )
+    await expect(page.locator('#quick-description')).toBeFocused()
     expect(requests).toBe(1)
     expect(
       (

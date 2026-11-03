@@ -31,6 +31,7 @@ export function InventorySortHeader({
   href,
   label,
   d,
+  column,
   numeric = false,
   preserveDraft = false,
 }: {
@@ -39,6 +40,7 @@ export function InventorySortHeader({
   href: string
   label: string
   d: Dictionary['items']['directory']
+  column?: string
   numeric?: boolean
   preserveDraft?: boolean
 }) {
@@ -46,6 +48,7 @@ export function InventorySortHeader({
   return (
     <th
       scope="col"
+      data-inventory-column={column}
       className={numeric ? 'inventory-number' : undefined}
       aria-sort={
         selected ? (direction === 'asc' ? 'ascending' : 'descending') : 'none'

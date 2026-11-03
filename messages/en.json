@@ -177,7 +177,7 @@
       "agreementAccepted": "Accepted",
       "agreementPending": "Not accepted"
     },
-    "title": "Quick reception",
+    "title": "Register items now",
     "intro": "A description and price are all you need. Add a photo or more details if you like.",
     "seller": "Seller",
     "searchSeller": "Find seller",
@@ -208,7 +208,9 @@
     "price": "Price",
     "printer": "Label printer",
     "noPrinter": "No label",
-    "submit": "Ready for the shelf",
+    "submit": "Save item",
+    "saveAndNext": "Save and next",
+    "savedNext": "Saved – ready for the next item.",
     "busy": "Saving…",
     "printing": "Printing…",
     "fillIn": "A description and a price above zero are needed.",
@@ -271,7 +273,7 @@
     "priceInvalid": "Enter a price above 0 and at most 999,999.99. Use at most two decimal places.",
     "savedPriceUnavailable": "The item is accepted, but its saved price could not be read. Open the item to check its price.",
     "formHelp": {
-      "label": "Help with quick reception",
+      "label": "Help with direct registration",
       "steps": [
         "Select the consignor and register one item at a time.",
         "Enter description, category and price. Check any AI suggestions.",
@@ -288,7 +290,7 @@
     "internalNoteHint": "Staff only. Not shown to sellers or included on labels, sales summaries or in POS data."
   },
   "intake": {
-    "quickLink": "Quick reception: one screen per garment",
+    "quickLink": "Register items now",
     "exportSellerData": "Download all data about this seller (JSON)",
     "title": "Intake",
     "intro": "Receive a drop-off now and review the items later. A drop-off is the goods a seller hands over on one occasion.",
@@ -355,7 +357,7 @@
     "matchPhone": "same phone",
     "matchName": "same name",
     "overviewIntro": "Receive an item now or register a drop-off to sort later.",
-    "quickHint": "A description and price are enough. A photo is optional.",
+    "quickHint": "Describe and price one item at a time, as you receive it.",
     "labelPreview": "Preview",
     "otherPrint": "Other printer or PDF",
     "browserPrint": "Open print dialog",
@@ -613,7 +615,7 @@
     "item.period_extended": "Item · Sale period · Extension",
     "item.photos_changed": "Item · Item photos · Change",
     "item.price_set": "Item · Price · Saved",
-    "item.quick_received": "Item · Quick reception · Receipt",
+    "item.quick_received": "Item · Direct registration · Receipt",
     "item.transferred_in": "Item · Transfer in",
     "item.transferred_out": "Item · Transfer out",
     "item_type.set": "Item type · Saved",
@@ -1350,7 +1352,13 @@
       "activeFilters": "Active filters",
       "removeFilter": "Remove {filter}",
       "periodWindow": "Sale period",
-      "categoryChoiceHint": "Choose a category from the store list."
+      "categoryChoiceHint": "Choose a category from the store list.",
+      "columns": {
+        "title": "Columns",
+        "core": "Item, price, seller and status are always shown.",
+        "show": "Show column: {column}",
+        "reset": "Reset columns"
+      }
     },
     "title": "Items",
     "item": "Item",
@@ -3352,9 +3360,9 @@
     "notice": "Returned items are excluded. Prices are what this store recorded; nothing is fetched from outside."
   },
   "nav": {
-    "quickShort": "Receive",
+    "quickShort": "Register",
     "receiving": "Receiving",
-    "receiveBag": "Receive a drop-off",
+    "receiveBag": "Receive now, register later",
     "selfDropOff": "Self drop-off",
     "goods": "Goods",
     "sellers": "Sellers",
@@ -3605,7 +3613,7 @@
     "item": "Item from the drop-off",
     "save": "Save item",
     "next": "Next item from the drop-off",
-    "registered": "Items from quick intake",
+    "registered": "Directly registered items",
     "empty": "No items registered yet.",
     "back": "Back to handover",
     "limit": "Showing the 50 most recently registered items.",
@@ -3910,7 +3918,7 @@
     "itemsHint": "Find and manage store items.",
     "salesHint": "View recorded sales.",
     "snapshot": "Store snapshot",
-    "receiptHint": "Receive now, inspect the items later."
+    "receiptHint": "Receive a bag, box or individual object now. Register the items later."
   },
   "auditHint": "The 12 most recent recorded events in the store.",
   "otherActivity": "Other store event",
@@ -4729,7 +4737,7 @@
     "categories": [
       "Create broad categories, such as Clothing, Home & décor or Books, to organise your items.",
       "Enter the category name. Add translations if you use several languages; custom names are not translated automatically.",
-      "Choose an optional category in Quick reception or when registering an item from a drop-off. You can override the item type default for each item."
+      "Choose an optional category in Register items now or when registering an item from a drop-off. You can override the item type default for each item."
     ],
     "types": [
       "Create item types such as Jacket or Trousers. The type determines which details staff fill in when receiving an item.",
@@ -5272,7 +5280,7 @@
     "uncertain": "The response could not be confirmed. Retry with the same information.",
     "visibility": {
       "title": "Show at intake",
-      "hint": "Choose the fields shown in quick intake and when registering items from a drop-off. Required item-type questions are always shown.",
+      "hint": "Choose the fields shown during direct registration and when registering items from a drop-off. Required item-type questions are always shown.",
       "priceLocked": "Price is always shown and must be entered.",
       "descriptionLocked": "Description is shown because it is required.",
       "fields": {

@@ -10,6 +10,7 @@ import {
 import type { DirectoryItem } from '@/lib/engine/item-directory'
 import type { ItemTypeProfile } from '@/lib/engine/attributes'
 import type { Dictionary, Locale } from '@/lib/i18n'
+import { useInventoryColumnCount } from './inventory-columns'
 import { useInventorySelection } from './inventory-selection'
 import { ItemClassificationEditor } from './item-classification-editor'
 import { LifecycleBatch } from './lifecycle-batch'
@@ -36,6 +37,7 @@ export function InventoryActions({
   manage: boolean
   d: Dictionary
 }) {
+  const columnCount = useInventoryColumnCount()
   const { ids, selected, setSelected, updates } = useInventorySelection()
   const chosen = items
     .map((item) => {
@@ -61,7 +63,7 @@ export function InventoryActions({
   if (!chosen.length && !batch) return null
   return (
     <tr className="inventory-selection-row">
-      <th colSpan={13}>
+      <th colSpan={columnCount}>
         <div
           className="inventory-selection-toolbar"
           aria-label={d.inventoryWorkspace.actions}

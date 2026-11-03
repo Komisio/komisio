@@ -177,7 +177,7 @@
       "agreementAccepted": "Hyväksytty",
       "agreementPending": "Ei hyväksytty"
     },
-    "title": "Pikavastaanotto",
+    "title": "Rekisteröi tuotteet nyt",
     "intro": "Kuvaus ja hinta riittävät. Lisää halutessasi kuva tai muita tietoja.",
     "seller": "Tuoja",
     "searchSeller": "Etsi tuoja",
@@ -208,7 +208,9 @@
     "price": "Hinta",
     "printer": "Etikettitulostin",
     "noPrinter": "Ei etikettiä",
-    "submit": "Valmis hyllyyn",
+    "submit": "Tallenna tuote",
+    "saveAndNext": "Tallenna ja seuraava",
+    "savedNext": "Tallennettu – valmis seuraavaan tuotteeseen.",
     "busy": "Tallennetaan…",
     "printing": "Tulostetaan…",
     "fillIn": "Tarvitaan kuvaus ja nollaa suurempi hinta.",
@@ -271,7 +273,7 @@
     "priceInvalid": "Anna hinta, joka on yli 0 ja enintään 999 999,99. Käytä enintään kahta desimaalia.",
     "savedPriceUnavailable": "Tuote on hyväksytty, mutta tallennettua hintaa ei voitu lukea. Avaa tuote tarkistaaksesi hinnan.",
     "formHelp": {
-      "label": "Pika vastaanoton ohje",
+      "label": "Suoran rekisteröinnin ohje",
       "steps": [
         "Valitse tavaran tuoja ja rekisteröi yksi tuote kerrallaan.",
         "Täytä kuvaus, tuoteryhmä ja hinta. Tarkista mahdolliset tekoälyn ehdotukset.",
@@ -288,7 +290,7 @@
     "internalNoteHint": "Vain henkilökunnalle. Ei näytetä myyjälle eikä sisälly etiketteihin, myyntiyhteenvetoihin tai kassajärjestelmän tietoihin."
   },
   "intake": {
-    "quickLink": "Pikavastaanotto: yksi näyttö per vaate",
+    "quickLink": "Rekisteröi tuotteet nyt",
     "exportSellerData": "Lataa kaikki tiedot tästä tuojasta (JSON)",
     "title": "Vastaanotto",
     "intro": "Vastaanota tuontierä nyt ja tarkasta tuotteet myöhemmin. Tuontierä tarkoittaa myyjän samalla kertaa tuomia tavaroita.",
@@ -355,7 +357,7 @@
     "matchPhone": "sama puhelin",
     "matchName": "sama nimi",
     "overviewIntro": "Vastaanota tuote heti tai kirjaa tuontierä myöhempää läpikäyntiä varten.",
-    "quickHint": "Kuvaus ja hinta riittävät. Kuva on valinnainen.",
+    "quickHint": "Kuvaile ja hinnoittele yksi tuote kerrallaan vastaanoton yhteydessä.",
     "labelPreview": "Esikatselu",
     "otherPrint": "Muu tulostin tai PDF",
     "browserPrint": "Avaa tulostusikkuna",
@@ -613,7 +615,7 @@
     "item.period_extended": "Tuote · Myyntijakso · Pidennys",
     "item.photos_changed": "Tuote · Tuotekuvat · Muutos",
     "item.price_set": "Tuote · Hinta · Tallennus",
-    "item.quick_received": "Tuote · Pikavastaanotto · Vastaanotto",
+    "item.quick_received": "Tuote · Suora rekisteröinti · Vastaanotto",
     "item.transferred_in": "Tuote · Siirto sisään",
     "item.transferred_out": "Tuote · Siirto ulos",
     "item_type.set": "Tuotetyyppi · Tallennus",
@@ -1350,7 +1352,13 @@
       "activeFilters": "Käytössä olevat suodattimet",
       "removeFilter": "Poista {filter}",
       "periodWindow": "Myyntiaika",
-      "categoryChoiceHint": "Valitse kategoria myymälän luettelosta."
+      "categoryChoiceHint": "Valitse kategoria myymälän luettelosta.",
+      "columns": {
+        "title": "Sarakkeet",
+        "core": "Tuote, hinta, myyjä ja tila näytetään aina.",
+        "show": "Näytä sarake: {column}",
+        "reset": "Palauta oletussarakkeet"
+      }
     },
     "title": "Tuotteet",
     "item": "Tuote",
@@ -3352,9 +3360,9 @@
     "notice": "Palautetut tuotteet on jätetty pois. Hinnat ovat tämän kaupan kirjaamia; mitään ei noudeta ulkopuolelta."
   },
   "nav": {
-    "quickShort": "Vastaanota",
+    "quickShort": "Rekisteröi",
     "receiving": "Vastaanotto",
-    "receiveBag": "Ota vastaan tuontierä",
+    "receiveBag": "Vastaanota nyt – rekisteröi myöhemmin",
     "selfDropOff": "Omatoiminen jättö",
     "goods": "Tavarat",
     "sellers": "Tuojat",
@@ -3605,7 +3613,7 @@
     "item": "Tuote tuontierästä",
     "save": "Tallenna tuote",
     "next": "Seuraava tuote tuontierästä",
-    "registered": "Pikavastaanoton tuotteet",
+    "registered": "Suoraan rekisteröidyt tuotteet",
     "empty": "Tuotteita ei ole vielä rekisteröity.",
     "back": "Takaisin tavaraerään",
     "limit": "Näytetään 50 viimeksi rekisteröityä tuotetta.",
@@ -3916,7 +3924,7 @@
     "itemsHint": "Etsi ja hallitse myymälän tuotteita.",
     "salesHint": "Katso kirjatut myynnit.",
     "snapshot": "Myymälän tilanne",
-    "receiptHint": "Ota vastaan nyt, tarkasta tuotteet myöhemmin."
+    "receiptHint": "Vastaanota pussi, laatikko tai yksittäinen esine nyt. Rekisteröi tuotteet myöhemmin."
   },
   "auditHint": "Myymälän 12 viimeisintä kirjattua tapahtumaa.",
   "otherActivity": "Muu myymälän tapahtuma",
@@ -4735,7 +4743,7 @@
     "categories": [
       "Luo laajoja kategorioita, kuten Vaatteet, Koti ja sisustus tai Kirjat, tuotteiden järjestämiseen.",
       "Anna kategorian nimi. Lisää käännökset, jos käytätte useita kieliä; omia nimiä ei käännetä automaattisesti.",
-      "Valitse halutessasi kategoria pikavastaanotossa tai rekisteröidessäsi tuotetta tuontierästä. Voit muuttaa tuotetyypin oletusvalintaa jokaiselle tuotteelle."
+      "Valitse halutessasi kategoria kohdassa Rekisteröi tuotteet nyt tai rekisteröidessäsi tuotetta tuontierästä. Tuotetyypin oletusvalintaa voi muuttaa tuotekohtaisesti."
     ],
     "types": [
       "Luo tuotetyyppejä, kuten Takki tai Housut. Tuotetyyppi määrittää vastaanotossa täytettävät tiedot.",
@@ -5278,7 +5286,7 @@
     "uncertain": "Vastausta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
     "visibility": {
       "title": "Näytä vastaanotossa",
-      "hint": "Valitse pikavastaanotossa ja tuontierän tuotteiden rekisteröinnissä näytettävät kentät. Tuotetyypin pakolliset kysymykset näytetään aina.",
+      "hint": "Valitse suorassa rekisteröinnissä ja tuontierän tuotteiden rekisteröinnissä näytettävät kentät. Tuotetyypin pakolliset kysymykset näytetään aina.",
       "priceLocked": "Hinta näytetään aina ja se on täytettävä.",
       "descriptionLocked": "Kuvaus näytetään, koska se on pakollinen.",
       "fields": {

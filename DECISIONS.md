@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-03: #745 places optional internal notes after item details and before completion controls in shared quick/bag registration. Existing store visibility, note privacy, saving and retry behavior remain unchanged.
+
 The fixed staging wait in the historical C6 entries is superseded by the
 2026-10-27 production-readiness decision below. See CLAUDE.md for the current rule.
 

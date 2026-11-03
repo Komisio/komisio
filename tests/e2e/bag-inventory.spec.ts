@@ -1,3 +1,4 @@
+import { showInventoryColumns } from '../helpers/inventory-columns'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -39,7 +40,12 @@ test('handover shares inline edits, selection and print actions without losing r
       'Synthetic selection',
     ])
     await f.commit()
+    await page.goto('/intake/items')
+    await showInventoryColumns(page)
     await page.goto(`/intake/bags/${bag}/inspect`)
+    await expect(
+      page.locator('.inventory-table thead tr:last-child th:visible'),
+    ).toHaveCount(13)
     const table = page.locator('#bag-registered')
     const rows = table.locator('.inventory-row')
     await expect(rows).toHaveCount(2)

@@ -1352,7 +1352,13 @@
       "activeFilters": "Aktiva filter",
       "removeFilter": "Ta bort {filter}",
       "periodWindow": "Säljperiod",
-      "categoryChoiceHint": "Välj en kategori från butikens lista."
+      "categoryChoiceHint": "Välj en kategori från butikens lista.",
+      "columns": {
+        "title": "Kolumner",
+        "core": "Vara, pris, säljare och status visas alltid.",
+        "show": "Visa kolumn: {column}",
+        "reset": "Återställ kolumner"
+      }
     },
     "title": "Varor",
     "item": "Vara",

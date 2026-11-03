@@ -1352,7 +1352,13 @@
       "activeFilters": "Käytössä olevat suodattimet",
       "removeFilter": "Poista {filter}",
       "periodWindow": "Myyntiaika",
-      "categoryChoiceHint": "Valitse kategoria myymälän luettelosta."
+      "categoryChoiceHint": "Valitse kategoria myymälän luettelosta.",
+      "columns": {
+        "title": "Sarakkeet",
+        "core": "Tuote, hinta, myyjä ja tila näytetään aina.",
+        "show": "Näytä sarake: {column}",
+        "reset": "Palauta oletussarakkeet"
+      }
     },
     "title": "Tuotteet",
     "item": "Tuote",

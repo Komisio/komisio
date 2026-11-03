@@ -159,8 +159,12 @@ export function InventoryEditableRow({
           </button>
         )}
       </th>
-      <td>{cell('category', d.quickIntake.category, categories)}</td>
-      <td>{cell('itemType', d.quickIntake.itemType, types)}</td>
+      <td data-inventory-column="category">
+        {cell('category', d.quickIntake.category, categories)}
+      </td>
+      <td data-inventory-column="itemType">
+        {cell('itemType', d.quickIntake.itemType, types)}
+      </td>
       <td className="inventory-number inventory-price" data-row-control>
         <ItemPriceCell
           tenantId={tenantId}
@@ -179,7 +183,9 @@ export function InventoryEditableRow({
         />
       </td>
       <td className="inventory-indicator-cell">{indicators}</td>
-      <td>{cell('assortment', t.group, groups)}</td>
+      <td data-inventory-column="assortment">
+        {cell('assortment', t.group, groups)}
+      </td>
       {children}
     </tr>
   )

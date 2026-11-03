@@ -1,4 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react'
+import { InventoryColumns } from './inventory-columns'
 import { InventoryActions } from './inventory-actions'
 import { InventoryEditableRow } from './inventory-editable-row'
 import { InventoryItemLink } from './inventory-item-link'
@@ -78,154 +79,168 @@ export function InventoryTable({
         d={t}
         numeric={numeric}
         preserveDraft={preserveDraft}
+        column={
+          ['category', 'accepted', 'periodEnd'].includes(key) ? key : undefined
+        }
       />
     )
   }
 
   return (
-    <InventorySelection key={selectionKey} ids={items.map((i) => i.id)}>
-      <InventoryTableShell label={d.list}>
-        <thead>
-          <InventoryActions
-            items={items}
-            tenantId={tenantId}
-            currency={currency}
-            groups={groups}
-            types={types}
-            locale={locale}
-            write={write}
-            manage={manage}
-            d={all}
-          />
-          <tr>
-            <th scope="col">
-              <InventorySelectAll label={all.itemWorkflow.selectAll} />
-            </th>
-            {header('title', d.item)}
-            {header('category', all.quickIntake.category)}
-            <th scope="col">{all.quickIntake.itemType}</th>
-            {header('price', all.quickIntake.price, true)}
-            <th scope="col" className="inventory-indicator-cell">
-              <span className="sr-only">{t.details}</span>
-            </th>
-            <th scope="col">{all.itemWorkflow.group}</th>
-            {header('seller', all.quickIntake.seller)}
-            {header('stage', d.stage)}
-            <th scope="col">{all.itemSync.title}</th>
-            {header('accepted', t.registered)}
-            {header('periodEnd', t.periodEnd)}
-            <th scope="col">
-              <span className="sr-only">{d.ownership}</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((i) => (
-            <InventoryEditableRow
-              key={i.id}
-              item={i}
+    <InventoryColumns key={tenantId} tenantId={tenantId} d={all}>
+      <InventorySelection key={selectionKey} ids={items.map((i) => i.id)}>
+        <InventoryTableShell label={d.list}>
+          <thead>
+            <InventoryActions
+              items={items}
               tenantId={tenantId}
               currency={currency}
+              groups={groups}
+              types={types}
               locale={locale}
               write={write}
-              types={types
-                .filter(
-                  (type) =>
-                    type.active || type.slug === i.classification?.itemType,
-                )
-                .map((type) => ({
-                  id: type.slug,
-                  name: labelOf(type, locale),
-                }))}
-              groups={groups}
-              categories={categoryChoices(categories, locale)}
+              manage={manage}
               d={all}
-              indicators={
-                <div className="inventory-indicators">
-                  {i.defaultPhotoId && (
-                    <ItemPhotoPreview
-                      tenantId={tenantId}
-                      itemId={i.id}
-                      photoId={i.defaultPhotoId}
-                      count={i.photoCount}
-                      title={i.title || d.item}
-                      d={all.itemPhotos}
-                    />
-                  )}
-                </div>
-              }
-            >
-              <td>
-                {i.sellerId ? (
-                  <Link
-                    className="inventory-seller"
-                    href={`/intake/sellers/${i.sellerId}`}
-                    title={i.sellerName || undefined}
-                  >
-                    {i.sellerName || '—'}
-                  </Link>
-                ) : (
-                  '—'
-                )}
-              </td>
-              <td className="inventory-state" data-stage={i.stage}>
-                {i.stage === 'markdown_due' ? (
-                  <ItemIndicator
-                    warning
-                    label={
-                      i.nextMarkdownAt
-                        ? t.markdownOn
-                            .replace('{date}', date(i.nextMarkdownAt))
-                            .replace(
-                              '{percent}',
-                              String(i.nextMarkdownPercent ?? ''),
-                            )
-                        : d.markdownWaiting
-                    }
-                  >
-                    <TrendingDown size={17} aria-hidden="true" />
-                  </ItemIndicator>
-                ) : (
-                  stageLabel(i.stage)
-                )}
-              </td>
-              <td>
-                {i.sync?.length
-                  ? i.sync.map((connection) => (
-                      <InventoryItemLink
-                        key={connection.connectionId}
-                        className="item-sync-state inventory-sync-link"
-                        data-state={connection.status}
+            />
+            <tr>
+              <th scope="col">
+                <InventorySelectAll label={all.itemWorkflow.selectAll} />
+              </th>
+              {header('title', d.item)}
+              {header('category', all.quickIntake.category)}
+              <th scope="col" data-inventory-column="itemType">
+                {all.quickIntake.itemType}
+              </th>
+              {header('price', all.quickIntake.price, true)}
+              <th scope="col" className="inventory-indicator-cell">
+                <span className="sr-only">{t.details}</span>
+              </th>
+              <th scope="col" data-inventory-column="assortment">
+                {all.itemWorkflow.group}
+              </th>
+              {header('seller', all.quickIntake.seller)}
+              {header('stage', d.stage)}
+              <th scope="col" data-inventory-column="sync">
+                {all.itemSync.title}
+              </th>
+              {header('accepted', t.registered)}
+              {header('periodEnd', t.periodEnd)}
+              <th scope="col">
+                <span className="sr-only">{d.ownership}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((i) => (
+              <InventoryEditableRow
+                key={i.id}
+                item={i}
+                tenantId={tenantId}
+                currency={currency}
+                locale={locale}
+                write={write}
+                types={types
+                  .filter(
+                    (type) =>
+                      type.active || type.slug === i.classification?.itemType,
+                  )
+                  .map((type) => ({
+                    id: type.slug,
+                    name: labelOf(type, locale),
+                  }))}
+                groups={groups}
+                categories={categoryChoices(categories, locale)}
+                d={all}
+                indicators={
+                  <div className="inventory-indicators">
+                    {i.defaultPhotoId && (
+                      <ItemPhotoPreview
+                        tenantId={tenantId}
                         itemId={i.id}
-                        hash="#sync-status"
-                      >
-                        {all.itemSync.providers[connection.provider]} ·{' '}
-                        {all.itemSync.states[connection.status]}
-                      </InventoryItemLink>
-                    ))
-                  : '—'}
-              </td>
-              <td className="inventory-date">
-                <time dateTime={i.acceptedAt}>{date(i.acceptedAt)}</time>
-              </td>
-              <td className="inventory-date">
-                <time dateTime={i.periodEnd}>{date(i.periodEnd)}</time>
-              </td>
-              <td>
-                <ItemIndicator label={d.ownershipKinds[i.ownership]}>
-                  {i.ownership === 'store' ? (
-                    <Store size={16} aria-hidden="true" />
+                        photoId={i.defaultPhotoId}
+                        count={i.photoCount}
+                        title={i.title || d.item}
+                        d={all.itemPhotos}
+                      />
+                    )}
+                  </div>
+                }
+              >
+                <td>
+                  {i.sellerId ? (
+                    <Link
+                      className="inventory-seller"
+                      href={`/intake/sellers/${i.sellerId}`}
+                      title={i.sellerName || undefined}
+                    >
+                      {i.sellerName || '—'}
+                    </Link>
                   ) : (
-                    <Handshake size={16} aria-hidden="true" />
+                    '—'
                   )}
-                </ItemIndicator>
-              </td>
-            </InventoryEditableRow>
-          ))}
-        </tbody>
-      </InventoryTableShell>
+                </td>
+                <td className="inventory-state" data-stage={i.stage}>
+                  {i.stage === 'markdown_due' ? (
+                    <ItemIndicator
+                      warning
+                      label={
+                        i.nextMarkdownAt
+                          ? t.markdownOn
+                              .replace('{date}', date(i.nextMarkdownAt))
+                              .replace(
+                                '{percent}',
+                                String(i.nextMarkdownPercent ?? ''),
+                              )
+                          : d.markdownWaiting
+                      }
+                    >
+                      <TrendingDown size={17} aria-hidden="true" />
+                    </ItemIndicator>
+                  ) : (
+                    stageLabel(i.stage)
+                  )}
+                </td>
+                <td data-inventory-column="sync">
+                  {i.sync?.length
+                    ? i.sync.map((connection) => (
+                        <InventoryItemLink
+                          key={connection.connectionId}
+                          className="item-sync-state inventory-sync-link"
+                          data-state={connection.status}
+                          itemId={i.id}
+                          hash="#sync-status"
+                        >
+                          {all.itemSync.providers[connection.provider]} ·{' '}
+                          {all.itemSync.states[connection.status]}
+                        </InventoryItemLink>
+                      ))
+                    : '—'}
+                </td>
+                <td className="inventory-date" data-inventory-column="accepted">
+                  <time dateTime={i.acceptedAt}>{date(i.acceptedAt)}</time>
+                </td>
+                <td
+                  className="inventory-date"
+                  data-inventory-column="periodEnd"
+                >
+                  <time dateTime={i.periodEnd}>{date(i.periodEnd)}</time>
+                </td>
+                <td>
+                  <ItemIndicator label={d.ownershipKinds[i.ownership]}>
+                    {i.ownership === 'store' ? (
+                      <Store size={16} aria-hidden="true" />
+                    ) : (
+                      <Handshake size={16} aria-hidden="true" />
+                    )}
+                  </ItemIndicator>
+                </td>
+              </InventoryEditableRow>
+            ))}
+          </tbody>
+        </InventoryTableShell>
 
-      {children}
-    </InventorySelection>
+        {children}
+      </InventorySelection>
+    </InventoryColumns>
   )
 }

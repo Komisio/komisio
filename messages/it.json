@@ -1352,7 +1352,13 @@
       "activeFilters": "Filtri attivi",
       "removeFilter": "Rimuovi {filter}",
       "periodWindow": "Periodo di vendita",
-      "categoryChoiceHint": "Scegli una categoria dall’elenco del negozio."
+      "categoryChoiceHint": "Scegli una categoria dall’elenco del negozio.",
+      "columns": {
+        "title": "Colonne",
+        "core": "Articolo, prezzo, venditore e stato sono sempre visibili.",
+        "show": "Mostra colonna: {column}",
+        "reset": "Ripristina colonne"
+      }
     },
     "title": "Articoli",
     "item": "Articolo",

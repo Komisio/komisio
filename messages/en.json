@@ -1352,7 +1352,13 @@
       "activeFilters": "Active filters",
       "removeFilter": "Remove {filter}",
       "periodWindow": "Sale period",
-      "categoryChoiceHint": "Choose a category from the store list."
+      "categoryChoiceHint": "Choose a category from the store list.",
+      "columns": {
+        "title": "Columns",
+        "core": "Item, price, seller and status are always shown.",
+        "show": "Show column: {column}",
+        "reset": "Reset columns"
+      }
     },
     "title": "Items",
     "item": "Item",

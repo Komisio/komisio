@@ -1352,7 +1352,13 @@
       "activeFilters": "Aktive Filter",
       "removeFilter": "{filter} entfernen",
       "periodWindow": "Verkaufszeitraum",
-      "categoryChoiceHint": "Wählen Sie eine Kategorie aus der Liste des Geschäfts."
+      "categoryChoiceHint": "Wählen Sie eine Kategorie aus der Liste des Geschäfts.",
+      "columns": {
+        "title": "Spalten",
+        "core": "Artikel, Preis, Verkäufer und Status werden immer angezeigt.",
+        "show": "Spalte anzeigen: {column}",
+        "reset": "Spalten zurücksetzen"
+      }
     },
     "title": "Artikel",
     "item": "Artikel",

@@ -16,7 +16,7 @@ taskLinks:
   - href: /help/labels
     label: Label help
 externalLinks: []
-lastReviewed: 2026-10-20
+lastReviewed: 2026-11-03
 machineTranslated: false
 ---
 
@@ -26,6 +26,8 @@ Find and edit items, select several at once and follow up prices and selling per
 1. Search or filter the items. Open an item for pictures, history and further details.
 2. Use table editing for the name, category, item type and assortment group.
 3. Select one or more rows for the available shared actions, such as editing several items or printing A4 label sheets.
+
+The default view shows item, price, seller and status. Open **Columns** to show more details. Your choice is saved for this store in your browser and also applies to the handover item list.
 
 Categories, item types, attributes and assortment groups are managed in the store's Item settings. Changed display text does not replace older agreement or sale evidence.
 

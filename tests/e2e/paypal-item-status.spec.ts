@@ -1,3 +1,4 @@
+import { showInventoryColumns } from '../helpers/inventory-columns'
 import { test, expect } from '@playwright/test'
 import { randomUUID } from 'node:crypto'
 import { register } from '../helpers/account'
@@ -52,6 +53,7 @@ test('Independent connection status filters the full inventory and opens a scope
     )
     await f.commit()
     await page.goto('/intake/items?sort=title&direction=asc&paypal=not_sent')
+    await showInventoryColumns(page)
     await expect(page.locator('.inventory-row')).toHaveCount(25)
     await page
       .getByRole('link', { name: d.items.nextPage, exact: true })

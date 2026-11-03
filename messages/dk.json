@@ -1352,7 +1352,13 @@
       "activeFilters": "Aktive filtre",
       "removeFilter": "Fjern {filter}",
       "periodWindow": "Salgsperiode",
-      "categoryChoiceHint": "Vælg en kategori fra butikkens liste."
+      "categoryChoiceHint": "Vælg en kategori fra butikkens liste.",
+      "columns": {
+        "title": "Kolonner",
+        "core": "Vare, pris, sælger og status vises altid.",
+        "show": "Vis kolonne: {column}",
+        "reset": "Nulstil kolonner"
+      }
     },
     "title": "Varer",
     "item": "Vare",

@@ -70,7 +70,7 @@ test('compact columns fit desktop and retain optional details through paging and
       '7',
     )
     // Hidden editors must not capture Tab after an unchanged title edit.
-    await table.locator('.inventory-item-link').click()
+    await table.locator('.inventory-title-edit').click()
     await page.keyboard.press('Tab')
     await expect(table.getByRole('textbox')).toHaveCount(0)
     expect(

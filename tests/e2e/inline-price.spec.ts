@@ -92,7 +92,7 @@ test('inline price replays once without a reason, while drop-off title editing s
     ).toBe(1)
     await page.goto(`/intake/bags/${bag}/inspect#bag-registered`)
     const received = page.locator(`#inventory-item-${item}`)
-    await received.locator('.inventory-item-link').click()
+    await received.locator('.inventory-title-edit').click()
     const description = received.getByRole('textbox', {
       name: d.items.item,
       exact: true,

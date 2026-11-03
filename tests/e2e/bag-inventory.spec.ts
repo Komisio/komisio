@@ -69,7 +69,7 @@ test('handover shares inline edits, selection and print actions without losing r
     await expect(rows.first()).toContainText('Synthetic coat')
     await expect(description).toHaveValue('Synthetic unsaved next item')
     const row = rows.first()
-    await row.locator('.inventory-item-link').click()
+    await row.locator('.inventory-title-edit').click()
     await row
       .getByRole('textbox', { name: d.items.item, exact: true })
       .fill('Synthetic corrected coat')
@@ -118,7 +118,7 @@ test('handover shares inline edits, selection and print actions without losing r
         body: JSON.stringify({ error: 'REQUEST_FAILED' }),
       })
     })
-    await row.locator('.inventory-item-link').click()
+    await row.locator('.inventory-title-edit').click()
     await row
       .getByRole('textbox', { name: d.items.item, exact: true })
       .fill('Synthetic confirmed coat')

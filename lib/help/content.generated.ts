@@ -4788,7 +4788,7 @@ export const helpContent: Record<
                     {
                       type: 'text',
                       value:
-                        'Använd redigeringen i tabellen för namn, kategori, varutyp och sortimentsgrupp.',
+                        'Klicka på varunamnet för att öppna varan. Pennan bredvid namnet ändrar namnet. Du kan även ändra kategori, varutyp och sortimentsgrupp i tabellen när kolumnerna visas.',
                     },
                   ],
                 },
@@ -4837,6 +4837,21 @@ export const helpContent: Record<
           ],
         },
         {
+          type: 'paragraph',
+          children: [
+            { type: 'text', value: 'På varans sida finns ' },
+            {
+              type: 'strong',
+              children: [{ type: 'text', value: 'Ändra pris' }],
+            },
+            {
+              type: 'text',
+              value:
+                ' direkt vid det aktuella priset för varor som fortfarande är till försäljning. Du behöver behörighet att ändra varor.',
+            },
+          ],
+        },
+        {
           type: 'heading',
           depth: 2,
           children: [{ type: 'text', value: 'Följ upp säljperioden' }],
@@ -4867,7 +4882,7 @@ export const helpContent: Record<
           ],
         },
       ],
-      text: 'Hitta och redigera varor, välj flera åt gången och följ upp priser och säljperioder.\nArbeta i varutabellen\nSök eller filtrera fram varorna. Öppna en vara för bilder, historik och fler detaljer. Använd redigeringen i tabellen för namn, kategori, varutyp och sortimentsgrupp. Markera en eller flera rader för de gemensamma åtgärder som visas, till exempel ändring av flera varor eller etiketter på A4.\nStandardvyn visar vara, pris, säljare och status. Öppna  Kolumner  för att visa fler uppgifter. Valet sparas för butiken i din webbläsare och används även i inlämningens varulista.\nKategorier, varutyper, attribut och sortimentsgrupper hanteras under butikens Varuinställningar. Ändrad visningstext ersätter inte äldre avtals- eller försäljningsunderlag.\nFölj upp säljperioden\nÖppna Säljperioder för att se kommande eller väntande åtgärder. Pris och datum följer varans sparade villkor. Kontrollera varan och den föreslagna åtgärden innan du genomför en ändring.\nEn symbol för väntande prissänkning är en uppmaning att följa upp varan. Kontrollera det aktuella priset och historiken för att se vad som faktiskt har hänt.',
+      text: 'Hitta och redigera varor, välj flera åt gången och följ upp priser och säljperioder.\nArbeta i varutabellen\nSök eller filtrera fram varorna. Öppna en vara för bilder, historik och fler detaljer. Klicka på varunamnet för att öppna varan. Pennan bredvid namnet ändrar namnet. Du kan även ändra kategori, varutyp och sortimentsgrupp i tabellen när kolumnerna visas. Markera en eller flera rader för de gemensamma åtgärder som visas, till exempel ändring av flera varor eller etiketter på A4.\nStandardvyn visar vara, pris, säljare och status. Öppna  Kolumner  för att visa fler uppgifter. Valet sparas för butiken i din webbläsare och används även i inlämningens varulista.\nKategorier, varutyper, attribut och sortimentsgrupper hanteras under butikens Varuinställningar. Ändrad visningstext ersätter inte äldre avtals- eller försäljningsunderlag.\nPå varans sida finns  Ändra pris  direkt vid det aktuella priset för varor som fortfarande är till försäljning. Du behöver behörighet att ändra varor.\nFölj upp säljperioden\nÖppna Säljperioder för att se kommande eller väntande åtgärder. Pris och datum följer varans sparade villkor. Kontrollera varan och den föreslagna åtgärden innan du genomför en ändring.\nEn symbol för väntande prissänkning är en uppmaning att följa upp varan. Kontrollera det aktuella priset och historiken för att se vad som faktiskt har hänt.',
     },
     en: {
       title: 'Items, prices and selling periods',
@@ -4932,7 +4947,7 @@ export const helpContent: Record<
                     {
                       type: 'text',
                       value:
-                        'Use table editing for the name, category, item type and assortment group.',
+                        'Click the item name to open the item. The pencil beside it edits the name. You can also edit category, item type and assortment group when those columns are shown.',
                     },
                   ],
                 },
@@ -4982,6 +4997,21 @@ export const helpContent: Record<
           ],
         },
         {
+          type: 'paragraph',
+          children: [
+            { type: 'text', value: 'On the item page, ' },
+            {
+              type: 'strong',
+              children: [{ type: 'text', value: 'Change price' }],
+            },
+            {
+              type: 'text',
+              value:
+                ' sits beside the current price for items still on sale. You need permission to edit items.',
+            },
+          ],
+        },
+        {
           type: 'heading',
           depth: 2,
           children: [{ type: 'text', value: 'Follow up the selling period' }],
@@ -5012,7 +5042,7 @@ export const helpContent: Record<
           ],
         },
       ],
-      text: "Find and edit items, select several at once and follow up prices and selling periods.\nWork in the item table\nSearch or filter the items. Open an item for pictures, history and further details. Use table editing for the name, category, item type and assortment group. Select one or more rows for the available shared actions, such as editing several items or printing A4 label sheets.\nThe default view shows item, price, seller and status. Open  Columns  to show more details. Your choice is saved for this store in your browser and also applies to the handover item list.\nCategories, item types, attributes and assortment groups are managed in the store's Item settings. Changed display text does not replace older agreement or sale evidence.\nFollow up the selling period\nOpen Selling periods to see upcoming or pending actions. Prices and dates follow the item's saved terms. Check the item and proposed action before making a change.\nA pending markdown symbol asks you to follow up the item. Check its current price and history to see what has actually happened.",
+      text: "Find and edit items, select several at once and follow up prices and selling periods.\nWork in the item table\nSearch or filter the items. Open an item for pictures, history and further details. Click the item name to open the item. The pencil beside it edits the name. You can also edit category, item type and assortment group when those columns are shown. Select one or more rows for the available shared actions, such as editing several items or printing A4 label sheets.\nThe default view shows item, price, seller and status. Open  Columns  to show more details. Your choice is saved for this store in your browser and also applies to the handover item list.\nCategories, item types, attributes and assortment groups are managed in the store's Item settings. Changed display text does not replace older agreement or sale evidence.\nOn the item page,  Change price  sits beside the current price for items still on sale. You need permission to edit items.\nFollow up the selling period\nOpen Selling periods to see upcoming or pending actions. Prices and dates follow the item's saved terms. Check the item and proposed action before making a change.\nA pending markdown symbol asks you to follow up the item. Check its current price and history to see what has actually happened.",
     },
   },
   labels: {

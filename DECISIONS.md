@@ -1289,3 +1289,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-01: #742 places registration settings in the fifth vocabulary tab, with a direct link and retained drafts. Tab notices identify unsaved edits and unconfirmed saves; status announcements remain available across tabs. Save behavior and read-only permissions remain unchanged.
 
 - 2026-11-03: Inventory defaults to item, price, seller and status with selection/photo/ownership indicators; six extra columns are optional per store/browser, shared by bag lists. Hidden fields stay mounted for safe retries; keyboard editing skips them (#749).
+
+- 2026-11-03: Inventory titles open items via real links retaining list context; separate pencils edit names with existing concurrency/retry rules. Eligible item details expose Change price beside the price through the existing guarded price dialog (#750).

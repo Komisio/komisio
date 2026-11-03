@@ -219,6 +219,16 @@
   display: grid;
   gap: 4px;
 }
+.item-detail-price-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.item-detail-change-price {
+  min-height: 44px;
+  gap: 6px;
+}
 .item-detail-price > span {
   color: var(--muted);
   font-size: 0.875rem;

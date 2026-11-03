@@ -99,10 +99,13 @@ test('receiving and label help preserve drafts and follow the current task witho
     )
     await expect(dialog.getByRole('heading', { level: 2 })).toBeFocused()
     await expect(dialog.locator('a[href^="/intake/accounting"]')).toHaveCount(0)
+    const receiveLater = dialog.getByRole('link', {
+      name: d.nav.receiveBag,
+      exact: true,
+    })
+    await expect(receiveLater).toHaveAttribute('href', '/intake')
     const navigation = page.waitForEvent('dialog')
-    const clicking = dialog
-      .getByRole('link', { name: d.helpCenter.receiving, exact: true })
-      .click()
+    const clicking = receiveLater.click()
     const warning = await navigation
     expect(warning.message()).toBe(d.quickIntake.leaveItem)
     await warning.dismiss()

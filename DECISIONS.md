@@ -1293,3 +1293,7 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-03: Inventory titles open items via real links retaining list context; separate pencils edit names with existing concurrency/retry rules. Eligible item details expose Change price beside the price through the existing guarded price dialog (#750).
 
 - 2026-11-03: Receiving entry points distinguish Register items now from Receive now, register later, with short visible hints for any goods. Existing routes and custody/acceptance rules stay unchanged; switching methods guards unsaved work in both directions (#753).
+
+- 2026-11-04: Sidebar keyboard focus remains below its sticky header as width and content reflow. Geometry changes recheck only the focused sidebar control; navigation, focus ownership, saved width preference and mobile behavior remain unchanged (#760).
+
+- 2026-11-04: Seller review confirmation and response controls wait for client handlers before accepting interaction. Approval still requires loaded photos and explicit confirmation; authorization, immutable response identity and uncertain retries are unchanged (#764).

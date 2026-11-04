@@ -46,10 +46,7 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
       exact: true,
     })
     const price = page.getByLabel(d.quickIntake.price, { exact: true })
-    const done = page.getByRole('region', {
-      name: d.quickIntake.done,
-      exact: true,
-    })
+    const savedSummary = page.locator('.quick-last-saved')
     const evidence: Record<string, unknown> = {}
     const accepted: { id: string; seller: string; priceOre: number }[] = []
 
@@ -95,13 +92,7 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
         await page.goto(`/intake/bags/${bag}/inspect`)
         await expect(page.locator('.bag-note')).toHaveText('Synthetic blue bag')
       } else if (index > 0 && index !== 15) {
-        await page
-          .getByRole('button', {
-            name: index > 10 ? d.bagIntake.next : d.quickIntake.next,
-            exact: true,
-          })
-          .click()
-        // #615: the next item resumes typing in the existing description field.
+        // Confirmed Enter saves resume typing without another next-item click.
         await expect(description).toBeFocused()
         await expect(description).toHaveValue('')
         await expect(price).toHaveValue('')
@@ -146,19 +137,21 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
       )
       await price.press('Enter')
       const saved = await (await response).json()
-      await expect(done).toBeVisible()
-      await expect(done).toContainText(title)
-      await expect(done.locator('.quick-confirmation-details')).toContainText(
+      await expect(savedSummary).toBeVisible()
+      await expect(savedSummary).toContainText(title)
+      await expect(savedSummary).toContainText(
         index < 5 ? 'Synthetic P2 seller' : 'Synthetic second seller',
       )
-      await expect(done.locator('.quick-confirmation-details')).toContainText(
+      await expect(savedSummary).toContainText(
         new Intl.NumberFormat('sv-SE', {
           style: 'currency',
           currency: 'SEK',
           currencyDisplay: 'code',
         }).format(amount + 0.5),
       )
-      await expect(done.getByRole('heading')).toBeFocused()
+      await expect(description).toBeFocused()
+      await expect(description).toHaveValue('')
+      await expect(price).toHaveValue('')
       accepted.push({
         id: saved.itemId,
         seller: index < 5 ? f.seller : other,
@@ -166,7 +159,7 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
       })
       if (index === 0 || index === 10) {
         evidence[index === 0 ? 'counterConfirmation' : 'bagConfirmation'] =
-          await done.innerText()
+          await savedSummary.innerText()
         await page.screenshot({
           path: testInfo.outputPath(`confirmation-${index}.png`),
           caret: 'initial',

@@ -6,7 +6,6 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  type FocusEvent,
   type ReactNode,
 } from 'react'
 import { createPortal } from 'react-dom'
@@ -149,6 +148,7 @@ export function Sidebar({
   const [storeOpen, setStoreOpen] = useState(false)
   const sidebarRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
+  const navRef = useRef<HTMLElement>(null)
   const focusFrame = useRef<number | null>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
   const storeButtonRef = useRef<HTMLButtonElement>(null)
@@ -167,9 +167,10 @@ export function Sidebar({
 
   // Native backward tab scrolling can place a link underneath the sticky header.
   // Correct only this scroller, after the browser has finished moving focus.
-  function revealFocusedControl(event: FocusEvent<HTMLElement>) {
-    const target = event.target
+  const revealFocusedControl = useCallback((target: EventTarget | null) => {
     if (
+      !(target instanceof HTMLElement) ||
+      !sidebarRef.current?.contains(target) ||
       headerRef.current?.contains(target) ||
       target.closest('.sidebar-flyout')
     )
@@ -186,7 +187,24 @@ export function Sidebar({
         target.getBoundingClientRect().top
       if (overlap > 0) sidebar.scrollTop -= overlap
     })
-  }
+  }, [])
+
+  useLayoutEffect(() => {
+    const sidebar = sidebarRef.current
+    const header = headerRef.current
+    const nav = navRef.current
+    if (!sidebar || !header || !nav) return
+    // Width animation and wrapped labels can move a control after its focus
+    // event. Recheck keyboard focus without following ordinary user scrolling.
+    const observer = new ResizeObserver(() => {
+      const focused = document.activeElement
+      if (focused?.matches(':focus-visible')) revealFocusedControl(focused)
+    })
+    observer.observe(sidebar)
+    observer.observe(header)
+    observer.observe(nav)
+    return () => observer.disconnect()
+  }, [revealFocusedControl])
 
   useEffect(
     () => () => {
@@ -329,7 +347,7 @@ export function Sidebar({
       id={SIDEBAR_ID}
       className={collapsed ? 'sidebar sidebar-collapsed' : 'sidebar'}
       ref={sidebarRef}
-      onFocusCapture={revealFocusedControl}
+      onFocusCapture={(event) => revealFocusedControl(event.target)}
     >
       <div className="sidebar-header" ref={headerRef}>
         <Brand compact={collapsed} />
@@ -388,7 +406,7 @@ export function Sidebar({
           storeControls
         )}
       </div>
-      <nav aria-label={d.platform} className="sidebar-nav">
+      <nav aria-label={d.platform} className="sidebar-nav" ref={navRef}>
         {groups.map((group) => (
           <div key={group.label || 'home'} className="nav-group">
             {group.label ? (

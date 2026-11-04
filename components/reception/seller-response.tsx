@@ -1,9 +1,18 @@
 'use client'
 import { useBusyState } from '@/components/platform/work-activity'
-import { useEffect, useState, useRef, type ReactNode } from 'react'
+import {
+  useEffect,
+  useState,
+  useRef,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
+const subscribe = () => () => {}
+const clientReady = () => true
+const serverReady = () => false
 export function SellerResponse({
   token,
   reviewId,
@@ -19,6 +28,7 @@ export function SellerResponse({
   d: Dictionary
   children: ReactNode
 }) {
+  const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const [busy, setBusy] = useBusyState(false),
     [error, setError] = useState(''),
     [checked, setChecked] = useState(false)
@@ -44,7 +54,7 @@ export function SellerResponse({
   } | null>(null)
   const router = useRouter()
   async function respond(decision: 'approve' | 'decline') {
-    if (running.current || needsReload || answer) return
+    if (!ready || running.current || needsReload || answer) return
     if (request.current && request.current.decision !== decision) return
     if (
       !request.current &&
@@ -153,7 +163,7 @@ export function SellerResponse({
             <input
               type="checkbox"
               checked={checked}
-              disabled={busy || pending !== null || needsReload}
+              disabled={!ready || busy || pending !== null || needsReload}
               onChange={(e) => setChecked(e.target.checked)}
             />
             {d.reviewConfirm}
@@ -161,6 +171,7 @@ export function SellerResponse({
           <div className="row wrap">
             <Button
               disabled={
+                !ready ||
                 busy ||
                 needsReload ||
                 pending === 'decline' ||
@@ -176,7 +187,7 @@ export function SellerResponse({
             </Button>
             <Button
               variant="secondary"
-              disabled={busy || needsReload || pending === 'approve'}
+              disabled={!ready || busy || needsReload || pending === 'approve'}
               onClick={() => respond('decline')}
             >
               {pending === 'decline'

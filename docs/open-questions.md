@@ -946,3 +946,9 @@ Seller push (#767, 2026-11-05): owner approved two independent default-off store
 settings (item registered and item sold), explicit device consent, original
 notification sounds, and two private device/delivery tables. Legacy placement
 and staff transaction notifications are outside this implementation's scope.
+
+Host support (#777, resolved 2026-11-05): the owner approved direct person-host
+read access from the store list and associated database changes. Visits require
+a reason, last at most 60 minutes, retain the real actor and preserve membership.
+Explicit exit ends access; expiry or removed authority fails closed. Write access
+and impersonation are outside this approval.

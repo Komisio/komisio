@@ -127,6 +127,7 @@ export function Sidebar({
   signingOut,
   onSelect,
   onSignOut,
+  supportMode = false,
 }: {
   d: Dictionary
   tenants: Tenant[]
@@ -142,6 +143,7 @@ export function Sidebar({
   signingOut: boolean
   onSelect: (tenantId: string) => void
   onSignOut: () => void
+  supportMode?: boolean
 }) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(initialCollapsed)
@@ -322,7 +324,7 @@ export function Sidebar({
       <select
         aria-label={d.activeTenant}
         value={active.id}
-        disabled={!ready || busy}
+        disabled={!ready || busy || supportMode}
         onChange={(event) => onSelect(event.target.value)}
       >
         {tenants.map((tenant) => (
@@ -331,14 +333,16 @@ export function Sidebar({
           </option>
         ))}
       </select>
-      <Link
-        href="/onboarding"
-        className="text-link row"
-        style={{ fontSize: 12 }}
-      >
-        <Plus size={12} aria-hidden="true" />
-        {d.newTenant}
-      </Link>
+      {!supportMode && (
+        <Link
+          href="/onboarding"
+          className="text-link row"
+          style={{ fontSize: 12 }}
+        >
+          <Plus size={12} aria-hidden="true" />
+          {d.newTenant}
+        </Link>
+      )}
     </>
   )
 

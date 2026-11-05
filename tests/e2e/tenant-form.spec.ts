@@ -17,7 +17,7 @@ test('store creation waits for JavaScript before enabling submission', async ({
   })
   try {
     const serverPage = await context.newPage()
-    await serverPage.goto('http://127.0.0.1:3000/onboarding')
+    await serverPage.goto(new URL('/onboarding', page.url()).toString())
     await expect(
       serverPage.getByRole('button', { name: d.createButton, exact: true }),
     ).toBeDisabled()

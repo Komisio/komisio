@@ -5345,5 +5345,33 @@
         "material": "Baumwolle"
       }
     }
+  },
+  "hostSupport": {
+    "open": "Supportmodus öffnen",
+    "heading": "Supportmodus – {name}",
+    "intro": "Lesen Sie die Geschäftsdaten mit Ihrem eigenen Konto für höchstens 60 Minuten. Der Zugriff wird protokolliert.",
+    "reason": "Grund des Supportzugriffs",
+    "reasonHint": "Beschreiben Sie das Anliegen kurz. Keine Passwörter oder sensiblen personenbezogenen Daten eingeben.",
+    "start": "Supportzugriff starten",
+    "cancel": "Abbrechen",
+    "working": "Wird bearbeitet…",
+    "retry": "Erneut versuchen",
+    "reload": "Status neu laden",
+    "uncertain": "Die Antwort konnte nicht bestätigt werden. Versuchen Sie denselben Zugriff erneut oder laden Sie den Status neu.",
+    "mode": "Supportmodus",
+    "readOnly": "Nur Lesen. Sie können die Geschäftsdaten nicht ändern.",
+    "until": "Verfügbar bis {time}.",
+    "end": "Supportmodus beenden",
+    "expired": "Der Supportzugriff ist abgelaufen. Beenden Sie den Zugriff, um zur Geschäftsliste zurückzukehren.",
+    "exitFailed": "Das Beenden konnte nicht bestätigt werden. Bitte erneut versuchen.",
+    "errors": {
+      "FORBIDDEN": "Sie haben keine Berechtigung.",
+      "AUTH_REQUIRED": "Melden Sie sich erneut an und schließen Sie eine erforderliche Zwei-Schritt-Verifizierung ab.",
+      "INVALID_INPUT": "Geben Sie einen Supportgrund ein.",
+      "SUPPORT_ACTIVE": "Beenden Sie zuerst den aktuellen Supportzugriff.",
+      "SUPPORT_ENDED": "Dieser Supportzugriff wurde beendet. Laden Sie die Seite neu.",
+      "TENANT_NOT_FOUND": "Das Geschäft existiert nicht mehr.",
+      "REQUEST_FAILED": "Die Aktion konnte nicht abgeschlossen werden. Bitte erneut versuchen."
+    }
   }
 }

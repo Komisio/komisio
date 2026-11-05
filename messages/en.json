@@ -5339,5 +5339,33 @@
         "material": "Cotton"
       }
     }
+  },
+  "hostSupport": {
+    "open": "Open support mode",
+    "heading": "Support mode – {name}",
+    "intro": "Read this store with your own account for up to 60 minutes. The visit is logged.",
+    "reason": "Support reason",
+    "reasonHint": "Briefly describe the issue. Avoid passwords and sensitive personal information.",
+    "start": "Start support visit",
+    "cancel": "Cancel",
+    "working": "Working…",
+    "retry": "Try again",
+    "reload": "Reload status",
+    "uncertain": "The response could not be confirmed. Retry the same visit or reload its status.",
+    "mode": "Support mode",
+    "readOnly": "Read only. You cannot change this store’s information.",
+    "until": "Available until {time}.",
+    "end": "End support mode",
+    "expired": "Support access has ended. End the visit to return to the store list.",
+    "exitFailed": "The exit could not be confirmed. Please try again.",
+    "errors": {
+      "FORBIDDEN": "You do not have permission.",
+      "AUTH_REQUIRED": "Sign in again and complete any required two-step verification.",
+      "INVALID_INPUT": "Enter a support reason.",
+      "SUPPORT_ACTIVE": "End your current support visit first.",
+      "SUPPORT_ENDED": "This support visit has ended. Reload the page.",
+      "TENANT_NOT_FOUND": "The store no longer exists.",
+      "REQUEST_FAILED": "The action could not be completed. Please try again."
+    }
   }
 }

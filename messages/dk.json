@@ -5339,5 +5339,33 @@
         "material": "Bomuld"
       }
     }
+  },
+  "hostSupport": {
+    "open": "Åbn supporttilstand",
+    "heading": "Supporttilstand – {name}",
+    "intro": "Læs butikkens oplysninger med din egen konto i op til 60 minutter. Besøget logges.",
+    "reason": "Supportårsag",
+    "reasonHint": "Beskriv sagen kort. Undgå adgangskoder og følsomme personoplysninger.",
+    "start": "Start supportbesøg",
+    "cancel": "Annuller",
+    "working": "Arbejder…",
+    "retry": "Prøv igen",
+    "reload": "Genindlæs status",
+    "uncertain": "Svaret kunne ikke bekræftes. Prøv samme besøg igen, eller genindlæs status.",
+    "mode": "Supporttilstand",
+    "readOnly": "Kun læsning. Du kan ikke ændre butikkens oplysninger.",
+    "until": "Tilgængelig indtil {time}.",
+    "end": "Afslut supporttilstand",
+    "expired": "Supportadgangen er udløbet. Afslut besøget for at vende tilbage til butikslisten.",
+    "exitFailed": "Afslutningen kunne ikke bekræftes. Prøv igen.",
+    "errors": {
+      "FORBIDDEN": "Du har ikke adgang.",
+      "AUTH_REQUIRED": "Log ind igen, og gennemfør eventuel totrinsbekræftelse.",
+      "INVALID_INPUT": "Angiv en supportårsag.",
+      "SUPPORT_ACTIVE": "Afslut dit igangværende supportbesøg først.",
+      "SUPPORT_ENDED": "Dette supportbesøg er afsluttet. Genindlæs siden.",
+      "TENANT_NOT_FOUND": "Butikken findes ikke længere.",
+      "REQUEST_FAILED": "Handlingen kunne ikke gennemføres. Prøv igen."
+    }
   }
 }

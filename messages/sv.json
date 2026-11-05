@@ -5339,5 +5339,33 @@
         "material": "Bomull"
       }
     }
+  },
+  "hostSupport": {
+    "open": "Öppna supportläge",
+    "heading": "Supportläge – {name}",
+    "intro": "Du läser butikens uppgifter med ditt eget konto i högst 60 minuter. Besöket loggas.",
+    "reason": "Supportorsak",
+    "reasonHint": "Beskriv ärendet kort. Undvik lösenord och känsliga personuppgifter.",
+    "start": "Starta supportbesök",
+    "cancel": "Avbryt",
+    "working": "Arbetar…",
+    "retry": "Försök igen",
+    "reload": "Läs in status igen",
+    "uncertain": "Svaret kunde inte bekräftas. Försök igen med samma besök eller läs in status igen.",
+    "mode": "Supportläge",
+    "readOnly": "Endast läsning. Du kan inte ändra butikens uppgifter.",
+    "until": "Tillgängligt till {time}.",
+    "end": "Avsluta supportläge",
+    "expired": "Supportåtkomsten har upphört. Avsluta besöket för att återgå till butikslistan.",
+    "exitFailed": "Avslutet kunde inte bekräftas. Försök igen.",
+    "errors": {
+      "FORBIDDEN": "Du saknar behörighet.",
+      "AUTH_REQUIRED": "Logga in igen och slutför eventuell tvåstegsverifiering.",
+      "INVALID_INPUT": "Fyll i en supportorsak.",
+      "SUPPORT_ACTIVE": "Avsluta ditt pågående supportbesök först.",
+      "SUPPORT_ENDED": "Detta supportbesök är avslutat. Läs in sidan igen.",
+      "TENANT_NOT_FOUND": "Butiken finns inte längre.",
+      "REQUEST_FAILED": "Åtgärden kunde inte slutföras. Försök igen."
+    }
   }
 }

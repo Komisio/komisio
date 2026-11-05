@@ -68,6 +68,9 @@ export const storePolicyBody = z
       .optional(),
     // Automatic seller notifications (P2 S18): absent means off; every message is logged.
     automaticSellerNotifications: z.boolean().optional(),
+    // Push is independent of email and requires explicit store and device opt-in.
+    pushItemRegistered: z.boolean().optional(),
+    pushItemSold: z.boolean().optional(),
     // Period notices have their own default-on switch; seller opt-out still wins.
     automaticPeriodNotifications: z.boolean().optional(),
     // Mail default when the seller and saved public store profile have no language.

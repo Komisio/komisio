@@ -41,8 +41,12 @@ select pg_temp.prepare_bag_reception(current_setting('test.other')::uuid,gen_ran
 select set_config('test.other_item',gen_random_uuid()::text,true);
 select accept_item(current_setting('test.other')::uuid,current_setting('test.other_item')::uuid,'reception_review',current_setting('test.other_d')::uuid,1,10000);
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=accepted_at-interval '15 days' where id in (current_setting('test.old')::uuid,current_setting('test.other_item')::uuid);
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 -- One store's entry in the agent's result, by tenant id.
 create function pg_temp.run_for(p_result jsonb,p_tenant text) returns jsonb language sql as $$
@@ -75,9 +79,13 @@ select throws_ok($$select komisio_private.run_automatic_markdowns()$$,'42501',nu
 -- The owner switches automatic markdowns on; the agent acts as that owner.
 select set_config('test.policy2',publish_store_policy(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.policy1')::uuid,(current_store_policy(current_setting('test.tenant')::uuid)->'policy') || '{"automaticMarkdowns":true}')::text,true);
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=accepted_at-interval '15 days' where id=current_setting('test.old')::uuid;
 update public.items set accepted_at=accepted_at-interval '15 days' where id=current_setting('test.fresh')::uuid;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 select set_config('test.auto',komisio_private.run_automatic_markdowns()::text,true);
 select is((select count(*) from jsonb_array_elements(current_setting('test.auto')::jsonb->'runs') r where r->>'tenantId'=current_setting('test.tenant')),1::bigint,'this store ran once');

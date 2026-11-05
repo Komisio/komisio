@@ -2,8 +2,12 @@
 import { createServer } from 'node:http'
 import { handleAuthEmail } from '../../lib/platform/auth-email'
 import { randomUUID } from 'node:crypto'
-if (process.env.NEXT_PUBLIC_SUPABASE_URL !== 'http://127.0.0.1:54321')
-  throw new Error('Local Auth email fixture only')
+import { localTestUrl } from '../helpers/local-services'
+const authUrl = localTestUrl(
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'http://127.0.0.1:54321',
+)
+const mailUrl = localTestUrl('TEST_MAIL_URL', 'http://127.0.0.1:54324')
 const env = {
   ...process.env,
   KOMISIO_AUTH_EMAIL_HOOK_SECRET: `v1,whsec_${Buffer.alloc(32, 7).toString('base64')}`,
@@ -15,7 +19,7 @@ const transport: typeof fetch = async (input, init) => {
     const mail = JSON.parse(String(init?.body))
     if (mail.to.some((email: string) => !email.endsWith('@example.test')))
       throw new Error('Synthetic recipients only')
-    const response = await fetch('http://127.0.0.1:54324/api/v1/send', {
+    const response = await fetch(`${mailUrl}/api/v1/send`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -30,7 +34,7 @@ const transport: typeof fetch = async (input, init) => {
       ? Response.json({ id: randomUUID() })
       : new Response('', { status: 500 })
   }
-  if (new URL(String(input)).origin !== 'http://127.0.0.1:54321')
+  if (new URL(String(input)).origin !== new URL(authUrl).origin)
     throw new Error('Local Auth database only')
   return fetch(input, init)
 }

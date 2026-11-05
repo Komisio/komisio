@@ -1,4 +1,15 @@
 {
+  "sellerPush": {
+    "title": "Notifiche push ai venditori",
+    "hint": "Il venditore deve avere l’app Komisio e consentire le notifiche. Queste scelte non influiscono sulle email.",
+    "registered": "Quando un articolo viene registrato",
+    "sold": "Quando un articolo viene venduto",
+    "preview": "Ascolta il suono",
+    "stop": "Ferma il suono",
+    "previewFailed": "Impossibile riprodurre il suono. Riprova.",
+    "channel": "Push",
+    "providerSent": "Inoltrata ad Apple/Google"
+  },
   "marketingConsentSave": "Salva preferenza email",
   "marketingConsentHeading": "Novità via email",
   "marketingConsentLabel": "Sì, desidero ricevere novità sui prodotti Komisio via email.",
@@ -725,7 +736,12 @@
     "item.period_reopened": "Periodo di vendita riaperto",
     "item.period_end_corrected": "Motivo della chiusura corretto",
     "item.lifecycle_batch": "Modifica multipla dei periodi di vendita",
-    "label_fields.set": "Campi etichetta · Salvati"
+    "label_fields.set": "Campi etichetta · Salvati",
+    "communication.push_claimed": "Notifica push · Preparata",
+    "communication.push_sent": "Notifica push · Inoltrata ad Apple/Google",
+    "communication.push_failed": "Notifica push · Non riuscita",
+    "communication.push_unconfirmed": "Notifica push · Non confermata",
+    "communication.push_pending": "Notifica push · In attesa"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",

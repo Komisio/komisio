@@ -36,8 +36,12 @@ select throws_ok($$select decide_operation(current_setting('test.tenant')::uuid,
 -- Markdown batch: only due steps, whole batch or nothing.
 select throws_like($$select propose_operation(current_setting('test.tenant')::uuid,gen_random_uuid(),'applyMarkdownBatch',jsonb_build_object('items',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.i2'),'step',1))),'agent',now()+interval '1 day')$$,'%MARKDOWN_NOT_DUE%','a batch with an undue step is refused');
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=accepted_at-interval '15 days' where id=current_setting('test.i2')::uuid;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000231","role":"authenticated"}';

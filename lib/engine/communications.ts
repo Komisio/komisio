@@ -38,6 +38,7 @@ const row = z
   .object({
     id: z.uuid(),
     kind: communicationKind,
+    channel: z.enum(['email', 'push']).default('email'),
     locale: z.enum(locales),
     recipient: z.string(),
     subject: z.string(),
@@ -80,7 +81,7 @@ export async function readSellerWelcome(
     : null
 }
 const columns =
-  'id,kind,locale,recipient,subject,body,reference_kind,reference_id,status,queued_at,delivered_at'
+  'id,kind,channel,locale,recipient,subject,body,reference_kind,reference_id,status,queued_at,delivered_at'
 
 /** Newest 50 messages for one seller. RLS scopes the read. */
 export async function readSellerCommunications(

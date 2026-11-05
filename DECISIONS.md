@@ -1,5 +1,9 @@
 # Decision Log
 
+- 2026-11-05: #767 adds owner-approved seller push for registered and sold consignment items, with independent default-off store switches and explicit device consent. Reuse original sounds; placement/staff notices and email-policy changes are excluded.
+- 2026-11-05: #767 adds protected device and delivery tables. Committed facts queue per-device work; current seller/session/store consent is rechecked before one send claim. No historical backfill or blind retries of uncertain sends; Expo receipts do not prove a person saw a notification.
+- 2026-11-05: #767 uses an authenticated push worker identified by operator-managed Auth app metadata, with narrow RPCs and no tenant membership or service-role application key. Push content/outcomes join communication history; device tokens remain private.
+
 - 2026-11-03: #747 adds Save and next to quick/bag intake, retaining context and a saved-item summary. Continue only after accepted-price and optional print-queue confirmation; uncertain attempts retain their action and identity. No engine or physical-print rules change.
 
 - 2026-11-03: #745 places optional internal notes after item details and before completion controls in shared quick/bag registration. Existing store visibility, note privacy, saving and retry behavior remain unchanged.

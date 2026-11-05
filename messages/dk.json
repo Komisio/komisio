@@ -1,4 +1,15 @@
 {
+  "sellerPush": {
+    "title": "Pushnotifikationer til sælgere",
+    "hint": "Sælgeren skal have Komisio-appen og tillade notifikationer. Disse valg påvirker ikke e-mail.",
+    "registered": "Når en vare registreres",
+    "sold": "Når en vare sælges",
+    "preview": "Afspil lyd",
+    "stop": "Stop lyd",
+    "previewFailed": "Lyden kunne ikke afspilles. Prøv igen.",
+    "channel": "Push",
+    "providerSent": "Videresendt til Apple/Google"
+  },
   "marketingConsentSave": "Gem e-mailvalg",
   "marketingConsentHeading": "Nyheder via e-mail",
   "marketingConsentLabel": "Ja tak, jeg vil modtage produktnyheder fra Komisio via e-mail.",
@@ -725,7 +736,12 @@
     "item.period_reopened": "Salgsperiode genåbnet",
     "item.period_end_corrected": "Afslutningsårsag rettet",
     "item.lifecycle_batch": "Masseændring af salgsperioder",
-    "label_fields.set": "Etiketfelter · Gemt"
+    "label_fields.set": "Etiketfelter · Gemt",
+    "communication.push_claimed": "Pushnotifikation · Klargjort",
+    "communication.push_sent": "Pushnotifikation · Overdraget til Apple/Google",
+    "communication.push_failed": "Pushnotifikation · Mislykket",
+    "communication.push_unconfirmed": "Pushnotifikation · Ikke bekræftet",
+    "communication.push_pending": "Pushnotifikation · Afventer"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",

@@ -28,10 +28,14 @@ select pg_temp.filter_item(31) as ended \gset
 select pg_temp.filter_item(32) as sold \gset
 -- Transaction-local fixture time travel only; production history stays immutable.
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=now()-interval '41 days' where id=:'ending';
 update public.items set accepted_at=now()-interval '43 days' where id in (:'expired',:'ended');
 update public.items set terms=jsonb_set(terms,'{markdownSteps}','[{"afterDays":0,"percent":10}]') where id=:'due';
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 select end_sale_period(:'tenant',gen_random_uuid(),:'ended','charity','Synthetic handover');

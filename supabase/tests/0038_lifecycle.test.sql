@@ -25,8 +25,12 @@ select throws_like($$select lifecycle_queue(current_setting('test.tenant')::uuid
 -- Backdate acceptance 15 days by inserting a fixture item directly (privileged), so step one is due.
 reset role;
 -- Fixture only: the immutability trigger is lifted by the test superuser to simulate elapsed time.
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=accepted_at-interval '15 days' where id=current_setting('test.item')::uuid;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000211","role":"authenticated"}';
@@ -49,8 +53,12 @@ select is((select period_end from lifecycle_queue(current_setting('test.tenant')
 -- Past the period: period_ended stage, then ending closes the item.
 reset role;
 -- Fixture only: the immutability trigger is lifted by the test superuser to simulate elapsed time.
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=accepted_at-interval '40 days' where id=current_setting('test.item')::uuid;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000211","role":"authenticated"}';

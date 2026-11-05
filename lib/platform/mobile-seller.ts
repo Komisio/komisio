@@ -35,11 +35,7 @@ export function mobileOrigin(request: Request): string | null {
   return origin
 }
 
-export async function mobileSellerClient(
-  request: Request,
-  tenant: string,
-  seller: string,
-) {
+export async function mobileIdentityClient(request: Request) {
   const authorization = request.headers.get('authorization') ?? ''
   const token =
     /^Bearer ([A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)$/.exec(
@@ -83,6 +79,15 @@ export async function mobileSellerClient(
     assurance.data.currentLevel !== 'aal2'
   )
     throw new MobileRequestError('MFA_REQUIRED', 403)
+  return client
+}
+
+export async function mobileSellerClient(
+  request: Request,
+  tenant: string,
+  seller: string,
+) {
+  const client = await mobileIdentityClient(request)
   const accounts = await readMySellerAccounts(client)
   if (
     accounts.filter((a) => a.tenantId === tenant && a.sellerId === seller)

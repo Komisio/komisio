@@ -31,8 +31,12 @@ end $$;
 create temporary table recent_items as select n,pg_temp.recent_item(n) as id from generate_series(1,28) n;
 -- Rollback-only fixture time travel: oldest accepted items are newest sold.
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items i set accepted_at=now()-(31-r.n)*interval '1 day' from recent_items r where i.id=r.id;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 select record_sale(:'tenant',gen_random_uuid(),'manual','RECENT-'||n,now()-greatest(n,2)*interval '1 hour','SEK',jsonb_build_array(jsonb_build_object('itemId',id,'priceOre',9000+n))) from recent_items where n<=27;

@@ -43,8 +43,12 @@ select pg_temp.prepare_bag_reception(current_setting('test.other')::uuid,gen_ran
 select accept_item(current_setting('test.other')::uuid,'b1680000-0000-4000-8000-000000000001','reception_review',current_setting('test.other_draft')::uuid,1,9900);
 -- Three items of store A are past step one; the rest are on sale. Members of A.
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=accepted_at-interval '15 days' where id in ('a1680000-0000-4000-8000-000000000001','a1680000-0000-4000-8000-000000000002','a1680000-0000-4000-8000-000000000003');
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 insert into tenant_members(tenant_id,user_id,role) values
  (current_setting('test.tenant')::uuid,'f0000000-0000-4000-8000-000000000943','admin'),

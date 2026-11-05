@@ -941,3 +941,8 @@ collection is introduced. Imported tenders remain unspecified when the adapter
 does not supply verified payment evidence. Existing frozen exports remain intact.
 
 Business sellers (#626, 2026-10-25): owner approved explicit immutable seller types, optional business details, staff-only registration, configurable VAT modes and existing accounting mappings. Resolved by owner: seller credit includes supplier VAT under full VAT (100 = 80 net + 20 VAT at 25%). Extract and freeze per sale; returns reverse the original facts. Retail sale VAT is distinct from supplier invoice VAT.
+
+Seller push (#767, 2026-11-05): owner approved two independent default-off store
+settings (item registered and item sold), explicit device consent, original
+notification sounds, and two private device/delivery tables. Legacy placement
+and staff transaction notifications are outside this implementation's scope.

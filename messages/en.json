@@ -1,4 +1,15 @@
 {
+  "sellerPush": {
+    "title": "Seller push notifications",
+    "hint": "The seller needs the Komisio app and must allow notifications. These choices do not affect email.",
+    "registered": "When an item is registered",
+    "sold": "When an item is sold",
+    "preview": "Preview sound",
+    "stop": "Stop sound",
+    "previewFailed": "The sound could not be played. Try again.",
+    "channel": "Push",
+    "providerSent": "Passed to Apple/Google"
+  },
   "marketingConsentSave": "Save email preference",
   "marketingConsentHeading": "Email updates",
   "marketingConsentLabel": "Yes, I would like to receive product news from Komisio by email.",
@@ -725,7 +736,12 @@
     "item.period_reopened": "Sale period reopened",
     "item.period_end_corrected": "End action corrected",
     "item.lifecycle_batch": "Bulk sale-period change",
-    "label_fields.set": "Label fields · Saved"
+    "label_fields.set": "Label fields · Saved",
+    "communication.push_claimed": "Push notification · Prepared",
+    "communication.push_sent": "Push notification · Passed to Apple/Google",
+    "communication.push_failed": "Push notification · Failed",
+    "communication.push_unconfirmed": "Push notification · Unconfirmed",
+    "communication.push_pending": "Push notification · Pending"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",

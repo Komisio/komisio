@@ -5288,8 +5288,8 @@
     "title": "Registro de artículos",
     "hint": "Los campos predeterminados se aplican a los tipos que heredan la configuración de la tienda.",
     "descriptionRequired": "Exigir descripción al registrar",
-    "template": "Título cuando falta la descripción",
-    "templateHint": "Usa estos marcadores. Se omiten los valores ausentes; un título vacío se sustituye por la referencia del artículo.",
+    "template": "Crear nombres de artículos automáticamente",
+    "templateHint": "Se utiliza cuando Descripción está vacía. Elige los campos en el orden en que deben aparecer.",
     "fields": "Campos predeterminados de la tienda",
     "inherit": "Usar los campos predeterminados de la tienda",
     "note": "Nota interna",
@@ -5321,6 +5321,29 @@
       }
     },
     "unsaved": "Cambios sin guardar",
-    "saving": "Guardando…"
+    "saving": "Guardando…",
+    "titleBuilder": {
+      "selected": "Campos del nombre del artículo",
+      "add": "Añadir campo",
+      "allAdded": "Todos los campos añadidos",
+      "earlier": "Mover {field} antes",
+      "later": "Mover {field} después",
+      "remove": "Quitar {field}",
+      "preview": "Ejemplo",
+      "missing": "Se omiten los campos sin valor. Si no queda nada, se utiliza la referencia del artículo.",
+      "customize": "Texto propio y separadores",
+      "textHint": "Introduce texto, espacios o signos de puntuación. La vista previa muestra el resultado.",
+      "before": "Texto al principio",
+      "after": "Después de {field}",
+      "invalid": "Elige al menos un campo o introduce texto propio. Hasta 240 caracteres, sin llaves.",
+      "examples": {
+        "type": "Vestido",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Azul",
+        "condition": "Buen estado",
+        "material": "Algodón"
+      }
+    }
   }
 }

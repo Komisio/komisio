@@ -23,8 +23,20 @@ test('store defaults generate a searchable title and keep notes private, includi
       })
       .last()
     await settings
-      .getByLabel(d.registration.template, { exact: true })
-      .fill('TEST {brand} {size}')
+      .getByRole('button', {
+        name: d.registration.titleBuilder.remove.replace(
+          '{field}',
+          d.registration.visibility.fields.itemType,
+        ),
+        exact: true,
+      })
+      .click()
+    await settings
+      .getByText(d.registration.titleBuilder.customize, { exact: true })
+      .click()
+    await settings
+      .getByLabel(d.registration.titleBuilder.before, { exact: true })
+      .fill('TEST ')
     const registrationTab = page
       .getByRole('tab')
       .filter({ hasText: d.registration.title })
@@ -37,8 +49,8 @@ test('store defaults generate a searchable title and keep notes private, includi
       .press('End')
     await expect(registrationTab).toBeFocused()
     await expect(
-      settings.getByLabel(d.registration.template, { exact: true }),
-    ).toHaveValue('TEST {brand} {size}')
+      settings.getByLabel(d.registration.titleBuilder.before, { exact: true }),
+    ).toHaveValue('TEST ')
     await settings
       .getByRole('button', { name: d.registration.save, exact: true })
       .click()
@@ -48,8 +60,11 @@ test('store defaults generate a searchable title and keep notes private, includi
     await page.reload()
     await expect(registrationTab).toHaveAttribute('aria-selected', 'true')
     await expect(
-      settings.getByLabel(d.registration.template, { exact: true }),
-    ).toHaveValue('TEST {brand} {size}')
+      settings.getByRole('status', {
+        name: d.registration.titleBuilder.preview,
+        exact: true,
+      }),
+    ).toContainText('TEST Nord M')
     await page.goto('/intake/quick')
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
     await expect(page.locator('#quick-description')).not.toHaveAttribute(

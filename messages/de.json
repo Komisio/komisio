@@ -5288,8 +5288,8 @@
     "title": "Artikelerfassung",
     "hint": "Standardfelder gelten für Artikeltypen, die die Ladeneinstellungen übernehmen.",
     "descriptionRequired": "Beschreibung bei der Erfassung verlangen",
-    "template": "Titel bei fehlender Beschreibung",
-    "templateHint": "Diese Platzhalter verwenden. Fehlende Werte werden ausgelassen; ein leerer Titel wird durch die Artikelreferenz ersetzt.",
+    "template": "Artikelnamen automatisch erstellen",
+    "templateHint": "Wird verwendet, wenn die Beschreibung leer ist. Wählen Sie die Felder in der gewünschten Reihenfolge.",
     "fields": "Standardfelder des Ladens",
     "inherit": "Standardfelder des Ladens verwenden",
     "note": "Interne Notiz",
@@ -5321,6 +5321,29 @@
       }
     },
     "unsaved": "Ungespeicherte Änderungen",
-    "saving": "Wird gespeichert…"
+    "saving": "Wird gespeichert…",
+    "titleBuilder": {
+      "selected": "Felder im Artikelnamen",
+      "add": "Feld hinzufügen",
+      "allAdded": "Alle Felder hinzugefügt",
+      "earlier": "{field} nach vorne verschieben",
+      "later": "{field} nach hinten verschieben",
+      "remove": "{field} entfernen",
+      "preview": "Beispiel",
+      "missing": "Felder ohne Wert werden übersprungen. Bleibt nichts übrig, wird die Artikelreferenz verwendet.",
+      "customize": "Eigener Text und Trennzeichen",
+      "textHint": "Geben Sie Text, Leerzeichen oder Satzzeichen ein. Die Vorschau zeigt das Ergebnis.",
+      "before": "Text am Anfang",
+      "after": "Nach {field}",
+      "invalid": "Wählen Sie mindestens ein Feld oder geben Sie eigenen Text ein. Höchstens 240 Zeichen, ohne geschweifte Klammern.",
+      "examples": {
+        "type": "Kleid",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Blau",
+        "condition": "Guter Zustand",
+        "material": "Baumwolle"
+      }
+    }
   }
 }

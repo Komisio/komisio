@@ -10,7 +10,9 @@ import {
   hideableIntakeFields,
   intakeFieldVisible,
   registrationCommand,
+  registrationTitleTemplate,
 } from '@/lib/engine/registration'
+import { RegistrationTitle } from './registration-title'
 import type { Dictionary } from '@/lib/i18n'
 import { Button } from '@/components/ui/button'
 import { useBusyState } from '@/components/platform/work-activity'
@@ -192,23 +194,13 @@ export function RegistrationSettings({
             </small>
           )}
         </fieldset>
-        <div className="field">
-          <label htmlFor={`${prefix}-template`}>{t.template}</label>
-          <input
-            id={`${prefix}-template`}
-            value={settings.titleTemplate}
-            maxLength={240}
-            onChange={(e) =>
-              setSettings({ ...settings, titleTemplate: e.target.value })
-            }
-          />
-          <small>
-            {t.templateHint}{' '}
-            <code>
-              {'{type} {brand} {size} {color} {condition} {material}'}
-            </code>
-          </small>
-        </div>
+        <RegistrationTitle
+          value={settings.titleTemplate}
+          onChange={(titleTemplate) =>
+            setSettings({ ...settings, titleTemplate })
+          }
+          d={t}
+        />
         <fieldset>
           <legend>{t.fields}</legend>
           <div className="vocabulary-field-choices">
@@ -240,7 +232,14 @@ export function RegistrationSettings({
       {editable && (
         <Button
           type="button"
-          disabled={busy || refused || (!dirty && !locked)}
+          disabled={
+            busy ||
+            refused ||
+            (!dirty && !locked) ||
+            (!locked &&
+              !registrationTitleTemplate.safeParse(settings.titleTemplate)
+                .success)
+          }
           onClick={() => void save()}
         >
           {locked ? t.retry : t.save}

@@ -17,7 +17,12 @@ for (const status of [409, 500]) {
       const tab = page
         .getByRole('tab')
         .filter({ hasText: d.registration.title })
-      const template = page.getByLabel(d.registration.template, { exact: true })
+      await page
+        .getByText(d.registration.titleBuilder.customize, { exact: true })
+        .click()
+      const template = page.getByLabel(d.registration.titleBuilder.before, {
+        exact: true,
+      })
       const original = await template.inputValue()
       await template.fill('Synthetic draft')
       await expect(tab).toHaveAttribute(
@@ -115,7 +120,10 @@ test('readonly members can view registration settings but cannot edit or save', 
       })
       await expect(panel).toBeVisible()
       await expect(
-        panel.getByLabel(d.registration.template, { exact: true }),
+        panel.getByRole('combobox', {
+          name: d.registration.titleBuilder.add,
+          exact: true,
+        }),
       ).toBeDisabled()
       await expect(
         panel.getByLabel(d.registration.descriptionRequired, { exact: true }),

@@ -5282,8 +5282,8 @@
     "title": "Varuregistrering",
     "hint": "Standardfälten gäller för varutyper som ärver butikens inställningar.",
     "descriptionRequired": "Kräv beskrivning vid registrering",
-    "template": "Titel när beskrivning saknas",
-    "templateHint": "Använd dessa platshållare. Saknade värden utelämnas; om titeln blir tom används varureferensen.",
+    "template": "Skapa varunamn automatiskt",
+    "templateHint": "Används när du lämnar Beskrivning tom. Välj fält i den ordning de ska visas.",
     "fields": "Butikens standardfält",
     "inherit": "Använd butikens standardfält",
     "note": "Intern anteckning",
@@ -5315,6 +5315,29 @@
       }
     },
     "unsaved": "Osparade ändringar",
-    "saving": "Sparar…"
+    "saving": "Sparar…",
+    "titleBuilder": {
+      "selected": "Fält i varunamnet",
+      "add": "Lägg till fält",
+      "allAdded": "Alla fält har lagts till",
+      "earlier": "Flytta {field} tidigare",
+      "later": "Flytta {field} senare",
+      "remove": "Ta bort {field}",
+      "preview": "Exempel",
+      "missing": "Fält utan värde hoppas över. Om inget återstår används varureferensen.",
+      "customize": "Egen text och skiljetecken",
+      "textHint": "Skriv vanlig text, mellanslag eller skiljetecken. Förhandsvisningen visar resultatet.",
+      "before": "Text i början",
+      "after": "Efter {field}",
+      "invalid": "Välj minst ett fält eller skriv egen text. Högst 240 tecken, utan klammerparenteser.",
+      "examples": {
+        "type": "Klänning",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Blå",
+        "condition": "Gott skick",
+        "material": "Bomull"
+      }
+    }
   }
 }

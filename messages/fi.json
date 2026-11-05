@@ -5288,8 +5288,8 @@
     "title": "Tuotteen rekisteröinti",
     "hint": "Oletuskentät koskevat tuotetyyppejä, jotka käyttävät myymälän asetuksia.",
     "descriptionRequired": "Vaadi kuvaus rekisteröinnissä",
-    "template": "Otsikko, kun kuvaus puuttuu",
-    "templateHint": "Käytä näitä paikkamerkkejä. Puuttuvat arvot ohitetaan; tyhjän otsikon tilalla käytetään tuoteviitettä.",
+    "template": "Muodosta tuotenimi automaattisesti",
+    "templateHint": "Käytetään, kun Kuvaus on tyhjä. Valitse kentät haluamaasi järjestykseen.",
     "fields": "Myymälän oletuskentät",
     "inherit": "Käytä myymälän oletuskenttiä",
     "note": "Sisäinen huomautus",
@@ -5321,6 +5321,29 @@
       }
     },
     "unsaved": "Tallentamattomia muutoksia",
-    "saving": "Tallennetaan…"
+    "saving": "Tallennetaan…",
+    "titleBuilder": {
+      "selected": "Tuotenimen kentät",
+      "add": "Lisää kenttä",
+      "allAdded": "Kaikki kentät on lisätty",
+      "earlier": "Siirrä {field} aiemmaksi",
+      "later": "Siirrä {field} myöhemmäksi",
+      "remove": "Poista {field}",
+      "preview": "Esimerkki",
+      "missing": "Tyhjät kentät ohitetaan. Jos mitään ei jää jäljelle, käytetään tuoteviitettä.",
+      "customize": "Oma teksti ja erotinmerkit",
+      "textHint": "Kirjoita tavallista tekstiä, välilyöntejä tai välimerkkejä. Näet tuloksen esikatselussa.",
+      "before": "Teksti alussa",
+      "after": "Kentän {field} jälkeen",
+      "invalid": "Valitse vähintään yksi kenttä tai kirjoita omaa tekstiä. Enintään 240 merkkiä, ei aaltosulkeita.",
+      "examples": {
+        "type": "Mekko",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Sininen",
+        "condition": "Hyvä kunto",
+        "material": "Puuvilla"
+      }
+    }
   }
 }

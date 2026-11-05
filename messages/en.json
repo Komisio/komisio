@@ -5282,8 +5282,8 @@
     "title": "Item registration",
     "hint": "Default fields apply to item types that inherit the store settings.",
     "descriptionRequired": "Require a description at registration",
-    "template": "Title when the description is empty",
-    "templateHint": "Use these placeholders. Missing values are omitted; an empty title falls back to the item reference.",
+    "template": "Create item names automatically",
+    "templateHint": "Used when Description is empty. Choose fields in the order they should appear.",
     "fields": "Store default fields",
     "inherit": "Use store default fields",
     "note": "Internal note",
@@ -5315,6 +5315,29 @@
       }
     },
     "unsaved": "Unsaved changes",
-    "saving": "Saving…"
+    "saving": "Saving…",
+    "titleBuilder": {
+      "selected": "Fields in the item name",
+      "add": "Add field",
+      "allAdded": "All fields added",
+      "earlier": "Move {field} earlier",
+      "later": "Move {field} later",
+      "remove": "Remove {field}",
+      "preview": "Example",
+      "missing": "Fields without a value are skipped. If nothing remains, the item reference is used.",
+      "customize": "Custom text and separators",
+      "textHint": "Enter plain text, spaces or punctuation. The preview shows the result.",
+      "before": "Text at the beginning",
+      "after": "After {field}",
+      "invalid": "Choose at least one field or enter custom text. Up to 240 characters, without curly brackets.",
+      "examples": {
+        "type": "Dress",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Blue",
+        "condition": "Good condition",
+        "material": "Cotton"
+      }
+    }
   }
 }

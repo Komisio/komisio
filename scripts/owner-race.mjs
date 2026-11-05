@@ -85,7 +85,9 @@ try {
  create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,deleted_at timestamptz,
   encrypted_password text,raw_user_meta_data jsonb,raw_app_meta_data jsonb,recovery_token text,recovery_sent_at timestamptz);
  create table auth.mfa_factors(user_id uuid,status text);
- create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id));
+ create type auth.aal_level as enum ('aal1','aal2','aal3');
+ create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id),
+  not_after timestamptz,aal auth.aal_level);
  create table auth.mfa_amr_claims(id uuid primary key,session_id uuid references auth.sessions(id),authentication_method text,created_at timestamptz,updated_at timestamptz);
  create function auth.jwt() returns jsonb language sql stable as 'select coalesce(nullif(current_setting(''request.jwt.claims'',true),'''')::jsonb,''{}''::jsonb)';
  create function auth.uid() returns uuid language sql stable as 'select (auth.jwt()->>''sub'')::uuid';

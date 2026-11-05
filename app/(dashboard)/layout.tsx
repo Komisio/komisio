@@ -18,6 +18,7 @@ import { LanguagePicker } from '@/components/platform/language-picker'
 import { SignOut } from '@/components/platform/sign-out'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { PlanBanner } from '@/components/platform/plan-banner'
+import { HostSupportBanner } from '@/components/platform/host-support-banner'
 import { isPlatformHost, readPlanStatus } from '@/lib/engine/plans'
 import { readPendingRegistrationCount } from '@/lib/engine/seller-registration'
 import {
@@ -103,7 +104,15 @@ export default async function DashboardLayout({
               sidebarCollapsed={readSidebarCollapsed(
                 (await cookies()).get(SIDEBAR_COOKIE)?.value,
               )}
+              supportMode={!!ctx.support}
             >
+              {ctx.support && (
+                <HostSupportBanner
+                  support={ctx.support}
+                  d={d.hostSupport}
+                  locale={ctx.locale}
+                />
+              )}
               <PlanBanner
                 status={plan}
                 isOwner={ctx.active.role === 'owner'}

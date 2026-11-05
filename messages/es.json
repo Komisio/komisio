@@ -5345,5 +5345,33 @@
         "material": "Algodón"
       }
     }
+  },
+  "hostSupport": {
+    "open": "Abrir modo de soporte",
+    "heading": "Modo de soporte – {name}",
+    "intro": "Consulta los datos de la tienda con tu propia cuenta durante un máximo de 60 minutos. La visita queda registrada.",
+    "reason": "Motivo del soporte",
+    "reasonHint": "Describe el problema brevemente. Evita contraseñas y datos personales sensibles.",
+    "start": "Iniciar visita de soporte",
+    "cancel": "Cancelar",
+    "working": "Procesando…",
+    "retry": "Reintentar",
+    "reload": "Recargar estado",
+    "uncertain": "No se pudo confirmar la respuesta. Reintenta la misma visita o recarga su estado.",
+    "mode": "Modo de soporte",
+    "readOnly": "Solo lectura. No puedes modificar los datos de la tienda.",
+    "until": "Disponible hasta las {time}.",
+    "end": "Finalizar modo de soporte",
+    "expired": "El acceso de soporte ha terminado. Finaliza la visita para volver a la lista de tiendas.",
+    "exitFailed": "No se pudo confirmar la finalización. Inténtalo de nuevo.",
+    "errors": {
+      "FORBIDDEN": "No tienes permiso.",
+      "AUTH_REQUIRED": "Vuelve a iniciar sesión y completa la verificación en dos pasos si se requiere.",
+      "INVALID_INPUT": "Introduce un motivo de soporte.",
+      "SUPPORT_ACTIVE": "Finaliza primero tu visita de soporte actual.",
+      "SUPPORT_ENDED": "Esta visita de soporte ha finalizado. Recarga la página.",
+      "TENANT_NOT_FOUND": "La tienda ya no existe.",
+      "REQUEST_FAILED": "No se pudo completar la acción. Inténtalo de nuevo."
+    }
   }
 }

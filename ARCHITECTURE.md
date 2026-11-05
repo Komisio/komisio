@@ -108,6 +108,17 @@ membership; mutations include the store shown to the user and reject a stale tab
 with 409. Accounts with a verified MFA factor require an aal2 session in both
 application checks and database policies/functions.
 
+Person platform hosts can explicitly open a 60-minute, reasoned support visit.
+Private immutable start/end records bind the real user and Auth session to one
+store. Tenant reads resolve to the existing read-only role only while the visit,
+host authority, Auth session and MFA remain valid; memberships stay unchanged.
+Expiry fails closed until explicit exit. Statement triggers on business tables
+also deny writes that do not use tenant roles, including host administration.
+Start/end serialize against writes using session advisory locks. New business
+tables must retain this guard; a pgTAP coverage assertion enforces that contract.
+The application displays the support context and discards cached layouts on entry
+and exit, but neither its banner nor its selected-store state grants access.
+
 Local services pin PostgREST v14.18, whose official maintenance release fixes
 sporadic fresh-JWT timing rejection observed in the CLI's default v16.2.
 `scripts/prepare-local.mjs` writes the version override consumed by CLI 2.117.0.

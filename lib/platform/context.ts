@@ -6,6 +6,7 @@ import { readMySellerAccounts } from '@/lib/engine/seller-portal'
 import { readMyRegistrations } from '@/lib/engine/seller-registration'
 import type { Tenant } from './types'
 import type { Role } from './permissions'
+import { readHostSupport } from '@/lib/engine/host-support'
 export async function platformContext() {
   const client = await serverClient()
   const {
@@ -16,7 +17,7 @@ export async function platformContext() {
     await client.auth.mfa.getAuthenticatorAssuranceLevel()
   const mfaRequired =
     assurance?.nextLevel === 'aal2' && assurance.currentLevel !== 'aal2'
-  const [memberships, profile] = await Promise.all([
+  const [memberships, profile, support] = await Promise.all([
     client
       .from('tenant_members')
       .select('tenant_id,role,tenants(id,name,slug)')
@@ -26,6 +27,7 @@ export async function platformContext() {
       .select('display_name,locale,active_tenant_id')
       .eq('user_id', user.id)
       .maybeSingle(),
+    readHostSupport(client),
   ])
   if (memberships.error || profile.error) {
     console.error('Platform context query failed', {
@@ -39,14 +41,16 @@ export async function platformContext() {
     return tenant ? [{ ...tenant, role: row.role as Role }] : []
   })
   const active =
+    support?.tenant ??
     tenants.find((t) => t.id === profile.data?.active_tenant_id) ??
     tenants[0] ??
     null
   return {
     client,
     user,
-    tenants,
+    tenants: support ? [support.tenant] : tenants,
     active,
+    support,
     mfaRequired,
     profile: profile.data,
     locale: await requestLocale(profile.data?.locale),
@@ -59,6 +63,7 @@ export const renderPlatformContext = cache(async () => {
   if (context && !context.user.email_confirmed_at) redirect('/confirm-email')
   if (context?.user.app_metadata.komisio_password_recovery_pending === true)
     redirect('/update-password')
+  if (context?.support && !context.support.available) redirect('/support')
   return context
 })
 

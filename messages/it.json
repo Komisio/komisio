@@ -5339,5 +5339,33 @@
         "material": "Cotone"
       }
     }
+  },
+  "hostSupport": {
+    "open": "Apri modalità assistenza",
+    "heading": "Modalità assistenza – {name}",
+    "intro": "Consulta i dati del negozio con il tuo account per un massimo di 60 minuti. La visita viene registrata.",
+    "reason": "Motivo dell’assistenza",
+    "reasonHint": "Descrivi brevemente il problema. Evita password e dati personali sensibili.",
+    "start": "Avvia visita di assistenza",
+    "cancel": "Annulla",
+    "working": "Elaborazione…",
+    "retry": "Riprova",
+    "reload": "Ricarica stato",
+    "uncertain": "Impossibile confermare la risposta. Riprova la stessa visita o ricarica lo stato.",
+    "mode": "Modalità assistenza",
+    "readOnly": "Sola lettura. Non puoi modificare i dati del negozio.",
+    "until": "Disponibile fino alle {time}.",
+    "end": "Termina modalità assistenza",
+    "expired": "L’accesso di assistenza è terminato. Termina la visita per tornare all’elenco dei negozi.",
+    "exitFailed": "Impossibile confermare la chiusura. Riprova.",
+    "errors": {
+      "FORBIDDEN": "Non hai l’autorizzazione.",
+      "AUTH_REQUIRED": "Accedi di nuovo e completa l’eventuale verifica in due passaggi.",
+      "INVALID_INPUT": "Inserisci un motivo per l’assistenza.",
+      "SUPPORT_ACTIVE": "Termina prima la visita di assistenza in corso.",
+      "SUPPORT_ENDED": "Questa visita di assistenza è terminata. Ricarica la pagina.",
+      "TENANT_NOT_FOUND": "Il negozio non esiste più.",
+      "REQUEST_FAILED": "Impossibile completare l’azione. Riprova."
+    }
   }
 }

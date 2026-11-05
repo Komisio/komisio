@@ -5345,5 +5345,33 @@
         "material": "Puuvilla"
       }
     }
+  },
+  "hostSupport": {
+    "open": "Avaa tukitila",
+    "heading": "Tukitila – {name}",
+    "intro": "Tarkastele myymälän tietoja omalla tililläsi enintään 60 minuuttia. Käynti kirjataan lokiin.",
+    "reason": "Tukikäynnin syy",
+    "reasonHint": "Kuvaa asia lyhyesti. Älä kirjoita salasanoja tai arkaluonteisia henkilötietoja.",
+    "start": "Aloita tukikäynti",
+    "cancel": "Peruuta",
+    "working": "Käsitellään…",
+    "retry": "Yritä uudelleen",
+    "reload": "Lataa tila uudelleen",
+    "uncertain": "Vastausta ei voitu vahvistaa. Yritä samaa käyntiä uudelleen tai lataa tila uudelleen.",
+    "mode": "Tukitila",
+    "readOnly": "Vain luku. Et voi muuttaa myymälän tietoja.",
+    "until": "Käytettävissä klo {time} asti.",
+    "end": "Lopeta tukitila",
+    "expired": "Tukikäyttöoikeus on päättynyt. Lopeta käynti palataksesi myymäläluetteloon.",
+    "exitFailed": "Lopetusta ei voitu vahvistaa. Yritä uudelleen.",
+    "errors": {
+      "FORBIDDEN": "Sinulla ei ole käyttöoikeutta.",
+      "AUTH_REQUIRED": "Kirjaudu uudelleen sisään ja suorita mahdollinen kaksivaiheinen vahvistus.",
+      "INVALID_INPUT": "Anna tukikäynnin syy.",
+      "SUPPORT_ACTIVE": "Lopeta ensin nykyinen tukikäynti.",
+      "SUPPORT_ENDED": "Tämä tukikäynti on päättynyt. Lataa sivu uudelleen.",
+      "TENANT_NOT_FOUND": "Myymälää ei enää ole.",
+      "REQUEST_FAILED": "Toimintoa ei voitu suorittaa. Yritä uudelleen."
+    }
   }
 }

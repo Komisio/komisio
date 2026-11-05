@@ -43,6 +43,7 @@ export function Shell({
   sidebarCollapsed = false,
   sellerAccess = false,
   pendingRegistrations,
+  supportMode = false,
 }: {
   children: React.ReactNode
   d: Dictionary
@@ -56,6 +57,7 @@ export function Shell({
   sidebarCollapsed?: boolean
   sellerAccess?: boolean
   pendingRegistrations?: number
+  supportMode?: boolean
 }) {
   const ready = useSyncExternalStore(subscribe, clientReady, serverReady)
   const pathname = usePathname()
@@ -136,7 +138,7 @@ export function Shell({
       className={mobile ? 'mobile-picker' : ''}
       aria-label={d.activeTenant}
       value={active.id}
-      disabled={!ready || action.busy}
+      disabled={!ready || action.busy || supportMode}
       onChange={(e) => select(e.target.value)}
     >
       {tenants.map((t) => (
@@ -166,6 +168,7 @@ export function Shell({
         signingOut={signingOut}
         onSelect={select}
         onSignOut={signOut}
+        supportMode={supportMode}
       />
       <header className="topbar">
         <Brand />
@@ -195,7 +198,7 @@ export function Shell({
           </form>
         )}
         <div className="topbar-tools">
-          {sellerAccess && <RoleSwitch current="store" d={d} />}
+          {sellerAccess && !supportMode && <RoleSwitch current="store" d={d} />}
           {intakeEnabled && (
             <Suspense
               fallback={
@@ -209,7 +212,9 @@ export function Shell({
           )}
           <LanguagePicker locale={locale} label={d.language} />
           <div className="desktop-only row">
-            <span className="badge">{d.roles[active.role]}</span>
+            <span className="badge">
+              {supportMode ? d.hostSupport.mode : d.roles[active.role]}
+            </span>
             <span className="avatar">
               {(name || email).slice(0, 2).toUpperCase()}
             </span>

@@ -16,14 +16,16 @@ import { readAiPlatformSettings } from '@/lib/engine/ai-credits'
 
 /** Platform host overview: every store's plan state and manual activation. */
 export default async function Host() {
-  const ctx = await requirePlatform()
+  const ctx = await requirePlatform(false)
   if (!(await isPlatformHost(ctx.client))) notFound()
   const d = dictionary(ctx.locale)
   const [rows, activity, ai, plan] = await Promise.all([
     readHostOverview(ctx.client),
     readHostActivity(ctx.client),
     readAiPlatformSettings(ctx.client),
-    readPlanStatus(ctx.client, ctx.active!.id),
+    ctx.active
+      ? readPlanStatus(ctx.client, ctx.active.id)
+      : Promise.resolve(null),
   ])
   return (
     <div className="host-console">
@@ -38,8 +40,10 @@ export default async function Host() {
         activity={Object.fromEntries(activity)}
         locale={ctx.locale}
         d={d.plans}
+        supportLabels={d.hostSupport}
+        supportActive={!!ctx.support}
       />
-      <HostAi settings={ai} d={d.credits.host} />
+      {!ctx.support && <HostAi settings={ai} d={d.credits.host} />}
       <div className="host-privacy">
         <Link
           className="text-link"

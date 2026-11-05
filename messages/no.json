@@ -5339,5 +5339,33 @@
         "material": "Bomull"
       }
     }
+  },
+  "hostSupport": {
+    "open": "Åpne supportmodus",
+    "heading": "Supportmodus – {name}",
+    "intro": "Les butikkens opplysninger med din egen konto i opptil 60 minutter. Besøket loggføres.",
+    "reason": "Årsak til support",
+    "reasonHint": "Beskriv saken kort. Unngå passord og sensitive personopplysninger.",
+    "start": "Start supportbesøk",
+    "cancel": "Avbryt",
+    "working": "Arbeider…",
+    "retry": "Prøv igjen",
+    "reload": "Last inn status på nytt",
+    "uncertain": "Svaret kunne ikke bekreftes. Prøv samme besøk igjen eller last inn status på nytt.",
+    "mode": "Supportmodus",
+    "readOnly": "Kun lesing. Du kan ikke endre butikkens opplysninger.",
+    "until": "Tilgjengelig til {time}.",
+    "end": "Avslutt supportmodus",
+    "expired": "Supporttilgangen har utløpt. Avslutt besøket for å gå tilbake til butikklisten.",
+    "exitFailed": "Avslutningen kunne ikke bekreftes. Prøv igjen.",
+    "errors": {
+      "FORBIDDEN": "Du har ikke tilgang.",
+      "AUTH_REQUIRED": "Logg inn igjen og fullfør eventuell totrinnsbekreftelse.",
+      "INVALID_INPUT": "Oppgi en årsak til support.",
+      "SUPPORT_ACTIVE": "Avslutt det pågående supportbesøket først.",
+      "SUPPORT_ENDED": "Dette supportbesøket er avsluttet. Last inn siden på nytt.",
+      "TENANT_NOT_FOUND": "Butikken finnes ikke lenger.",
+      "REQUEST_FAILED": "Handlingen kunne ikke fullføres. Prøv igjen."
+    }
   }
 }

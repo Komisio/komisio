@@ -50,6 +50,8 @@ test('stock cards match upcoming items across pages, ownership and all display l
       JSON.stringify([{ itemId: sold, priceOre: 20000 }]),
     ])
     // Isolated fixture time travel; real item history is never edited.
+    // Run deferred item and sale triggers as the owner before changing the table.
+    await f.db.query('set constraints all immediate')
     await f.db.query('reset role')
     await f.db.query('alter table public.items disable trigger items_immutable')
     await f.db.query(

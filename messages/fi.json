@@ -1,4 +1,15 @@
 {
+  "sellerPush": {
+    "title": "Push-ilmoitukset myyjille",
+    "hint": "Myyjä tarvitsee Komisio-sovelluksen ja hänen on sallittava ilmoitukset. Nämä valinnat eivät vaikuta sähköpostiin.",
+    "registered": "Kun tuote rekisteröidään",
+    "sold": "Kun tuote myydään",
+    "preview": "Kuuntele ääni",
+    "stop": "Pysäytä ääni",
+    "previewFailed": "Ääntä ei voitu toistaa. Yritä uudelleen.",
+    "channel": "Push",
+    "providerSent": "Välitetty Applelle/Googlelle"
+  },
   "marketingConsentSave": "Tallenna sähköpostivalinta",
   "marketingConsentHeading": "Uutiset sähköpostitse",
   "marketingConsentLabel": "Kyllä, haluan saada Komision tuoteuutisia sähköpostitse.",
@@ -725,7 +736,12 @@
     "item.period_reopened": "Myyntijakso avattu uudelleen",
     "item.period_end_corrected": "Päättämistoimi korjattu",
     "item.lifecycle_batch": "Myyntiaikojen joukkomuutos",
-    "label_fields.set": "Etikettikentät · Tallennettu"
+    "label_fields.set": "Etikettikentät · Tallennettu",
+    "communication.push_claimed": "Push-ilmoitus · Valmisteltu",
+    "communication.push_sent": "Push-ilmoitus · Välitetty Applelle/Googlelle",
+    "communication.push_failed": "Push-ilmoitus · Epäonnistui",
+    "communication.push_unconfirmed": "Push-ilmoitus · Vahvistamaton",
+    "communication.push_pending": "Push-ilmoitus · Odottaa"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",

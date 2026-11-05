@@ -1,5 +1,48 @@
 # Operations runbook (hosted)
 
+## Seller push notifications
+
+Stores independently enable registered-item and sold-item push in Settings.
+Both default to off. Sellers explicitly enable notifications on each phone;
+changing the selected store does not unsubscribe from their other stores.
+Email settings are independent. Existing items/sales are not backfilled.
+
+Before enabling transport, deploy the seller-push migration and mobile API,
+then build the mobile app with the `expo-notifications` plugin and the bundled
+`registeredstore.wav` and `sale.wav`. These original legacy assets are reused
+unchanged; this native change cannot be delivered by an OTA JavaScript update.
+Configure APNs/FCM credentials for the existing Expo project and verify both
+events and sounds on physical iOS/Android devices, including background,
+foreground, cold launch, denied permission, logout and account switching.
+See [Expo setup](https://docs.expo.dev/push-notifications/push-notifications-setup/).
+
+Provision a dedicated, confirmed Supabase Auth user with protected **app**
+metadata `{"komisio_push_worker":true}` through the operator's Auth administration.
+It needs no tenant membership and must not be a human staff account. User metadata
+does not grant this capability. Store its credentials in
+`KOMISIO_PUSH_WORKER_EMAIL` / `KOMISIO_PUSH_WORKER_PASSWORD`; also configure
+`CRON_SECRET` (at least 16 characters), the public Supabase URL/key,
+`KOMISIO_INTAKE_ENABLED=true`, and `KOMISIO_MOBILE_API_ENABLED=true`.
+Set `KOMISIO_PUSH_ENABLED=true` only after verification. The application never
+uses a service-role key. If Expo enhanced security is enabled, set the server-only
+`KOMISIO_EXPO_ACCESS_TOKEN`. Never expose worker credentials or device tokens in logs.
+
+Vercel calls `/api/automation/seller-push` every minute. Self-hosters must schedule
+the same authenticated GET using `Authorization: Bearer <CRON_SECRET>`.
+The sender rechecks store consent, seller identity, device generation and session
+at claim time. Disabled/re-enabled settings do not revive old deliveries.
+Logout waits for confirmed device revocation; an unknown write is retained for
+reconciliation. A phone that never enabled push can log out without this API.
+
+An Expo ticket means accepted; a receipt means handed to Apple/Google, **not read**.
+Receipts are checked after 15 minutes; missing receipts after 24 hours become
+unconfirmed. Lost send/claim replies and interrupted sends are never blindly
+resent. `DeviceNotRegistered` disables only the matching device/token generation.
+The seller's communication history identifies Push and the recorded outcome.
+To pause delivery set `KOMISIO_PUSH_ENABLED=false`; leave the device API available
+for revocation. Pushes already handed to providers cannot be recalled; TTL is one
+hour. Do not manually reset claimed/terminal deliveries to queued.
+
 ## Account email language
 
 The signed Send Email hook renders account messages from

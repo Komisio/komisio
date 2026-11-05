@@ -28,9 +28,13 @@ select pg_temp.detail_item(3) as ended \gset
 select pg_temp.detail_item(4) as expired \gset
 create temporary table ending_items as select pg_temp.detail_item(n) as id from generate_series(5,31) n;
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=now()-interval '41 days' where id in (select id from ending_items);
 update public.items set accepted_at=now()-interval '43 days' where id in (:'expired',:'ended');
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 select end_sale_period(:'tenant',gen_random_uuid(),:'ended','return','Synthetic return');

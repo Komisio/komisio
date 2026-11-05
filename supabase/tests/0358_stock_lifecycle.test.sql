@@ -28,18 +28,26 @@ select pg_temp.filter_item(31) as ended \gset
 select pg_temp.filter_item(32) as sold \gset
 -- Transaction-local fixture time travel only; production history stays immutable.
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=now()-interval '41 days' where id=:'ending';
 update public.items set accepted_at=now()-interval '43 days' where id in (:'expired',:'ended');
 update public.items set terms=jsonb_set(terms,'{markdownSteps}','[{"afterDays":0,"percent":10}]') where id=:'due';
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 select end_sale_period(:'tenant',gen_random_uuid(),:'ended','charity','Synthetic handover');
 select record_sale(:'tenant',gen_random_uuid(),'manual','FILTER-1',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',:'sold','priceOre',9000)));
 -- A due markdown can also be nearing period end.
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=now()-interval '41 days' where id=:'due';
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 select set_item_price(:'tenant',gen_random_uuid(),:'due',12000,'Current price fixture');
@@ -81,8 +89,12 @@ select ok(not komisio_private.stock_period_nearing_end('sold',now()+interval '1 
 select ok(not komisio_private.stock_period_nearing_end('ended',now()+interval '1 day'),'ended excluded even with future end');
 select ok(not has_function_privilege('authenticated','komisio_private.stock_period_nearing_end(text,timestamptz)','execute'),'private predicate is not exposed');
 -- Time travel only in the rolled-back fixture: enough upcoming rows for a second page.
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=now()-interval '41 days' where tenant_id=:'tenant' and id not in (:'expired',:'ended',:'due',:'ending');
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 select is(pg_temp.search_items(:'tenant','{"periodWindow":"next7days"}')->>'total','30','all eligible stock counted before paging');

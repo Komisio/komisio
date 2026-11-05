@@ -27,8 +27,12 @@ insert into auth.users(id,email,email_confirmed_at) values ('f0000000-0000-4000-
 select komisio_private.configure_period_notice_worker('f0000000-0000-4000-8000-000000000232',true);
 select is((select count(*) from tenant_members where user_id='f0000000-0000-4000-8000-000000000232'),0::bigint,'worker registration grants no membership');
 -- Historical dates exist only inside this rolled-back synthetic fixture.
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table items disable trigger user;
 update items set accepted_at=(((now() at time zone 'Europe/Stockholm')::date+7)::timestamp at time zone 'Europe/Stockholm')+interval '12 hours'-interval '42 days' where id=current_setting('test.item')::uuid;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table items enable trigger user;
 select is(komisio_private.period_notice_facts(current_setting('test.item')::uuid,'period_ending'),null::jsonb,'activation does not backfill a reminder due earlier today');
 update komisio_private.period_notice_worker set enabled_since=now()-interval '1 day';

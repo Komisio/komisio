@@ -40,12 +40,16 @@ select pg_temp.catalogue_item('Synthetic expired bag') as expired \gset
 select pg_temp.catalogue_item('Synthetic expired marked-down scarf') as markdown_expired \gset
 -- Transaction-local fixture time travel only; production history stays immutable.
 reset role;
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items disable trigger items_immutable;
 update public.items set accepted_at=now()-interval '43 days' where id=:'expired';
 update public.items set accepted_at=now()-interval '1 day' where id=:'coat';
 update public.items set accepted_at=now()-interval '1 hour' where id=:'lamp';
 -- A markdown left unapplied past the period end: the lifecycle reports markdown_due.
 update public.items set accepted_at=now()-interval '43 days',terms=jsonb_set(terms,'{markdownSteps}','[{"afterDays":21,"percent":20}]') where id=:'markdown_expired';
+-- Flush committed-fact notifications before changing fixture-only trigger state.
+set constraints seller_push_registered, seller_push_sold immediate;
 alter table public.items enable trigger items_immutable;
 set local role authenticated;
 select end_sale_period(:'tenant',gen_random_uuid(),:'ended','charity','Synthetic handover');

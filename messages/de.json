@@ -1,4 +1,15 @@
 {
+  "sellerPush": {
+    "title": "Push-Mitteilungen für Verkäufer",
+    "hint": "Verkäufer benötigen die Komisio-App und müssen Mitteilungen erlauben. Diese Auswahl wirkt sich nicht auf E-Mails aus.",
+    "registered": "Wenn ein Artikel erfasst wird",
+    "sold": "Wenn ein Artikel verkauft wird",
+    "preview": "Ton anhören",
+    "stop": "Ton stoppen",
+    "previewFailed": "Der Ton konnte nicht abgespielt werden. Erneut versuchen.",
+    "channel": "Push",
+    "providerSent": "An Apple/Google übergeben"
+  },
   "marketingConsentSave": "E-Mail-Einstellung speichern",
   "marketingConsentHeading": "Neuigkeiten per E-Mail",
   "marketingConsentLabel": "Ja, ich möchte Produktneuigkeiten von Komisio per E-Mail erhalten.",
@@ -725,7 +736,12 @@
     "item.period_reopened": "Verkaufszeitraum wieder eröffnet",
     "item.period_end_corrected": "Abschlussgrund korrigiert",
     "item.lifecycle_batch": "Sammeländerung der Verkaufszeiträume",
-    "label_fields.set": "Etikettenfelder · Gespeichert"
+    "label_fields.set": "Etikettenfelder · Gespeichert",
+    "communication.push_claimed": "Push-Mitteilung · Vorbereitet",
+    "communication.push_sent": "Push-Mitteilung · An Apple/Google übergeben",
+    "communication.push_failed": "Push-Mitteilung · Fehlgeschlagen",
+    "communication.push_unconfirmed": "Push-Mitteilung · Unbestätigt",
+    "communication.push_pending": "Push-Mitteilung · Ausstehend"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",

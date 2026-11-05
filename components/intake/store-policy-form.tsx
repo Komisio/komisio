@@ -20,6 +20,7 @@ import {
 } from '@/components/platform/navigation-warning'
 import { useFormDirty } from '@/components/platform/use-form-dirty'
 import { feeAmountFromInput } from '@/lib/engine/consignment-fees'
+import { SellerPushFields } from './seller-push-fields'
 
 function PolicySection({
   id,
@@ -274,6 +275,8 @@ export function StorePolicyForm({
               communicationLanguage: f.get('communicationLanguage'),
               automaticSellerNotifications:
                 f.get('automaticSellerNotifications') === 'on',
+              pushItemRegistered: f.get('pushItemRegistered') === 'on',
+              pushItemSold: f.get('pushItemSold') === 'on',
               automaticPeriodNotifications:
                 f.get('automaticPeriodNotifications') === 'on',
               automaticMarkdowns: f.get('automaticMarkdowns') === 'on',
@@ -884,6 +887,7 @@ export function StorePolicyForm({
                 {d.periodNotices.setting}
               </label>
               <small id="period-notices-hint">{d.periodNotices.hint}</small>
+              <SellerPushFields policy={base.policy} copy={d.sellerPush} />
             </PolicySection>
           </fieldset>
           {editable && !saved && (

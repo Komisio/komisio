@@ -918,8 +918,11 @@ export default async function Seller({
                               value={m.queued_at}
                               locale={ctx.locale}
                             />{' '}
-                            · {c.kinds[m.kind]} · {c.outcomes[m.status]} ·{' '}
-                            {m.subject}
+                            · {c.kinds[m.kind]} ·{' '}
+                            {m.channel === 'push'
+                              ? `${all.sellerPush.channel} · ${m.status === 'sent' ? all.sellerPush.providerSent : c.outcomes[m.status]}`
+                              : c.outcomes[m.status]}{' '}
+                            · {m.subject}
                           </summary>
                           <pre
                             style={{

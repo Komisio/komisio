@@ -1,4 +1,15 @@
 {
+  "sellerPush": {
+    "title": "Pushvarsler til selgere",
+    "hint": "Selgeren må ha Komisio-appen og tillate varsler. Disse valgene påvirker ikke e-post.",
+    "registered": "Når en vare registreres",
+    "sold": "Når en vare selges",
+    "preview": "Prøv lyden",
+    "stop": "Stopp lyden",
+    "previewFailed": "Lyden kunne ikke spilles av. Prøv igjen.",
+    "channel": "Push",
+    "providerSent": "Sendt videre til Apple/Google"
+  },
   "marketingConsentSave": "Lagre e-postvalg",
   "marketingConsentHeading": "Nyheter på e-post",
   "marketingConsentLabel": "Ja takk, jeg vil motta produktnyheter fra Komisio på e-post.",
@@ -725,7 +736,12 @@
     "item.period_reopened": "Salgsperiode gjenåpnet",
     "item.period_end_corrected": "Avslutningsårsak rettet",
     "item.lifecycle_batch": "Masseendring av salgsperioder",
-    "label_fields.set": "Etikettfelt · Lagret"
+    "label_fields.set": "Etikettfelt · Lagret",
+    "communication.push_claimed": "Pushvarsel · Klargjort",
+    "communication.push_sent": "Pushvarsel · Overlevert til Apple/Google",
+    "communication.push_failed": "Pushvarsel · Mislyktes",
+    "communication.push_unconfirmed": "Pushvarsel · Ikke bekreftet",
+    "communication.push_pending": "Pushvarsel · Venter"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tillatelse til å gjøre dette.",

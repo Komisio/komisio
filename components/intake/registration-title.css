@@ -1,0 +1,97 @@
+.registration-title {
+  min-width: 0;
+  margin: 20px 0;
+}
+.registration-title > legend {
+  font-weight: 600;
+}
+.registration-title > p,
+.registration-title-text > p {
+  margin: 6px 0 12px;
+  max-width: 65ch;
+}
+.registration-title-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+.registration-title-fields li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+}
+.registration-title-label {
+  padding: 8px 4px 8px 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.registration-title-actions {
+  display: flex;
+  flex-shrink: 0;
+  padding: 2px;
+}
+.registration-title-actions button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--green);
+  cursor: pointer;
+}
+.registration-title-actions button:hover:not(:disabled) {
+  background: var(--mint);
+}
+.registration-title-actions button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.registration-title-fields li:focus,
+.registration-title-actions button:focus-visible,
+.registration-title-text summary:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+.registration-title > select {
+  width: auto;
+  max-width: 100%;
+  min-height: 44px;
+}
+.registration-title-preview {
+  display: grid;
+  gap: 4px;
+  margin: 16px 0 6px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--green);
+  background: var(--paper);
+  overflow-wrap: anywhere;
+}
+.registration-title-preview span {
+  font-size: 0.875rem;
+}
+.registration-title-text {
+  margin-top: 12px;
+}
+.registration-title-text summary {
+  width: fit-content;
+  padding: 10px 0;
+  min-height: 44px;
+  cursor: pointer;
+}
+.registration-title-text .field {
+  max-width: 32rem;
+}
+@media (max-width: 480px) {
+  .registration-title-fields li {
+    width: 100%;
+  }
+}

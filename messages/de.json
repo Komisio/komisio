@@ -5288,8 +5288,8 @@
     "title": "Artikelerfassung",
     "hint": "Standardfelder gelten für Artikeltypen, die die Ladeneinstellungen übernehmen.",
     "descriptionRequired": "Beschreibung bei der Erfassung verlangen",
-    "template": "Titel bei fehlender Beschreibung",
-    "templateHint": "Diese Platzhalter verwenden. Fehlende Werte werden ausgelassen; ein leerer Titel wird durch die Artikelreferenz ersetzt.",
+    "template": "Artikelnamen automatisch erstellen",
+    "templateHint": "Wird verwendet, wenn die Beschreibung leer ist. Wählen Sie die Felder in der gewünschten Reihenfolge.",
     "fields": "Standardfelder des Ladens",
     "inherit": "Standardfelder des Ladens verwenden",
     "note": "Interne Notiz",
@@ -5321,6 +5321,57 @@
       }
     },
     "unsaved": "Ungespeicherte Änderungen",
-    "saving": "Wird gespeichert…"
+    "saving": "Wird gespeichert…",
+    "titleBuilder": {
+      "selected": "Felder im Artikelnamen",
+      "add": "Feld hinzufügen",
+      "allAdded": "Alle Felder hinzugefügt",
+      "earlier": "{field} nach vorne verschieben",
+      "later": "{field} nach hinten verschieben",
+      "remove": "{field} entfernen",
+      "preview": "Beispiel",
+      "missing": "Felder ohne Wert werden übersprungen. Bleibt nichts übrig, wird die Artikelreferenz verwendet.",
+      "customize": "Eigener Text und Trennzeichen",
+      "textHint": "Geben Sie Text, Leerzeichen oder Satzzeichen ein. Die Vorschau zeigt das Ergebnis.",
+      "before": "Text am Anfang",
+      "after": "Nach {field}",
+      "invalid": "Wählen Sie mindestens ein Feld oder geben Sie eigenen Text ein. Höchstens 240 Zeichen, ohne geschweifte Klammern.",
+      "examples": {
+        "type": "Kleid",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Blau",
+        "condition": "Guter Zustand",
+        "material": "Baumwolle"
+      }
+    }
+  },
+  "hostSupport": {
+    "open": "Supportmodus öffnen",
+    "heading": "Supportmodus – {name}",
+    "intro": "Lesen Sie die Geschäftsdaten mit Ihrem eigenen Konto für höchstens 60 Minuten. Der Zugriff wird protokolliert.",
+    "reason": "Grund des Supportzugriffs",
+    "reasonHint": "Beschreiben Sie das Anliegen kurz. Keine Passwörter oder sensiblen personenbezogenen Daten eingeben.",
+    "start": "Supportzugriff starten",
+    "cancel": "Abbrechen",
+    "working": "Wird bearbeitet…",
+    "retry": "Erneut versuchen",
+    "reload": "Status neu laden",
+    "uncertain": "Die Antwort konnte nicht bestätigt werden. Versuchen Sie denselben Zugriff erneut oder laden Sie den Status neu.",
+    "mode": "Supportmodus",
+    "readOnly": "Nur Lesen. Sie können die Geschäftsdaten nicht ändern.",
+    "until": "Verfügbar bis {time}.",
+    "end": "Supportmodus beenden",
+    "expired": "Der Supportzugriff ist abgelaufen. Beenden Sie den Zugriff, um zur Geschäftsliste zurückzukehren.",
+    "exitFailed": "Das Beenden konnte nicht bestätigt werden. Bitte erneut versuchen.",
+    "errors": {
+      "FORBIDDEN": "Sie haben keine Berechtigung.",
+      "AUTH_REQUIRED": "Melden Sie sich erneut an und schließen Sie eine erforderliche Zwei-Schritt-Verifizierung ab.",
+      "INVALID_INPUT": "Geben Sie einen Supportgrund ein.",
+      "SUPPORT_ACTIVE": "Beenden Sie zuerst den aktuellen Supportzugriff.",
+      "SUPPORT_ENDED": "Dieser Supportzugriff wurde beendet. Laden Sie die Seite neu.",
+      "TENANT_NOT_FOUND": "Das Geschäft existiert nicht mehr.",
+      "REQUEST_FAILED": "Die Aktion konnte nicht abgeschlossen werden. Bitte erneut versuchen."
+    }
   }
 }

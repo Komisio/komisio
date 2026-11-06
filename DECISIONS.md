@@ -1301,3 +1301,6 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-04: Sidebar keyboard focus remains below its sticky header as width and content reflow. Geometry changes recheck only the focused sidebar control; navigation, focus ownership, saved width preference and mobile behavior remain unchanged (#760).
 
 - 2026-11-04: Seller review confirmation and response controls wait for client handlers before accepting interaction. Approval still requires loaded photos and explicit confirmation; authorization, immutable response identity and uncertain retries are unchanged (#764).
+
+- 2026-11-05: #775 edits automatic item names through localized field choices, ordering and an example. Existing literal text and separators round-trip unchanged. The six supported fields, description priority, title rendering, permissions and save/retry contract remain unchanged.
+- 2026-11-05: #777 permits person hosts to open audited, session-bound 60-minute support visits. Database-enforced read-only access preserves identity and memberships, checks MFA and host authority, and fails closed after expiry until exit. No impersonation or support writes are granted.

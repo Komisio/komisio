@@ -5282,8 +5282,8 @@
     "title": "Vareregistrering",
     "hint": "Standardfeltene gjelder varetyper som arver butikkens innstillinger.",
     "descriptionRequired": "Krev beskrivelse ved registrering",
-    "template": "Tittel når beskrivelsen mangler",
-    "templateHint": "Bruk disse plassholderne. Manglende verdier utelates; en tom tittel erstattes med varereferansen.",
+    "template": "Lag varenavn automatisk",
+    "templateHint": "Brukes når Beskrivelse er tom. Velg feltene i den rekkefølgen de skal vises.",
     "fields": "Butikkens standardfelt",
     "inherit": "Bruk butikkens standardfelt",
     "note": "Internt notat",
@@ -5315,6 +5315,57 @@
       }
     },
     "unsaved": "Ulagrede endringer",
-    "saving": "Lagrer…"
+    "saving": "Lagrer…",
+    "titleBuilder": {
+      "selected": "Felt i varenavnet",
+      "add": "Legg til felt",
+      "allAdded": "Alle felt er lagt til",
+      "earlier": "Flytt {field} tidligere",
+      "later": "Flytt {field} senere",
+      "remove": "Fjern {field}",
+      "preview": "Eksempel",
+      "missing": "Felt uten verdi hoppes over. Hvis ingenting gjenstår, brukes varereferansen.",
+      "customize": "Egen tekst og skilletegn",
+      "textHint": "Skriv vanlig tekst, mellomrom eller skilletegn. Forhåndsvisningen viser resultatet.",
+      "before": "Tekst i starten",
+      "after": "Etter {field}",
+      "invalid": "Velg minst ett felt eller skriv egen tekst. Maks. 240 tegn, uten krøllparenteser.",
+      "examples": {
+        "type": "Kjole",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Blå",
+        "condition": "God stand",
+        "material": "Bomull"
+      }
+    }
+  },
+  "hostSupport": {
+    "open": "Åpne supportmodus",
+    "heading": "Supportmodus – {name}",
+    "intro": "Les butikkens opplysninger med din egen konto i opptil 60 minutter. Besøket loggføres.",
+    "reason": "Årsak til support",
+    "reasonHint": "Beskriv saken kort. Unngå passord og sensitive personopplysninger.",
+    "start": "Start supportbesøk",
+    "cancel": "Avbryt",
+    "working": "Arbeider…",
+    "retry": "Prøv igjen",
+    "reload": "Last inn status på nytt",
+    "uncertain": "Svaret kunne ikke bekreftes. Prøv samme besøk igjen eller last inn status på nytt.",
+    "mode": "Supportmodus",
+    "readOnly": "Kun lesing. Du kan ikke endre butikkens opplysninger.",
+    "until": "Tilgjengelig til {time}.",
+    "end": "Avslutt supportmodus",
+    "expired": "Supporttilgangen har utløpt. Avslutt besøket for å gå tilbake til butikklisten.",
+    "exitFailed": "Avslutningen kunne ikke bekreftes. Prøv igjen.",
+    "errors": {
+      "FORBIDDEN": "Du har ikke tilgang.",
+      "AUTH_REQUIRED": "Logg inn igjen og fullfør eventuell totrinnsbekreftelse.",
+      "INVALID_INPUT": "Oppgi en årsak til support.",
+      "SUPPORT_ACTIVE": "Avslutt det pågående supportbesøket først.",
+      "SUPPORT_ENDED": "Dette supportbesøket er avsluttet. Last inn siden på nytt.",
+      "TENANT_NOT_FOUND": "Butikken finnes ikke lenger.",
+      "REQUEST_FAILED": "Handlingen kunne ikke fullføres. Prøv igjen."
+    }
   }
 }

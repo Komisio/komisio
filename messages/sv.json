@@ -5282,8 +5282,8 @@
     "title": "Varuregistrering",
     "hint": "Standardfälten gäller för varutyper som ärver butikens inställningar.",
     "descriptionRequired": "Kräv beskrivning vid registrering",
-    "template": "Titel när beskrivning saknas",
-    "templateHint": "Använd dessa platshållare. Saknade värden utelämnas; om titeln blir tom används varureferensen.",
+    "template": "Skapa varunamn automatiskt",
+    "templateHint": "Används när du lämnar Beskrivning tom. Välj fält i den ordning de ska visas.",
     "fields": "Butikens standardfält",
     "inherit": "Använd butikens standardfält",
     "note": "Intern anteckning",
@@ -5315,6 +5315,57 @@
       }
     },
     "unsaved": "Osparade ändringar",
-    "saving": "Sparar…"
+    "saving": "Sparar…",
+    "titleBuilder": {
+      "selected": "Fält i varunamnet",
+      "add": "Lägg till fält",
+      "allAdded": "Alla fält har lagts till",
+      "earlier": "Flytta {field} tidigare",
+      "later": "Flytta {field} senare",
+      "remove": "Ta bort {field}",
+      "preview": "Exempel",
+      "missing": "Fält utan värde hoppas över. Om inget återstår används varureferensen.",
+      "customize": "Egen text och skiljetecken",
+      "textHint": "Skriv vanlig text, mellanslag eller skiljetecken. Förhandsvisningen visar resultatet.",
+      "before": "Text i början",
+      "after": "Efter {field}",
+      "invalid": "Välj minst ett fält eller skriv egen text. Högst 240 tecken, utan klammerparenteser.",
+      "examples": {
+        "type": "Klänning",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Blå",
+        "condition": "Gott skick",
+        "material": "Bomull"
+      }
+    }
+  },
+  "hostSupport": {
+    "open": "Öppna supportläge",
+    "heading": "Supportläge – {name}",
+    "intro": "Du läser butikens uppgifter med ditt eget konto i högst 60 minuter. Besöket loggas.",
+    "reason": "Supportorsak",
+    "reasonHint": "Beskriv ärendet kort. Undvik lösenord och känsliga personuppgifter.",
+    "start": "Starta supportbesök",
+    "cancel": "Avbryt",
+    "working": "Arbetar…",
+    "retry": "Försök igen",
+    "reload": "Läs in status igen",
+    "uncertain": "Svaret kunde inte bekräftas. Försök igen med samma besök eller läs in status igen.",
+    "mode": "Supportläge",
+    "readOnly": "Endast läsning. Du kan inte ändra butikens uppgifter.",
+    "until": "Tillgängligt till {time}.",
+    "end": "Avsluta supportläge",
+    "expired": "Supportåtkomsten har upphört. Avsluta besöket för att återgå till butikslistan.",
+    "exitFailed": "Avslutet kunde inte bekräftas. Försök igen.",
+    "errors": {
+      "FORBIDDEN": "Du saknar behörighet.",
+      "AUTH_REQUIRED": "Logga in igen och slutför eventuell tvåstegsverifiering.",
+      "INVALID_INPUT": "Fyll i en supportorsak.",
+      "SUPPORT_ACTIVE": "Avsluta ditt pågående supportbesök först.",
+      "SUPPORT_ENDED": "Detta supportbesök är avslutat. Läs in sidan igen.",
+      "TENANT_NOT_FOUND": "Butiken finns inte längre.",
+      "REQUEST_FAILED": "Åtgärden kunde inte slutföras. Försök igen."
+    }
   }
 }

@@ -5288,8 +5288,8 @@
     "title": "Registro de artículos",
     "hint": "Los campos predeterminados se aplican a los tipos que heredan la configuración de la tienda.",
     "descriptionRequired": "Exigir descripción al registrar",
-    "template": "Título cuando falta la descripción",
-    "templateHint": "Usa estos marcadores. Se omiten los valores ausentes; un título vacío se sustituye por la referencia del artículo.",
+    "template": "Crear nombres de artículos automáticamente",
+    "templateHint": "Se utiliza cuando Descripción está vacía. Elige los campos en el orden en que deben aparecer.",
     "fields": "Campos predeterminados de la tienda",
     "inherit": "Usar los campos predeterminados de la tienda",
     "note": "Nota interna",
@@ -5321,6 +5321,57 @@
       }
     },
     "unsaved": "Cambios sin guardar",
-    "saving": "Guardando…"
+    "saving": "Guardando…",
+    "titleBuilder": {
+      "selected": "Campos del nombre del artículo",
+      "add": "Añadir campo",
+      "allAdded": "Todos los campos añadidos",
+      "earlier": "Mover {field} antes",
+      "later": "Mover {field} después",
+      "remove": "Quitar {field}",
+      "preview": "Ejemplo",
+      "missing": "Se omiten los campos sin valor. Si no queda nada, se utiliza la referencia del artículo.",
+      "customize": "Texto propio y separadores",
+      "textHint": "Introduce texto, espacios o signos de puntuación. La vista previa muestra el resultado.",
+      "before": "Texto al principio",
+      "after": "Después de {field}",
+      "invalid": "Elige al menos un campo o introduce texto propio. Hasta 240 caracteres, sin llaves.",
+      "examples": {
+        "type": "Vestido",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Azul",
+        "condition": "Buen estado",
+        "material": "Algodón"
+      }
+    }
+  },
+  "hostSupport": {
+    "open": "Abrir modo de soporte",
+    "heading": "Modo de soporte – {name}",
+    "intro": "Consulta los datos de la tienda con tu propia cuenta durante un máximo de 60 minutos. La visita queda registrada.",
+    "reason": "Motivo del soporte",
+    "reasonHint": "Describe el problema brevemente. Evita contraseñas y datos personales sensibles.",
+    "start": "Iniciar visita de soporte",
+    "cancel": "Cancelar",
+    "working": "Procesando…",
+    "retry": "Reintentar",
+    "reload": "Recargar estado",
+    "uncertain": "No se pudo confirmar la respuesta. Reintenta la misma visita o recarga su estado.",
+    "mode": "Modo de soporte",
+    "readOnly": "Solo lectura. No puedes modificar los datos de la tienda.",
+    "until": "Disponible hasta las {time}.",
+    "end": "Finalizar modo de soporte",
+    "expired": "El acceso de soporte ha terminado. Finaliza la visita para volver a la lista de tiendas.",
+    "exitFailed": "No se pudo confirmar la finalización. Inténtalo de nuevo.",
+    "errors": {
+      "FORBIDDEN": "No tienes permiso.",
+      "AUTH_REQUIRED": "Vuelve a iniciar sesión y completa la verificación en dos pasos si se requiere.",
+      "INVALID_INPUT": "Introduce un motivo de soporte.",
+      "SUPPORT_ACTIVE": "Finaliza primero tu visita de soporte actual.",
+      "SUPPORT_ENDED": "Esta visita de soporte ha finalizado. Recarga la página.",
+      "TENANT_NOT_FOUND": "La tienda ya no existe.",
+      "REQUEST_FAILED": "No se pudo completar la acción. Inténtalo de nuevo."
+    }
   }
 }

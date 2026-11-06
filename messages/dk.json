@@ -5282,8 +5282,8 @@
     "title": "Vareregistrering",
     "hint": "Standardfelterne gælder varetyper, der arver butikkens indstillinger.",
     "descriptionRequired": "Kræv beskrivelse ved registrering",
-    "template": "Titel, når beskrivelsen mangler",
-    "templateHint": "Brug disse pladsholdere. Manglende værdier udelades; en tom titel erstattes med varereferencen.",
+    "template": "Opret varenavne automatisk",
+    "templateHint": "Bruges, når Beskrivelse er tom. Vælg felterne i den rækkefølge, de skal vises.",
     "fields": "Butikkens standardfelter",
     "inherit": "Brug butikkens standardfelter",
     "note": "Intern note",
@@ -5315,6 +5315,57 @@
       }
     },
     "unsaved": "Ikke-gemte ændringer",
-    "saving": "Gemmer…"
+    "saving": "Gemmer…",
+    "titleBuilder": {
+      "selected": "Felter i varenavnet",
+      "add": "Tilføj felt",
+      "allAdded": "Alle felter er tilføjet",
+      "earlier": "Flyt {field} tidligere",
+      "later": "Flyt {field} senere",
+      "remove": "Fjern {field}",
+      "preview": "Eksempel",
+      "missing": "Felter uden værdi springes over. Hvis intet er tilbage, bruges varereferencen.",
+      "customize": "Egen tekst og skilletegn",
+      "textHint": "Skriv almindelig tekst, mellemrum eller skilletegn. Forhåndsvisningen viser resultatet.",
+      "before": "Tekst i starten",
+      "after": "Efter {field}",
+      "invalid": "Vælg mindst ét felt, eller skriv egen tekst. Højst 240 tegn uden krøllede parenteser.",
+      "examples": {
+        "type": "Kjole",
+        "brand": "Nord",
+        "size": "M",
+        "color": "Blå",
+        "condition": "God stand",
+        "material": "Bomuld"
+      }
+    }
+  },
+  "hostSupport": {
+    "open": "Åbn supporttilstand",
+    "heading": "Supporttilstand – {name}",
+    "intro": "Læs butikkens oplysninger med din egen konto i op til 60 minutter. Besøget logges.",
+    "reason": "Supportårsag",
+    "reasonHint": "Beskriv sagen kort. Undgå adgangskoder og følsomme personoplysninger.",
+    "start": "Start supportbesøg",
+    "cancel": "Annuller",
+    "working": "Arbejder…",
+    "retry": "Prøv igen",
+    "reload": "Genindlæs status",
+    "uncertain": "Svaret kunne ikke bekræftes. Prøv samme besøg igen, eller genindlæs status.",
+    "mode": "Supporttilstand",
+    "readOnly": "Kun læsning. Du kan ikke ændre butikkens oplysninger.",
+    "until": "Tilgængelig indtil {time}.",
+    "end": "Afslut supporttilstand",
+    "expired": "Supportadgangen er udløbet. Afslut besøget for at vende tilbage til butikslisten.",
+    "exitFailed": "Afslutningen kunne ikke bekræftes. Prøv igen.",
+    "errors": {
+      "FORBIDDEN": "Du har ikke adgang.",
+      "AUTH_REQUIRED": "Log ind igen, og gennemfør eventuel totrinsbekræftelse.",
+      "INVALID_INPUT": "Angiv en supportårsag.",
+      "SUPPORT_ACTIVE": "Afslut dit igangværende supportbesøg først.",
+      "SUPPORT_ENDED": "Dette supportbesøg er afsluttet. Genindlæs siden.",
+      "TENANT_NOT_FOUND": "Butikken findes ikke længere.",
+      "REQUEST_FAILED": "Handlingen kunne ikke gennemføres. Prøv igen."
+    }
   }
 }

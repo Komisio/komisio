@@ -4,6 +4,8 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { useRouter } from '@/components/platform/use-working-router'
 import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { HostSupportStart } from './host-support-start'
+import './host-support.css'
 import { intlLocale, type Dictionary } from '@/lib/i18n'
 import {
   planStates,
@@ -23,12 +25,16 @@ export function HostPlans({
   activity,
   locale,
   d,
+  supportLabels,
+  supportActive = false,
 }: {
   billingEnabled: boolean
   rows: PlanOverviewRow[]
   activity: Record<string, ActivityRow>
   locale: string
   d: Dictionary['plans']
+  supportLabels: Dictionary['hostSupport']
+  supportActive?: boolean
 }) {
   const router = useRouter()
   const running = useRef(false)
@@ -265,6 +271,12 @@ export function HostPlans({
                           className="host-store-expanded"
                         >
                           <h3>{row.name}</h3>
+                          <HostSupportStart
+                            tenantId={row.tenant_id}
+                            name={row.name}
+                            d={supportLabels}
+                            disabled={supportActive}
+                          />
                           <dl className="host-store-detail">
                             <div>
                               <dt>{d.members}</dt>
@@ -299,29 +311,31 @@ export function HostPlans({
                               </dd>
                             </div>
                           </dl>
-                          <details className="host-manual-plan">
-                            <summary>{d.activate}</summary>
-                            <p>{d.activationHint}</p>
-                            {!billingEnabled ? (
-                              <p>{d.errors.BILLING_DISABLED}</p>
-                            ) : row.state !== 'closed' ? (
-                              <Button
-                                type="button"
-                                variant="secondary"
-                                disabled={busy || uncertain}
-                                onClick={() => {
-                                  setError('')
-                                  setUntil('')
-                                  setReason('')
-                                  setTarget(row)
-                                }}
-                              >
-                                {d.editPlan}
-                              </Button>
-                            ) : (
-                              <p>{d.errors.PLAN_CLOSED}</p>
-                            )}
-                          </details>
+                          {!supportActive && (
+                            <details className="host-manual-plan">
+                              <summary>{d.activate}</summary>
+                              <p>{d.activationHint}</p>
+                              {!billingEnabled ? (
+                                <p>{d.errors.BILLING_DISABLED}</p>
+                              ) : row.state !== 'closed' ? (
+                                <Button
+                                  type="button"
+                                  variant="secondary"
+                                  disabled={busy || uncertain}
+                                  onClick={() => {
+                                    setError('')
+                                    setUntil('')
+                                    setReason('')
+                                    setTarget(row)
+                                  }}
+                                >
+                                  {d.editPlan}
+                                </Button>
+                              ) : (
+                                <p>{d.errors.PLAN_CLOSED}</p>
+                              )}
+                            </details>
+                          )}
                         </section>
                       )}
                     </td>

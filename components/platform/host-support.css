@@ -1,0 +1,30 @@
+.host-support-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid var(--green);
+  border-radius: 0.75rem;
+  background: var(--mint);
+  color: var(--green);
+}
+.host-support-banner p {
+  margin: 0.25rem 0;
+}
+.host-support-start {
+  display: grid;
+  gap: 1rem;
+  max-width: 42rem;
+  padding: 1rem 0;
+}
+.host-support-start p {
+  margin: 0;
+}
+@media (max-width: 480px) {
+  .host-support-banner > button {
+    width: 100%;
+  }
+}

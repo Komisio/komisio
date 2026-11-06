@@ -15,6 +15,18 @@ export const hideableIntakeFields = [
 ] as const
 export type HideableIntakeField = (typeof hideableIntakeFields)[number]
 
+export const registrationTitleTemplate = z
+  .string()
+  .trim()
+  .min(1)
+  .max(240)
+  .refine(
+    (s) =>
+      !/[{}\x00-\x1f\x7f]/.test(
+        s.replace(/\{(type|brand|size|color|condition|material)\}/g, ''),
+      ),
+  )
+
 export const registrationPreferences = z
   .strictObject({
     // Absence preserves legacy records and their exact retry payloads.
@@ -24,17 +36,7 @@ export const registrationPreferences = z
       .refine((fields) => new Set(fields).size === fields.length)
       .optional(),
     descriptionRequired: z.boolean(),
-    titleTemplate: z
-      .string()
-      .trim()
-      .min(1)
-      .max(240)
-      .refine(
-        (s) =>
-          !/[{}\x00-\x1f\x7f]/.test(
-            s.replace(/\{(type|brand|size|color|condition|material)\}/g, ''),
-          ),
-      ),
+    titleTemplate: registrationTitleTemplate,
     attributes: z
       .array(z.string().regex(/^[a-z][a-z0-9_]{0,39}$/))
       .max(100)

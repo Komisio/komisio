@@ -14,6 +14,7 @@ import {
   localeNames,
 } from '@/lib/i18n'
 import { safeNext } from '@/lib/platform/validation'
+import { passwordUpdateError } from '@/lib/platform/password-update-error'
 import { Button } from '@/components/ui/button'
 import { Feedback } from '@/components/platform/feedback'
 import { Brand } from '@/components/platform/brand'
@@ -156,7 +157,9 @@ export function AuthForm({
           'status' in error &&
           error.status === 429
           ? d.sellerAccess.rateLimited
-          : d.authError,
+          : mode === 'password'
+            ? passwordUpdateError(error, d)
+            : d.authError,
       )
     } finally {
       setBusy(false)

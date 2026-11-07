@@ -436,6 +436,7 @@
   "invitedRegisterIntro": "Seurasit kaupan kutsua. Luo henkilökohtainen tilisi sillä sähköpostiosoitteella, joka vastaanotti kutsun. Sinun ei tarvitse luoda uutta kauppaa. Onko sinulla jo tili? Käytä alla olevaa kirjautumislinkkiä.",
   "invitedLoginIntro": "Kirjaudu sisään sillä sähköpostiosoitteella, joka vastaanotti kutsun. Palaat tänne hyväksymään sen. Uusi Komisiossa? Valitse alta Luo tili.",
   "passwordHint": "Vähintään 10 merkkiä.",
+  "passwordMustDiffer": "Uuden salasanan on oltava eri kuin nykyinen salasanasi. Valitse toinen salasana ja yritä uudelleen.",
   "verifySent": "Tarkista sähköpostisi ja seuraa linkkiä vahvistaaksesi tilisi. Avaa se samassa selaimessa, jota käytit täällä. Linkkiä voi käyttää vain kerran.",
   "resetSent": "Jos tili on olemassa, nollauslinkki on lähetetty. Tarkista sähköpostisi.",
   "resend": "Lähetä vahvistus uudelleen",

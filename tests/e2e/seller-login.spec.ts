@@ -89,6 +89,15 @@ test('seller login opens the only store, recovery requires a new password, and d
     ).toBeVisible()
     await page.goto('/seller')
     await expect(page).toHaveURL(/\/update-password/)
+    await page.getByLabel(d.newPassword, { exact: true }).fill(password)
+    await page
+      .getByRole('button', { name: d.savePassword, exact: true })
+      .click()
+    await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+      d.passwordMustDiffer,
+    )
+    await page.goto('/seller')
+    await expect(page).toHaveURL(/\/update-password/)
     await page.getByLabel(d.newPassword, { exact: true }).fill(replacement)
     await page
       .getByRole('button', { name: d.savePassword, exact: true })

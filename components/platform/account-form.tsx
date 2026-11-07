@@ -7,6 +7,7 @@ import { useCommand } from './use-command'
 import { Feedback } from './feedback'
 import { Button } from '@/components/ui/button'
 import { browserClient } from '@/lib/supabase/client'
+import { passwordUpdateError } from '@/lib/platform/password-update-error'
 import { PasswordInput } from '@/components/auth/password-input'
 import {
   intlLocale,
@@ -128,8 +129,8 @@ export function PasswordForm({ d }: { d: Dictionary }) {
           setSaved(true)
           form.reset()
           setPasswordVersion((version) => version + 1)
-        } catch {
-          setError(d.authError)
+        } catch (error) {
+          setError(passwordUpdateError(error, d))
         } finally {
           setBusy(false)
         }

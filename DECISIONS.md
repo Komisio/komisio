@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-07: #785 explains same_password in recovery and account password changes in all interface languages. A different password remains required; recovery, verification and MFA gates are unchanged. Feedback never displays provider messages or passwords.
+
 - 2026-11-05: #767 adds owner-approved seller push for registered and sold consignment items, with independent default-off store switches and explicit device consent. Reuse original sounds; placement/staff notices and email-policy changes are excluded.
 - 2026-11-05: #767 adds protected device and delivery tables. Committed facts queue per-device work; current seller/session/store consent is rechecked before one send claim. No historical backfill or blind retries of uncertain sends; Expo receipts do not prove a person saw a notification.
 - 2026-11-05: #767 uses an authenticated push worker identified by operator-managed Auth app metadata, with narrow RPCs and no tenant membership or service-role application key. Push content/outcomes join communication history; device tokens remain private.

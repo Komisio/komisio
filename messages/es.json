@@ -436,6 +436,7 @@
   "invitedRegisterIntro": "Has seguido una invitación de una tienda. Crea tu cuenta personal con el correo electrónico que la recibió. No necesitas crear una tienda nueva. ¿Ya tienes una cuenta? Usa el enlace de inicio de sesión de abajo.",
   "invitedLoginIntro": "Inicia sesión con el correo electrónico que recibió la invitación. Volverás aquí para aceptarla. ¿Eres nuevo en Komisio? Elige Crear cuenta abajo.",
   "passwordHint": "Al menos 10 caracteres.",
+  "passwordMustDiffer": "La nueva contraseña debe ser diferente de la actual. Elige otra contraseña e inténtalo de nuevo.",
   "verifySent": "Revisa tu correo electrónico y sigue el enlace para confirmar tu cuenta. Ábrelo en el mismo navegador que has usado aquí. El enlace solo se puede usar una vez.",
   "resetSent": "Si la cuenta existe, se ha enviado un enlace de restablecimiento. Revisa tu correo electrónico.",
   "resend": "Reenviar confirmación",

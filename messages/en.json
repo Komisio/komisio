@@ -436,6 +436,7 @@
   "invitedRegisterIntro": "You followed a store invitation. Create your personal account using the email address that received it. You do not need to create a new store. Already have an account? Use the sign-in link below.",
   "invitedLoginIntro": "Sign in with the email address that received the invitation. You will return here to accept it. New to Komisio? Choose Create account below.",
   "passwordHint": "At least 10 characters.",
+  "passwordMustDiffer": "The new password must be different from your current password. Choose another password and try again.",
   "verifySent": "Check your email and follow the link to confirm your account. Open it in the same browser you used here. The link can only be used once.",
   "resetSent": "If the account exists, a reset link has been sent. Please check your email.",
   "resend": "Resend confirmation",

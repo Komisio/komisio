@@ -436,6 +436,7 @@
   "invitedRegisterIntro": "Du fulgte en butikkinvitasjon. Opprett din personlige konto med e-postadressen som mottok den. Du trenger ikke opprette en ny butikk. Har du allerede en konto? Bruk innloggingslenken nedenfor.",
   "invitedLoginIntro": "Logg inn med e-postadressen som mottok invitasjonen. Du kommer tilbake hit for å godta den. Ny hos Komisio? Velg Opprett konto nedenfor.",
   "passwordHint": "Minst 10 tegn.",
+  "passwordMustDiffer": "Det nye passordet må være forskjellig fra det nåværende passordet ditt. Velg et annet passord og prøv igjen.",
   "verifySent": "Sjekk e-posten din og følg lenken for å bekrefte kontoen. Åpne den i samme nettleser som du brukte her. Lenken kan bare brukes én gang.",
   "resetSent": "Hvis kontoen finnes, er en tilbakestillingslenke sendt. Sjekk e-posten din.",
   "resend": "Send bekreftelsen på nytt",

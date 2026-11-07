@@ -436,6 +436,7 @@
   "invitedRegisterIntro": "Sie sind einer Store-Einladung gefolgt. Erstellen Sie Ihr persönliches Konto mit der E-Mail-Adresse, an die die Einladung gesendet wurde. Sie müssen keinen neuen Store erstellen. Sie haben bereits ein Konto? Verwenden Sie den Anmeldelink unten.",
   "invitedLoginIntro": "Melden Sie sich mit der E-Mail-Adresse an, an die die Einladung gesendet wurde. Sie kehren hierher zurück, um sie anzunehmen. Neu bei Komisio? Wählen Sie unten Konto erstellen.",
   "passwordHint": "Mindestens 10 Zeichen.",
+  "passwordMustDiffer": "Das neue Passwort muss sich von Ihrem aktuellen Passwort unterscheiden. Wählen Sie ein anderes Passwort und versuchen Sie es erneut.",
   "verifySent": "Prüfen Sie Ihre E-Mails und folgen Sie dem Link, um Ihr Konto zu bestätigen. Öffnen Sie ihn im selben Browser, den Sie hier verwendet haben. Der Link kann nur einmal verwendet werden.",
   "resetSent": "Falls das Konto existiert, wurde ein Link zum Zurücksetzen gesendet. Bitte prüfen Sie Ihre E-Mails.",
   "resend": "Bestätigung erneut senden",

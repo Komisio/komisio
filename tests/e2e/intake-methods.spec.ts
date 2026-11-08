@@ -39,10 +39,7 @@ test('switching receiving methods preserves cancelled item, receipt and seller d
         writes.push(request.url())
     })
     await page.goto('/')
-    const actions = page.getByRole('region', {
-      name: d.dashboard.actions,
-      exact: true,
-    })
+    const actions = page.locator('.dashboard-actions')
     await actions.locator('a[href="/intake/quick"]').click()
     await page.getByRole('button', { name: /Synthetic P2 seller/ }).click()
     const description = page.getByLabel(d.quickIntake.description, {
@@ -135,16 +132,12 @@ test('both task entries remain readable and direct in all languages at mobile an
         .context()
         .addCookies([{ name: 'komisio-locale', value: locale, url: baseURL! }])
       await page.goto('/')
-      const actions = page.getByRole('region', {
-        name: t.dashboard.actions,
-        exact: true,
-      })
+      const actions = page.locator('.dashboard-actions')
       const direct = actions.locator('a[href="/intake/quick"]')
       const later = actions.locator('a[href="/intake#bag-receiving"]')
-      await expect(direct).toContainText(t.quickIntake.title)
-      await expect(direct).toContainText(t.intake.quickHint)
-      await expect(later).toContainText(t.nav.receiveBag)
-      await expect(later).toContainText(t.dashboard.receiptHint)
+      await expect(actions.getByRole('link')).toHaveCount(2)
+      await expect(direct).toHaveText(t.dashboard.registerItems)
+      await expect(later).toHaveText(t.dashboard.receiveDropoff)
       for (const width of [1280, 320]) {
         await page.setViewportSize({ width, height: 900 })
         await expect

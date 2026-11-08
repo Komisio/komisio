@@ -196,24 +196,6 @@
 .seller-item-price strong {
   font-weight: 600;
 }
-.seller-item-badge {
-  display: inline-block;
-  border-radius: 0.5rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  background: var(--paper);
-  border: 1px solid var(--line);
-}
-.seller-item-badge-forSale,
-.seller-item-badge-sold {
-  background: var(--mint);
-}
-.seller-item-badge-periodEnding,
-.seller-item-badge-periodEnded {
-  border-style: dashed;
-  font-weight: 600;
-}
 .seller-item-plan {
   margin-top: 0.25rem;
 }

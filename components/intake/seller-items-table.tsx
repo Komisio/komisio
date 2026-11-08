@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { WorkingForm } from '@/components/platform/working-form'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import { EventTime } from '@/components/ui/event-time'
+import { ItemStatusBadge } from '@/components/ui/item-status-badge'
 import type { Dictionary } from '@/lib/i18n'
 import { itemStage, formatOre } from '@/lib/engine/items'
 import {
@@ -195,13 +196,10 @@ export async function SellerItemsTable({
                           ? '—'
                           : `${formatOre(price)} ${currency}`}
                       </td>
-                      <td>
-                        <span
-                          className="inventory-cell-text"
-                          title={all.lifecycle.stages[item.stage]}
-                        >
+                      <td className="inventory-state">
+                        <ItemStatusBadge stage={item.stage}>
                           {all.lifecycle.stages[item.stage]}
-                        </span>
+                        </ItemStatusBadge>
                       </td>
                       <td>
                         <span

@@ -2888,13 +2888,6 @@ button.text-link:hover:not(:disabled) {
 .lifecycle-price {
   white-space: nowrap;
 }
-.lifecycle-status {
-  font-size: 0.85rem;
-}
-.lifecycle-status-markdown_due,
-.lifecycle-status-period_ended {
-  font-weight: 600;
-}
 .lifecycle-detail {
   border-top: 1px solid var(--line);
   padding: 1rem 0;
@@ -6709,6 +6702,50 @@ button.text-link:hover:not(:disabled) {
   font-size: 13px;
   white-space: nowrap;
 }
+.inventory-status-content {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 6px;
+}
+.inventory-status-content > .inventory-icon {
+  flex-shrink: 0;
+}
+.item-status-badge {
+  display: inline-block;
+  max-width: 100%;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+.item-status-badge[data-stage='on_sale'] {
+  background: var(--mint);
+  color: var(--green);
+}
+.item-status-badge[data-stage='markdown_due'],
+.item-status-badge[data-stage='period_ending'],
+.item-status-badge[data-stage='period_ended'] {
+  background: #fff4df;
+  color: #735115;
+}
+.item-status-badge[data-stage='sold'] {
+  background: #edf2f7;
+  color: #36576d;
+}
+.inventory-table .item-status-badge {
+  max-width: none;
+  white-space: nowrap;
+}
+.inventory-table .inventory-state {
+  max-width: none;
+}
 .inventory-tooltip {
   position: fixed;
   z-index: 100;
@@ -6919,22 +6956,6 @@ button.text-link:hover:not(:disabled) {
   grid-column: 3;
   grid-row: 1;
   justify-self: start;
-  background: var(--paper);
-  color: var(--muted);
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 400;
-}
-.lifecycle-page .lifecycle-status-on_sale {
-  background: var(--mint);
-  color: var(--green);
-}
-.lifecycle-page .lifecycle-status-markdown_due,
-.lifecycle-page .lifecycle-status-period_ending,
-.lifecycle-page .lifecycle-status-period_ended {
-  background: #fff4df;
-  color: #735115;
 }
 .lifecycle-page .lifecycle-end {
   grid-column: 4;

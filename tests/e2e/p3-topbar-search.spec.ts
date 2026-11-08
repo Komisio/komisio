@@ -26,10 +26,10 @@ test('the top bar search opens a bag by its label reference', async ({
       exact: true,
     })
     await search
-      .getByLabel(d.openByReference.reference, { exact: true })
+      .getByLabel(d.openByReference.scanLabel, { exact: true })
       .fill(`k-${bag.reference}`)
     await search
-      .getByLabel(d.openByReference.reference, { exact: true })
+      .getByLabel(d.openByReference.scanLabel, { exact: true })
       .press('Enter')
     await expect(page).toHaveURL(new RegExp(`/intake/bags/${bag.id}/inspect`))
     await page.goto('/intake/open?ref=K-999999')

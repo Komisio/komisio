@@ -1309,3 +1309,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-06: #781 allows an explicit 1–20 recent-sale limit; legacy callers retain five. Sale-time/line-ID ordering, completed/non-returned semantics and seller identity/MFA stay unchanged. Mobile Overview requests 20 with legacy fallback during rollout.
 
 - 2026-11-08: Seller economy uses task tabs and compact balances. Generic statements are presented as account statements with readable period dates and print layout; self-billing titles, immutable facts, issuance, payout rules and permissions remain unchanged.
+
+- 2026-11-08: #793 simplifies the store overview to two receiving actions, existing localized totals and active follow-ups. Zero queues and all setup steps remain expandable; unknown reads stay visible. Reference lookup gains a visible label. Permissions and financial rules are unchanged.

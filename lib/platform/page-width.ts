@@ -1,5 +1,6 @@
 /** Opt in lists/reports and the drop-off review workspace; other details stay narrow. */
 const widePages = new Set([
+  '/',
   '/intake',
   '/intake/items',
   '/intake/stock',

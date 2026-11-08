@@ -2287,7 +2287,8 @@
     "open": "Öffnen",
     "notFound": "Nichts in diesem Store trägt die Referenz {ref}.",
     "ambiguous": "Mehrere Artikel in diesem Geschäft haben die Referenz {ref}. Wähle den richtigen Artikel aus der Liste.",
-    "chooseMatch": "Passende Artikel anzeigen"
+    "chooseMatch": "Passende Artikel anzeigen",
+    "scanLabel": "Etikettenreferenz scannen oder eingeben"
   },
   "usage": {
     "title": "Nutzung diesen Monat",
@@ -3944,7 +3945,20 @@
     "itemsHint": "Artikel im Laden finden und verwalten.",
     "salesHint": "Erfasste Verkäufe ansehen.",
     "snapshot": "Stand im Laden",
-    "receiptHint": "Nehmen Sie eine Tasche, einen Karton oder einen einzelnen Gegenstand an. Erfassen Sie die Artikel später."
+    "receiptHint": "Nehmen Sie eine Tasche, einen Karton oder einen einzelnen Gegenstand an. Erfassen Sie die Artikel später.",
+    "registerItems": "Artikel erfassen",
+    "receiveDropoff": "Abgabe annehmen",
+    "salesToday": "Umsatz heute",
+    "beforeReturns": "Vor Retouren",
+    "currentTotal": "Aktueller Gesamtbetrag",
+    "showAll": "Alle anzeigen",
+    "showLess": "Weniger anzeigen",
+    "nothingPending": "Aktuell gibt es nichts nachzuverfolgen.",
+    "dayPending": "{count} Tag in der Buchhaltung prüfen",
+    "daysPending": "{count} Tage in der Buchhaltung prüfen",
+    "thisMonth": "Diesen Monat",
+    "viewDays": "Tage anzeigen",
+    "introductionHelp": "Einführung und Hilfe"
   },
   "auditHint": "Die 12 zuletzt erfassten Ereignisse im Geschäft.",
   "otherActivity": "Anderes Ereignis im Geschäft",

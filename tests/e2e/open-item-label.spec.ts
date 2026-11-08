@@ -59,10 +59,10 @@ test('printed item references open within the active store and collisions requir
       exact: true,
     })
     await topbar
-      .getByLabel(d.openByReference.reference, { exact: true })
+      .getByLabel(d.openByReference.scanLabel, { exact: true })
       .fill(ref)
     await topbar
-      .getByLabel(d.openByReference.reference, { exact: true })
+      .getByLabel(d.openByReference.scanLabel, { exact: true })
       .press('Enter')
     await expect(page).toHaveURL('/intake/items/' + id)
     await expect(

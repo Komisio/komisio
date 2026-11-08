@@ -257,8 +257,16 @@ test('a store day keeps twenty items, seller changes and interrupted bag work di
     await page
       .getByRole('tab', { name: d.sellerWorkspace.economy, exact: true })
       .click()
-    await expect(page.locator('.seller-balance-primary dd')).toContainText(
-      (Number(balance.availableOre) / 100).toFixed(2),
+    const available = page.locator('.seller-economy-available')
+    await expect(available).toBeVisible()
+    await expect(available.getByRole('term')).toHaveText(
+      d.sellerEconomy.available,
+    )
+    await expect(available.getByRole('definition')).toHaveText(
+      new Intl.NumberFormat('sv-SE', {
+        style: 'currency',
+        currency: 'SEK',
+      }).format(Number(balance.availableOre) / 100),
     )
     evidence.received = 20
     evidence.bagAccepted = 10

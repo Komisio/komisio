@@ -2287,7 +2287,8 @@
     "open": "Apri",
     "notFound": "Nulla in questo negozio porta il riferimento {ref}.",
     "ambiguous": "Più articoli di questo negozio hanno il riferimento {ref}. Scegli quello corretto dall’elenco.",
-    "chooseMatch": "Mostra articoli corrispondenti"
+    "chooseMatch": "Mostra articoli corrispondenti",
+    "scanLabel": "Scansiona o inserisci il riferimento dell'etichetta"
   },
   "usage": {
     "title": "Utilizzo questo mese",
@@ -3938,7 +3939,20 @@
     "itemsHint": "Trova e gestisci gli articoli del negozio.",
     "salesHint": "Consulta le vendite registrate.",
     "snapshot": "Situazione del negozio",
-    "receiptHint": "Ricevi una borsa, una scatola o un singolo oggetto ora. Registra gli articoli dopo."
+    "receiptHint": "Ricevi una borsa, una scatola o un singolo oggetto ora. Registra gli articoli dopo.",
+    "registerItems": "Registra articoli",
+    "receiveDropoff": "Ricevi consegna",
+    "salesToday": "Vendite di oggi",
+    "beforeReturns": "Prima dei resi",
+    "currentTotal": "Totale attuale",
+    "showAll": "Mostra tutto",
+    "showLess": "Mostra meno",
+    "nothingPending": "Nessuna attività da seguire al momento.",
+    "dayPending": "{count} giorno da verificare in contabilità",
+    "daysPending": "{count} giorni da verificare in contabilità",
+    "thisMonth": "Questo mese",
+    "viewDays": "Vedi giorni",
+    "introductionHelp": "Introduzione e aiuto"
   },
   "auditHint": "I 12 eventi registrati più recenti del negozio.",
   "otherActivity": "Altro evento del negozio",

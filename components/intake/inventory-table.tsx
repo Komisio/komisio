@@ -1,4 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react'
+import { ItemStatusBadge } from '@/components/ui/item-status-badge'
 import { InventoryColumns } from './inventory-columns'
 import { InventoryActions } from './inventory-actions'
 import { InventoryEditableRow } from './inventory-editable-row'
@@ -180,25 +181,28 @@ export function InventoryTable({
                   )}
                 </td>
                 <td className="inventory-state" data-stage={i.stage}>
-                  {i.stage === 'markdown_due' ? (
-                    <ItemIndicator
-                      warning
-                      label={
-                        i.nextMarkdownAt
-                          ? t.markdownOn
-                              .replace('{date}', date(i.nextMarkdownAt))
-                              .replace(
-                                '{percent}',
-                                String(i.nextMarkdownPercent ?? ''),
-                              )
-                          : d.markdownWaiting
-                      }
-                    >
-                      <TrendingDown size={17} aria-hidden="true" />
-                    </ItemIndicator>
-                  ) : (
-                    stageLabel(i.stage)
-                  )}
+                  <div className="inventory-status-content">
+                    <ItemStatusBadge stage={i.stage}>
+                      {stageLabel(i.stage)}
+                    </ItemStatusBadge>
+                    {i.stage === 'markdown_due' && (
+                      <ItemIndicator
+                        warning
+                        label={
+                          i.nextMarkdownAt
+                            ? t.markdownOn
+                                .replace('{date}', date(i.nextMarkdownAt))
+                                .replace(
+                                  '{percent}',
+                                  String(i.nextMarkdownPercent ?? ''),
+                                )
+                            : d.markdownWaiting
+                        }
+                      >
+                        <TrendingDown size={17} aria-hidden="true" />
+                      </ItemIndicator>
+                    )}
+                  </div>
                 </td>
                 <td data-inventory-column="sync">
                   {i.sync?.length

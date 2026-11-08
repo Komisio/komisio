@@ -1,4 +1,5 @@
 import type { Dictionary, Locale } from '@/lib/i18n'
+import { ItemStatusBadge } from '@/components/ui/item-status-badge'
 import { intlLocale } from '@/lib/i18n'
 import { economyFormat } from '@/lib/intake/economy-format'
 import {
@@ -82,11 +83,12 @@ export function SellerItems({
                 )}
               </td>
               <td className="seller-item-state">
-                <span
-                  className={`seller-item-badge seller-item-badge-${state}`}
+                <ItemStatusBadge
+                  stage={state === 'forSale' ? 'on_sale' : item.stage}
+                  className="seller-item-badge"
                 >
                   {d.itemStates[state]}
-                </span>
+                </ItemStatusBadge>
                 {state === 'ended' && ended && <small>{ended}</small>}
                 {(state === 'periodEnding' || state === 'periodEnded') &&
                   item.endOfPeriodAction && (

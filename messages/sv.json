@@ -2287,7 +2287,8 @@
     "open": "Öppna",
     "notFound": "Inget i butiken bär referensen {ref}.",
     "ambiguous": "Flera varor i butiken har referensen {ref}. Välj rätt vara i listan.",
-    "chooseMatch": "Visa matchande varor"
+    "chooseMatch": "Visa matchande varor",
+    "scanLabel": "Skanna eller ange etikettreferens"
   },
   "usage": {
     "title": "Användning denna månad",
@@ -3938,7 +3939,20 @@
     "itemsHint": "Hitta och hantera butikens varor.",
     "salesHint": "Se registrerade försäljningar.",
     "snapshot": "Butikens läge",
-    "receiptHint": "Ta emot en påse, kartong eller ett föremål nu. Registrera varorna senare."
+    "receiptHint": "Ta emot en påse, kartong eller ett föremål nu. Registrera varorna senare.",
+    "registerItems": "Registrera varor",
+    "receiveDropoff": "Ta emot inlämning",
+    "salesToday": "Försäljning idag",
+    "beforeReturns": "Före returer",
+    "currentTotal": "Totalt",
+    "showAll": "Visa alla",
+    "showLess": "Visa färre",
+    "nothingPending": "Inget att följa upp just nu.",
+    "dayPending": "{count} dag att följa upp i bokföringen",
+    "daysPending": "{count} dagar att följa upp i bokföringen",
+    "thisMonth": "Den här månaden",
+    "viewDays": "Visa dagarna",
+    "introductionHelp": "Introduktion och hjälp"
   },
   "auditHint": "De 12 senaste registrerade händelserna i butiken.",
   "otherActivity": "Annan butikshändelse",

@@ -2287,7 +2287,8 @@
     "open": "Åbn",
     "notFound": "Intet i denne butik har referencen {ref}.",
     "ambiguous": "Flere varer i butikken har referencen {ref}. Vælg den rigtige vare på listen.",
-    "chooseMatch": "Vis matchende varer"
+    "chooseMatch": "Vis matchende varer",
+    "scanLabel": "Scan eller indtast etiketreference"
   },
   "usage": {
     "title": "Forbrug denne måned",
@@ -3938,7 +3939,20 @@
     "itemsHint": "Find og administrer butikkens varer.",
     "salesHint": "Se registrerede salg.",
     "snapshot": "Butikkens status",
-    "receiptHint": "Modtag en pose, kasse eller enkelt genstand nu. Registrer varerne senere."
+    "receiptHint": "Modtag en pose, kasse eller enkelt genstand nu. Registrer varerne senere.",
+    "registerItems": "Registrer varer",
+    "receiveDropoff": "Modtag indlevering",
+    "salesToday": "Salg i dag",
+    "beforeReturns": "Før returneringer",
+    "currentTotal": "I alt",
+    "showAll": "Vis alle",
+    "showLess": "Vis færre",
+    "nothingPending": "Intet at følge op på lige nu.",
+    "dayPending": "{count} dag at følge op på i bogføringen",
+    "daysPending": "{count} dage at følge op på i bogføringen",
+    "thisMonth": "Denne måned",
+    "viewDays": "Vis dagene",
+    "introductionHelp": "Introduktion og hjælp"
   },
   "auditHint": "De 12 senest registrerede hændelser i butikken.",
   "otherActivity": "Anden butikshændelse",

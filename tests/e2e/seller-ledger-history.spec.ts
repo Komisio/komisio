@@ -33,8 +33,9 @@ test('staff can reach older seller entries and keep the economy history open acr
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto(`/intake/sellers/${f.seller}#seller-economy`)
     const history = page.locator('#seller-ledger')
-    await expect(history.locator('summary')).toContainText('51')
-    await history.locator('summary').click()
+    await page
+      .getByRole('tab', { name: d.sellerProfile.transactions, exact: true })
+      .click()
     const range = (from: number, to: number) =>
       d.ledger.showingRange
         .replace('{from}', String(from))
@@ -46,8 +47,10 @@ test('staff can reach older seller entries and keep the economy history open acr
     await history
       .getByRole('link', { name: d.ledger.older, exact: true })
       .click()
-    await expect(page).toHaveURL(new RegExp(`ledgerPage=1#seller-economy$`))
-    await expect(history).toHaveAttribute('open', '')
+    await expect(page).toHaveURL(
+      new RegExp(`ledgerPage=1#seller-economy-history$`),
+    )
+    await expect(history).toBeVisible()
     await expect(history).toContainText(range(51, 51))
     const oldest = history.getByText(/Synthetic opening explanation/)
     await expect(oldest).toBeVisible()
@@ -79,12 +82,12 @@ test('staff can reach older seller entries and keep the economy history open acr
       caret: 'initial',
     })
     await page.reload()
-    await expect(history).toHaveAttribute('open', '')
+    await expect(history).toBeVisible()
     await expect(oldest).toBeVisible()
     await history
       .getByRole('link', { name: d.ledger.newer, exact: true })
       .click()
-    await expect(history).toHaveAttribute('open', '')
+    await expect(history).toBeVisible()
     await expect(history).toContainText(range(1, 50))
     expect(await history.locator('tbody tr').allTextContents()).toEqual(
       firstPage,
@@ -176,9 +179,14 @@ test('seller account table shows sale shares and related payout events on deskto
         kind === 'payout_released' ? /\+100,00\s+SEK/ : /[−-]100,00\s+SEK/,
       )
     }
-    await expect(history.locator('summary')).toContainText('4')
+    await expect(history).toContainText(
+      d.ledger.showingRange
+        .replace('{from}', '1')
+        .replace('{to}', '4')
+        .replace('{total}', '4'),
+    )
     await expect(
-      page.getByText(d.ledger.adjustHeading, { exact: true }),
+      page.getByRole('tab', { name: d.ledger.adjustHeading, exact: true }),
     ).toBeVisible()
     await table.screenshot({
       path: testInfo.outputPath('seller-ledger-desktop.png'),

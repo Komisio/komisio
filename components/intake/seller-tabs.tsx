@@ -13,6 +13,11 @@ export const sellerTabs = [
 ] as const
 export type SellerTab = (typeof sellerTabs)[number]
 function currentTab(): SellerTab {
+  if (
+    window.location.hash.startsWith('#seller-economy-') ||
+    window.location.hash === '#seller-ledger'
+  )
+    return 'economy'
   const value = window.location.hash.replace('#seller-', '')
   return sellerTabs.includes(value as SellerTab)
     ? (value as SellerTab)
@@ -39,6 +44,20 @@ export function SellerTabs({
     () => 'overview' as SellerTab,
   )
   const strip = useRef<HTMLDivElement>(null)
+  const economyHash = useRef('#seller-economy')
+  useEffect(() => {
+    const remember = () => {
+      if (
+        window.location.hash === '#seller-economy' ||
+        window.location.hash.startsWith('#seller-economy-')
+      )
+        economyHash.current = window.location.hash
+      else if (window.location.hash === '#seller-ledger')
+        economyHash.current = '#seller-economy-history'
+    }
+    remember()
+    return subscribe(remember)
+  }, [])
   // On a phone the strip scrolls sideways; a deep link, a shortcut or a
   // click may select a tab beyond its visible width. Scroll the strip alone,
   // never the page, so the selected tab is in view.
@@ -68,7 +87,11 @@ export function SellerTabs({
     return () => observer.disconnect()
   }, [selected])
   function select(tab: SellerTab) {
-    window.history.pushState(null, '', '#seller-' + tab)
+    window.history.pushState(
+      null,
+      '',
+      tab === 'economy' ? economyHash.current : '#seller-' + tab,
+    )
     window.dispatchEvent(new HashChangeEvent('hashchange'))
   }
   return (

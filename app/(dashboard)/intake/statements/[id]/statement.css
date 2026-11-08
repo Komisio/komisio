@@ -1,0 +1,176 @@
+.statement {
+  max-width: 1000px;
+  container-type: inline-size;
+}
+.statement-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--ink);
+}
+.statement-header h2 {
+  margin: 4px 0 0;
+  font-size: 1.8rem;
+}
+.statement-meta {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.statement-meta dt,
+.statement-sales-summary {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.statement-meta dd {
+  margin: 2px 0 0;
+}
+.statement-recipient {
+  padding: 24px 0 0;
+  overflow-wrap: anywhere;
+}
+.statement-recipient p {
+  margin: 4px 0;
+}
+.statement-summary {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 40px;
+  align-items: start;
+  margin: 28px 0;
+}
+.statement-summary .statement-totals {
+  margin: 0;
+  max-width: none;
+}
+.statement-sales-summary dl {
+  margin: 0 0 16px;
+}
+.statement-sales-summary dl > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 8px 0;
+}
+.statement-sales-summary dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.statement-sales-summary p {
+  line-height: 1.6;
+}
+.statement .statement-lines th:nth-child(n + 3),
+.statement .statement-lines td:nth-child(n + 3) {
+  text-align: right;
+}
+.statement .statement-lines th {
+  font-size: 0.85rem;
+  background: var(--surface);
+}
+.statement .statement-lines td {
+  font-size: 0.9rem;
+}
+.statement-actions {
+  margin-top: 16px;
+}
+@media screen and (max-width: 700px) {
+  .statement-summary {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .statement-header h2 {
+    font-size: 1.5rem;
+  }
+  .statement .statement-lines td:nth-child(n + 3) {
+    text-align: left;
+  }
+}
+@media screen {
+  @container (max-width: 40rem) {
+    .statement-summary {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .statement .statement-lines thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    .statement .statement-lines,
+    .statement .statement-lines tbody {
+      display: block;
+    }
+    .statement .statement-lines tr {
+      display: grid;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .statement .statement-lines td,
+    .statement .statement-lines td:nth-child(n + 3) {
+      display: block;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      text-align: left;
+    }
+    .statement .statement-lines td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: normal;
+    }
+  }
+}
+@media print {
+  @page seller-statement {
+    size: A4;
+    margin: 15mm;
+  }
+  .statement {
+    page: seller-statement;
+    container-type: normal;
+    max-width: none;
+    font-size: 10pt;
+    line-height: 1.4;
+  }
+  .statement-header {
+    padding-bottom: 6mm;
+    break-inside: avoid;
+  }
+  .statement-header h2 {
+    font-size: 20pt;
+  }
+  .statement-recipient {
+    padding-top: 6mm;
+    break-inside: avoid;
+  }
+  .statement-summary {
+    margin: 7mm 0;
+    gap: 10mm;
+    break-inside: avoid;
+  }
+  .statement h3 {
+    break-after: avoid;
+  }
+  .statement .statement-lines th,
+  .statement .statement-lines td {
+    padding: 3mm 2mm;
+    font-size: 9pt;
+  }
+  .statement .statement-meta dt,
+  .statement .statement-sales-summary {
+    color: #333;
+    font-size: 9pt;
+  }
+  .statement .eyebrow {
+    color: #333;
+  }
+}

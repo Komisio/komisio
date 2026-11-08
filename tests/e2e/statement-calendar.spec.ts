@@ -26,17 +26,12 @@ test('statement defaults are closed and selected days use Stockholm despite the 
     await f.commit()
     await page.setViewportSize({ width: 320, height: 800 })
     await page.goto(`/intake/sellers/${f.seller}#seller-economy`)
-    const help = page.locator('.statement-help')
-    await expect(help.locator('summary')).toBeVisible()
-    await expect(help.locator('p')).not.toBeVisible()
-    await help.locator('summary').focus()
-    await page.keyboard.press('Enter')
-    await expect(help.locator('p')).toHaveText(d.statements.issueHint)
-    await expect(help.locator('p')).toBeVisible()
-    await help.locator('summary').click()
-    await expect(help.locator('p')).not.toBeVisible()
-    await help.scrollIntoViewIfNeeded()
-    await page.screenshot({ path: 'private/statement-compact-mobile.png' })
+    await page
+      .getByRole('tab', { name: d.statements.title, exact: true })
+      .click()
+    await expect(
+      page.getByText(d.statements.issueHint, { exact: true }),
+    ).toBeVisible()
     const from = page.getByLabel(d.statements.from, { exact: true })
     const to = page.getByLabel(d.statements.to, { exact: true })
     const today = new Date().toLocaleDateString('sv-SE', {
@@ -113,7 +108,10 @@ test('statement defaults are closed and selected days use Stockholm despite the 
       (url) => url.pathname === `/intake/statements/${statement.id}`,
     )
     await expect(
-      page.getByRole('heading', { name: d.statements.title, exact: false }),
+      page.getByRole('heading', {
+        name: d.statements.title,
+        level: 1,
+      }),
     ).toBeVisible()
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),

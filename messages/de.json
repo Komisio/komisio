@@ -1689,9 +1689,9 @@
     "flaggedHint": "Die Einlieferer-Gutschrift für diese Rückgaben war bereits reserviert oder ausgezahlt. Klären Sie dies mit dem Einlieferer und erfassen Sie bei Bedarf eine Anpassung."
   },
   "statements": {
-    "title": "Abrechnung",
-    "intro": "Ein nummeriertes, eingefrorenes Dokument, das aus dem Konto berechnet wird. Korrekturen sind Gutschriften, die auf das Original verweisen.",
-    "statement": "Abrechnung",
+    "title": "Kontoauszüge",
+    "intro": "Zeigt Verkäufe, Rückgaben, Auszahlungen und Guthaben des Verkäufers für einen gewählten Zeitraum. Erstellen und drucken Sie den Kontoauszug für den Verkäufer. Dies löst keine Zahlung aus.",
+    "statement": "Kontoauszug",
     "creditNote": "Gutschrift",
     "period": "Zeitraum",
     "issuedAt": "Ausgestellt",
@@ -1709,16 +1709,16 @@
     "noLines": "Keine Einträge in diesem Zeitraum.",
     "salePrice": "Verkaufspreis",
     "footer": "Beträge in {currency} inklusive MwSt., soweit anwendbar. Diese Abrechnung wird aus dem Konto des Stores berechnet und ändert sich danach nicht.",
-    "print": "Abrechnung drucken",
-    "empty": "Noch keine Abrechnungen ausgestellt.",
-    "issueHeading": "Abrechnung ausstellen",
-    "issueHint": "Der Zeitraum darf sich nicht mit einer früheren Abrechnung überschneiden. Die Nummer wird bei der Ausstellung vergeben.",
+    "print": "Kontoauszug drucken",
+    "empty": "Es wurden noch keine Kontoauszüge erstellt.",
+    "issueHeading": "Kontoauszug erstellen",
+    "issueHint": "Der Zeitraum darf sich nicht mit einem früheren Kontoauszug überschneiden. Das Dokument wird nummeriert gespeichert und kann danach nicht geändert werden.",
     "from": "Von",
     "to": "Bis (einschließlich)",
-    "confirm": "Ich möchte die nächste nummerierte Abrechnung für diesen Zeitraum ausstellen.",
-    "issue": "Abrechnung ausstellen",
-    "issued": "Die Abrechnung ist ausgestellt.",
-    "open": "Abrechnung öffnen",
+    "confirm": "Ich möchte den Kontoauszug für den gewählten Zeitraum erstellen und speichern.",
+    "issue": "Kontoauszug erstellen",
+    "issued": "Der Kontoauszug wurde gespeichert.",
+    "open": "Kontoauszug öffnen",
     "closedPeriodHint": "Das Enddatum muss spätestens gestern sein.",
     "issueInfo": "Zur Abrechnung",
     "selfBilling": "Gutschrift (Selbstfakturierung)",
@@ -1732,7 +1732,10 @@
     "noSeparateVat": "Keine gesondert berechnete Umsatzsteuer",
     "downloadPdf": "PDF herunterladen",
     "invoiceTotals": "Rechnungsbeträge",
-    "invoiceNote": "Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen."
+    "invoiceNote": "Die Selbstfakturierung betrifft das Guthaben des Verkäufers für die Waren. Auszahlungen und Salden werden gesondert in der Abrechnung ausgewiesen.",
+    "recipient": "Für den Verkäufer",
+    "closingHint": "Der Endsaldo enthält die Kontobewegungen und Reservierungen des Zeitraums. Das heute verfügbare Guthaben kann abweichen.",
+    "otherChanges": "Weitere Kontobewegungen"
   },
   "handovers": {
     "title": "Angekündigte Übergaben",
@@ -5374,5 +5377,11 @@
       "TENANT_NOT_FOUND": "Das Geschäft existiert nicht mehr.",
       "REQUEST_FAILED": "Die Aktion konnte nicht abgeschlossen werden. Bitte erneut versuchen."
     }
+  },
+  "sellerEconomy": {
+    "available": "Verfügbares Guthaben",
+    "availableHint": "Der nach Auszahlungsreservierungen verfügbare Betrag.",
+    "credited": "Aus Verkäufen, gesamt",
+    "paid": "Ausgezahlt, gesamt"
   }
 }

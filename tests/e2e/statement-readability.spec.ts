@@ -22,8 +22,26 @@ test('issued statements keep amounts readable on mobile and print only the docum
       ],
     )
     const statement = randomUUID()
+    await f.db.query('select adjust_seller_ledger($1,$2,$3,20000,$4)', [
+      f.tenant,
+      randomUUID(),
+      f.seller,
+      'Synthetic opening adjustment',
+    ])
+    const payout = randomUUID()
+    await f.db.query('select request_payout($1,$2,$3,10000)', [
+      f.tenant,
+      payout,
+      f.seller,
+    ])
+    await f.db.query('select approve_payout($1,$2,$3,$4)', [
+      f.tenant,
+      randomUUID(),
+      payout,
+      'Synthetic reserved payment',
+    ])
     await f.db.query(
-      "select issue_statement($1,$2,$3,'2020-01-01','2020-02-01')",
+      "select issue_statement($1,$2,$3,'2020-01-01',clock_timestamp())",
       [f.tenant, statement, f.seller],
     )
     await f.commit()
@@ -32,10 +50,20 @@ test('issued statements keep amounts readable on mobile and print only the docum
     const document = page.locator('article.statement')
     await expect(document).toBeVisible()
     await expect(document).toHaveAttribute('lang', 'sv-SE')
+    await expect(
+      document
+        .locator('.statement-totals > div')
+        .filter({ hasText: d.statements.otherChanges }),
+    ).toContainText(/[−-]100,00\s+kr/)
+    await expect(
+      document
+        .locator('.statement-totals > div')
+        .filter({ hasText: d.statements.closing }),
+    ).toContainText(/180,00\s+kr/)
     const row = document.locator('tbody tr').first()
-    await expect(row).toContainText('200.00 SEK')
-    await expect(row).toContainText('120.00 SEK')
-    await expect(row).toContainText('80.00 SEK')
+    await expect(row).toContainText(/200,00\s+kr/)
+    await expect(row).toContainText(/120,00\s+kr/)
+    await expect(row).toContainText(/80,00\s+kr/)
     await expect(document.locator('thead th')).toHaveCount(5)
     expect(
       await page.evaluate(
@@ -64,6 +92,9 @@ test('issued statements keep amounts readable on mobile and print only the docum
       page.getByRole('button', { name: d.statements.print, exact: true }),
     ).not.toBeVisible()
     await expect(document.locator('thead')).toBeVisible()
+    expect(await document.evaluate((el) => getComputedStyle(el).page)).toBe(
+      'seller-statement',
+    )
     expect((await document.boundingBox())!.x).toBeLessThanOrEqual(1)
     expect(
       await document
@@ -73,6 +104,11 @@ test('issued statements keep amounts readable on mobile and print only the docum
     await page.screenshot({
       path: testInfo.outputPath('statement-print.png'),
       fullPage: true,
+    })
+    await page.pdf({
+      path: testInfo.outputPath('statement-a4.pdf'),
+      preferCSSPageSize: true,
+      printBackground: true,
     })
   } finally {
     await f.close()

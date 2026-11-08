@@ -26,7 +26,9 @@ import {
 import { resolveSellerEmailLocale } from '@/lib/communications/locale'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import HistoryLink from '@/components/platform/working-link'
-import { Info } from 'lucide-react'
+import { SellerEconomyTabs } from '@/components/intake/seller-economy-tabs'
+import { economyFormat } from '@/lib/intake/economy-format'
+import './economy.css'
 import { notFound } from 'next/navigation'
 import { z } from 'zod'
 import { requirePlatform } from '@/lib/platform/context'
@@ -323,8 +325,9 @@ export default async function Seller({
   if (profileHistory.error)
     throw new Error('Unable to read seller profile history')
   const write = tenant.role !== 'readonly'
+  const money = (ore: number) => economyFormat(ctx.locale).money(ore, currency)
   const when = (iso: string) =>
-    new Date(iso).toLocaleString(intlLocale(ctx.locale), {
+    new Date(iso).toLocaleDateString(intlLocale(ctx.locale), {
       timeZone: 'Europe/Stockholm',
     })
   return (
@@ -499,211 +502,255 @@ export default async function Seller({
           ),
           economy: (
             <>
-              <ConsignmentFeeHistory
-                fees={fees}
-                tenantId={tenant.id}
-                sellerId={id.data}
-                writable={write}
-                admin={tenant.role === 'owner' || tenant.role === 'admin'}
-                d={all}
-                locale={ctx.locale}
-                page={feePageValue.data}
-                base={sellerPath}
-                staff
-              />
               <section className="card intake-form seller-economy">
-                <h2>{all.sellerProfile.balance}</h2>
-
-                <dl className="seller-balances">
-                  {[
-                    [l.available, balance.availableOre],
-                    [l.reserved, balance.reservedOre],
-                    [l.credited, balance.creditedOre],
-                    [l.paid, balance.paidOre],
-                  ].map(([label, amount], index) => (
-                    <div
-                      key={String(label)}
-                      className={index === 0 ? 'seller-balance-primary' : ''}
-                    >
-                      <dt>{label}</dt>
-                      <dd>
-                        {formatSignedOre(Number(amount))} {currency}
-                      </dd>
-                    </div>
-                  ))}
+                <dl className="seller-economy-balances">
+                  <div className="seller-economy-available">
+                    <dt>{all.sellerEconomy.available}</dt>
+                    <dd>{money(balance.availableOre)}</dd>
+                    <small>{all.sellerEconomy.availableHint}</small>
+                  </div>
+                  <div>
+                    <dt>{l.reserved}</dt>
+                    <dd>{money(balance.reservedOre)}</dd>
+                  </div>
+                  <div>
+                    <dt>{all.sellerEconomy.credited}</dt>
+                    <dd>{money(balance.creditedOre)}</dd>
+                  </div>
+                  <div>
+                    <dt>{all.sellerEconomy.paid}</dt>
+                    <dd>{money(balance.paidOre)}</dd>
+                  </div>
                 </dl>
-                <details className="seller-disclosure seller-payouts">
-                  <summary>{all.payouts.title}</summary>
-                  <div className="seller-disclosure-body">
-                    {write && balance.availableOre > 0 && (
-                      <>
-                        <h3>{all.payouts.requestHeading}</h3>
-                        <p>{all.payouts.requestHint}</p>
-                        <PayoutRequestForm
-                          key={`${tenant.id}-${id.data}-${balance.availableOre}`}
-                          tenantId={tenant.id}
-                          currency={currency}
-                          sellers={[
-                            {
-                              id: id.data,
-                              name: seller.data.name,
-                              availableOre: balance.availableOre,
-                            },
-                          ]}
-                          d={all.payouts}
-                          intake={all.intake}
-                        />
-                      </>
-                    )}
-                    <p>{all.payouts.notice}</p>
-                    {payouts.length === 0 && <p>{all.payouts.empty}</p>}
-                    {payouts.map((p) => (
-                      <section key={p.id} className="intake-notice">
-                        <strong>
-                          {formatSignedOre(p.amount_ore)} {currency} ·{' '}
-                          {all.payouts.statuses[p.status]}
-                        </strong>
-                        <p>
-                          <EventTime
-                            value={p.requested_at}
-                            locale={ctx.locale}
-                          />
-                          {p.payment_reference
-                            ? ` · ${p.payment_reference}`
-                            : ''}
-                        </p>
-                        {write &&
-                          (p.status === 'requested' ||
-                            p.status === 'approved') && (
-                            <PayoutDecision
-                              key={`${p.id}-${p.status}`}
-                              tenantId={tenant.id}
-                              payoutId={p.id}
-                              status={p.status}
-                              d={all.payouts}
-                              intake={all.intake}
+                <SellerEconomyTabs
+                  label={w.economy}
+                  initial={
+                    query.ledgerPage !== undefined ||
+                    query.feePage !== undefined
+                      ? 'history'
+                      : 'payouts'
+                  }
+                  tabs={[
+                    {
+                      id: 'payouts',
+                      label: all.payouts.title,
+                      content: (
+                        <div className="seller-payouts seller-economy-content">
+                          <h2>{all.payouts.title}</h2>
+                          {write && balance.availableOre > 0 && (
+                            <>
+                              <h3>{all.payouts.requestHeading}</h3>
+                              <PayoutRequestForm
+                                fixedSeller
+                                key={`${tenant.id}-${id.data}-${balance.availableOre}`}
+                                tenantId={tenant.id}
+                                currency={currency}
+                                sellers={[
+                                  {
+                                    id: id.data,
+                                    name: seller.data.name,
+                                    availableOre: balance.availableOre,
+                                  },
+                                ]}
+                                d={all.payouts}
+                                intake={all.intake}
+                              />
+                            </>
+                          )}
+                          <p>{all.payouts.notice}</p>
+                          {payouts.length === 0 && <p>{all.payouts.empty}</p>}
+                          {payouts.map((p) => (
+                            <section key={p.id} className="intake-notice">
+                              <strong>
+                                {money(p.amount_ore)} ·{' '}
+                                {all.payouts.statuses[p.status]}
+                              </strong>
+                              <p>
+                                <EventTime
+                                  value={p.requested_at}
+                                  locale={ctx.locale}
+                                />
+                                {p.payment_reference
+                                  ? ` · ${p.payment_reference}`
+                                  : ''}
+                              </p>
+                              {write &&
+                                (p.status === 'requested' ||
+                                  p.status === 'approved') && (
+                                  <PayoutDecision
+                                    key={`${p.id}-${p.status}`}
+                                    tenantId={tenant.id}
+                                    payoutId={p.id}
+                                    status={p.status}
+                                    d={all.payouts}
+                                    intake={all.intake}
+                                  />
+                                )}
+                            </section>
+                          ))}
+                        </div>
+                      ),
+                    },
+                    {
+                      id: 'history',
+                      label: all.sellerProfile.transactions,
+                      content: (
+                        <div
+                          id="seller-ledger"
+                          className="seller-economy-content"
+                        >
+                          <h2>{all.sellerProfile.transactions}</h2>
+                          <p className="seller-economy-hint">{l.intro}</p>
+                          {ledger.legacy ? (
+                            <p>{l.recentOnly}</p>
+                          ) : (
+                            ledger.total > 0 && (
+                              <p>
+                                {l.showingRange
+                                  .replace(
+                                    '{from}',
+                                    String(ledger.page * ledger.limit + 1),
+                                  )
+                                  .replace(
+                                    '{to}',
+                                    String(
+                                      ledger.page * ledger.limit +
+                                        ledger.items.length,
+                                    ),
+                                  )
+                                  .replace('{total}', String(ledger.total))}
+                              </p>
+                            )
+                          )}
+                          {ledger.items.length === 0 && <p>{l.empty}</p>}
+                          {ledger.items.length > 0 && (
+                            <SellerLedgerTable
+                              entries={ledger.items}
+                              currency={currency}
+                              locale={ctx.locale}
+                              d={all}
                             />
                           )}
-                      </section>
-                    ))}
-                  </div>
-                </details>
-                <details
-                  className="seller-disclosure"
-                  id="seller-ledger"
-                  open={query.ledgerPage !== undefined}
-                >
-                  <summary>
-                    {all.sellerProfile.transactions}{' '}
-                    <span>{ledger.total ?? balance.entries}</span>
-                  </summary>
-                  <div className="seller-disclosure-body">
-                    {ledger.legacy ? (
-                      <p>{l.recentOnly}</p>
-                    ) : (
-                      ledger.total > 0 && (
-                        <p>
-                          {l.showingRange
-                            .replace(
-                              '{from}',
-                              String(ledger.page * ledger.limit + 1),
-                            )
-                            .replace(
-                              '{to}',
-                              String(
-                                ledger.page * ledger.limit +
-                                  ledger.items.length,
-                              ),
-                            )
-                            .replace('{total}', String(ledger.total))}
-                        </p>
-                      )
-                    )}
-                    {ledger.items.length === 0 && <p>{l.empty}</p>}
-                    {ledger.items.length > 0 && (
-                      <SellerLedgerTable
-                        entries={ledger.items}
-                        currency={currency}
-                        locale={ctx.locale}
-                        d={all}
-                      />
-                    )}
-                    {!ledger.legacy && ledger.total > ledger.limit && (
-                      <nav
-                        className="row wrap"
-                        aria-label={all.sellerProfile.transactions}
-                      >
-                        {ledger.page > 0 && (
-                          <Link
-                            className="btn btn-secondary"
-                            href={`${sellerPath}?ledgerPage=${ledger.page - 1}#seller-economy`}
-                          >
-                            {l.newer}
-                          </Link>
-                        )}
-                        {(ledger.page + 1) * ledger.limit < ledger.total && (
-                          <Link
-                            className="btn btn-secondary"
-                            href={`${sellerPath}?ledgerPage=${ledger.page + 1}#seller-economy`}
-                          >
-                            {l.older}
-                          </Link>
-                        )}
-                      </nav>
-                    )}
-                  </div>
-                </details>
-                {['owner', 'admin'].includes(tenant.role) && (
-                  <details className="seller-disclosure">
-                    <summary>{l.adjustHeading}</summary>
-                    <div className="seller-disclosure-body">
-                      <LedgerAdjustForm
-                        tenantId={tenant.id}
-                        sellerId={id.data}
-                        d={l}
-                        intake={all.intake}
-                      />
-                    </div>
-                  </details>
-                )}
-              </section>
-              <section className="card intake-form">
-                <h2>{st.title}</h2>
-                <div className="seller-disclosure-body">
-                  {statements.length === 0 && <p>{st.empty}</p>}
-                  {statements.map((s) => (
-                    <p key={s.id}>
-                      <Link
-                        className="text-link"
-                        href={`/intake/statements/${s.id}`}
-                      >
-                        {statementTitle(s, st)} {s.number}
-                      </Link>{' '}
-                      · {when(s.period_from)} – {when(s.period_to)} ·{' '}
-                      {st.closing} {formatSignedOre(s.closing_ore)} {currency}
-                    </p>
-                  ))}
-                  {write && (
-                    <>
-                      <h3>{st.issueHeading}</h3>
-                      <details className="statement-help">
-                        <summary>
-                          <Info size={18} aria-hidden="true" />
-                          {st.issueInfo}
-                        </summary>
-                        <p>{st.issueHint}</p>
-                      </details>
-                      <StatementForm
-                        tenantId={tenant.id}
-                        sellerId={id.data}
-                        defaultFrom={statementPeriod.from}
-                        defaultTo={statementPeriod.to}
-                        d={st}
-                        intake={all.intake}
-                      />
-                    </>
-                  )}
-                </div>
+                          {!ledger.legacy && ledger.total > ledger.limit && (
+                            <nav
+                              className="row wrap"
+                              aria-label={all.sellerProfile.transactions}
+                            >
+                              {ledger.page > 0 && (
+                                <Link
+                                  className="btn btn-secondary"
+                                  href={`${sellerPath}?ledgerPage=${ledger.page - 1}#seller-economy-history`}
+                                >
+                                  {l.newer}
+                                </Link>
+                              )}
+                              {(ledger.page + 1) * ledger.limit <
+                                ledger.total && (
+                                <Link
+                                  className="btn btn-secondary"
+                                  href={`${sellerPath}?ledgerPage=${ledger.page + 1}#seller-economy-history`}
+                                >
+                                  {l.older}
+                                </Link>
+                              )}
+                            </nav>
+                          )}
+                          <ConsignmentFeeHistory
+                            fees={fees}
+                            tenantId={tenant.id}
+                            sellerId={id.data}
+                            writable={write}
+                            admin={
+                              tenant.role === 'owner' || tenant.role === 'admin'
+                            }
+                            d={all}
+                            locale={ctx.locale}
+                            page={feePageValue.data}
+                            base={sellerPath}
+                            staff
+                          />
+                        </div>
+                      ),
+                    },
+                    {
+                      id: 'statements',
+                      label: st.title,
+                      content: (
+                        <div className="seller-economy-content">
+                          <h2>{st.title}</h2>
+                          <p className="seller-economy-hint">{st.intro}</p>
+                          {statements.length === 0 && <p>{st.empty}</p>}
+                          {statements.length > 0 && (
+                            <ul className="seller-statement-list">
+                              {statements.map((s) => (
+                                <li key={s.id}>
+                                  <div>
+                                    <Link
+                                      className="text-link"
+                                      href={`/intake/statements/${s.id}`}
+                                    >
+                                      {statementTitle(s, st)} {s.number}
+                                    </Link>
+                                    <span>
+                                      {when(s.period_from)} –{' '}
+                                      {when(
+                                        new Date(
+                                          Date.parse(s.period_to) - 1,
+                                        ).toISOString(),
+                                      )}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <small>{st.closing}</small>
+                                    <strong>{money(s.closing_ore)}</strong>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          {write && (
+                            <>
+                              <h3>{st.issueHeading}</h3>
+                              <p className="seller-economy-hint">
+                                {st.issueHint}
+                              </p>
+                              <StatementForm
+                                tenantId={tenant.id}
+                                sellerId={id.data}
+                                defaultFrom={statementPeriod.from}
+                                defaultTo={statementPeriod.to}
+                                d={st}
+                                intake={all.intake}
+                              />
+                            </>
+                          )}
+                        </div>
+                      ),
+                    },
+                    ...(['owner', 'admin'].includes(tenant.role)
+                      ? [
+                          {
+                            id: 'adjust',
+                            label: l.adjustHeading,
+                            content: (
+                              <div className="seller-economy-content seller-economy-adjust">
+                                <h2>{l.adjustHeading}</h2>
+                                <p className="seller-economy-hint">
+                                  {l.adjustHint}
+                                </p>
+                                <LedgerAdjustForm
+                                  tenantId={tenant.id}
+                                  sellerId={id.data}
+                                  d={l}
+                                  intake={all.intake}
+                                />
+                              </div>
+                            ),
+                          },
+                        ]
+                      : []),
+                  ]}
+                />
               </section>
             </>
           ),

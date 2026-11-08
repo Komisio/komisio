@@ -2287,7 +2287,8 @@
     "open": "Abrir",
     "notFound": "Nada en esta tienda lleva la referencia {ref}.",
     "ambiguous": "Varios artículos de esta tienda tienen la referencia {ref}. Elige el artículo correcto de la lista.",
-    "chooseMatch": "Mostrar artículos coincidentes"
+    "chooseMatch": "Mostrar artículos coincidentes",
+    "scanLabel": "Escanea o introduce la referencia de la etiqueta"
   },
   "usage": {
     "title": "Uso este mes",
@@ -3944,7 +3945,20 @@
     "itemsHint": "Busca y gestiona los artículos de la tienda.",
     "salesHint": "Consulta las ventas registradas.",
     "snapshot": "Estado de la tienda",
-    "receiptHint": "Recibe una bolsa, caja u objeto individual ahora. Registra los artículos después."
+    "receiptHint": "Recibe una bolsa, caja u objeto individual ahora. Registra los artículos después.",
+    "registerItems": "Registrar artículos",
+    "receiveDropoff": "Recibir entrega",
+    "salesToday": "Ventas de hoy",
+    "beforeReturns": "Antes de devoluciones",
+    "currentTotal": "Total actual",
+    "showAll": "Mostrar todo",
+    "showLess": "Mostrar menos",
+    "nothingPending": "No hay nada pendiente de seguimiento.",
+    "dayPending": "{count} día por revisar en contabilidad",
+    "daysPending": "{count} días por revisar en contabilidad",
+    "thisMonth": "Este mes",
+    "viewDays": "Ver días",
+    "introductionHelp": "Introducción y ayuda"
   },
   "auditHint": "Los 12 eventos registrados más recientes de la tienda.",
   "otherActivity": "Otro evento de la tienda",

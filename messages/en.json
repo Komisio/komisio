@@ -2287,7 +2287,8 @@
     "open": "Open",
     "notFound": "Nothing in this store carries the reference {ref}.",
     "ambiguous": "More than one item in this store has the reference {ref}. Choose the correct item from the list.",
-    "chooseMatch": "Show matching items"
+    "chooseMatch": "Show matching items",
+    "scanLabel": "Scan or enter a label reference"
   },
   "usage": {
     "title": "Usage this month",
@@ -3938,7 +3939,20 @@
     "itemsHint": "Find and manage store items.",
     "salesHint": "View recorded sales.",
     "snapshot": "Store snapshot",
-    "receiptHint": "Receive a bag, box or individual object now. Register the items later."
+    "receiptHint": "Receive a bag, box or individual object now. Register the items later.",
+    "registerItems": "Register items",
+    "receiveDropoff": "Receive drop-off",
+    "salesToday": "Today's sales",
+    "beforeReturns": "Before returns",
+    "currentTotal": "Current total",
+    "showAll": "Show all",
+    "showLess": "Show fewer",
+    "nothingPending": "Nothing to follow up right now.",
+    "dayPending": "{count} day to follow up in accounting",
+    "daysPending": "{count} days to follow up in accounting",
+    "thisMonth": "This month",
+    "viewDays": "View days",
+    "introductionHelp": "Introduction and help"
   },
   "auditHint": "The 12 most recent recorded events in the store.",
   "otherActivity": "Other store event",

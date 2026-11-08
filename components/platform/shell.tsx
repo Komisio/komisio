@@ -188,10 +188,13 @@ export function Shell({
             role="search"
             aria-label={d.openByReference.title}
           >
+            <label htmlFor="topbar-reference">
+              {d.openByReference.scanLabel}
+            </label>
             <input
+              id="topbar-reference"
               name="ref"
               placeholder={d.openByReference.hint}
-              aria-label={d.openByReference.reference}
               maxLength={16}
               inputMode="text"
             />

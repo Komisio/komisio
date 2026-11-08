@@ -2287,7 +2287,8 @@
     "open": "Avaa",
     "notFound": "Mikään tässä kaupassa ei kanna viitettä {ref}.",
     "ambiguous": "Usealla myymälän tuotteella on tunnus {ref}. Valitse oikea tuote luettelosta.",
-    "chooseMatch": "Näytä vastaavat tuotteet"
+    "chooseMatch": "Näytä vastaavat tuotteet",
+    "scanLabel": "Skannaa tai syötä tunniste"
   },
   "usage": {
     "title": "Käyttö tässä kuussa",
@@ -3944,7 +3945,20 @@
     "itemsHint": "Etsi ja hallitse myymälän tuotteita.",
     "salesHint": "Katso kirjatut myynnit.",
     "snapshot": "Myymälän tilanne",
-    "receiptHint": "Vastaanota pussi, laatikko tai yksittäinen esine nyt. Rekisteröi tuotteet myöhemmin."
+    "receiptHint": "Vastaanota pussi, laatikko tai yksittäinen esine nyt. Rekisteröi tuotteet myöhemmin.",
+    "registerItems": "Rekisteröi tuotteita",
+    "receiveDropoff": "Vastaanota tavaroita",
+    "salesToday": "Myynti tänään",
+    "beforeReturns": "Ennen palautuksia",
+    "currentTotal": "Yhteensä",
+    "showAll": "Näytä kaikki",
+    "showLess": "Näytä vähemmän",
+    "nothingPending": "Ei seurattavia asioita juuri nyt.",
+    "dayPending": "{count} päivä tarkistettavana kirjanpidossa",
+    "daysPending": "{count} päivää tarkistettavana kirjanpidossa",
+    "thisMonth": "Tässä kuussa",
+    "viewDays": "Näytä päivät",
+    "introductionHelp": "Aloitus ja ohjeet"
   },
   "auditHint": "Myymälän 12 viimeisintä kirjattua tapahtumaa.",
   "otherActivity": "Muu myymälän tapahtuma",

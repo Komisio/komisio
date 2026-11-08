@@ -16,11 +16,15 @@ for (const action of ['adjustSellerLedger', 'issueStatement'] as const)
       await f.commit()
       await page.setViewportSize({ width: 320, height: 800 })
       await page.goto(`/intake/sellers/${f.seller}#seller-economy`)
-      if (action === 'adjustSellerLedger')
-        await page
-          .locator('summary')
-          .filter({ hasText: d.ledger.adjustHeading })
-          .click()
+      await page
+        .getByRole('tab', {
+          name:
+            action === 'adjustSellerLedger'
+              ? d.ledger.adjustHeading
+              : d.statements.title,
+          exact: true,
+        })
+        .click()
       const form = page.locator('form').filter({
         has: page.locator(
           action === 'adjustSellerLedger'

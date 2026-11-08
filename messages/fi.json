@@ -436,6 +436,7 @@
   "invitedRegisterIntro": "Seurasit kaupan kutsua. Luo henkilökohtainen tilisi sillä sähköpostiosoitteella, joka vastaanotti kutsun. Sinun ei tarvitse luoda uutta kauppaa. Onko sinulla jo tili? Käytä alla olevaa kirjautumislinkkiä.",
   "invitedLoginIntro": "Kirjaudu sisään sillä sähköpostiosoitteella, joka vastaanotti kutsun. Palaat tänne hyväksymään sen. Uusi Komisiossa? Valitse alta Luo tili.",
   "passwordHint": "Vähintään 10 merkkiä.",
+  "passwordMustDiffer": "Uuden salasanan on oltava eri kuin nykyinen salasanasi. Valitse toinen salasana ja yritä uudelleen.",
   "verifySent": "Tarkista sähköpostisi ja seuraa linkkiä vahvistaaksesi tilisi. Avaa se samassa selaimessa, jota käytit täällä. Linkkiä voi käyttää vain kerran.",
   "resetSent": "Jos tili on olemassa, nollauslinkki on lähetetty. Tarkista sähköpostisi.",
   "resend": "Lähetä vahvistus uudelleen",
@@ -1688,8 +1689,8 @@
     "flaggedHint": "Tuojan hyvitys näistä palautuksista oli jo varattu tai tilitetty. Selvitä asia tuojan kanssa ja kirjaa tarvittaessa oikaisu."
   },
   "statements": {
-    "title": "Tiliote",
-    "intro": "Numeroitu, jäädytetty asiakirja, joka lasketaan tilikirjasta. Korjaukset ovat hyvityslaskuja, jotka viittaavat alkuperäiseen.",
+    "title": "Tiliotteet",
+    "intro": "Näyttää myyjän myynnit, palautukset, maksut ja saldon valitulta ajanjaksolta. Luo tiliote ja tulosta se myyjälle. Tämä ei suorita maksua.",
     "statement": "Tiliote",
     "creditNote": "Hyvityslasku",
     "period": "Jakso",
@@ -1709,14 +1710,14 @@
     "salePrice": "Myyntihinta",
     "footer": "Summat valuutassa {currency} sisältäen alv:n soveltuvin osin. Tämä tiliote lasketaan kaupan tilikirjasta, eikä se muutu jälkikäteen.",
     "print": "Tulosta tiliote",
-    "empty": "Tiliotteita ei ole vielä annettu.",
-    "issueHeading": "Anna tiliote",
-    "issueHint": "Jakso ei saa olla päällekkäinen aiemman tilityksen kanssa. Numero annetaan tilityksen laatimisen yhteydessä.",
+    "empty": "Tiliotteita ei ole vielä luotu.",
+    "issueHeading": "Luo tiliote",
+    "issueHint": "Ajanjakso ei saa olla päällekkäinen aiemman tiliotteen kanssa. Asiakirja tallennetaan numeroituna, eikä sitä voi muuttaa jälkikäteen.",
     "from": "Alkaen",
     "to": "Asti (mukaan lukien)",
-    "confirm": "Haluan antaa seuraavan numeroidun tiliotteen tälle jaksolle.",
-    "issue": "Anna tiliote",
-    "issued": "Tiliote on annettu.",
+    "confirm": "Haluan luoda ja tallentaa tiliotteen valitulta ajanjaksolta.",
+    "issue": "Luo tiliote",
+    "issued": "Tiliote on tallennettu.",
     "open": "Avaa tiliote",
     "closedPeriodHint": "Päättymispäivän on oltava viimeistään eilinen.",
     "issueInfo": "Tietoa tilityksestä",
@@ -1731,7 +1732,10 @@
     "noSeparateVat": "Ei erikseen veloitettavaa ALV:tä",
     "downloadPdf": "Lataa PDF",
     "invoiceTotals": "Laskun määrät",
-    "invoiceNote": "Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä."
+    "invoiceNote": "Itselaskutuslasku koskee myyjälle tavaroista kuuluvaa saatavaa. Maksut ja saldo esitetään erikseen tilityksessä.",
+    "recipient": "Myyjälle",
+    "closingHint": "Loppusaldo sisältää ajanjakson tilitapahtumat ja varaukset. Tämän päivän käytettävissä oleva saldo voi olla eri.",
+    "otherChanges": "Muut tilitapahtumat"
   },
   "handovers": {
     "title": "Ennakkoilmoitukset",
@@ -5373,5 +5377,11 @@
       "TENANT_NOT_FOUND": "Myymälää ei enää ole.",
       "REQUEST_FAILED": "Toimintoa ei voitu suorittaa. Yritä uudelleen."
     }
+  },
+  "sellerEconomy": {
+    "available": "Käytettävissä oleva saldo",
+    "availableHint": "Maksuvarauksien jälkeen käytettävissä oleva summa.",
+    "credited": "Myynneistä yhteensä",
+    "paid": "Maksettu yhteensä"
   }
 }

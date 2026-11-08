@@ -1,0 +1,124 @@
+.seller-economy-balances {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  align-items: center;
+  gap: 24px;
+  margin: 0 0 28px;
+}
+.seller-economy-balances dt,
+.seller-economy-balances small,
+.seller-economy-hint,
+.seller-statement-list span,
+.seller-statement-list small {
+  color: var(--muted);
+}
+.seller-economy-balances dt {
+  font-size: 0.875rem;
+}
+.seller-economy-balances dd {
+  margin: 6px 0;
+  font-size: 1.15rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.seller-economy-available dd {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  color: var(--ink);
+}
+.seller-economy-available small {
+  display: block;
+  max-width: 32ch;
+  line-height: 1.5;
+}
+.seller-economy-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.seller-economy-tablist button {
+  padding: 14px 2px;
+  min-height: 44px;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 600;
+}
+.seller-economy-tablist button[aria-selected='true'] {
+  border-bottom-color: var(--ink);
+  color: var(--ink);
+}
+.seller-economy-tablist button:hover {
+  color: var(--ink);
+}
+.seller-economy-tablist button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.seller-economy-panel:not([hidden]) {
+  padding-top: 24px;
+}
+.seller-economy-content > h2 {
+  margin: 0 0 8px;
+}
+.seller-economy-content > h3 {
+  margin-top: 28px;
+}
+.seller-economy-hint {
+  max-width: 72ch;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+.seller-economy-adjust {
+  max-width: 680px;
+}
+.seller-statement-list {
+  list-style: none;
+  margin: 20px 0 28px;
+  padding: 0;
+}
+.seller-statement-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.seller-statement-list li > div {
+  display: grid;
+  gap: 4px;
+}
+.seller-statement-list strong {
+  font-variant-numeric: tabular-nums;
+}
+.seller-statement-list a {
+  font-weight: 600;
+}
+@media (max-width: 900px) {
+  .seller-economy-balances {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px 12px;
+  }
+  .seller-economy-available {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 480px) {
+  .seller-economy-balances {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .seller-economy-balances dd {
+    overflow-wrap: anywhere;
+  }
+  .seller-economy-tablist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 12px;
+  }
+  .seller-economy-tablist button {
+    text-align: left;
+    font-size: 0.9rem;
+  }
+}

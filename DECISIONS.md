@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-07: #785 explains same_password in recovery and account password changes in all interface languages. A different password remains required; recovery, verification and MFA gates are unchanged. Feedback never displays provider messages or passwords.
+
 - 2026-11-05: #767 adds owner-approved seller push for registered and sold consignment items, with independent default-off store switches and explicit device consent. Reuse original sounds; placement/staff notices and email-policy changes are excluded.
 - 2026-11-05: #767 adds protected device and delivery tables. Committed facts queue per-device work; current seller/session/store consent is rechecked before one send claim. No historical backfill or blind retries of uncertain sends; Expo receipts do not prove a person saw a notification.
 - 2026-11-05: #767 uses an authenticated push worker identified by operator-managed Auth app metadata, with narrow RPCs and no tenant membership or service-role application key. Push content/outcomes join communication history; device tokens remain private.
@@ -1305,3 +1307,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-05: #775 edits automatic item names through localized field choices, ordering and an example. Existing literal text and separators round-trip unchanged. The six supported fields, description priority, title rendering, permissions and save/retry contract remain unchanged.
 - 2026-11-05: #777 permits person hosts to open audited, session-bound 60-minute support visits. Database-enforced read-only access preserves identity and memberships, checks MFA and host authority, and fails closed after expiry until exit. No impersonation or support writes are granted.
 - 2026-11-06: #781 allows an explicit 1–20 recent-sale limit; legacy callers retain five. Sale-time/line-ID ordering, completed/non-returned semantics and seller identity/MFA stay unchanged. Mobile Overview requests 20 with legacy fallback during rollout.
+
+- 2026-11-08: Seller economy uses task tabs and compact balances. Generic statements are presented as account statements with readable period dates and print layout; self-billing titles, immutable facts, issuance, payout rules and permissions remain unchanged.

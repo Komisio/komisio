@@ -23,10 +23,7 @@ test('staff records a payout entirely on the selected seller page', async ({
     await f.commit()
     await page.goto(`/intake/sellers/${f.seller}#seller-economy`)
     const section = page.locator('.seller-payouts')
-    await section.locator('summary').click()
-    await expect(
-      section.getByLabel(d.payouts.seller, { exact: true }),
-    ).toHaveValue(f.seller)
+    await expect(section.locator('input[name="seller"]')).toHaveValue(f.seller)
     await section.getByLabel(d.payouts.amount, { exact: true }).fill('150')
     await section.getByLabel(d.payouts.requestConfirm, { exact: true }).check()
     await section
@@ -42,7 +39,7 @@ test('staff records a payout entirely on the selected seller page', async ({
       .getByRole('button', { name: d.payouts.markPaid, exact: true })
       .click()
     await expect(
-      section.getByText('150.00 SEK · utbetald', { exact: true }),
+      section.getByText(/150,00\s+kr · utbetald/, { exact: true }),
     ).toBeVisible()
     const rows = (
       await f.db.query(
@@ -55,9 +52,8 @@ test('staff records a payout entirely on the selected seller page', async ({
     expect(rows[0].status).toBe('paid')
     expect(Number(rows[0].amount_ore)).toBe(15000)
     await page.reload()
-    await section.locator('summary').click()
     await expect(
-      section.getByText('150.00 SEK · utbetald', { exact: true }),
+      section.getByText(/150,00\s+kr · utbetald/, { exact: true }),
     ).toBeVisible()
   } finally {
     await f.close()

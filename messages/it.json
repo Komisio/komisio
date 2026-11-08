@@ -436,6 +436,7 @@
   "invitedRegisterIntro": "Hai seguito un invito di un negozio. Crea il tuo account personale con l'indirizzo e-mail che lo ha ricevuto. Non devi creare un nuovo negozio. Hai già un account? Usa il link di accesso qui sotto.",
   "invitedLoginIntro": "Accedi con l'indirizzo e-mail che ha ricevuto l'invito. Tornerai qui per accettarlo. Nuovo su Komisio? Scegli Crea account qui sotto.",
   "passwordHint": "Almeno 10 caratteri.",
+  "passwordMustDiffer": "La nuova password deve essere diversa da quella attuale. Scegli un'altra password e riprova.",
   "verifySent": "Controlla la tua e-mail e segui il link per confermare l'account. Aprilo nello stesso browser che hai usato qui. Il link può essere usato una sola volta.",
   "resetSent": "Se l'account esiste, è stato inviato un link di reimpostazione. Controlla la tua e-mail.",
   "resend": "Invia di nuovo la conferma",
@@ -1688,9 +1689,9 @@
     "flaggedHint": "L'accredito al conferente per questi resi era già stato riservato o pagato. Regola la posizione con il conferente e registra una rettifica se necessario."
   },
   "statements": {
-    "title": "Rendiconto",
-    "intro": "Un documento numerato e congelato, calcolato dal registro. Le correzioni sono note di credito che fanno riferimento all'originale.",
-    "statement": "Rendiconto",
+    "title": "Estratti conto",
+    "intro": "Mostra vendite, resi, pagamenti e saldo del venditore per un periodo. Crea un estratto conto e stampalo per il venditore. Questa operazione non effettua pagamenti.",
+    "statement": "Estratto conto",
     "creditNote": "Nota di credito",
     "period": "Periodo",
     "issuedAt": "Emesso",
@@ -1708,16 +1709,16 @@
     "noLines": "Nessuna voce in questo periodo.",
     "salePrice": "Prezzo di vendita",
     "footer": "Importi in {currency}, IVA inclusa ove applicabile. Questo rendiconto è calcolato dal registro del negozio e non cambia in seguito.",
-    "print": "Stampa rendiconto",
-    "empty": "Nessun rendiconto emesso finora.",
-    "issueHeading": "Emetti un rendiconto",
-    "issueHint": "Il periodo non può sovrapporsi a un rendiconto precedente. Il numero viene assegnato all’emissione.",
+    "print": "Stampa estratto conto",
+    "empty": "Non sono ancora stati creati estratti conto.",
+    "issueHeading": "Crea estratto conto",
+    "issueHint": "Il periodo non può sovrapporsi a un estratto precedente. Il documento viene salvato con un numero e non può essere modificato in seguito.",
     "from": "Dal",
     "to": "Al (incluso)",
-    "confirm": "Voglio emettere il prossimo rendiconto numerato per questo periodo.",
-    "issue": "Emetti rendiconto",
-    "issued": "Il rendiconto è emesso.",
-    "open": "Apri rendiconto",
+    "confirm": "Voglio creare e salvare l’estratto conto per il periodo selezionato.",
+    "issue": "Crea estratto conto",
+    "issued": "L’estratto conto è stato salvato.",
+    "open": "Apri estratto conto",
     "closedPeriodHint": "La data finale deve essere ieri o precedente.",
     "issueInfo": "Informazioni sul rendiconto",
     "selfBilling": "Autofattura",
@@ -1731,7 +1732,10 @@
     "noSeparateVat": "Nessuna IVA addebitata separatamente",
     "downloadPdf": "Scarica PDF",
     "invoiceTotals": "Importi della fattura",
-    "invoiceNote": "L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto."
+    "invoiceNote": "L’autofattura riguarda il credito del venditore per gli articoli. Pagamenti e saldi sono indicati separatamente nel rendiconto.",
+    "recipient": "Per il venditore",
+    "closingHint": "Il saldo finale include i movimenti e le prenotazioni del periodo. Il saldo disponibile oggi può essere diverso.",
+    "otherChanges": "Altri movimenti"
   },
   "handovers": {
     "title": "Consegne annunciate",
@@ -5367,5 +5371,11 @@
       "TENANT_NOT_FOUND": "Il negozio non esiste più.",
       "REQUEST_FAILED": "Impossibile completare l’azione. Riprova."
     }
+  },
+  "sellerEconomy": {
+    "available": "Saldo disponibile",
+    "availableHint": "L’importo disponibile dopo le prenotazioni di pagamento.",
+    "credited": "Dalle vendite, totale",
+    "paid": "Pagato, totale"
   }
 }

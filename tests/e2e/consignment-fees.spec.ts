@@ -54,7 +54,7 @@ test('store configures fee VAT and payment history while the seller portal hides
       await f.item('First monthly coat')
       await f.item('Second monthly coat')
     })
-    await page.goto(`/intake/sellers/${f.seller}#seller-economy`)
+    await page.goto(`/intake/sellers/${f.seller}#seller-economy-history`)
     const history = page.locator('#consignment-fees')
     await expect(history.getByRole('article')).toHaveCount(1)
     await expect(history).toContainText('125.01 SEK')
@@ -98,7 +98,7 @@ test('store configures fee VAT and payment history while the seller portal hides
       )
       return seller
     })
-    await page.goto(`/intake/sellers/${seller}#seller-economy`)
+    await page.goto(`/intake/sellers/${seller}#seller-economy-history`)
     await expect(history).toContainText(d.consignmentFees.status.unpaid)
     await history
       .getByText(d.consignmentFees.pay, { exact: true })

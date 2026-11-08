@@ -23,6 +23,7 @@ export function PayoutRequestForm({
   d,
   intake,
   leaveUnsaved,
+  fixedSeller = false,
 }: {
   tenantId: string
   currency: string
@@ -30,6 +31,7 @@ export function PayoutRequestForm({
   d: D
   intake: Dictionary['intake']
   leaveUnsaved?: string
+  fixedSeller?: boolean
 }) {
   const action = useIntakeAction(intake)
   const router = useRouter()
@@ -101,16 +103,24 @@ export function PayoutRequestForm({
             data-draft-readiness
             disabled={!ready || action.busy || action.locked}
           >
-            <div className="field">
-              <label htmlFor="payout-seller">{d.seller}</label>
-              <select id="payout-seller" name="seller" required>
-                {displayedSellers.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name} · {(s.availableOre / 100).toFixed(2)} {currency}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {fixedSeller && displayedSellers.length === 1 ? (
+              <input
+                type="hidden"
+                name="seller"
+                value={displayedSellers[0].id}
+              />
+            ) : (
+              <div className="field">
+                <label htmlFor="payout-seller">{d.seller}</label>
+                <select id="payout-seller" name="seller" required>
+                  {displayedSellers.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} · {(s.availableOre / 100).toFixed(2)} {currency}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="field">
               <label htmlFor="payout-amount">{d.amount}</label>
               <input

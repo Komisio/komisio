@@ -31,7 +31,7 @@ export function ConsignmentFeeHistory({
   if (!fees || fees.total === 0) return null
   const t = d.consignmentFees
   const href = (n: number) =>
-    `${base}${base.includes('?') ? '&' : '?'}feePage=${n}#${staff ? 'seller-economy' : 'consignment-fees'}`
+    `${base}${base.includes('?') ? '&' : '?'}feePage=${n}#${staff ? 'seller-economy-history' : 'consignment-fees'}`
   return (
     <section className="card intake-form" id="consignment-fees" tabIndex={-1}>
       <h2>{t.title}</h2>

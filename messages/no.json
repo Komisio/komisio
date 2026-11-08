@@ -436,6 +436,7 @@
   "invitedRegisterIntro": "Du fulgte en butikkinvitasjon. Opprett din personlige konto med e-postadressen som mottok den. Du trenger ikke opprette en ny butikk. Har du allerede en konto? Bruk innloggingslenken nedenfor.",
   "invitedLoginIntro": "Logg inn med e-postadressen som mottok invitasjonen. Du kommer tilbake hit for å godta den. Ny hos Komisio? Velg Opprett konto nedenfor.",
   "passwordHint": "Minst 10 tegn.",
+  "passwordMustDiffer": "Det nye passordet må være forskjellig fra det nåværende passordet ditt. Velg et annet passord og prøv igjen.",
   "verifySent": "Sjekk e-posten din og følg lenken for å bekrefte kontoen. Åpne den i samme nettleser som du brukte her. Lenken kan bare brukes én gang.",
   "resetSent": "Hvis kontoen finnes, er en tilbakestillingslenke sendt. Sjekk e-posten din.",
   "resend": "Send bekreftelsen på nytt",
@@ -1688,9 +1689,9 @@
     "flaggedHint": "Innlevererens tilgodehavende for disse returene var allerede reservert eller utbetalt. Gjør opp med innlevereren og registrer en justering ved behov."
   },
   "statements": {
-    "title": "Avregning",
-    "intro": "Et nummerert, fryst dokument beregnet fra reskontroen. Korreksjoner er kreditnotaer som viser til originalen.",
-    "statement": "Avregning",
+    "title": "Kontoutskrifter",
+    "intro": "Viser selgerens salg, returer, utbetalinger og saldo for en valgt periode. Opprett en kontoutskrift og skriv den ut til selgeren. Dette utfører ingen utbetaling.",
+    "statement": "Kontoutskrift",
     "creditNote": "Kreditnota",
     "period": "Periode",
     "issuedAt": "Utstedt",
@@ -1708,16 +1709,16 @@
     "noLines": "Ingen posteringer i denne perioden.",
     "salePrice": "Salgspris",
     "footer": "Beløp i {currency} inkludert mva der det er aktuelt. Denne avregningen er beregnet fra butikkens reskontro og endres ikke i etterkant.",
-    "print": "Skriv ut avregning",
-    "empty": "Ingen avregninger utstedt ennå.",
-    "issueHeading": "Utsted en avregning",
-    "issueHint": "Perioden kan ikke overlappe en tidligere avregning. Nummeret tildeles når avregningen utstedes.",
+    "print": "Skriv ut kontoutskrift",
+    "empty": "Ingen kontoutskrifter er opprettet ennå.",
+    "issueHeading": "Opprett kontoutskrift",
+    "issueHint": "Perioden kan ikke overlappe en tidligere kontoutskrift. Dokumentet lagres med et nummer og kan ikke endres i etterkant.",
     "from": "Fra",
     "to": "Til (inkludert)",
-    "confirm": "Jeg vil utstede neste nummererte avregning for denne perioden.",
-    "issue": "Utsted avregning",
-    "issued": "Avregningen er utstedt.",
-    "open": "Åpne avregning",
+    "confirm": "Jeg vil opprette og lagre kontoutskriften for den valgte perioden.",
+    "issue": "Opprett kontoutskrift",
+    "issued": "Kontoutskriften er lagret.",
+    "open": "Åpne kontoutskriften",
     "closedPeriodHint": "Sluttdatoen må være i går eller tidligere.",
     "issueInfo": "Om avregningen",
     "selfBilling": "Selvfaktura",
@@ -1731,7 +1732,10 @@
     "noSeparateVat": "Ingen særskilt belastet mva.",
     "downloadPdf": "Last ned PDF",
     "invoiceTotals": "Selvfakturaens beløp",
-    "invoiceNote": "Selvfakturaen gjelder selgerens tilgodehavende for varene. Utbetalinger og saldo vises separat i avregningen."
+    "invoiceNote": "Selvfakturaen gjelder selgerens tilgodehavende for varene. Utbetalinger og saldo vises separat i avregningen.",
+    "recipient": "Til selgeren",
+    "closingHint": "Sluttsaldoen inkluderer periodens kontohendelser og reservasjoner. Dagens tilgjengelige saldo kan være en annen.",
+    "otherChanges": "Andre kontohendelser"
   },
   "handovers": {
     "title": "Forhåndsmeldinger",
@@ -5367,5 +5371,11 @@
       "TENANT_NOT_FOUND": "Butikken finnes ikke lenger.",
       "REQUEST_FAILED": "Handlingen kunne ikke fullføres. Prøv igjen."
     }
+  },
+  "sellerEconomy": {
+    "available": "Tilgjengelig saldo",
+    "availableHint": "Beløpet som er tilgjengelig etter reservasjoner for utbetaling.",
+    "credited": "Fra salg, totalt",
+    "paid": "Utbetalt, totalt"
   }
 }

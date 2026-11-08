@@ -10,9 +10,9 @@ import { p2Fixture } from '../helpers/p2-fixture'
 // the selected tab must then be brought into the strip, without moving the
 // page vertically or changing the hash and keyboard behaviour.
 const selectedWithinStrip = async (page: Page) => {
-  const strip = await page.getByRole('tablist').boundingBox()
+  const strip = await page.locator('.seller-tablist').boundingBox()
   const tab = await page
-    .locator('[role="tab"][aria-selected="true"]')
+    .locator('.seller-tablist [role="tab"][aria-selected="true"]')
     .boundingBox()
   expect(strip).not.toBeNull()
   expect(tab).not.toBeNull()

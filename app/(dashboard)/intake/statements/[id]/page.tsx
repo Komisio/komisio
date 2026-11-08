@@ -10,7 +10,8 @@ import { requirePlatform } from '@/lib/platform/context'
 import { dictionary, intlLocale, isLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readStatement } from '@/lib/engine/statements'
-import { formatSignedOre } from '@/lib/engine/seller-ledger'
+import { economyFormat } from '@/lib/intake/economy-format'
+import './statement.css'
 import { PrintLabel } from '@/components/intake/print-label'
 
 export default async function Statement({
@@ -40,49 +41,86 @@ export default async function Statement({
   const locale = intlLocale(documentLanguage)
   const day = (iso: string) =>
     new Date(iso).toLocaleDateString(locale, { timeZone: 'Europe/Stockholm' })
-  const when = (iso: string) =>
-    new Date(iso).toLocaleString(locale, { timeZone: 'Europe/Stockholm' })
-  const money = (ore: number) => `${formatSignedOre(ore)} ${currency}`
+  const money = (ore: number) =>
+    economyFormat(documentLanguage).money(ore, currency)
+  const otherChanges = lines
+    .filter(
+      (line) =>
+        ![
+          'credit_sale',
+          'credit_reversal',
+          'payout_paid',
+          'adjustment',
+        ].includes(line.kind),
+    )
+    .reduce((total, line) => total + line.amount_ore, 0)
   const lastDay = new Date(Date.parse(s.period_to) - 1).toISOString()
   return (
     <>
       <div className="page-heading no-print">
         <h1>{d.title}</h1>
-        <p>{d.intro}</p>
-        <BackLink className="text-link" href={`/intake/sellers/${s.seller_id}`}>
+        <BackLink
+          className="text-link"
+          href={`/intake/sellers/${s.seller_id}#seller-economy-statements`}
+        >
           {all.returnNavigation.back}
         </BackLink>
+        <div className="row wrap statement-actions">
+          <PrintLabel label={d.print} />
+          {s.self_billing && (
+            <a
+              className="btn btn-secondary"
+              href={`/api/statements/pdf?tenant=${active.id}&statement=${s.id}`}
+            >
+              {d.downloadPdf}
+            </a>
+          )}
+        </div>
       </div>
       <article
         className="card intake-form statement"
         lang={intlLocale(documentLanguage)}
       >
-        <p className="eyebrow">{s.self_billing?.buyer.name ?? active.name}</p>
-        <h2>
-          {statementTitle(s, d)} {s.number}
-        </h2>
-        <p>
-          {seller.name}
-          {seller.email ? ` · ${seller.email}` : ''}
-          {seller.phone ? ` · ${seller.phone}` : ''}
-        </p>
-        {s.seller_contact && (
-          <p>
-            {[
-              s.seller_contact.addressLine1,
-              s.seller_contact.addressLine2,
-              s.seller_contact.postalCode,
-              s.seller_contact.city,
-              s.seller_contact.country,
-            ]
-              .filter(Boolean)
-              .join(', ')}
-          </p>
-        )}
-        <p>
-          {d.period}: {day(s.period_from)} – {day(lastDay)} · {d.issuedAt}{' '}
-          {when(s.issued_at)}
-        </p>
+        <header className="statement-header">
+          <div>
+            <p className="eyebrow">
+              {s.self_billing?.buyer.name ?? active.name}
+            </p>
+            <h2>
+              {statementTitle(s, d)} {s.number}
+            </h2>
+          </div>
+          <dl className="statement-meta">
+            <div>
+              <dt>{d.period}</dt>
+              <dd>
+                {day(s.period_from)} – {day(lastDay)}
+              </dd>
+            </div>
+            <div>
+              <dt>{d.issuedAt}</dt>
+              <dd>{day(s.issued_at)}</dd>
+            </div>
+          </dl>
+        </header>
+        <div className="statement-recipient">
+          <p className="eyebrow">{d.recipient}</p>
+          <strong>{seller.name}</strong>
+          <p>{[seller.email, seller.phone].filter(Boolean).join(' · ')}</p>
+          {s.seller_contact && (
+            <p>
+              {[
+                s.seller_contact.addressLine1,
+                s.seller_contact.addressLine2,
+                s.seller_contact.postalCode,
+                s.seller_contact.city,
+                s.seller_contact.country,
+              ]
+                .filter(Boolean)
+                .join(', ')}
+            </p>
+          )}
+        </div>
         {s.corrects_id && (
           <p>
             {d.corrects}{' '}
@@ -100,42 +138,37 @@ export default async function Statement({
             locale={documentLanguage}
           />
         )}
-        <dl className="statement-totals">
-          <div>
-            <dt>{d.opening}</dt>
-            <dd>{money(s.opening_ore)}</dd>
+        <div className="statement-summary">
+          <dl className="statement-totals">
+            {[
+              [d.opening, s.opening_ore],
+              [d.credited, s.credited_ore],
+              [d.reversed, -s.reversed_ore],
+              [d.paid, -s.paid_ore],
+              [d.adjustments, s.adjustments_ore],
+              ...(otherChanges !== 0 ? [[d.otherChanges, otherChanges]] : []),
+              [d.closing, s.closing_ore],
+            ].map(([label, amount]) => (
+              <div key={String(label)}>
+                <dt>{label}</dt>
+                <dd>{money(Number(amount))}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className="statement-sales-summary">
+            <dl>
+              <div>
+                <dt>{d.salesGross}</dt>
+                <dd>{money(s.sales_gross_ore)}</dd>
+              </div>
+              <div>
+                <dt>{d.commission}</dt>
+                <dd>{money(s.commission_ore)}</dd>
+              </div>
+            </dl>
+            <p>{d.closingHint}</p>
           </div>
-          <div>
-            <dt>{d.salesGross}</dt>
-            <dd>{money(s.sales_gross_ore)}</dd>
-          </div>
-          <div>
-            <dt>{d.commission}</dt>
-            <dd>{money(s.commission_ore)}</dd>
-          </div>
-          <div>
-            <dt>{d.credited}</dt>
-            <dd>{money(s.credited_ore)}</dd>
-          </div>
-          <div>
-            <dt>{d.reversed}</dt>
-            <dd>{money(s.reversed_ore)}</dd>
-          </div>
-          <div>
-            <dt>{d.paid}</dt>
-            <dd>{money(s.paid_ore)}</dd>
-          </div>
-          <div>
-            <dt>{d.adjustments}</dt>
-            <dd>{money(s.adjustments_ore)}</dd>
-          </div>
-          <div>
-            <dt>{d.closing}</dt>
-            <dd>
-              <strong>{money(s.closing_ore)}</strong>
-            </dd>
-          </div>
-        </dl>
+        </div>
         <h3>{d.lines}</h3>
         {lines.length === 0 && <p>{d.noLines}</p>}
         <table className="statement-lines">
@@ -155,7 +188,7 @@ export default async function Statement({
             {lines.map((l) => (
               <tr key={l.id}>
                 <td data-label={all.sellerPortal.date}>
-                  <time dateTime={l.occurred_at}>{when(l.occurred_at)}</time>
+                  <time dateTime={l.occurred_at}>{day(l.occurred_at)}</time>
                 </td>
                 <td data-label={all.sellerPortal.kind}>
                   {all.ledger.kinds[l.kind as keyof typeof all.ledger.kinds] ??
@@ -186,17 +219,6 @@ export default async function Statement({
           <small>{d.footer.replace('{currency}', currency)}</small>
         </p>
       </article>
-      <div className="row no-print">
-        <PrintLabel label={d.print} />
-        {s.self_billing && (
-          <a
-            className="btn btn-secondary"
-            href={`/api/statements/pdf?tenant=${active.id}&statement=${s.id}`}
-          >
-            {d.downloadPdf}
-          </a>
-        )}
-      </div>
     </>
   )
 }

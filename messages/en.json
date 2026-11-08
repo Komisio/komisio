@@ -1689,9 +1689,9 @@
     "flaggedHint": "The seller's credit for these returns had already been reserved or paid out. Settle with the seller and record an adjustment if needed."
   },
   "statements": {
-    "title": "Settlement statement",
-    "intro": "A numbered, frozen document computed from the ledger. Corrections are credit notes that reference the original.",
-    "statement": "Statement",
+    "title": "Account statements",
+    "intro": "Shows the seller’s sales, returns, payouts and balance for a selected period. Create a statement and print it for the seller. This does not make a payment.",
+    "statement": "Account statement",
     "creditNote": "Credit note",
     "period": "Period",
     "issuedAt": "Issued",
@@ -1709,16 +1709,16 @@
     "noLines": "No entries in this period.",
     "salePrice": "Sale price",
     "footer": "Amounts in {currency} including VAT where applicable. This statement is computed from the store's ledger and does not change afterwards.",
-    "print": "Print statement",
-    "empty": "No statements issued yet.",
-    "issueHeading": "Issue a statement",
-    "issueHint": "The period must not overlap an earlier statement. A number is assigned when the statement is issued.",
+    "print": "Print account statement",
+    "empty": "No account statements have been created yet.",
+    "issueHeading": "Create account statement",
+    "issueHint": "The period must not overlap a previous statement. The document is saved with a number and cannot be changed afterwards.",
     "from": "From",
     "to": "To (inclusive)",
-    "confirm": "I want to issue the next numbered statement for this period.",
-    "issue": "Issue statement",
-    "issued": "The statement is issued.",
-    "open": "Open statement",
+    "confirm": "I want to create and save the statement for the selected period.",
+    "issue": "Create account statement",
+    "issued": "The account statement has been saved.",
+    "open": "Open account statement",
     "closedPeriodHint": "The end date must be yesterday or earlier.",
     "issueInfo": "About the statement",
     "selfBilling": "Self-billing invoice",
@@ -1732,7 +1732,10 @@
     "noSeparateVat": "No separately charged VAT",
     "downloadPdf": "Download PDF",
     "invoiceTotals": "Invoice amounts",
-    "invoiceNote": "This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement."
+    "invoiceNote": "This self-billing invoice covers the seller credit for the goods. Payments and balances are shown separately in the settlement.",
+    "recipient": "For the seller",
+    "closingHint": "The closing balance includes the period’s account events and reservations. Today’s available balance may differ.",
+    "otherChanges": "Other account events"
   },
   "handovers": {
     "title": "Announced drop-offs",
@@ -5368,5 +5371,11 @@
       "TENANT_NOT_FOUND": "The store no longer exists.",
       "REQUEST_FAILED": "The action could not be completed. Please try again."
     }
+  },
+  "sellerEconomy": {
+    "available": "Available balance",
+    "availableHint": "The amount available after payout reservations.",
+    "credited": "From sales, total",
+    "paid": "Paid out, total"
   }
 }

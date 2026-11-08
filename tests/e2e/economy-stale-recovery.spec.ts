@@ -82,14 +82,16 @@ test('staff economy forms provide a reload when the active store became stale', 
       .check()
     await refuse(settlement, d.payouts.settle.replace('{count}', '1'))
     await page.goto(`/intake/sellers/${f.seller}#seller-economy`)
+    await page
+      .getByRole('tab', { name: d.statements.title, exact: true })
+      .click()
     const statement = page
       .locator('form')
       .filter({ has: page.locator('#statement-from') })
     await statement.getByRole('checkbox').check()
     await refuse(statement, d.statements.issue)
     await page
-      .locator('summary')
-      .filter({ hasText: d.ledger.adjustHeading })
+      .getByRole('tab', { name: d.ledger.adjustHeading, exact: true })
       .click()
     const ledger = page
       .locator('form')

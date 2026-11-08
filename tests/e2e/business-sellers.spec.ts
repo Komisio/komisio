@@ -256,6 +256,9 @@ test('staff registers a business, safely retries, filters its directory and sees
       ])
     })
     await page.goto(`/intake/sellers/${seller}#seller-economy`)
+    await page
+      .getByRole('tab', { name: d.statements.title, exact: true })
+      .click()
     const statementForm = page
       .locator('form')
       .filter({ has: page.locator('#statement-from') })

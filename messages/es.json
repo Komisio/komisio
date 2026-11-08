@@ -1689,9 +1689,9 @@
     "flaggedHint": "El crédito del depositante por estas devoluciones ya estaba reservado o pagado. Acuérdalo con el depositante y registra un ajuste si es necesario."
   },
   "statements": {
-    "title": "Liquidación",
-    "intro": "Un documento numerado y congelado calculado a partir del libro. Las correcciones son notas de crédito que hacen referencia al original.",
-    "statement": "Liquidación",
+    "title": "Extractos de cuenta",
+    "intro": "Muestra las ventas, devoluciones, pagos y el saldo del vendedor de un periodo. Cree un extracto e imprímalo para el vendedor. Esto no realiza ningún pago.",
+    "statement": "Extracto de cuenta",
     "creditNote": "Nota de crédito",
     "period": "Periodo",
     "issuedAt": "Emitida",
@@ -1709,16 +1709,16 @@
     "noLines": "No hay asientos en este periodo.",
     "salePrice": "Precio de venta",
     "footer": "Importes en {currency}, IVA incluido cuando corresponda. Esta liquidación se calcula a partir del libro de la tienda y no cambia después.",
-    "print": "Imprimir liquidación",
-    "empty": "Aún no se han emitido liquidaciones.",
-    "issueHeading": "Emitir una liquidación",
-    "issueHint": "El período no puede solaparse con una liquidación anterior. El número se asigna al emitirla.",
+    "print": "Imprimir extracto de cuenta",
+    "empty": "Aún no se han creado extractos de cuenta.",
+    "issueHeading": "Crear extracto de cuenta",
+    "issueHint": "El periodo no puede solaparse con un extracto anterior. El documento se guarda con un número y no puede modificarse después.",
     "from": "Desde",
     "to": "Hasta (inclusive)",
-    "confirm": "Quiero emitir la siguiente liquidación numerada para este periodo.",
-    "issue": "Emitir liquidación",
-    "issued": "La liquidación está emitida.",
-    "open": "Abrir liquidación",
+    "confirm": "Quiero crear y guardar el extracto del periodo seleccionado.",
+    "issue": "Crear extracto de cuenta",
+    "issued": "El extracto de cuenta se ha guardado.",
+    "open": "Abrir extracto de cuenta",
     "closedPeriodHint": "La fecha final debe ser ayer o anterior.",
     "issueInfo": "Sobre la liquidación",
     "selfBilling": "Autofactura",
@@ -1732,7 +1732,10 @@
     "noSeparateVat": "Sin IVA cobrado por separado",
     "downloadPdf": "Descargar PDF",
     "invoiceTotals": "Importes de la factura",
-    "invoiceNote": "La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación."
+    "invoiceNote": "La autofactura corresponde al crédito del vendedor por los artículos. Los pagos y saldos se muestran por separado en la liquidación.",
+    "recipient": "Para el vendedor",
+    "closingHint": "El saldo final incluye los movimientos y las reservas del periodo. El saldo disponible hoy puede ser diferente.",
+    "otherChanges": "Otros movimientos"
   },
   "handovers": {
     "title": "Entregas anunciadas",
@@ -5374,5 +5377,11 @@
       "TENANT_NOT_FOUND": "La tienda ya no existe.",
       "REQUEST_FAILED": "No se pudo completar la acción. Inténtalo de nuevo."
     }
+  },
+  "sellerEconomy": {
+    "available": "Saldo disponible",
+    "availableHint": "El importe disponible tras las reservas para pagos.",
+    "credited": "De ventas, total",
+    "paid": "Pagado, total"
   }
 }

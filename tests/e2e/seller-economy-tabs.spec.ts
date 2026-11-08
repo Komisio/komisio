@@ -38,6 +38,15 @@ test('seller economy keeps task drafts, keyboard navigation and bookmarked tasks
     await expect(
       tabs.getByRole('tab', { name: d.payouts.title, exact: true }),
     ).toHaveAttribute('aria-selected', 'true')
+    await page
+      .getByRole('tab', { name: d.sellerWorkspace.overview, exact: true })
+      .click()
+    await page
+      .getByRole('tab', { name: d.sellerWorkspace.economy, exact: true })
+      .click()
+    await expect(
+      tabs.getByRole('tab', { name: d.payouts.title, exact: true }),
+    ).toHaveAttribute('aria-selected', 'true')
     await page.setViewportSize({ width: 1440, height: 1000 })
     await page.screenshot({
       path: testInfo.outputPath('economy-desktop.png'),
@@ -99,6 +108,25 @@ test('seller economy keeps task drafts, keyboard navigation and bookmarked tasks
       tabs.getByRole('tab', { name: d.statements.title, exact: true }),
     ).toHaveAttribute('aria-selected', 'true')
     await expect(page.locator('#statement-from')).toBeVisible()
+    await page.goto(`/intake/sellers/${f.seller}#seller-ledger`)
+    await expect(
+      tabs.getByRole('tab', {
+        name: d.sellerProfile.transactions,
+        exact: true,
+      }),
+    ).toHaveAttribute('aria-selected', 'true')
+    await page
+      .getByRole('tab', { name: d.sellerWorkspace.overview, exact: true })
+      .click()
+    await page
+      .getByRole('tab', { name: d.sellerWorkspace.economy, exact: true })
+      .click()
+    await expect(
+      tabs.getByRole('tab', {
+        name: d.sellerProfile.transactions,
+        exact: true,
+      }),
+    ).toHaveAttribute('aria-selected', 'true')
     expect(
       (
         await f.db.query(

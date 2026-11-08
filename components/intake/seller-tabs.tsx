@@ -47,8 +47,13 @@ export function SellerTabs({
   const economyHash = useRef('#seller-economy')
   useEffect(() => {
     const remember = () => {
-      if (window.location.hash.startsWith('#seller-economy-'))
+      if (
+        window.location.hash === '#seller-economy' ||
+        window.location.hash.startsWith('#seller-economy-')
+      )
         economyHash.current = window.location.hash
+      else if (window.location.hash === '#seller-ledger')
+        economyHash.current = '#seller-economy-history'
     }
     remember()
     return subscribe(remember)

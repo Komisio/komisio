@@ -11,6 +11,7 @@ import { dictionary, intlLocale, isLocale } from '@/lib/i18n'
 import { readStoreCurrency } from '@/lib/engine/money'
 import { readStatement } from '@/lib/engine/statements'
 import { economyFormat } from '@/lib/intake/economy-format'
+import { statementOtherChanges } from '@/lib/intake/statement-summary'
 import './statement.css'
 import { PrintLabel } from '@/components/intake/print-label'
 
@@ -43,17 +44,7 @@ export default async function Statement({
     new Date(iso).toLocaleDateString(locale, { timeZone: 'Europe/Stockholm' })
   const money = (ore: number) =>
     economyFormat(documentLanguage).money(ore, currency)
-  const otherChanges = lines
-    .filter(
-      (line) =>
-        ![
-          'credit_sale',
-          'credit_reversal',
-          'payout_paid',
-          'adjustment',
-        ].includes(line.kind),
-    )
-    .reduce((total, line) => total + line.amount_ore, 0)
+  const otherChanges = statementOtherChanges(s)
   const lastDay = new Date(Date.parse(s.period_to) - 1).toISOString()
   return (
     <>

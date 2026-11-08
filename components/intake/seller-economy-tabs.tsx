@@ -18,6 +18,7 @@ export function SellerEconomyTabs({
       const value = window.location.hash.replace('#seller-economy-', '')
       if (tabs.some((tab) => tab.id === value)) setSelected(value)
       else if (window.location.hash === '#seller-ledger') setSelected('history')
+      else if (window.location.hash === '#seller-economy') setSelected(initial)
     }
     sync()
     window.addEventListener('hashchange', sync)
@@ -26,7 +27,8 @@ export function SellerEconomyTabs({
       window.removeEventListener('hashchange', sync)
       window.removeEventListener('popstate', sync)
     }
-  }, [tabs])
+  }, [initial, tabs])
+  const active = tabs.some((tab) => tab.id === selected) ? selected : initial
   function select(id: string) {
     setSelected(id)
     window.history.pushState(null, '', `#seller-economy-${id}`)
@@ -41,9 +43,9 @@ export function SellerEconomyTabs({
             id={`economy-tab-${tab.id}`}
             type="button"
             role="tab"
-            aria-selected={selected === tab.id}
+            aria-selected={active === tab.id}
             aria-controls={`seller-economy-${tab.id}`}
-            tabIndex={selected === tab.id ? 0 : -1}
+            tabIndex={active === tab.id ? 0 : -1}
             onClick={() => select(tab.id)}
             onKeyDown={(event) => {
               const next =
@@ -73,7 +75,7 @@ export function SellerEconomyTabs({
           role="tabpanel"
           aria-labelledby={`economy-tab-${tab.id}`}
           tabIndex={0}
-          hidden={selected !== tab.id}
+          hidden={active !== tab.id}
           className="seller-economy-panel"
         >
           {tab.content}

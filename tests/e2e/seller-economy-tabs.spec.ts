@@ -31,6 +31,13 @@ test('seller economy keeps task drafts, keyboard navigation and bookmarked tasks
       /697,60\s+kr/,
     )
     await expect(page.locator('#statement-from')).not.toBeVisible()
+    await tabs
+      .getByRole('tab', { name: d.sellerProfile.transactions, exact: true })
+      .click()
+    await page.goBack()
+    await expect(
+      tabs.getByRole('tab', { name: d.payouts.title, exact: true }),
+    ).toHaveAttribute('aria-selected', 'true')
     await page.setViewportSize({ width: 1440, height: 1000 })
     await page.screenshot({
       path: testInfo.outputPath('economy-desktop.png'),

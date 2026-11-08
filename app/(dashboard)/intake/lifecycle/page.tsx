@@ -4,6 +4,7 @@ import {
   InventoryFooter,
 } from '@/components/intake/inventory-table-shell'
 import { LifecycleTableRow } from '@/components/intake/lifecycle-table-row'
+import { ItemStatusBadge } from '@/components/ui/item-status-badge'
 import { Handshake, Store } from 'lucide-react'
 import { WorkingForm } from '@/components/platform/working-form'
 import { ItemPhotoPreview } from '@/components/intake/item-photo-preview'
@@ -332,11 +333,12 @@ export default async function Lifecycle({
                           : `${formatSignedOre(r.current_price_ore)} ${currency}`}
                       </td>
                       <td className="inventory-state">
-                        <span
-                          className={`lifecycle-status lifecycle-status-${r.stage}`}
+                        <ItemStatusBadge
+                          stage={r.stage}
+                          className="lifecycle-status"
                         >
                           {stageLabel(r.stage)}
-                        </span>
+                        </ItemStatusBadge>
                       </td>
                       <td className="inventory-date">{when(r.accepted_at)}</td>
                       <td className="inventory-date">{when(r.period_end)}</td>

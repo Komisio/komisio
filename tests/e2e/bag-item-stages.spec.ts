@@ -97,6 +97,16 @@ test('handover item stages and actual sale price remain clear on mobile in every
       await expect(
         rows.filter({ hasText: 'Synthetic period ending chair' }),
       ).toContainText(d.lifecycle.stages.period_ending)
+      // Long translated statuses scroll with the table instead of stretching rows.
+      await expect(rows.first()).toBeVisible()
+      for (const row of await rows.all()) {
+        expect((await row.boundingBox())!.height).toBeLessThanOrEqual(50)
+        const badge = await row.locator('.item-status-badge').boundingBox()
+        const status = await row.locator('.inventory-state').boundingBox()
+        expect(badge!.x + badge!.width).toBeLessThanOrEqual(
+          status!.x + status!.width,
+        )
+      }
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),
       ).toBeLessThanOrEqual(320)

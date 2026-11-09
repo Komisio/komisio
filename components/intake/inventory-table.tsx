@@ -180,7 +180,7 @@ export function InventoryTable({
                     '—'
                   )}
                 </td>
-                <td className="inventory-state" data-stage={i.stage}>
+                <td className="inventory-state">
                   <div className="inventory-status-content">
                     <ItemStatusBadge stage={i.stage}>
                       {stageLabel(i.stage)}

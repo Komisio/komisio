@@ -18,6 +18,18 @@ test('owner opts a store into the mobile directory and can hide it again', async
       name: d.storeProfile.appLabel,
     })
     await expect(checkbox).not.toBeChecked()
+    for (const width of [320, 1440]) {
+      await page.setViewportSize({ width, height: 900 })
+      const bounds = (await checkbox.boundingBox())!
+      expect(bounds.width).toBeLessThanOrEqual(24)
+      expect(bounds.height).toBeLessThanOrEqual(24)
+      expect(
+        (await checkbox.locator('..').boundingBox())!.height,
+      ).toBeGreaterThanOrEqual(44)
+      await section.screenshot({
+        path: `private/store-app-visibility-${width}.png`,
+      })
+    }
     for (const visible of [true, false]) {
       await checkbox.setChecked(visible)
       const saved = page.waitForResponse(

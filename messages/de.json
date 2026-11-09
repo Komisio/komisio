@@ -1309,6 +1309,8 @@
       "submissionSeller": "Verkäufer geben den Preis an",
       "submissionApproval": "Verkäufer schlagen vor, das Geschäft bestätigt",
       "photosHelp": "Verkäufer können vor der Abgabe Fotos zur Prüfung senden.",
+      "externalAppSubmissions": "Artikelvorschläge neuer Verkäufer über die App erhalten",
+      "externalAppSubmissionsHelp": "Für Personen, die noch keine Verkäufer in Ihrem Geschäft sind. Die Auswahl wird jetzt gespeichert und gilt, sobald der neue App-Ablauf verfügbar ist.",
       "agreementHelp": "Wähle, wann Komisio prüft, ob der Verkäufer dem aktuellen Vertrag zugestimmt hat.",
       "bagHelp": "Bevor das Personal eine Tasche oder Abgabe annimmt.",
       "reviewHelp": "Bevor Preis und Bedingungen des Artikels in der Annahme fertiggestellt werden.",

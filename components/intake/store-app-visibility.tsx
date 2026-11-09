@@ -75,7 +75,10 @@ export function StoreAppVisibilityForm({
   const [requestId, setRequestId] = useState(() => crypto.randomUUID())
   const [saved, setSaved] = useState(false)
   return (
-    <section className="card registration-settings" aria-label={t.appTitle}>
+    <section
+      className="card registration-settings store-app-visibility"
+      aria-label={t.appTitle}
+    >
       <h2>{t.appTitle}</h2>
       <p id="store-app-hint">{t.appHint}</p>
       <form
@@ -98,7 +101,7 @@ export function StoreAppVisibilityForm({
           }
         }}
       >
-        <label className="check">
+        <label className="intake-confirm">
           <input
             type="checkbox"
             checked={visible}

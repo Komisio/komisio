@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-09: Owners/admins may save externalAppSubmissionsEnabled for future app proposals from new sellers. Absence means off, independently of photo pre-review and app visibility. This slice saves consent only; it grants no seller access or financial guarantees.
+
 - 2026-11-07: #785 explains same_password in recovery and account password changes in all interface languages. A different password remains required; recovery, verification and MFA gates are unchanged. Feedback never displays provider messages or passwords.
 
 - 2026-11-05: #767 adds owner-approved seller push for registered and sold consignment items, with independent default-off store switches and explicit device consent. Reuse original sounds; placement/staff notices and email-policy changes are excluded.

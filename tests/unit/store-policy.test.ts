@@ -53,6 +53,7 @@ it('rejects unknown fields, future flags and unsupported subset entries', () => 
   for (const patch of [
     { tenantId: 'model-selected' },
     { assistanceEnabled: 'yes' },
+    { externalAppSubmissionsEnabled: 'true' },
     { sellerReviewMode: 'automatic' },
     { commissionBasis: 'gross' },
     { endOfPeriodAction: 'discard' },

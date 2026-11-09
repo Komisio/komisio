@@ -1309,6 +1309,8 @@
       "submissionSeller": "Myyjä ilmoittaa hinnan",
       "submissionApproval": "Myyjä ehdottaa, liike hyväksyy",
       "photosHelp": "Myyjät voivat lähettää kuvia arvioitavaksi ennen tuontia.",
+      "externalAppSubmissions": "Vastaanota tuote-ehdotuksia uusilta myyjiltä sovelluksen kautta",
+      "externalAppSubmissionsHelp": "Henkilöille, jotka eivät vielä ole myymälän myyjiä. Valinta tallennetaan nyt ja tulee voimaan, kun uusi sovellustoiminto julkaistaan.",
       "agreementHelp": "Valitse, milloin Komisio tarkistaa, että myyjä on hyväksynyt voimassa olevan sopimuksen.",
       "bagHelp": "Ennen kuin henkilökunta vastaanottaa kassin tai tuontierän.",
       "reviewHelp": "Ennen kuin tuotteen hinta ja ehdot viimeistellään vastaanotossa.",

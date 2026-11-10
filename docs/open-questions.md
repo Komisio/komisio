@@ -7,13 +7,16 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 External app intake (2026-11-09): the owner confirms fixed seller compensation
 regardless of sale price, 45 days from physical receipt, and credit to the seller
 balance rather than an automatic bank transfer. The store and seller handle
-condition disputes and liability under the store's agreement. Only a separate,
-default-off store preference and a bounded public opt-in directory are implemented;
-no store is enabled automatically. The directory does not grant seller access or
-permit submissions. A phone-owned request/image model without tenant membership
-and the SMS provider still need confirmation. Offers, receipt links and financial
-execution remain future work. Offer/request expiry and acquisition accounting
-remain open.
+condition disputes and liability under the store's agreement. Discovery uses a
+separate, default-off store preference and a bounded public opt-in directory;
+no store is enabled automatically. The directory alone grants no seller access or
+submission authority. On 2026-11-10 the owner approved phone-verified request/image
+records for one chosen store, without membership, seller registration or balance,
+and a server-enforced ten-active-request limit. Prepare Supabase Phone Auth;
+provider choice and hosted SMS activation remain deferred. Offers, receipt links
+and financial execution remain future work. Offer/request expiry, identity
+recovery when a phone/email belongs to another account, and acquisition accounting
+remain open. Existing email seller access must remain unchanged.
 
 Sales summary (#655, scope clarified 2026-10-26): the owner selected a separate
 sales-information document and then explicitly requested a simple summary of

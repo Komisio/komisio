@@ -1,5 +1,9 @@
 # Decision Log
 
+- 2026-11-10: Owner approves phone-verified, user-owned external requests and private photos for one opted-in store. Submission creates no membership, seller, custody or balance. Serialize ten active requests per identity across stores; a recorded decline releases a slot.
+- 2026-11-10: External requests freeze their payload and photo order under a client UUID; exact retries return the original result. Recheck store consent/currency on first submission. Phone Auth is prepared separately from existing email access; SMS provider activation remains deferred.
+- 2026-11-10: Reserve at most 80 unsubmitted private JPEGs per phone identity. Photos are immutable and limited to 1 MiB; discard and submit serialize. Referenced images and request/review evidence cannot be removed. Neither request nor offer expiry is inferred.
+
 - 2026-11-09: External app drafts select one explicitly opted-in store through a bounded public directory. Return only store identity, public city/country and policy currency; ordinary app visibility remains separate. Selection grants no access and submission must recheck consent.
 
 - 2026-11-09: Owners/admins may save externalAppSubmissionsEnabled for future app proposals from new sellers. Absence means off, independently of photo pre-review and app visibility. This slice saves consent only; it grants no seller access or financial guarantees.

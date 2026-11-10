@@ -15,6 +15,7 @@ import { POST, OPTIONS } from '../../app/api/mobile/v1/external-items/route'
 import { POST as photoPost } from '../../app/api/mobile/v1/external-items/photos/route'
 import { POST as sellerPost } from '../../app/api/mobile/v1/seller/route'
 import { POST as offerPost } from '../../app/api/mobile/v1/external-items/offers/route'
+import { POST as onboardingPost } from '../../app/api/mobile/v1/external-items/onboarding/route'
 import { issueExternalOfferCommand } from '../../lib/engine/external-item-offers'
 import { externalItemSubmission } from '../../lib/engine/external-item-requests'
 
@@ -515,5 +516,126 @@ describe('private external photos', () => {
       (await POST(request({ action: 'discardPhoto', photoId }))).status,
     ).toBe(503)
     expect(mocks.rpc).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('central account and handover boundary', () => {
+  const agreementId = 'f6100000-0000-4000-8000-000000000401',
+    offerId = 'f6100000-0000-4000-8000-000000000501'
+  const command = {
+    action: 'complete',
+    requestId,
+    offerId,
+    agreementVersionId: agreementId,
+    profile: { name: 'Synthetic phone owner', email: 'contact@example.test' },
+    bank: {
+      holder: 'Synthetic phone owner',
+      country: 'SE',
+      kind: 'local',
+      routing: '8327',
+      account: '123456789',
+    },
+  }
+  it('owns identity on the server and passes exact consent and bank data through the engine', async () => {
+    for (const patch of [
+      { ownerId: owner },
+      { sellerId: owner },
+      { bank: { ...command.bank, country: 'DE' } },
+      { bank: { ...command.bank, routing: '' } },
+    ])
+      expect(
+        (await onboardingPost(request({ ...command, ...patch }))).status,
+      ).toBe(400)
+    expect(mocks.rpc).not.toHaveBeenCalled()
+    const r = await onboardingPost(request(command))
+    expect(r.status).toBe(200)
+    expect(await r.json()).toEqual({ id: requestId })
+    expect(mocks.rpc).toHaveBeenCalledExactlyOnceWith(
+      'complete_external_item_offer',
+      {
+        p_id: requestId,
+        p_offer: offerId,
+        p_agreement: agreementId,
+        p_profile: command.profile,
+        p_bank: command.bank,
+      },
+    )
+    expect(r.headers.get('cache-control')).toBe('private, no-store')
+  })
+  it('requires verified phone and current MFA before reading account data', async () => {
+    mocks.getUser.mockResolvedValue({
+      data: { user: { ...identity, phone_confirmed_at: null } },
+      error: null,
+    })
+    expect(
+      (await onboardingPost(request({ action: 'read', offerId }))).status,
+    ).toBe(403)
+    mocks.getUser.mockResolvedValue({ data: { user: identity }, error: null })
+    mocks.assurance.mockResolvedValue({
+      data: { currentLevel: 'aal1', nextLevel: 'aal2' },
+      error: null,
+    })
+    expect((await onboardingPost(request(command))).status).toBe(403)
+    expect(mocks.rpc).not.toHaveBeenCalled()
+  })
+  it('only renders an owned open handover QR and never includes bank details', async () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://app.example.test')
+    const data = {
+      offerId,
+      tenantId,
+      phone: identity.phone,
+      store: { address: null, openingHours: [] },
+      account: {
+        id: owner,
+        name: 'Synthetic',
+        email: 'contact@example.test',
+        hasBank: true,
+      },
+      handover: {
+        id: requestId,
+        reference: 'H-128',
+        status: 'open',
+        receivedAt: null,
+        itemCount: 1,
+        items: [
+          { requestId, offerId, description: 'Jacket', brand: '', photoId },
+        ],
+      },
+    }
+    mocks.rpc.mockResolvedValue({ data, error: null })
+    const r = await onboardingPost(request({ action: 'read', offerId }))
+    expect(r.status).toBe(200)
+    const body = await r.json()
+    expect(body.qrPng).toMatch(/^data:image\/png;base64,/)
+    expect(body.bank).toBeUndefined()
+    expect(
+      (await sharp(Buffer.from(body.qrPng.split(',')[1], 'base64')).metadata())
+        .format,
+    ).toBe('png')
+    mocks.rpc.mockResolvedValue({
+      data: {
+        ...data,
+        handover: {
+          ...data.handover,
+          status: 'received',
+          receivedAt: '2026-11-10T12:00:00Z',
+        },
+      },
+      error: null,
+    })
+    expect(
+      (
+        await (
+          await onboardingPost(request({ action: 'read', offerId }))
+        ).json()
+      ).qrPng,
+    ).toBeNull()
+    mocks.rpc.mockResolvedValue({
+      data: { ...data, offerId: owner },
+      error: null,
+    })
+    expect(
+      (await onboardingPost(request({ action: 'read', offerId }))).status,
+    ).toBe(503)
   })
 })

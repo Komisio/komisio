@@ -192,6 +192,78 @@ export async function raceExternalOffers({ setup, connectionString }) {
       ).rows[0].n,
       0,
     )
+    // Two final consents from separate app sessions share one explicit account
+    // and one same-version handover, even when neither had an account yet.
+    const completionOffers = []
+    for (let i = 0; i < 2; i++) {
+      const requestId = randomUUID(),
+        offerId = randomUUID()
+      await as(clients[0], owner)
+      await submit(requestId)
+      await as(clients[0], staff)
+      await clients[0].query(
+        'select issue_external_item_offer($1,$2,$3,null,40000,100000,$4)',
+        [tenant, offerId, requestId, agreement],
+      )
+      completionOffers.push(offerId)
+    }
+    for (const c of clients) await as(c, owner)
+    const commandIds = [randomUUID(), randomUUID()]
+    const profile = {
+      name: 'Synthetic phone owner',
+      email: 'contact@example.test',
+    }
+    const bank = {
+      holder: 'Synthetic phone owner',
+      country: 'SE',
+      kind: 'local',
+      account: '123456789',
+      routing: '8327',
+    }
+    const complete = (c, i) =>
+      c.query('select complete_external_item_offer($1,$2,$3,$4,$5)', [
+        commandIds[i],
+        completionOffers[i],
+        agreement,
+        profile,
+        bank,
+      ])
+    assert.deepEqual(
+      await together(() => clients.map((c, i) => outcome(complete(c, i)))),
+      ['saved', 'saved'],
+    )
+    const grouped = (
+      await setup.query(
+        'select count(distinct seller_id)::int sellers,count(distinct handover_id)::int handovers,count(*)::int links from external_item_handover_links where offer_id=any($1)',
+        [completionOffers],
+      )
+    ).rows[0]
+    assert.deepEqual(grouped, { sellers: 1, handovers: 1, links: 2 })
+    assert.equal(
+      (
+        await setup.query(
+          'select count(*)::int n from seller_bank_versions where seller_id in(select seller_id from external_item_handover_links where offer_id=any($1))',
+          [completionOffers],
+        )
+      ).rows[0].n,
+      1,
+    )
+    assert.deepEqual(
+      await together(() => clients.map((c) => outcome(complete(c, 0)))),
+      ['saved', 'saved'],
+    )
+    assert.equal(
+      await outcome(
+        clients[0].query(
+          'select complete_external_item_offer($1,$2,$3,null,null)',
+          [randomUUID(), lateOffer, agreement],
+        ),
+      ),
+      'OFFER_EXPIRED',
+    )
+    console.log(
+      'PASS: concurrent first accounts, grouped handovers, exact onboarding retries and expired completion',
+    )
     console.log(
       'PASS: competing offers, yes/no, exact retries and expiry after lock contention',
     )

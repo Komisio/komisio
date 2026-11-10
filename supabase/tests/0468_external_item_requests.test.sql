@@ -16,11 +16,12 @@ select gen_random_uuid() as enabled \gset
 select publish_store_policy(:'tenant',:'enabled',null,:'body'::jsonb || '{"externalAppSubmissionsEnabled":true}');
 select publish_store_policy(:'other',gen_random_uuid(),null,:'body'::jsonb || '{"externalAppSubmissionsEnabled":true}');
 reset role;
+update public.platform_settings set central_app_tenant_id=:'tenant';
 insert into tenant_members(tenant_id,user_id,role) values
  (:'tenant','f6100000-0000-4000-8000-000000000005','readonly'),
  (:'other','f6100000-0000-4000-8000-000000000006','staff');
 create function pg_temp.submit_request(i uuid,t uuid,p uuid[],price numeric default 10000,c text default 'SEK') returns uuid language sql as $$
- select public.submit_external_item_request(i,t,'Jacket','Synthetic','good','',price,c,p);
+ select public.submit_external_item_request(i,t,'Jacket','Synthetic','good','',price,c,p,'SE');
 $$;
 set local role authenticated;
 select throws_like($$select reserve_external_item_photo(gen_random_uuid(),repeat('a',64),100)$$,'%PHONE_VERIFICATION_REQUIRED%','email verification is not phone verification');
@@ -46,15 +47,25 @@ select is(pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',:'tenant
 select lives_ok(format($$select pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'lost-response replay succeeds');
 select throws_like(format($$select pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',%L,array['f6100000-0000-4000-8000-000000000101']::uuid[],200)$$,:'tenant'),'%REQUEST_CONFLICT%','changed replay rejected');
 select is((select count(*) from external_item_requests),1::bigint,'one request after replay');
+select is((select sender_country from external_item_requests limit 1),'SE','residence declaration is retained');
+select throws_like(format($$select submit_external_item_request(gen_random_uuid(),%L,'Jacket','','good','',null,'SEK',array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'%SWEDEN_REQUIRED%','legacy caller cannot create without residence declaration');
+select throws_like(format($$select submit_external_item_request(gen_random_uuid(),%L,'Jacket','','good','',null,'SEK',array['f6100000-0000-4000-8000-000000000101']::uuid[],'DE')$$,:'tenant'),'%SWEDEN_REQUIRED%','other countries cannot submit');
 select is((select count(*) from sellers),0::bigint,'no seller access is granted');
 select throws_like($$select discard_external_item_photo('f6100000-0000-4000-8000-000000000101')$$,'%PHOTO_IN_USE%','submitted evidence cannot be discarded');
 select is(public.external_item_photo_access('f6100000-0000-4000-8000-000000000002/f6100000-0000-4000-8000-000000000101.jpg','delete'),false,'direct Storage delete of submitted photo denied');
 select throws_ok($$update external_item_requests set description='Changed'$$,'42501',null,'direct request changes denied');
 select throws_ok($$delete from external_item_requests$$,'42501',null,'direct request deletion denied');
+reset role;
+update public.platform_settings set central_app_tenant_id=:'other';
+set local role authenticated;
 select pg_temp.submit_request(gen_random_uuid(),:'other',array['f6100000-0000-4000-8000-000000000101']::uuid[]) from generate_series(1,9);
+reset role;
+update public.platform_settings set central_app_tenant_id=:'tenant';
+set local role authenticated;
 select throws_like(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'%ACTIVE_REQUEST_LIMIT%','ten-active cap spans stores');
 select lives_ok(format($$select pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'exact replay is allowed at the cap');
 select is(my_external_item_requests()->>'activeCount','10','server count is exact');
+select is(my_external_item_requests()#>>'{requests,0,store_name}','Komisio','central requests use the product brand independently of the recipient tenant name');
 set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000005","role":"authenticated"}';
 select is((select count(*) from external_item_requests),1::bigint,'readonly staff see only the selected recipient store');
 select throws_ok(format($$select decline_external_item_request(gen_random_uuid(),%L,'f6100000-0000-4000-8000-000000000201','')$$,:'tenant'),'42501','FORBIDDEN','readonly staff cannot decline');
@@ -75,10 +86,12 @@ select gen_random_uuid() as decline \gset
 select lives_ok(format($$select decline_external_item_request(%L,%L,'f6100000-0000-4000-8000-000000000201','Not our assortment')$$,:'decline',:'tenant'),'staff can decline with optional explanation');
 select lives_ok(format($$select decline_external_item_request(%L,%L,'f6100000-0000-4000-8000-000000000201','Not our assortment')$$,:'decline',:'tenant'),'decline replays once');
 select throws_like(format($$select decline_external_item_request(gen_random_uuid(),%L,'f6100000-0000-4000-8000-000000000201','')$$,:'tenant'),'%REQUEST_CHANGED%','a second decline cannot overwrite history');
-select publish_store_policy(:'tenant',gen_random_uuid(),:'enabled',:'body'::jsonb || '{"externalAppSubmissionsEnabled":false}');
+reset role;
+update public.platform_settings set central_app_tenant_id=:'other';
+set local role authenticated;
 set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000002","role":"authenticated"}';
 select is(my_external_item_requests()->>'activeCount','9','decline frees exactly one slot');
-select throws_like(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'%STORE_UNAVAILABLE%','opt-out is authoritative');
+select throws_like(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'%STORE_UNAVAILABLE%','only the current central recipient accepts new requests');
 select lives_ok(format($$select pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'replay survives opt-out and decline');
 select lives_ok(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[],null)$$,:'other'),'freed slot accepts a new request without a price wish');
 select reserve_external_item_photo('f6100000-0000-4000-8000-000000000102',repeat('b',64),100);
@@ -95,7 +108,7 @@ select throws_like($$select reserve_external_item_photo(gen_random_uuid(),repeat
 reset role;
 select is((select count(*) from tenant_members where user_id='f6100000-0000-4000-8000-000000000002'),0::bigint,'submission created no membership');
 select is((select count(*) from sellers where tenant_id in (:'tenant',:'other')),0::bigint,'submission created no seller record');
-select is((select count(*) from external_item_request_declines),1::bigint,'declines are immutable facts');
+select is((select count(*) from external_item_request_declines where tenant_id in (:'tenant',:'other')),1::bigint,'declines are immutable facts');
 select throws_like($$update external_item_requests set description='Changed'$$,'%IMMUTABLE%','request evidence is protected even for privileged SQL');
 insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at)
  values(gen_random_uuid(),'f6100000-0000-4000-8000-000000000002','totp','verified',now(),now());

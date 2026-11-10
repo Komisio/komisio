@@ -24,6 +24,7 @@ export const externalItemSubmission = z.strictObject({
     .regex(/^[1-9]\d{0,10}$/)
     .nullable(),
   currency: z.string().regex(/^[A-Z]{3}$/),
+  senderCountry: z.literal('SE').optional(),
   photos: z
     .array(uuid)
     .min(1)
@@ -50,6 +51,7 @@ const errorCodes = new Set([
   'ACTIVE_REQUEST_LIMIT',
   'STORE_UNAVAILABLE',
   'STORE_CHANGED',
+  'SWEDEN_REQUIRED',
   'PHOTO_NOT_FOUND',
   'PHOTO_LIMIT',
   'PHOTO_IN_USE',
@@ -76,6 +78,7 @@ const externalRequest = z.object({
   desired_price_ore: externalItemSubmission.shape.desiredPriceOre,
   currency: externalItemSubmission.shape.currency,
   photos: externalItemSubmission.shape.photos,
+  sender_country: z.literal('SE').nullable().optional(),
   created_at: z.iso.datetime({ offset: true }),
   status: z.enum(['waiting', 'declined']),
   decline_note: z.string().nullable(),
@@ -102,6 +105,7 @@ export async function executeExternalItemCommand(
       p_price_ore: c.desiredPriceOre,
       p_currency: c.currency,
       p_photos: c.photos,
+      p_sender_country: c.senderCountry ?? null,
     })
     checkError(result.error)
     if (result.data !== c.requestId) throw new Error('UNCONFIRMED_RESULT')

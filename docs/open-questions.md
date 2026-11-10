@@ -4,6 +4,19 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Central app intake (2026-11-10): the owner replaces the external-store opt-in
+directory with one host-designated ordinary tenant branded Komisio. The pilot
+accepts Swedish residents and SEK only. Inority AB and its registration number
+belong in the accepted seller agreement, not the app's introductory branding.
+Ordinary stores retain their own photo pre-review and consignment flows. Central
+compensation is fixed regardless of resale price; credit occurs on sale or 45 days
+after physical receipt, with acquisition of unsold goods on that date. This
+supersedes the store-discovery direction below. The acquisition accounting,
+returns after credit, loss/damage handling, offer expiry, agreement text and legal
+identity details still need resolution before financial execution. No automatic
+bank transfer, cross-border intake, currency conversion or production activation
+is authorized by the implementation work.
+
 External app intake (2026-11-09): the owner confirms fixed seller compensation
 regardless of sale price, 45 days from physical receipt, and credit to the seller
 balance rather than an automatic bank transfer. The store and seller handle

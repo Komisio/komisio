@@ -742,7 +742,8 @@
     "communication.push_sent": "Push notification · Passed to Apple/Google",
     "communication.push_failed": "Push notification · Failed",
     "communication.push_unconfirmed": "Push notification · Unconfirmed",
-    "communication.push_pending": "Push notification · Pending"
+    "communication.push_pending": "Push notification · Pending",
+    "central_app.recipient_changed": "Komisio app request recipient changed"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -5393,5 +5394,21 @@
     "availableHint": "The amount available after payout reservations.",
     "credited": "From sales, total",
     "paid": "Paid out, total"
+  },
+  "centralApp": {
+    "title": "Requests to Komisio",
+    "intro": "Choose the business receiving new item requests from the app. The pilot supports residents of Sweden and SEK amounts.",
+    "recipient": "Receiving store",
+    "paused": "Paused – no new requests",
+    "hint": "You must be an owner or administrator of the receiving store. Store photo pre-reviews are unaffected.",
+    "otherRecipient": "Current recipient",
+    "save": "Save recipient",
+    "busy": "Saving…",
+    "saved": "Recipient saved.",
+    "failed": "The recipient could not be saved.",
+    "changed": "The setting changed. Reload the page.",
+    "sekRequired": "The receiving store must use SEK.",
+    "uncertain": "The change could not be confirmed. Reload to check what was saved.",
+    "reload": "Reload page"
   }
 }

@@ -6,7 +6,12 @@ import { setTimeout as pause } from 'node:timers/promises'
 export async function raceExternalRequests({ setup, connectionString }) {
   const owner = randomUUID(),
     staff = randomUUID()
-  let tenant, other
+  let tenant
+  const previous = (
+    await setup.query(
+      'select central_app_tenant_id,central_app_revision from platform_settings where only_row',
+    )
+  ).rows[0]
   await setup.query(
     'insert into auth.users(id,phone,phone_confirmed_at) values($1,$2,now())',
     [owner, '46700006199'],
@@ -28,7 +33,7 @@ export async function raceExternalRequests({ setup, connectionString }) {
     path = `${owner}/${photo}.jpg`
   const submit = (c, id, store = tenant, image = photo) =>
     c.query(
-      "select submit_external_item_request($1,$2,'Jacket','','good','',10000,'SEK',$3) as id",
+      "select submit_external_item_request($1,$2,'Jacket','','good','',10000,'SEK',$3,'SE') as id",
       [id, store, [image]],
     )
   const outcome = (promise) =>
@@ -90,7 +95,22 @@ export async function raceExternalRequests({ setup, connectionString }) {
         [store, randomUUID()],
       )
     }
-    ;[tenant, other] = stores
+    ;[tenant] = stores
+    await setup.query(
+      "insert into platform_hosts(user_id,kind) values($1,'person')",
+      [staff],
+    )
+    async function designate(target) {
+      const current = (
+        await reviewer.query('select host_central_app_intake() as s')
+      ).rows[0].s
+      return reviewer.query('select set_central_app_intake($1,$2,$3)', [
+        randomUUID(),
+        current.revision,
+        target,
+      ])
+    }
+    await designate(tenant)
     await a.query("select reserve_external_item_photo($1,repeat('a',64),100)", [
       photo,
     ])
@@ -99,12 +119,34 @@ export async function raceExternalRequests({ setup, connectionString }) {
       [path],
     )
     const original = randomUUID()
+    await a.query('begin')
     await submit(a, original)
+    const pausing = designate(null)
+    let blocked = false
+    for (let i = 0; i < 200; i++) {
+      blocked = (
+        await setup.query(
+          "select exists(select 1 from pg_stat_activity where application_name='external_request_race_2' and wait_event_type='Lock') as yes",
+        )
+      ).rows[0].yes
+      if (blocked) break
+      await pause(10)
+    }
+    await a.query('commit')
+    await pausing
+    assert.equal(
+      blocked,
+      true,
+      'host pause must wait for the accepted submission transaction',
+    )
+    await submit(a, original)
+    assert.equal(await outcome(submit(a, randomUUID())), 'STORE_UNAVAILABLE')
+    await designate(tenant)
     for (let i = 0; i < 8; i++) await submit(a, randomUUID())
     assert.deepEqual(
       await together(() => [
         outcome(submit(a, randomUUID())),
-        outcome(submit(b, randomUUID(), other)),
+        outcome(submit(b, randomUUID())),
       ]),
       ['ACTIVE_REQUEST_LIMIT', 'saved'],
     )
@@ -186,9 +228,13 @@ export async function raceExternalRequests({ setup, connectionString }) {
       ['PHOTO_LIMIT', 'saved'],
     )
     console.log(
-      'PASS: external requests serialize cross-store capacity, replay, photo discard and upload quota across independent connections.',
+      'PASS: central requests serialize host pause, capacity, replay, photo discard and upload quota across independent connections.',
     )
   } finally {
     await Promise.allSettled(clients.map((c) => c.end()))
+    await setup.query(
+      'update platform_settings set central_app_tenant_id=$1,central_app_revision=$2 where only_row',
+      [previous.central_app_tenant_id, previous.central_app_revision],
+    )
   }
 }

@@ -4,7 +4,7 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('owner saves the future external app preference independently of photo pre-review', async ({
+test('photo pre-review remains compact and editable without a central intake checkbox', async ({
   page,
 }) => {
   const email = `external-app-${randomUUID()}@example.test`
@@ -21,23 +21,20 @@ test('owner saves the future external app preference independently of photo pre-
       name: d.submissions.enablePhotos,
       exact: true,
     })
-    await expect(checkbox).not.toBeChecked()
+    await expect(checkbox).toHaveCount(0)
     await expect(photos).toBeChecked()
-    await expect(checkbox).toHaveAccessibleDescription(
-      d.storePolicy.editor.externalAppSubmissionsHelp,
-    )
     for (const width of [320, 1440]) {
       await page.setViewportSize({ width, height: 900 })
-      await expect(checkbox).toBeVisible()
-      const bounds = (await checkbox.boundingBox())!
+      await expect(photos).toBeVisible()
+      const bounds = (await photos.boundingBox())!
       expect(bounds.width).toBeLessThanOrEqual(24)
       expect(bounds.height).toBeLessThanOrEqual(24)
       await page.locator('#policy-section-receiving').screenshot({
         path: `private/external-app-setting-${width}.png`,
       })
     }
-    for (const enabled of [true, false]) {
-      await checkbox.setChecked(enabled)
+    for (const enabled of [false, true]) {
+      await photos.setChecked(enabled)
       await page.getByLabel(d.storePolicy.confirm, { exact: true }).check()
       const saved = page.waitForResponse(
         (r) =>
@@ -50,12 +47,11 @@ test('owner saves the future external app preference independently of photo pre-
       const response = await saved
       expect(response.status()).toBe(200)
       expect(response.request().postDataJSON().policy).toMatchObject({
-        externalAppSubmissionsEnabled: enabled,
-        photoSubmissionsEnabled: true,
+        photoSubmissionsEnabled: enabled,
       })
       await page.reload()
-      await expect(checkbox).toBeChecked({ checked: enabled })
-      await expect(photos).toBeChecked()
+      await expect(checkbox).toHaveCount(0)
+      await expect(photos).toBeChecked({ checked: enabled })
     }
   } finally {
     await f.close()

@@ -36,6 +36,7 @@ export function externalItemFailure(error: unknown, origin: string | null) {
     PHOTO_LIMIT: 409,
     STORE_UNAVAILABLE: 409,
     STORE_CHANGED: 409,
+    SWEDEN_REQUIRED: 409,
     PHOTO_NOT_FOUND: 409,
     PHOTO_IN_USE: 409,
     PHOTO_STILL_STORED: 409,

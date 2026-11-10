@@ -742,7 +742,8 @@
     "communication.push_sent": "Pushnotifikation · Overdraget til Apple/Google",
     "communication.push_failed": "Pushnotifikation · Mislykket",
     "communication.push_unconfirmed": "Pushnotifikation · Ikke bekræftet",
-    "communication.push_pending": "Pushnotifikation · Afventer"
+    "communication.push_pending": "Pushnotifikation · Afventer",
+    "central_app.recipient_changed": "Modtager af Komisios appforespørgsler ændret"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -5393,5 +5394,21 @@
     "availableHint": "Beløbet, der er tilgængeligt efter reservationer til udbetaling.",
     "credited": "Fra salg, i alt",
     "paid": "Udbetalt, i alt"
+  },
+  "centralApp": {
+    "title": "Forespørgsler til Komisio",
+    "intro": "Vælg virksomheden, som modtager nye vareforespørgsler fra appen. Piloten gælder personer bosat i Sverige og beløb i SEK.",
+    "recipient": "Modtagerbutik",
+    "paused": "Sat på pause – ingen nye forespørgsler",
+    "hint": "Du skal være ejer eller administrator i modtagerbutikken. Butikkernes billedvurdering påvirkes ikke.",
+    "otherRecipient": "Nuværende modtager",
+    "save": "Gem modtager",
+    "busy": "Gemmer…",
+    "saved": "Modtageren er gemt.",
+    "failed": "Modtageren kunne ikke gemmes.",
+    "changed": "Indstillingen er ændret. Genindlæs siden.",
+    "sekRequired": "Modtagerbutikken skal bruge SEK.",
+    "uncertain": "Ændringen kunne ikke bekræftes. Genindlæs siden for at kontrollere, hvad der er gemt.",
+    "reload": "Genindlæs siden"
   }
 }

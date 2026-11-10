@@ -21,10 +21,10 @@ ordinary seller registration and H-handovers. No automatic
 bank transfer, cross-border intake, currency conversion or production activation
 is authorized by the implementation work.
 
-Before account details and H-handover creation, confirm whether the verified
-phone identity may own a separate central seller record with contact-only email,
-or whether verified email is also required. Never infer ownership from an
-unverified contact address or automatically merge existing seller identities.
+Resolved by the owner on 2026-11-10: the verified phone identity owns a separate
+central seller record. Email is contact-only; it never grants access or merges
+existing sellers. Account, bank details, frozen agreement consent and an invited
+H-handover use that explicit identity. Ordinary store email access is unchanged.
 
 External app intake (2026-11-09): the owner confirms fixed seller compensation
 regardless of sale price, 45 days from physical receipt, and credit to the seller
@@ -35,10 +35,11 @@ no store is enabled automatically. The directory alone grants no seller access o
 submission authority. On 2026-11-10 the owner approved phone-verified request/image
 records for one chosen store, without membership, seller registration or balance,
 and a server-enforced ten-active-request limit. Prepare Supabase Phone Auth;
-provider choice and hosted SMS activation remain deferred. Offers, receipt links
-and financial execution remain future work. Offer/request expiry, identity
-recovery when a phone/email belongs to another account, and acquisition accounting
-remain open. Existing email seller access must remain unchanged.
+provider choice and hosted SMS activation remain deferred. Fixed offers and
+receipt links follow the decisions above; financial execution remains future
+work. Request expiry, identity recovery after losing access to a phone number,
+and acquisition accounting remain open. Existing email seller access must remain
+unchanged.
 
 Sales summary (#655, scope clarified 2026-10-26): the owner selected a separate
 sales-information document and then explicitly requested a simple summary of

@@ -39,6 +39,8 @@ export function externalItemFailure(error: unknown, origin: string | null) {
     OFFER_ACTIVE: 409,
     OFFER_ACCEPTED: 409,
     AGREEMENT_CHANGED: 409,
+    SELLER_CLOSED: 409,
+    ACCOUNT_REQUIRED: 409,
     ACTIVE_REQUEST_LIMIT: 409,
     PHOTO_LIMIT: 409,
     STORE_UNAVAILABLE: 409,

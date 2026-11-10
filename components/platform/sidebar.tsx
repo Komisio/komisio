@@ -120,6 +120,7 @@ export function Sidebar({
   name,
   intakeEnabled,
   host,
+  centralOffers,
   pendingRegistrations,
   collapsed: initialCollapsed,
   ready,
@@ -136,6 +137,7 @@ export function Sidebar({
   name: string
   intakeEnabled: boolean
   host: boolean
+  centralOffers?: boolean
   pendingRegistrations?: number
   collapsed: boolean
   ready: boolean
@@ -158,6 +160,7 @@ export function Sidebar({
   const storeAnchor = useRef<{ top: number; left: number } | null>(null)
   const storePanelId = useId()
   const groups = buildNavigation(d, {
+    centralOffers,
     pendingRegistrations,
     intakeEnabled,
     host,

@@ -12,10 +12,19 @@ Ordinary stores retain their own photo pre-review and consignment flows. Central
 compensation is fixed regardless of resale price; credit occurs on sale or 45 days
 after physical receipt, with acquisition of unsold goods on that date. This
 supersedes the store-discovery direction below. The acquisition accounting,
-returns after credit, loss/damage handling, offer expiry, agreement text and legal
-identity details still need resolution before financial execution. No automatic
+returns after credit, loss/damage handling and legal identity details still need
+resolution before financial execution. The owner sets offer expiry to 48 hours
+and selects the recipient store's ordinary seller agreement; later versions
+require consent for subsequent uploads without changing earlier items. The owner
+approves immutable offers and separate seller responses, with later links to
+ordinary seller registration and H-handovers. No automatic
 bank transfer, cross-border intake, currency conversion or production activation
 is authorized by the implementation work.
+
+Before account details and H-handover creation, confirm whether the verified
+phone identity may own a separate central seller record with contact-only email,
+or whether verified email is also required. Never infer ownership from an
+unverified contact address or automatically merge existing seller identities.
 
 External app intake (2026-11-09): the owner confirms fixed seller compensation
 regardless of sale price, 45 days from physical receipt, and credit to the seller

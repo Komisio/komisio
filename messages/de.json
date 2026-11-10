@@ -743,7 +743,9 @@
     "communication.push_failed": "Push-Mitteilung · Fehlgeschlagen",
     "communication.push_unconfirmed": "Push-Mitteilung · Unbestätigt",
     "communication.push_pending": "Push-Mitteilung · Ausstehend",
-    "central_app.recipient_changed": "Empfänger für Komisio-App-Anfragen geändert"
+    "central_app.recipient_changed": "Empfänger für Komisio-App-Anfragen geändert",
+    "external_offer.issued": "Angebot gesendet",
+    "external_offer.responded": "Verkäufer hat auf Angebot geantwortet"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -5416,5 +5418,43 @@
     "sekRequired": "Das empfangende Geschäft muss SEK verwenden.",
     "uncertain": "Die Änderung konnte nicht bestätigt werden. Laden Sie die Seite neu, um den gespeicherten Stand zu prüfen.",
     "reload": "Seite neu laden"
+  },
+  "externalOffers": {
+    "title": "Anfragen",
+    "intro": "Über die App an Komisio gesendete Artikel.",
+    "empty": "Noch keine Anfragen.",
+    "sellerAmount": "Garantierter Verkäuferbetrag (SEK)",
+    "salePrice": "Geplanter Verkaufspreis (SEK)",
+    "fixedHint": "Der Verkäuferbetrag ist fest, unabhängig vom Verkaufspreis.",
+    "duration": "Das Angebot gilt 48 Stunden.",
+    "send": "Angebot senden",
+    "decline": "Ablehnen",
+    "note": "Begründung für den Verkäufer (optional)",
+    "noAgreement": "Veröffentlichen Sie vor dem Angebot eine Verkäufervereinbarung.",
+    "agreement": "Verkäufervereinbarung",
+    "waiting": "Wartet auf Prüfung",
+    "offered": "Wartet auf Antwort",
+    "accepted": "Verkäufer hat angenommen",
+    "declined": "Abgeschlossen",
+    "expired": "Angebot abgelaufen",
+    "superseded": "Durch neues Angebot ersetzt",
+    "deadline": "Antwort bis",
+    "failure": "Das Ergebnis konnte nicht bestätigt werden. Mit denselben Angaben erneut versuchen.",
+    "changed": "Die Anfrage hat sich geändert. Laden Sie vor dem Fortfahren den aktuellen Status.",
+    "reload": "Aktuellen Status laden",
+    "invalidAmount": "Betrag über 0 mit höchstens zwei Nachkommastellen eingeben.",
+    "saved": "Gespeichert",
+    "photos": "Fotos",
+    "desiredPrice": "Preiswunsch des Verkäufers",
+    "retry": "Erneut versuchen",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "condition": "Zustand",
+    "conditions": {
+      "like_new": "Wie neu",
+      "very_good": "Sehr gut",
+      "good": "Gut",
+      "worn": "Abgenutzt"
+    }
   }
 }

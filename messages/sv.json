@@ -743,7 +743,9 @@
     "communication.push_failed": "Pushnotis · Misslyckad",
     "communication.push_unconfirmed": "Pushnotis · Ej bekräftad",
     "communication.push_pending": "Pushnotis · Väntar",
-    "central_app.recipient_changed": "Mottagare för Komisios appförfrågningar ändrad"
+    "central_app.recipient_changed": "Mottagare för Komisios appförfrågningar ändrad",
+    "external_offer.issued": "Erbjudande skickat",
+    "external_offer.responded": "Säljaren svarade på erbjudandet"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -5410,5 +5412,43 @@
     "sekRequired": "Mottagarbutiken måste använda SEK.",
     "uncertain": "Det gick inte att bekräfta ändringen. Läs in sidan för att se vad som sparats.",
     "reload": "Läs in sidan igen"
+  },
+  "externalOffers": {
+    "title": "Förfrågningar",
+    "intro": "Varor som har skickats till Komisio via appen.",
+    "empty": "Inga förfrågningar ännu.",
+    "sellerAmount": "Garanterat till säljaren (SEK)",
+    "salePrice": "Planerat försäljningspris (SEK)",
+    "fixedHint": "Beloppet till säljaren är fast, oavsett vad varan säljs för.",
+    "duration": "Erbjudandet gäller i 48 timmar.",
+    "send": "Skicka erbjudande",
+    "decline": "Avvisa",
+    "note": "Motivering till säljaren (valfritt)",
+    "noAgreement": "Publicera ett säljaravtal innan du skickar ett erbjudande.",
+    "agreement": "Säljaravtal",
+    "waiting": "Väntar på bedömning",
+    "offered": "Väntar på säljarens svar",
+    "accepted": "Säljaren har tackat ja",
+    "declined": "Avslutad",
+    "expired": "Erbjudandet har gått ut",
+    "superseded": "Ersatt av ett nytt erbjudande",
+    "deadline": "Svara senast",
+    "failure": "Svaret kunde inte bekräftas. Försök igen med samma uppgifter.",
+    "changed": "Förfrågan har ändrats. Hämta aktuell status innan du fortsätter.",
+    "reload": "Hämta aktuell status",
+    "invalidAmount": "Ange ett belopp större än 0, med högst två decimaler.",
+    "saved": "Sparat",
+    "photos": "Bilder",
+    "desiredPrice": "Säljarens önskade pris",
+    "retry": "Försök igen",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "condition": "Skick",
+    "conditions": {
+      "like_new": "Nyskick",
+      "very_good": "Mycket gott",
+      "good": "Gott",
+      "worn": "Slitet"
+    }
   }
 }

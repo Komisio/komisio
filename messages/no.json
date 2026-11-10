@@ -743,7 +743,9 @@
     "communication.push_failed": "Pushvarsel · Mislyktes",
     "communication.push_unconfirmed": "Pushvarsel · Ikke bekreftet",
     "communication.push_pending": "Pushvarsel · Venter",
-    "central_app.recipient_changed": "Mottaker for Komisios appforespørsler endret"
+    "central_app.recipient_changed": "Mottaker for Komisios appforespørsler endret",
+    "external_offer.issued": "Tilbud sendt",
+    "external_offer.responded": "Selgeren svarte på tilbudet"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tillatelse til å gjøre dette.",
@@ -5410,5 +5412,43 @@
     "sekRequired": "Mottakerbutikken må bruke SEK.",
     "uncertain": "Endringen kunne ikke bekreftes. Last inn siden for å kontrollere hva som er lagret.",
     "reload": "Last inn siden på nytt"
+  },
+  "externalOffers": {
+    "title": "Forespørsler",
+    "intro": "Varer sendt til Komisio via appen.",
+    "empty": "Ingen forespørsler ennå.",
+    "sellerAmount": "Garantert til selgeren (SEK)",
+    "salePrice": "Planlagt salgspris (SEK)",
+    "fixedHint": "Beløpet til selgeren er fast, uansett salgspris.",
+    "duration": "Tilbudet gjelder i 48 timer.",
+    "send": "Send tilbud",
+    "decline": "Avvis",
+    "note": "Begrunnelse til selgeren (valgfritt)",
+    "noAgreement": "Publiser en selgeravtale før du sender et tilbud.",
+    "agreement": "Selgeravtale",
+    "waiting": "Venter på vurdering",
+    "offered": "Venter på selgerens svar",
+    "accepted": "Selgeren har takket ja",
+    "declined": "Avsluttet",
+    "expired": "Tilbudet har utløpt",
+    "superseded": "Erstattet av et nytt tilbud",
+    "deadline": "Svar innen",
+    "failure": "Resultatet kunne ikke bekreftes. Prøv igjen med samme opplysninger.",
+    "changed": "Forespørselen er endret. Hent gjeldende status før du fortsetter.",
+    "reload": "Hent gjeldende status",
+    "invalidAmount": "Angi et beløp over 0 med høyst to desimaler.",
+    "saved": "Lagret",
+    "photos": "Bilder",
+    "desiredPrice": "Selgerens ønskede pris",
+    "retry": "Prøv igjen",
+    "previous": "Forrige",
+    "next": "Neste",
+    "condition": "Tilstand",
+    "conditions": {
+      "like_new": "Som ny",
+      "very_good": "Svært god",
+      "good": "God",
+      "worn": "Slitt"
+    }
   }
 }

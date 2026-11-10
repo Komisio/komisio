@@ -1,3 +1,4 @@
+import { centralOfferQueueVisible } from '@/lib/platform/central-offer-queue'
 import { cookies } from 'next/headers'
 import { HelpSupportProvider } from '@/components/help/contact-support'
 import { HelpContentProvider } from '@/components/help/content-provider'
@@ -56,15 +57,17 @@ export default async function DashboardLayout({
     )
   }
   const d = dictionary(ctx.locale)
-  const [plan, host, sellerAccess, pendingRegistrations] = await Promise.all([
-    readPlanStatus(ctx.client, ctx.active.id),
-    isPlatformHost(ctx.client),
-    hasSellerAccount(ctx),
-    process.env.KOMISIO_INTAKE_ENABLED === 'true' &&
-    ctx.active.role !== 'readonly'
-      ? readPendingRegistrationCount(ctx.client, ctx.active.id)
-      : undefined,
-  ])
+  const [plan, host, sellerAccess, centralOffers, pendingRegistrations] =
+    await Promise.all([
+      readPlanStatus(ctx.client, ctx.active.id),
+      isPlatformHost(ctx.client),
+      hasSellerAccount(ctx),
+      centralOfferQueueVisible(ctx.client, ctx.active.id),
+      process.env.KOMISIO_INTAKE_ENABLED === 'true' &&
+      ctx.active.role !== 'readonly'
+        ? readPendingRegistrationCount(ctx.client, ctx.active.id)
+        : undefined,
+    ])
   return (
     <LoadingMessageProvider message={d.loading}>
       <NavigationWarningProvider>
@@ -91,6 +94,7 @@ export default async function DashboardLayout({
             }}
           >
             <Shell
+              centralOffers={centralOffers}
               pendingRegistrations={pendingRegistrations}
               sellerAccess={sellerAccess}
               intakeEnabled={process.env.KOMISIO_INTAKE_ENABLED === 'true'}

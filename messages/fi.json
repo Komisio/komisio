@@ -743,7 +743,9 @@
     "communication.push_failed": "Push-ilmoitus · Epäonnistui",
     "communication.push_unconfirmed": "Push-ilmoitus · Vahvistamaton",
     "communication.push_pending": "Push-ilmoitus · Odottaa",
-    "central_app.recipient_changed": "Komision sovelluspyyntöjen vastaanottaja muutettu"
+    "central_app.recipient_changed": "Komision sovelluspyyntöjen vastaanottaja muutettu",
+    "external_offer.issued": "Tarjous lähetetty",
+    "external_offer.responded": "Myyjä vastasi tarjoukseen"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -5416,5 +5418,43 @@
     "sekRequired": "Vastaanottavan kaupan valuutan on oltava SEK.",
     "uncertain": "Muutosta ei voitu vahvistaa. Tarkista tallennettu tila lataamalla sivu uudelleen.",
     "reload": "Lataa sivu uudelleen"
+  },
+  "externalOffers": {
+    "title": "Pyynnöt",
+    "intro": "Komisiolle sovelluksessa lähetetyt tuotteet.",
+    "empty": "Ei vielä pyyntöjä.",
+    "sellerAmount": "Myyjälle taattu summa (SEK)",
+    "salePrice": "Suunniteltu myyntihinta (SEK)",
+    "fixedHint": "Myyjän summa on kiinteä myyntihinnasta riippumatta.",
+    "duration": "Tarjous on voimassa 48 tuntia.",
+    "send": "Lähetä tarjous",
+    "decline": "Hylkää",
+    "note": "Perustelu myyjälle (valinnainen)",
+    "noAgreement": "Julkaise myyjäsopimus ennen tarjouksen lähettämistä.",
+    "agreement": "Myyjäsopimus",
+    "waiting": "Odottaa arviointia",
+    "offered": "Odottaa myyjän vastausta",
+    "accepted": "Myyjä hyväksyi",
+    "declined": "Suljettu",
+    "expired": "Tarjous vanhentui",
+    "superseded": "Korvattu uudella tarjouksella",
+    "deadline": "Vastaa viimeistään",
+    "failure": "Tulosta ei voitu vahvistaa. Yritä uudelleen samoilla tiedoilla.",
+    "changed": "Pyyntö on muuttunut. Lataa nykyinen tila ennen jatkamista.",
+    "reload": "Lataa nykyinen tila",
+    "invalidAmount": "Anna yli 0 oleva summa, jossa on enintään kaksi desimaalia.",
+    "saved": "Tallennettu",
+    "photos": "Kuvat",
+    "desiredPrice": "Myyjän toivoma hinta",
+    "retry": "Yritä uudelleen",
+    "previous": "Edellinen",
+    "next": "Seuraava",
+    "condition": "Kunto",
+    "conditions": {
+      "like_new": "Uudenveroinen",
+      "very_good": "Erittäin hyvä",
+      "good": "Hyvä",
+      "worn": "Kulunut"
+    }
   }
 }

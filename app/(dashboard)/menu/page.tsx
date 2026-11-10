@@ -1,3 +1,4 @@
+import { centralOfferQueueVisible } from '@/lib/platform/central-offer-queue'
 import { platformPageMetadata } from '@/lib/platform/page-metadata'
 import Link from '@/components/platform/working-link'
 import { ChevronRight } from 'lucide-react'
@@ -15,6 +16,7 @@ export default async function MenuPage() {
   const ctx = await requirePlatform()
   const d = dictionary(ctx.locale)
   const groups = buildNavigation(d, {
+    centralOffers: await centralOfferQueueVisible(ctx.client, ctx.active!.id),
     pendingRegistrations:
       process.env.KOMISIO_INTAKE_ENABLED === 'true' &&
       ctx.active!.role !== 'readonly'

@@ -26,6 +26,14 @@ central seller record. Email is contact-only; it never grants access or merges
 existing sellers. Account, bank details, frozen agreement consent and an invited
 H-handover use that explicit identity. Ordinary store email access is unchanged.
 
+Central guarantee implementation still needs the owner's decision on retaining
+seller credit after a customer return, without a second credit on resale. A
+separate immutable guarantee record and append-only fulfillment events are
+proposed, not yet approved. Sales below the fixed amount and late POS imports
+must reconcile with acquisition and accounting without inventing negative
+commission or duplicate seller credit. Existing percentage-based sales and
+returns remain unchanged while these questions are open.
+
 External app intake (2026-11-09): the owner confirms fixed seller compensation
 regardless of sale price, 45 days from physical receipt, and credit to the seller
 balance rather than an automatic bank transfer. The store and seller handle

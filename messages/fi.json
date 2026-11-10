@@ -5455,6 +5455,14 @@
       "very_good": "Erittäin hyvä",
       "good": "Hyvä",
       "worn": "Kulunut"
+    },
+    "openHandover": "Avaa toimitus",
+    "groupedItems": "Tuotteita samassa toimituksessa: {count}",
+    "receivedAt": "Vastaanotettu",
+    "handoverStatuses": {
+      "open": "Odottaa toimitusta",
+      "received": "Vastaanotettu",
+      "cancelled": "Toimitus peruttu"
     }
   }
 }

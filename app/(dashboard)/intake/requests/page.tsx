@@ -93,11 +93,35 @@ export default async function ExternalRequests({
           <strong>
             {row.declined
               ? d.declined
-              : row.offer
-                ? d[row.offer.status]
-                : d.waiting}
+              : row.offer?.handover
+                ? d.handoverStatuses[row.offer.handover.status]
+                : row.offer
+                  ? d[row.offer.status]
+                  : d.waiting}
           </strong>
           {row.decline_note ? <p>{row.decline_note}</p> : null}
+          {row.offer?.handover ? (
+            <div className="stack">
+              <Link href={`/intake/handovers?focus=${row.offer.handover.id}`}>
+                {d.openHandover} · {row.offer.handover.reference}
+              </Link>
+              <span>
+                {d.groupedItems.replace(
+                  '{count}',
+                  String(row.offer.handover.itemCount),
+                )}
+              </span>
+              {row.offer.handover.receivedAt ? (
+                <span>
+                  {d.receivedAt}:{' '}
+                  <EventTime
+                    value={row.offer.handover.receivedAt}
+                    locale={ctx.locale}
+                  />
+                </span>
+              ) : null}
+            </div>
+          ) : null}
           {row.offer ? (
             <>
               <p>
@@ -106,10 +130,13 @@ export default async function ExternalRequests({
                   {externalOfferAmount(row.offer.sellerAmountOre)}
                 </strong>
               </p>
-              <p>
-                {d.deadline}:{' '}
-                <EventTime value={row.offer.expiresAt} locale={ctx.locale} />
-              </p>
+              {row.offer.status === 'offered' ||
+              row.offer.status === 'expired' ? (
+                <p>
+                  {d.deadline}:{' '}
+                  <EventTime value={row.offer.expiresAt} locale={ctx.locale} />
+                </p>
+              ) : null}
             </>
           ) : null}
           {agreements.data

@@ -5455,6 +5455,14 @@
       "very_good": "Muy bueno",
       "good": "Bueno",
       "worn": "Desgastado"
+    },
+    "openHandover": "Abrir entrega",
+    "groupedItems": "Artículos en esta entrega: {count}",
+    "receivedAt": "Recibido",
+    "handoverStatuses": {
+      "open": "Pendiente de entrega",
+      "received": "Recibido",
+      "cancelled": "Entrega cancelada"
     }
   }
 }

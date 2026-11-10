@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-10: Central offer reads include the linked handover's actual status, receipt time and grouped count for the same authorized owner or store. Accepted requests open their existing handover directly; receipt never implies saleable inventory, a sale or balance credit.
+
 - 2026-11-10: Owner selects host-managed central app intake into an ordinary tenant branded Komisio. Store self-service opt-in is retired; photo pre-review stays separate. New submissions require a Sweden residence declaration and SEK. Existing request recipients remain immutable.
 - 2026-11-10: Central offers promise fixed seller compensation regardless of resale price. Credit on sale or 45 days after physical receipt; acquire unsold goods for that amount on day 45 without double credit. Inority AB is named in the agreement. Financial execution awaits reviewed accounting rules.
 - 2026-11-10: A person host with owner/admin access to a SEK tenant may designate the central recipient using revision-checked engine writes. No default tenant by name or email, no implicit membership, and no host-wide access to request evidence. Preserve old exact retries and deny new legacy submissions.

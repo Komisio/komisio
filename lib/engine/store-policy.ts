@@ -20,6 +20,8 @@ const days = z.number().int().nonnegative()
 export const storePolicyBody = z
   .strictObject({
     photoSubmissionsEnabled: z.boolean().optional(),
+    // Future external app intake requires explicit opt-in; absence means off.
+    externalAppSubmissionsEnabled: z.boolean().optional(),
     submissionPricing: z.enum(['store', 'seller', 'approval']).optional(),
     commissionBasis: z.enum(['inclusive', 'exclusive']),
     commissionRatePercent: percent,

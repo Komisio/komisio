@@ -4,6 +4,17 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+External app intake (2026-11-09): the owner confirms fixed seller compensation
+regardless of sale price, 45 days from physical receipt, and credit to the seller
+balance rather than an automatic bank transfer. The store and seller handle
+condition disputes and liability under the store's agreement. Only a separate,
+default-off store preference and a bounded public opt-in directory are implemented;
+no store is enabled automatically. The directory does not grant seller access or
+permit submissions. A phone-owned request/image model without tenant membership
+and the SMS provider still need confirmation. Offers, receipt links and financial
+execution remain future work. Offer/request expiry and acquisition accounting
+remain open.
+
 Sales summary (#655, scope clarified 2026-10-26): the owner selected a separate
 sales-information document and then explicitly requested a simple summary of
 one sale. Implement a downloadable PDF with recorded prices and currency,

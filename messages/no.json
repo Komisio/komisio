@@ -1309,6 +1309,8 @@
       "submissionSeller": "Selgeren angir prisen",
       "submissionApproval": "Selgeren foreslår, butikken godkjenner",
       "photosHelp": "Selgere kan sende bilder til vurdering før innlevering.",
+      "externalAppSubmissions": "Motta vareforslag fra nye selgere via appen",
+      "externalAppSubmissionsHelp": "For personer som ennå ikke er selgere hos butikken. Valget lagres nå og trer i kraft når den nye appflyten lanseres.",
       "agreementHelp": "Velg når Komisio skal kontrollere at selgeren har godkjent gjeldende avtale.",
       "bagHelp": "Før personalet tar imot en pose eller innlevering.",
       "reviewHelp": "Før varens pris og vilkår ferdigstilles i mottaket.",

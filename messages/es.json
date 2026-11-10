@@ -1309,6 +1309,8 @@
       "submissionSeller": "El vendedor indica el precio",
       "submissionApproval": "El vendedor propone y la tienda aprueba",
       "photosHelp": "Los vendedores pueden enviar fotos para una valoración antes de la entrega.",
+      "externalAppSubmissions": "Recibir propuestas de artículos de nuevos vendedores desde la app",
+      "externalAppSubmissionsHelp": "Para personas que aún no son vendedores de la tienda. La opción se guarda ahora y se aplicará cuando esté disponible el nuevo proceso en la app.",
       "agreementHelp": "Elige cuándo Komisio comprueba que el vendedor ha aceptado el contrato vigente.",
       "bagHelp": "Antes de que el personal reciba una bolsa o entrega.",
       "reviewHelp": "Antes de finalizar el precio y las condiciones del artículo en la recepción.",

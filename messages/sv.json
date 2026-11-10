@@ -1309,6 +1309,8 @@
       "submissionSeller": "Säljaren anger priset",
       "submissionApproval": "Säljaren föreslår, butiken godkänner",
       "photosHelp": "Säljaren kan skicka bilder för bedömning före inlämningen.",
+      "externalAppSubmissions": "Ta emot varuförslag från nya säljare via appen",
+      "externalAppSubmissionsHelp": "För personer som ännu inte är säljare hos butiken. Valet sparas nu och börjar gälla när det nya appflödet lanseras.",
       "agreementHelp": "Välj när Komisio ska kontrollera att säljaren har godkänt det aktuella avtalet.",
       "bagHelp": "Innan personalen tar emot en påse eller inlämning.",
       "reviewHelp": "Innan varans pris och villkor färdigställs i mottagningsflödet.",

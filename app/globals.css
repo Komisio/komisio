@@ -6183,7 +6183,8 @@ button.text-link:hover:not(:disabled) {
   margin-bottom: 12px;
 }
 .policy-section .intake-confirm,
-.policy-publish-bar .intake-confirm {
+.policy-publish-bar .intake-confirm,
+.store-app-visibility .intake-confirm {
   display: flex;
   align-items: flex-start;
   min-height: 44px;
@@ -6193,7 +6194,8 @@ button.text-link:hover:not(:disabled) {
   margin: 0;
 }
 .policy-section input[type='checkbox'],
-.policy-publish-bar input[type='checkbox'] {
+.policy-publish-bar input[type='checkbox'],
+.store-app-visibility input[type='checkbox'] {
   width: 18px;
   height: 18px;
   min-height: 18px;

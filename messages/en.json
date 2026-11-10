@@ -1309,6 +1309,8 @@
       "submissionSeller": "The seller sets the price",
       "submissionApproval": "The seller proposes, the store approves",
       "photosHelp": "Sellers can send photos for assessment before drop-off.",
+      "externalAppSubmissions": "Receive item proposals from new sellers through the app",
+      "externalAppSubmissionsHelp": "For people who are not yet sellers at your store. Your choice is saved now and takes effect when the new app flow launches.",
       "agreementHelp": "Choose when Komisio checks that the seller has accepted the current agreement.",
       "bagHelp": "Before staff receive a bag or drop-off.",
       "reviewHelp": "Before the item’s price and terms are finalized in reception.",

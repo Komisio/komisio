@@ -745,7 +745,8 @@
     "communication.push_pending": "Push notification · Pending",
     "central_app.recipient_changed": "Komisio app request recipient changed",
     "external_offer.issued": "Offer issued",
-    "external_offer.responded": "Seller responded to offer"
+    "external_offer.responded": "Seller responded to offer",
+    "external_item.guarantee_frozen": "Guaranteed amount and deadline saved"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",

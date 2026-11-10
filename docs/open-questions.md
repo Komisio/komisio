@@ -12,7 +12,7 @@ Ordinary stores retain their own photo pre-review and consignment flows. Central
 compensation is fixed regardless of resale price; credit occurs on sale or 45 days
 after physical receipt, with acquisition of unsold goods on that date. This
 supersedes the store-discovery direction below. The acquisition accounting,
-returns after credit, loss/damage handling and legal identity details still need
+loss/damage handling and legal identity details still need
 resolution before financial execution. The owner sets offer expiry to 48 hours
 and selects the recipient store's ordinary seller agreement; later versions
 require consent for subsequent uploads without changing earlier items. The owner
@@ -26,13 +26,15 @@ central seller record. Email is contact-only; it never grants access or merges
 existing sellers. Account, bank details, frozen agreement consent and an invited
 H-handover use that explicit identity. Ordinary store email access is unchanged.
 
-Central guarantee implementation still needs the owner's decision on retaining
-seller credit after a customer return, without a second credit on resale. A
-separate immutable guarantee record and append-only fulfillment events are
-proposed, not yet approved. Sales below the fixed amount and late POS imports
-must reconcile with acquisition and accounting without inventing negative
-commission or duplicate seller credit. Existing percentage-based sales and
-returns remain unchanged while these questions are open.
+Resolved by the owner on 2026-11-10: a customer return does not reverse the
+central seller's fixed credit, and resale creates no second credit. The owner
+approves immutable per-item guarantee records and append-only fulfillment
+events. Physical receipt freezes the accepted amount and the 45-day clock;
+later inventory registration links to that evidence without restarting it.
+Sales below the fixed amount and late POS imports still need defined acquisition
+and accounting reconciliation without negative commission or duplicate credit.
+Existing percentage-based sales and returns remain unchanged. Guarantee records
+alone do not create inventory, ledger credit, purchases or accounting exports.
 
 External app intake (2026-11-09): the owner confirms fixed seller compensation
 regardless of sale price, 45 days from physical receipt, and credit to the seller

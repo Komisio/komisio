@@ -745,7 +745,8 @@
     "communication.push_pending": "Push-Mitteilung · Ausstehend",
     "central_app.recipient_changed": "Empfänger für Komisio-App-Anfragen geändert",
     "external_offer.issued": "Angebot gesendet",
-    "external_offer.responded": "Verkäufer hat auf Angebot geantwortet"
+    "external_offer.responded": "Verkäufer hat auf Angebot geantwortet",
+    "external_item.guarantee_frozen": "Garantiebetrag und Frist gespeichert"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",

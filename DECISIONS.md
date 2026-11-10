@@ -1,5 +1,8 @@
 # Decision Log
 
+- 2026-11-10: The owner approves immutable per-item guarantees with append-only registration, sale, acquisition and credit links. Freeze the accepted SEK amount and a 45-day deadline at physical receipt; later inventory registration must not restart the clock. One guarantee permits one credit.
+- 2026-11-10: A central seller keeps the fixed credited amount after a customer return. Komisio bears the return and a resale gives no second seller credit. Ordinary percentage-based returns are unchanged; acquisition and accounting rules remain separate.
+
 - 2026-11-10: Central offer reads include the linked handover's actual status, receipt time and grouped count for the same authorized owner or store. Accepted requests open their existing handover directly; receipt never implies saleable inventory, a sale or balance credit.
 
 - 2026-11-10: Owner selects host-managed central app intake into an ordinary tenant branded Komisio. Store self-service opt-in is retired; photo pre-review stays separate. New submissions require a Sweden residence declaration and SEK. Existing request recipients remain immutable.

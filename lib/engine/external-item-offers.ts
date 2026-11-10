@@ -4,6 +4,20 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 const uuid = z.uuid().transform((value) => value.toLowerCase())
 const ore = z.string().regex(/^[1-9]\d{0,10}$/)
 const time = z.iso.datetime({ offset: true })
+const offerGuarantee = z
+  .object({
+    id: uuid,
+    amountOre: ore,
+    currency: z.literal('SEK'),
+    receivedAt: time,
+    dueAt: time,
+    creditedAt: time.nullable(),
+  })
+  .refine(
+    (g) =>
+      Date.parse(g.dueAt) - Date.parse(g.receivedAt) ===
+      45 * 24 * 60 * 60 * 1000,
+  )
 const offerHandover = z
   .object({
     id: uuid,
@@ -32,6 +46,7 @@ export const externalOfferSummary = z.object({
     .nullable(),
   // Older deployed reads omit this additive field during rollout.
   handover: offerHandover.nullish(),
+  guarantee: offerGuarantee.nullish(),
 })
 export const externalOfferDetail = externalOfferSummary
   .extend({

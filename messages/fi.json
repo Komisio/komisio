@@ -745,7 +745,8 @@
     "communication.push_pending": "Push-ilmoitus · Odottaa",
     "central_app.recipient_changed": "Komision sovelluspyyntöjen vastaanottaja muutettu",
     "external_offer.issued": "Tarjous lähetetty",
-    "external_offer.responded": "Myyjä vastasi tarjoukseen"
+    "external_offer.responded": "Myyjä vastasi tarjoukseen",
+    "external_item.guarantee_frozen": "Takuusumma ja määräaika tallennettu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",

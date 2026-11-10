@@ -745,7 +745,8 @@
     "communication.push_pending": "Notifica push · In attesa",
     "central_app.recipient_changed": "Destinatario delle richieste dell’app Komisio modificato",
     "external_offer.issued": "Offerta inviata",
-    "external_offer.responded": "Il venditore ha risposto all’offerta"
+    "external_offer.responded": "Il venditore ha risposto all’offerta",
+    "external_item.guarantee_frozen": "Importo garantito e scadenza salvati"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",

@@ -689,4 +689,26 @@ it('returns authorized handover progress through the existing bounded offer read
   expect((await offerPost(request({ action: 'read', offerId }))).status).toBe(
     503,
   )
+  const guarantee = {
+    id: requestId,
+    amountOre: '40000',
+    currency: 'SEK',
+    receivedAt: '2026-11-10T12:00:00Z',
+    dueAt: '2026-12-25T12:00:00Z',
+    creditedAt: null,
+  }
+  mocks.rpc.mockResolvedValue({ data: { ...data, guarantee }, error: null })
+  const guaranteed = await offerPost(request({ action: 'read', offerId }))
+  expect(guaranteed.status).toBe(200)
+  expect((await guaranteed.json()).guarantee).toEqual(guarantee)
+  mocks.rpc.mockResolvedValue({
+    data: {
+      ...data,
+      guarantee: { ...guarantee, dueAt: '2026-11-11T12:00:00Z' },
+    },
+    error: null,
+  })
+  expect((await offerPost(request({ action: 'read', offerId }))).status).toBe(
+    503,
+  )
 })

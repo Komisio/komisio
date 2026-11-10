@@ -746,7 +746,8 @@
     "central_app.recipient_changed": "Empfänger für Komisio-App-Anfragen geändert",
     "external_offer.issued": "Angebot gesendet",
     "external_offer.responded": "Verkäufer hat auf Angebot geantwortet",
-    "external_item.guarantee_frozen": "Garantiebetrag und Frist gespeichert"
+    "external_item.guarantee_frozen": "Garantiebetrag und Frist gespeichert",
+    "external_item.registered": "Registriert"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -3241,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "Die Verbindung wird aktualisiert. Bitte später erneut versuchen.",
       "PAYPAL_RECONNECT_REQUIRED": "Zum Fortfahren erneut verbinden.",
       "PAYPAL_CONNECTION_CHANGED": "Zum Fortfahren erneut verbinden.",
-      "PAYPAL_APP_UNAVAILABLE": "Die PayPal POS-Verbindung wurde von Komisio noch nicht aktiviert."
+      "PAYPAL_APP_UNAVAILABLE": "Die PayPal POS-Verbindung wurde von Komisio noch nicht aktiviert.",
+      "GUARANTEED_SALE_REQUIRED": "Der Verkauf von Artikeln mit garantiertem Verkäuferbetrag ist noch nicht verfügbar."
     },
     "approvalHint": "Zugeordnete Belege werden automatisch erfasst. Nur Ausnahmen müssen untersucht werden; ein zweiter Genehmiger ist nicht erforderlich.",
     "held": "Der Beleg konnte nicht erfasst werden. Untersuchen Sie, bevor Sie es erneut versuchen.",
@@ -5464,6 +5466,14 @@
       "open": "Wartet auf Abgabe",
       "received": "Eingegangen",
       "cancelled": "Abgabe storniert"
-    }
+    },
+    "register": "Artikel registrieren",
+    "registered": "Registriert",
+    "openItem": "Artikel öffnen",
+    "itemDescription": "Beschreibung",
+    "registrationPrice": "Verkaufspreis (SEK)",
+    "registrationPriceInvalid": "Geben Sie einen Preis zwischen 0,01 und 999.999,99 SEK ein.",
+    "guaranteeDue": "Garantierte Gutschrift bis",
+    "guaranteedPurchase": "Geschäft kauft unverkauften Artikel"
   }
 }

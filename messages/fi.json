@@ -746,7 +746,8 @@
     "central_app.recipient_changed": "Komision sovelluspyyntöjen vastaanottaja muutettu",
     "external_offer.issued": "Tarjous lähetetty",
     "external_offer.responded": "Myyjä vastasi tarjoukseen",
-    "external_item.guarantee_frozen": "Takuusumma ja määräaika tallennettu"
+    "external_item.guarantee_frozen": "Takuusumma ja määräaika tallennettu",
+    "external_item.registered": "Rekisteröity"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -3241,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "Yhteyttä päivitetään. Yritä pian uudelleen.",
       "PAYPAL_RECONNECT_REQUIRED": "Jatka yhdistämällä uudelleen.",
       "PAYPAL_CONNECTION_CHANGED": "Jatka yhdistämällä uudelleen.",
-      "PAYPAL_APP_UNAVAILABLE": "Komisio ei ole vielä ottanut PayPal POS -yhteyttä käyttöön."
+      "PAYPAL_APP_UNAVAILABLE": "Komisio ei ole vielä ottanut PayPal POS -yhteyttä käyttöön.",
+      "GUARANTEED_SALE_REQUIRED": "Tuotteiden myynti taatulla myyjäkorvauksella ei ole vielä käytettävissä."
     },
     "approvalHint": "Täsmäävät kuitit kirjataan automaattisesti. Vain poikkeukset vaativat tutkintaa; toista hyväksyjää ei tarvita.",
     "held": "Kuittia ei voitu kirjata. Tutki ennen uutta yritystä.",
@@ -5464,6 +5466,14 @@
       "open": "Odottaa toimitusta",
       "received": "Vastaanotettu",
       "cancelled": "Toimitus peruttu"
-    }
+    },
+    "register": "Rekisteröi tuote",
+    "registered": "Rekisteröity",
+    "openItem": "Avaa tuote",
+    "itemDescription": "Kuvaus",
+    "registrationPrice": "Myyntihinta (SEK)",
+    "registrationPriceInvalid": "Anna hinta väliltä 0,01–999 999,99 SEK.",
+    "guaranteeDue": "Taattu saldohyvitys viimeistään",
+    "guaranteedPurchase": "Myymälä ostaa myymättä jääneen tuotteen"
   }
 }

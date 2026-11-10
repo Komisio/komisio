@@ -746,7 +746,8 @@
     "central_app.recipient_changed": "Destinatario delle richieste dell’app Komisio modificato",
     "external_offer.issued": "Offerta inviata",
     "external_offer.responded": "Il venditore ha risposto all’offerta",
-    "external_item.guarantee_frozen": "Importo garantito e scadenza salvati"
+    "external_item.guarantee_frozen": "Importo garantito e scadenza salvati",
+    "external_item.registered": "Registrato"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -3241,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "Il collegamento si sta aggiornando. Riprova tra poco.",
       "PAYPAL_RECONNECT_REQUIRED": "Ricollega per continuare.",
       "PAYPAL_CONNECTION_CHANGED": "Ricollega per continuare.",
-      "PAYPAL_APP_UNAVAILABLE": "Komisio non ha ancora attivato il collegamento a PayPal POS."
+      "PAYPAL_APP_UNAVAILABLE": "Komisio non ha ancora attivato il collegamento a PayPal POS.",
+      "GUARANTEED_SALE_REQUIRED": "La vendita di articoli con importo garantito al venditore non è ancora disponibile."
     },
     "approvalHint": "Gli scontrini abbinati vengono registrati automaticamente. Solo le eccezioni richiedono una verifica; non serve un secondo approvatore.",
     "held": "Impossibile registrare lo scontrino. Verifica prima di riprovare.",
@@ -5458,6 +5460,14 @@
       "open": "In attesa di consegna",
       "received": "Ricevuto",
       "cancelled": "Consegna annullata"
-    }
+    },
+    "register": "Registra articolo",
+    "registered": "Registrato",
+    "openItem": "Apri articolo",
+    "itemDescription": "Descrizione",
+    "registrationPrice": "Prezzo di vendita (SEK)",
+    "registrationPriceInvalid": "Inserisci un prezzo tra 0,01 e 999.999,99 SEK.",
+    "guaranteeDue": "Accredito garantito entro",
+    "guaranteedPurchase": "Il negozio acquista l’articolo invenduto"
   }
 }

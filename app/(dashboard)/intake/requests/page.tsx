@@ -7,6 +7,7 @@ import { readExternalOfferQueue } from '@/lib/engine/external-item-offers'
 import { externalOfferAmount } from '@/lib/platform/external-offer-amount'
 import { EventTime } from '@/components/ui/event-time'
 import { ExternalRequestReview } from '@/components/intake/external-request-review'
+import { ExternalItemRegistration } from '@/components/intake/external-item-registration'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import '@/app/seller/submissions/submissions.css'
 
@@ -93,13 +94,22 @@ export default async function ExternalRequests({
           <strong>
             {row.declined
               ? d.declined
-              : row.offer?.handover
-                ? d.handoverStatuses[row.offer.handover.status]
-                : row.offer
-                  ? d[row.offer.status]
-                  : d.waiting}
+              : row.offer?.guarantee?.itemId
+                ? d.registered
+                : row.offer?.handover
+                  ? d.handoverStatuses[row.offer.handover.status]
+                  : row.offer
+                    ? d[row.offer.status]
+                    : d.waiting}
           </strong>
           {row.decline_note ? <p>{row.decline_note}</p> : null}
+          {row.offer?.guarantee?.itemId ? (
+            <p>
+              <Link href={`/intake/items/${row.offer.guarantee.itemId}`}>
+                {d.openItem}
+              </Link>
+            </p>
+          ) : null}
           {row.offer?.handover ? (
             <div className="stack">
               <Link href={`/intake/handovers?focus=${row.offer.handover.id}`}>
@@ -150,6 +160,18 @@ export default async function ExternalRequests({
                 <p className="submission-description">{a.body}</p>
               </details>
             ))}
+          {tenant.role !== 'readonly' &&
+          row.offer?.guarantee &&
+          !row.offer.guarantee.itemId ? (
+            <ExternalItemRegistration
+              tenantId={tenant.id}
+              guaranteeId={row.offer.guarantee.id}
+              description={row.description}
+              priceOre={row.offer.expectedSalePriceOre}
+              d={d}
+              leaveWarning={all.leaveUnsaved}
+            />
+          ) : null}
           {tenant.role !== 'readonly' &&
           !row.declined &&
           (!row.offer || row.offer.status === 'expired') ? (

@@ -35,6 +35,7 @@ export function externalItemFailure(error: unknown, origin: string | null) {
     REQUEST_CHANGED: 409,
     REQUEST_NOT_FOUND: 404,
     OFFER_NOT_FOUND: 404,
+    GUARANTEE_NOT_FOUND: 404,
     OFFER_EXPIRED: 409,
     OFFER_ACTIVE: 409,
     OFFER_ACCEPTED: 409,

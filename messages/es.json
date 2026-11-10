@@ -746,7 +746,8 @@
     "central_app.recipient_changed": "Se ha cambiado el destinatario de las solicitudes de la app de Komisio",
     "external_offer.issued": "Oferta enviada",
     "external_offer.responded": "El vendedor respondió a la oferta",
-    "external_item.guarantee_frozen": "Importe garantizado y plazo guardados"
+    "external_item.guarantee_frozen": "Importe garantizado y plazo guardados",
+    "external_item.registered": "Registrado"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -3241,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "La conexión se está actualizando. Inténtalo de nuevo en un momento.",
       "PAYPAL_RECONNECT_REQUIRED": "Vuelve a conectar para continuar.",
       "PAYPAL_CONNECTION_CHANGED": "Vuelve a conectar para continuar.",
-      "PAYPAL_APP_UNAVAILABLE": "Komisio aún no ha activado la conexión con PayPal POS."
+      "PAYPAL_APP_UNAVAILABLE": "Komisio aún no ha activado la conexión con PayPal POS.",
+      "GUARANTEED_SALE_REQUIRED": "La venta de artículos con un importe garantizado al vendedor aún no está disponible."
     },
     "approvalHint": "Los recibos coincidentes se registran automáticamente. Solo las excepciones necesitan investigación; no se requiere un segundo aprobador.",
     "held": "No se pudo registrar el recibo. Investiga antes de reintentar.",
@@ -5464,6 +5466,14 @@
       "open": "Pendiente de entrega",
       "received": "Recibido",
       "cancelled": "Entrega cancelada"
-    }
+    },
+    "register": "Registrar artículo",
+    "registered": "Registrado",
+    "openItem": "Abrir artículo",
+    "itemDescription": "Descripción",
+    "registrationPrice": "Precio de venta (SEK)",
+    "registrationPriceInvalid": "Introduce un precio entre 0,01 y 999.999,99 SEK.",
+    "guaranteeDue": "Abono garantizado antes del",
+    "guaranteedPurchase": "La tienda compra el artículo no vendido"
   }
 }

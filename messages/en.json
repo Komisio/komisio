@@ -746,7 +746,8 @@
     "central_app.recipient_changed": "Komisio app request recipient changed",
     "external_offer.issued": "Offer issued",
     "external_offer.responded": "Seller responded to offer",
-    "external_item.guarantee_frozen": "Guaranteed amount and deadline saved"
+    "external_item.guarantee_frozen": "Guaranteed amount and deadline saved",
+    "external_item.registered": "Registered"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -3241,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "The connection is updating. Try again shortly.",
       "PAYPAL_RECONNECT_REQUIRED": "Reconnect to continue.",
       "PAYPAL_CONNECTION_CHANGED": "Reconnect to continue.",
-      "PAYPAL_APP_UNAVAILABLE": "The PayPal POS connection has not yet been enabled by Komisio."
+      "PAYPAL_APP_UNAVAILABLE": "The PayPal POS connection has not yet been enabled by Komisio.",
+      "GUARANTEED_SALE_REQUIRED": "Sales of items with guaranteed seller amounts are not yet available."
     },
     "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
     "held": "The receipt could not be recorded. Investigate before retrying.",
@@ -5458,6 +5460,14 @@
       "open": "Waiting for drop-off",
       "received": "Received",
       "cancelled": "Handover cancelled"
-    }
+    },
+    "register": "Register item",
+    "registered": "Registered",
+    "openItem": "Open item",
+    "itemDescription": "Description",
+    "registrationPrice": "Selling price (SEK)",
+    "registrationPriceInvalid": "Enter a price between 0.01 and 999,999.99 SEK.",
+    "guaranteeDue": "Guaranteed balance credit by",
+    "guaranteedPurchase": "Store purchases unsold item"
   }
 }

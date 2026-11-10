@@ -36,6 +36,12 @@ and accounting reconciliation without negative commission or duplicate credit.
 Existing percentage-based sales and returns remain unchanged. Guarantee records
 alone do not create inventory, ledger credit, purchases or accounting exports.
 
+Owner follow-up 2026-11-10: accounting for sales below the guarantee and day-45
+acquisitions must be discussed before implementation. Late-import reconciliation
+also remains undecided. Neither the proposed separate cost accounts nor automatic
+day-45 credit with manual reconciliation is approved. Continue nonfinancial
+inventory registration; keep sale/acquisition execution closed for these items.
+
 External app intake (2026-11-09): the owner confirms fixed seller compensation
 regardless of sale price, 45 days from physical receipt, and credit to the seller
 balance rather than an automatic bank transfer. The store and seller handle

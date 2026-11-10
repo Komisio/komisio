@@ -745,7 +745,8 @@
     "communication.push_pending": "Pushnotifikation · Afventer",
     "central_app.recipient_changed": "Modtager af Komisios appforespørgsler ændret",
     "external_offer.issued": "Tilbud sendt",
-    "external_offer.responded": "Sælgeren svarede på tilbuddet"
+    "external_offer.responded": "Sælgeren svarede på tilbuddet",
+    "external_item.guarantee_frozen": "Garantibeløb og frist gemt"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",

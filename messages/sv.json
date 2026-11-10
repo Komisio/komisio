@@ -745,7 +745,8 @@
     "communication.push_pending": "Pushnotis · Väntar",
     "central_app.recipient_changed": "Mottagare för Komisios appförfrågningar ändrad",
     "external_offer.issued": "Erbjudande skickat",
-    "external_offer.responded": "Säljaren svarade på erbjudandet"
+    "external_offer.responded": "Säljaren svarade på erbjudandet",
+    "external_item.guarantee_frozen": "Garantibelopp och slutdatum sparade"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",

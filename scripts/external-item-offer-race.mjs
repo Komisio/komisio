@@ -29,9 +29,16 @@ export async function raceExternalOffers({ setup, connectionString }) {
       () => 'saved',
       (e) => e.message,
     )
-  async function together(start) {
+  async function together(start, tenant) {
     await setup.query('begin')
-    await setup.query('select komisio_private.lock_external_owner($1)', [owner])
+    if (tenant)
+      await setup.query('select 1 from tenants where id=$1 for update', [
+        tenant,
+      ])
+    else
+      await setup.query('select komisio_private.lock_external_owner($1)', [
+        owner,
+      ])
     const promises = start()
     let waiting = 0
     try {
@@ -52,7 +59,7 @@ export async function raceExternalOffers({ setup, connectionString }) {
     assert.equal(
       waiting,
       2,
-      'both offer commands must contend on the owner lock',
+      'both commands must contend on the selected serialization lock',
     )
     return results.sort()
   }
@@ -260,6 +267,43 @@ export async function raceExternalOffers({ setup, connectionString }) {
         ),
       ),
       'OFFER_EXPIRED',
+    )
+    const handover = (
+      await setup.query(
+        'select handover_id from external_item_handover_links where offer_id=$1',
+        [completionOffers[0]],
+      )
+    ).rows[0].handover_id
+    const receipt = randomUUID()
+    for (const c of clients) await as(c, staff)
+    const receive = (c) =>
+      c.query("select receive_handover($1,$2,$3,'staff_receipt','')", [
+        tenant,
+        receipt,
+        handover,
+      ])
+    assert.deepEqual(
+      await together(() => clients.map((c) => outcome(receive(c))), tenant),
+      ['saved', 'saved'],
+    )
+    const guarantees = (
+      await setup.query(
+        "select count(*)::int n,count(distinct received_at)::int clocks,bool_and(due_at=received_at+interval '1080 hours') exact from external_item_guarantees where offer_id=any($1)",
+        [completionOffers],
+      )
+    ).rows[0]
+    assert.deepEqual(guarantees, { n: 2, clocks: 1, exact: true })
+    assert.equal(
+      (
+        await setup.query(
+          'select count(*)::int n from seller_ledger_entries where tenant_id=$1',
+          [tenant],
+        )
+      ).rows[0].n,
+      0,
+    )
+    console.log(
+      'PASS: concurrent receipt retries freeze one guarantee per grouped item, one physical clock and no credit',
     )
     console.log(
       'PASS: concurrent first accounts, grouped handovers, exact onboarding retries and expired completion',

@@ -742,7 +742,8 @@
     "communication.push_sent": "Notificación push · Entregada a Apple/Google",
     "communication.push_failed": "Notificación push · Fallida",
     "communication.push_unconfirmed": "Notificación push · Sin confirmar",
-    "communication.push_pending": "Notificación push · Pendiente"
+    "communication.push_pending": "Notificación push · Pendiente",
+    "central_app.recipient_changed": "Se ha cambiado el destinatario de las solicitudes de la app de Komisio"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -5399,5 +5400,21 @@
     "availableHint": "El importe disponible tras las reservas para pagos.",
     "credited": "De ventas, total",
     "paid": "Pagado, total"
+  },
+  "centralApp": {
+    "title": "Solicitudes a Komisio",
+    "intro": "Elige el negocio que recibe nuevas solicitudes de artículos desde la app. El piloto es para residentes en Suecia e importes en SEK.",
+    "recipient": "Tienda receptora",
+    "paused": "En pausa – sin nuevas solicitudes",
+    "hint": "Debes ser propietario o administrador de la tienda receptora. La valoración previa de fotos de las tiendas no cambia.",
+    "otherRecipient": "Destinatario actual",
+    "save": "Guardar destinatario",
+    "busy": "Guardando…",
+    "saved": "Destinatario guardado.",
+    "failed": "No se pudo guardar el destinatario.",
+    "changed": "La configuración ha cambiado. Recarga la página.",
+    "sekRequired": "La tienda receptora debe utilizar SEK.",
+    "uncertain": "No se pudo confirmar el cambio. Recarga la página para comprobar lo guardado.",
+    "reload": "Recargar página"
   }
 }

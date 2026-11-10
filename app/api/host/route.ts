@@ -9,6 +9,11 @@ import {
 } from '@/lib/engine/plans'
 import { z } from 'zod'
 import {
+  centralAppCommand,
+  centralAppErrorCodes,
+  setCentralAppIntake,
+} from '@/lib/engine/central-app-intake'
+import {
   aiSettingsCommand,
   setAiPlatformSettings,
 } from '@/lib/engine/ai-credits'
@@ -34,6 +39,9 @@ export async function POST(request: Request) {
     } catch {
       return reply({ error: 'INVALID_INPUT' }, 400)
     }
+    const central = centralAppCommand.safeParse(input)
+    if (central.success)
+      return reply(await setCentralAppIntake(ctx.client, central.data))
     const ai = z
       .strictObject({
         action: z.literal('aiSettings'),
@@ -46,10 +54,17 @@ export async function POST(request: Request) {
     if (!parsed.success) return reply({ error: 'INVALID_INPUT' }, 400)
     return reply(await activatePlanManually(ctx.client, parsed.data))
   } catch (e) {
-    const code = planErrorCode(e instanceof Error ? e.message : '')
+    const message = e instanceof Error ? e.message : ''
+    const code = centralAppErrorCodes.includes(message)
+      ? message
+      : planErrorCode(message)
     return reply(
       { error: code },
-      code === 'FORBIDDEN' ? 403 : code === 'INVALID_INPUT' ? 400 : 409,
+      code === 'FORBIDDEN' || code === 'SUPPORT_READ_ONLY'
+        ? 403
+        : code === 'INVALID_INPUT'
+          ? 400
+          : 409,
     )
   }
 }

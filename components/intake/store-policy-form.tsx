@@ -269,8 +269,6 @@ export function StorePolicyForm({
               vatRatePercent: rate === '' ? undefined : Number(rate),
               photoSubmissionsEnabled:
                 f.get('photoSubmissionsEnabled') === 'on',
-              externalAppSubmissionsEnabled:
-                f.get('externalAppSubmissionsEnabled') === 'on',
               submissionPricing: f.get('submissionPricing'),
               assistanceEnabled: f.get('assistanceEnabled') === 'on',
               itemLanguage: f.get('itemLanguage'),
@@ -376,23 +374,6 @@ export function StorePolicyForm({
                 <span>
                   {d.submissions.enablePhotos}
                   <small id="policy-photos-help">{t.editor.photosHelp}</small>
-                </span>
-              </label>
-              <label className="intake-confirm policy-option">
-                <input
-                  type="checkbox"
-                  name="externalAppSubmissionsEnabled"
-                  aria-label={t.editor.externalAppSubmissions}
-                  aria-describedby="policy-external-app-help"
-                  defaultChecked={
-                    base.policy.externalAppSubmissionsEnabled === true
-                  }
-                />
-                <span>
-                  {t.editor.externalAppSubmissions}
-                  <small id="policy-external-app-help">
-                    {t.editor.externalAppSubmissionsHelp}
-                  </small>
                 </span>
               </label>
             </PolicySection>

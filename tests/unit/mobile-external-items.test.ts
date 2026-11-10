@@ -30,6 +30,7 @@ const input = {
   notes: '',
   desiredPriceOre: '10000',
   currency: 'SEK',
+  senderCountry: 'SE',
   photos: [photoId],
 }
 const identity = {
@@ -137,6 +138,7 @@ describe('external request phone boundary', () => {
         p_notes: '',
         p_price_ore: '10000',
         p_currency: 'SEK',
+        p_sender_country: 'SE',
         p_photos: [photoId],
       },
     )

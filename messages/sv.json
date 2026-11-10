@@ -746,7 +746,8 @@
     "central_app.recipient_changed": "Mottagare för Komisios appförfrågningar ändrad",
     "external_offer.issued": "Erbjudande skickat",
     "external_offer.responded": "Säljaren svarade på erbjudandet",
-    "external_item.guarantee_frozen": "Garantibelopp och slutdatum sparade"
+    "external_item.guarantee_frozen": "Garantibelopp och slutdatum sparade",
+    "external_item.registered": "Registrerad"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -3241,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "Anslutningen uppdateras. Försök igen om en stund.",
       "PAYPAL_RECONNECT_REQUIRED": "Anslut igen för att fortsätta.",
       "PAYPAL_CONNECTION_CHANGED": "Anslut igen för att fortsätta.",
-      "PAYPAL_APP_UNAVAILABLE": "PayPal POS-anslutningen är ännu inte aktiverad av Komisio."
+      "PAYPAL_APP_UNAVAILABLE": "PayPal POS-anslutningen är ännu inte aktiverad av Komisio.",
+      "GUARANTEED_SALE_REQUIRED": "Försäljning av varor med garanterat belopp är ännu inte tillgänglig."
     },
     "approvalHint": "Matchade kvitton registreras automatiskt. Endast avvikelser behöver utredas; ingen andra godkännare krävs.",
     "held": "Kvittot kunde inte bokas. Utred orsaken innan nytt försök.",
@@ -5458,6 +5460,14 @@
       "open": "Väntar på inlämning",
       "received": "Mottagen",
       "cancelled": "Inlämningen är avbruten"
-    }
+    },
+    "register": "Registrera vara",
+    "registered": "Registrerad",
+    "openItem": "Öppna varan",
+    "itemDescription": "Beskrivning",
+    "registrationPrice": "Försäljningspris (SEK)",
+    "registrationPriceInvalid": "Ange ett pris mellan 0,01 och 999 999,99 SEK.",
+    "guaranteeDue": "Garanterat saldo senast",
+    "guaranteedPurchase": "Butiken köper osåld vara"
   }
 }

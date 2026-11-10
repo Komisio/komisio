@@ -746,7 +746,8 @@
     "central_app.recipient_changed": "Modtager af Komisios appforespørgsler ændret",
     "external_offer.issued": "Tilbud sendt",
     "external_offer.responded": "Sælgeren svarede på tilbuddet",
-    "external_item.guarantee_frozen": "Garantibeløb og frist gemt"
+    "external_item.guarantee_frozen": "Garantibeløb og frist gemt",
+    "external_item.registered": "Registreret"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -3241,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "Forbindelsen opdateres. Prøv igen om lidt.",
       "PAYPAL_RECONNECT_REQUIRED": "Tilslut igen for at fortsætte.",
       "PAYPAL_CONNECTION_CHANGED": "Tilslut igen for at fortsætte.",
-      "PAYPAL_APP_UNAVAILABLE": "PayPal POS-forbindelsen er endnu ikke aktiveret af Komisio."
+      "PAYPAL_APP_UNAVAILABLE": "PayPal POS-forbindelsen er endnu ikke aktiveret af Komisio.",
+      "GUARANTEED_SALE_REQUIRED": "Salg af varer med garanteret beløb er endnu ikke tilgængeligt."
     },
     "approvalHint": "Matchede kvitteringer registreres automatisk. Kun undtagelser kræver undersøgelse; der kræves ingen anden godkender.",
     "held": "Kvitteringen kunne ikke registreres. Undersøg, før du prøver igen.",
@@ -5458,6 +5460,14 @@
       "open": "Afventer indlevering",
       "received": "Modtaget",
       "cancelled": "Indleveringen er annulleret"
-    }
+    },
+    "register": "Registrer vare",
+    "registered": "Registreret",
+    "openItem": "Åbn varen",
+    "itemDescription": "Beskrivelse",
+    "registrationPrice": "Salgspris (SEK)",
+    "registrationPriceInvalid": "Angiv en pris mellem 0,01 og 999.999,99 SEK.",
+    "guaranteeDue": "Garanteret saldo senest",
+    "guaranteedPurchase": "Butikken køber usolgt vare"
   }
 }

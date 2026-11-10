@@ -293,6 +293,68 @@ export async function raceExternalOffers({ setup, connectionString }) {
       )
     ).rows[0]
     assert.deepEqual(guarantees, { n: 2, clocks: 1, exact: true })
+    const guarantee = (
+      await setup.query(
+        'select id from external_item_guarantees where offer_id=$1',
+        [completionOffers[0]],
+      )
+    ).rows[0].id
+    const prepared = (
+      await clients[0].query(
+        'select prepare_external_item_registration($1,$2) state',
+        [tenant, guarantee],
+      )
+    ).rows[0].state
+    for (const photoId of prepared.photoIds) {
+      await setup.query(
+        'insert into storage.objects(bucket_id,name) values($1,$3),($2,$3)',
+        [
+          'reception-photos',
+          'seller-reception-photos',
+          `${tenant}/${prepared.sessionId}/${photoId}.jpg`,
+        ],
+      )
+    }
+    const registrations = [randomUUID(), randomUUID()]
+    const register = (c, id) =>
+      c.query('select register_external_item($1,$2,$3,$4,30000)', [
+        tenant,
+        id,
+        guarantee,
+        'Synthetic guaranteed jacket',
+      ])
+    assert.deepEqual(
+      await together(
+        () => clients.map((c, i) => outcome(register(c, registrations[i]))),
+        tenant,
+      ),
+      ['REQUEST_CHANGED', 'saved'],
+    )
+    const registered = (
+      await setup.query(
+        "select id,item_id from external_item_guarantee_events where guarantee_id=$1 and kind='registered'",
+        [guarantee],
+      )
+    ).rows
+    assert.equal(registered.length, 1)
+    assert.deepEqual(
+      await together(
+        () => clients.map((c) => outcome(register(c, registered[0].id))),
+        tenant,
+      ),
+      ['saved', 'saved'],
+    )
+    assert.equal(
+      (
+        await setup.query('select count(*)::int n from items where id=$1', [
+          registered[0].item_id,
+        ])
+      ).rows[0].n,
+      1,
+    )
+    console.log(
+      'PASS: competing guaranteed registrations create one item; exact concurrent retries return the same item without credit',
+    )
     assert.equal(
       (
         await setup.query(

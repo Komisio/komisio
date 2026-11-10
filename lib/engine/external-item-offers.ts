@@ -12,7 +12,10 @@ const offerGuarantee = z
     receivedAt: time,
     dueAt: time,
     creditedAt: time.nullable(),
+    itemId: z.guid().nullish(),
+    registeredAt: time.nullish(),
   })
+  .refine((g) => Boolean(g.itemId) === Boolean(g.registeredAt))
   .refine(
     (g) =>
       Date.parse(g.dueAt) - Date.parse(g.receivedAt) ===

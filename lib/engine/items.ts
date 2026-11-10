@@ -34,7 +34,16 @@ const frozenTerms = z
     commissionRatePercent: z.number().optional(),
     sellerTermsVersion: z.number().int().optional(),
     salePeriodDays: z.number().int(),
-    endOfPeriodAction: z.enum(['charity', 'return']),
+    endOfPeriodAction: z.enum(['charity', 'return', 'guaranteed_purchase']),
+    externalGuarantee: z
+      .object({
+        id: z.uuid(),
+        amountOre: z.string().regex(/^[1-9]\d{0,10}$/),
+        currency: z.literal('SEK'),
+        receivedAt: z.iso.datetime({ offset: true }),
+        dueAt: z.iso.datetime({ offset: true }),
+      })
+      .optional(),
     markdownSteps: z.array(
       z.object({ afterDays: z.number(), percent: z.number() }),
     ),

@@ -35,7 +35,10 @@ export function mobileOrigin(request: Request): string | null {
   return origin
 }
 
-export async function mobileIdentityClient(request: Request) {
+async function mobileVerifiedClient(
+  request: Request,
+  identity: 'email' | 'phone',
+) {
   const authorization = request.headers.get('authorization') ?? ''
   const token =
     /^Bearer ([A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)$/.exec(
@@ -61,8 +64,14 @@ export async function mobileIdentityClient(request: Request) {
       invalid ? 401 : 503,
     )
   }
-  if (!data.user || !data.user.email_confirmed_at)
+  if (!data.user) throw new MobileRequestError('AUTH_REQUIRED', 401)
+  if (identity === 'email' && !data.user.email_confirmed_at)
     throw new MobileRequestError('AUTH_REQUIRED', 401)
+  if (
+    identity === 'phone' &&
+    (!data.user.phone_confirmed_at || !data.user.phone)
+  )
+    throw new MobileRequestError('PHONE_VERIFICATION_REQUIRED', 403)
   if (data.user.app_metadata.komisio_password_recovery_pending === true)
     throw new MobileRequestError('PASSWORD_UPDATE_REQUIRED', 409)
   const assurance = await client.auth.mfa.getAuthenticatorAssuranceLevel(token)
@@ -80,6 +89,16 @@ export async function mobileIdentityClient(request: Request) {
   )
     throw new MobileRequestError('MFA_REQUIRED', 403)
   return client
+}
+
+/** Existing seller, bank and payout commands retain email verification. */
+export function mobileIdentityClient(request: Request) {
+  return mobileVerifiedClient(request, 'email')
+}
+
+/** External intake only; never a substitute for the registered-seller boundary. */
+export function mobilePhoneClient(request: Request) {
+  return mobileVerifiedClient(request, 'phone')
 }
 
 export async function mobileSellerClient(

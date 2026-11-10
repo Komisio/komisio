@@ -5455,6 +5455,14 @@
       "very_good": "Sehr gut",
       "good": "Gut",
       "worn": "Abgenutzt"
+    },
+    "openHandover": "Abgabe öffnen",
+    "groupedItems": "Artikel in dieser Abgabe: {count}",
+    "receivedAt": "Eingegangen",
+    "handoverStatuses": {
+      "open": "Wartet auf Abgabe",
+      "received": "Eingegangen",
+      "cancelled": "Abgabe storniert"
     }
   }
 }

@@ -5449,6 +5449,14 @@
       "very_good": "Very good",
       "good": "Good",
       "worn": "Worn"
+    },
+    "openHandover": "Open handover",
+    "groupedItems": "Items in this handover: {count}",
+    "receivedAt": "Received",
+    "handoverStatuses": {
+      "open": "Waiting for drop-off",
+      "received": "Received",
+      "cancelled": "Handover cancelled"
     }
   }
 }

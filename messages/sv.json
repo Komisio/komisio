@@ -5449,6 +5449,14 @@
       "very_good": "Mycket gott",
       "good": "Gott",
       "worn": "Slitet"
+    },
+    "openHandover": "Öppna inlämningen",
+    "groupedItems": "Varor i samma inlämning: {count}",
+    "receivedAt": "Mottagen",
+    "handoverStatuses": {
+      "open": "Väntar på inlämning",
+      "received": "Mottagen",
+      "cancelled": "Inlämningen är avbruten"
     }
   }
 }

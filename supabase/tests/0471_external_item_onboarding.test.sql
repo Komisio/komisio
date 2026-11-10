@@ -23,6 +23,7 @@ select issue_external_item_offer(:'tenant','f7200000-0000-4000-8000-000000000401
 select register_seller(:'tenant','f7200000-0000-4000-8000-000000000901','Existing email seller','account-reader@example.test','');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000002","role":"authenticated"}';
 select is(read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')->'account','null'::jsonb,'a new phone user has no invented seller account');
+select is(read_external_item_offer('f7200000-0000-4000-8000-000000000401')->'handover','null'::jsonb,'an unanswered offer has no invented handover');
 select throws_like($$select complete_external_item_offer('f7200000-0000-4000-8000-000000000501','f7200000-0000-4000-8000-000000000401','f7200000-0000-4000-8000-000000000101',null,null)$$,'%ACCOUNT_REQUIRED%','first acceptance needs account and bank details');
 select throws_like($$select complete_external_item_offer(gen_random_uuid(),'f7200000-0000-4000-8000-000000000401','f7200000-0000-4000-8000-000000000101','{"name":"Phone seller","email":"contact@example.test"}','{"holder":"Phone seller","country":"DE","kind":"local","account":"123456789","routing":"8327"}')$$,'%INVALID_INPUT%','onboarding requires Swedish bank details');
 select throws_like($$select complete_external_item_offer(gen_random_uuid(),'f7200000-0000-4000-8000-000000000401','f7200000-0000-4000-8000-000000000102',null,null)$$,'%AGREEMENT_CHANGED%','cannot substitute another agreement');
@@ -31,6 +32,7 @@ reset role;
 insert into auth.mfa_factors(id,created_at,updated_at,user_id,status,factor_type,friendly_name) values(gen_random_uuid(),now(),now(),'f7200000-0000-4000-8000-000000000002','verified','totp','Synthetic onboarding MFA');
 set local role authenticated;
 select throws_like($$select read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')$$,'%PHONE_VERIFICATION_REQUIRED%','MFA downgrade blocks account reads');
+select throws_ok($$select read_external_item_offer('f7200000-0000-4000-8000-000000000401')$$,'42501',null,'MFA downgrade cannot obtain handover progress through the offer read');
 reset role;
 delete from auth.mfa_factors where user_id='f7200000-0000-4000-8000-000000000002';
 set local role authenticated;
@@ -52,6 +54,8 @@ set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000002","rol
 select complete_external_item_offer('f7200000-0000-4000-8000-000000000502','f7200000-0000-4000-8000-000000000402','f7200000-0000-4000-8000-000000000101',null,null);
 select is(read_external_item_onboarding('f7200000-0000-4000-8000-000000000402')#>>'{handover,id}',:'handover','same-version items share one open handover');
 select is(read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')#>>'{handover,itemCount}','2','group count includes both confirmed items');
+select is(read_external_item_offer('f7200000-0000-4000-8000-000000000401')#>>'{handover,id}',:'handover','offer progress opens the exact grouped H-handover');
+select is(my_external_item_offers(array['f7200000-0000-4000-8000-000000000301']::uuid[])#>>'{offers,0,handover,itemCount}','2','batched mobile reads include actual linked count');
 select submit_external_item_request('f7200000-0000-4000-8000-000000000303',:'tenant','Later upload','','good','',null,'SEK',array['f7200000-0000-4000-8000-000000000201']::uuid[],'SE');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000001","role":"authenticated"}';
 select issue_external_item_offer(:'tenant','f7200000-0000-4000-8000-000000000403','f7200000-0000-4000-8000-000000000303',null,30000,80000,'f7200000-0000-4000-8000-000000000102');
@@ -61,6 +65,7 @@ select isnt(read_external_item_onboarding('f7200000-0000-4000-8000-000000000403'
 select is(read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')#>>'{handover,itemCount}','2','later terms cannot change an earlier handover group');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000003","role":"authenticated"}';
 select throws_like($$select read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')$$,'%OFFER_NOT_FOUND%','other phone identities cannot read account or bank information');
+select throws_ok($$select read_external_item_offer('f7200000-0000-4000-8000-000000000401')$$,'42501',null,'other owners cannot read receipt progress');
 select throws_like($$select complete_external_item_offer(gen_random_uuid(),'f7200000-0000-4000-8000-000000000401','f7200000-0000-4000-8000-000000000101',null,null)$$,'%OFFER_NOT_FOUND%','another phone user cannot claim an accepted offer');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000004","role":"authenticated"}';
 select is(jsonb_array_length(my_seller_accounts()),1,'matching contact email does not hide or duplicate the existing email seller');
@@ -78,6 +83,10 @@ select is((select agreement_version_id from bag_receipts where tenant_id=:'tenan
 select lives_ok(format($$select receive_handover(%L,'f7200000-0000-4000-8000-000000000601',%L,'staff_receipt','')$$,:'tenant',:'handover'),'staff receipt retries exactly once');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000002","role":"authenticated"}';
 select is(read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')#>>'{handover,status}','received','owner sees actual receipt');
+select is(read_external_item_offer('f7200000-0000-4000-8000-000000000401')#>>'{handover,status}','received','offer summary reflects real staff receipt');
+select ok(read_external_item_offer('f7200000-0000-4000-8000-000000000401')#>>'{handover,receivedAt}' is not null,'received offer includes the actual receipt time');
+set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000004","role":"authenticated"}';
+select is((select x#>>'{offer,handover,status}' from jsonb_array_elements(external_item_offer_queue(:'tenant')->'rows') x where x->>'id'='f7200000-0000-4000-8000-000000000301'),'received','read-only store queue sees the same actual receipt');
 reset role;
 select is((select count(*) from tenant_members where user_id='f7200000-0000-4000-8000-000000000002'),0::bigint,'onboarding creates no tenant membership');
 select throws_like(format($$update sellers set external_owner_id=null where id=%L$$,:'seller'),'%IMMUTABLE%','explicit identity cannot be cleared to enable email matching');

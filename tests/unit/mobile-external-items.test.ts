@@ -639,3 +639,54 @@ describe('central account and handover boundary', () => {
     ).toBe(503)
   })
 })
+
+it('returns authorized handover progress through the existing bounded offer read', async () => {
+  const offerId = 'f6100000-0000-4000-8000-000000000501',
+    agreementId = 'f6100000-0000-4000-8000-000000000401'
+  const handover = {
+    id: requestId,
+    reference: 'H-128',
+    status: 'received',
+    receivedAt: '2026-11-10T12:00:00Z',
+    itemCount: 2,
+  }
+  const data = {
+    id: offerId,
+    requestId,
+    tenantId,
+    sellerAmountOre: '40000',
+    expectedSalePriceOre: '100000',
+    currency: 'SEK',
+    agreementVersionId: agreementId,
+    createdAt: '2026-11-10T10:00:00Z',
+    expiresAt: '2026-11-12T10:00:00Z',
+    serverNow: '2026-11-10T12:00:00Z',
+    status: 'accepted',
+    canAccept: false,
+    canDecline: false,
+    response: {
+      id: photoId,
+      accepted: true,
+      createdAt: '2026-11-10T11:00:00Z',
+    },
+    agreement: {
+      id: agreementId,
+      version: 1,
+      title: 'Synthetic terms',
+      body: 'Synthetic text',
+      language: 'sv',
+    },
+    handover,
+  }
+  mocks.rpc.mockResolvedValue({ data, error: null })
+  const r = await offerPost(request({ action: 'read', offerId }))
+  expect(r.status).toBe(200)
+  expect((await r.json()).handover).toEqual(handover)
+  mocks.rpc.mockResolvedValue({
+    data: { ...data, handover: { ...handover, receivedAt: null } },
+    error: null,
+  })
+  expect((await offerPost(request({ action: 'read', offerId }))).status).toBe(
+    503,
+  )
+})

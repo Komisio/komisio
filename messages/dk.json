@@ -5449,6 +5449,14 @@
       "very_good": "Meget god",
       "good": "God",
       "worn": "Slidt"
+    },
+    "openHandover": "Åbn indleveringen",
+    "groupedItems": "Varer i samme indlevering: {count}",
+    "receivedAt": "Modtaget",
+    "handoverStatuses": {
+      "open": "Afventer indlevering",
+      "received": "Modtaget",
+      "cancelled": "Indleveringen er annulleret"
     }
   }
 }

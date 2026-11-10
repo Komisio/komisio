@@ -4,6 +4,15 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 const uuid = z.uuid().transform((value) => value.toLowerCase())
 const ore = z.string().regex(/^[1-9]\d{0,10}$/)
 const time = z.iso.datetime({ offset: true })
+const offerHandover = z
+  .object({
+    id: uuid,
+    reference: z.string().regex(/^H-[1-9]\d{0,11}$/),
+    status: z.enum(['open', 'received', 'cancelled']),
+    receivedAt: time.nullable(),
+    itemCount: z.number().int().min(1).max(10),
+  })
+  .refine((h) => (h.status === 'received') === (h.receivedAt !== null))
 export const externalOfferSummary = z.object({
   id: uuid,
   requestId: uuid,
@@ -21,6 +30,8 @@ export const externalOfferSummary = z.object({
   response: z
     .object({ id: uuid, accepted: z.boolean(), createdAt: time })
     .nullable(),
+  // Older deployed reads omit this additive field during rollout.
+  handover: offerHandover.nullish(),
 })
 export const externalOfferDetail = externalOfferSummary
   .extend({

@@ -5449,6 +5449,14 @@
       "very_good": "Ottime",
       "good": "Buone",
       "worn": "Usurato"
+    },
+    "openHandover": "Apri consegna",
+    "groupedItems": "Articoli in questa consegna: {count}",
+    "receivedAt": "Ricevuto",
+    "handoverStatuses": {
+      "open": "In attesa di consegna",
+      "received": "Ricevuto",
+      "cancelled": "Consegna annullata"
     }
   }
 }

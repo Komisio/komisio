@@ -14,6 +14,8 @@ vi.mock('@supabase/supabase-js', () => ({ createClient: mocks.createClient }))
 import { POST, OPTIONS } from '../../app/api/mobile/v1/external-items/route'
 import { POST as photoPost } from '../../app/api/mobile/v1/external-items/photos/route'
 import { POST as sellerPost } from '../../app/api/mobile/v1/seller/route'
+import { POST as offerPost } from '../../app/api/mobile/v1/external-items/offers/route'
+import { issueExternalOfferCommand } from '../../lib/engine/external-item-offers'
 import { externalItemSubmission } from '../../lib/engine/external-item-requests'
 
 const owner = 'f6100000-0000-4000-8000-000000000002'
@@ -101,6 +103,118 @@ beforeEach(() => {
   mocks.remove.mockResolvedValue({ error: null })
 })
 afterEach(() => vi.unstubAllEnvs())
+
+describe('central offer boundary', () => {
+  const agreementId = 'f6100000-0000-4000-8000-000000000401'
+  const offerId = 'f6100000-0000-4000-8000-000000000501'
+  it('keeps the exact response ID and displayed agreement, without accepting an owner override', async () => {
+    const c = {
+      action: 'respond',
+      requestId,
+      offerId,
+      accepted: true,
+      agreementVersionId: agreementId,
+    }
+    expect((await offerPost(request({ ...c, ownerId: owner }))).status).toBe(
+      400,
+    )
+    expect(mocks.rpc).not.toHaveBeenCalled()
+    const response = await offerPost(request(c))
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual({ id: requestId })
+    expect(mocks.rpc).toHaveBeenCalledExactlyOnceWith(
+      'respond_external_item_offer',
+      {
+        p_id: requestId,
+        p_offer: offerId,
+        p_accepted: true,
+        p_agreement: agreementId,
+      },
+    )
+    expect(response.headers.get('cache-control')).toBe('private, no-store')
+  })
+  it('returns expiry as a conflict without treating it as accepted', async () => {
+    mocks.rpc.mockResolvedValue({
+      data: null,
+      error: { message: 'OFFER_EXPIRED' },
+    })
+    const response = await offerPost(
+      request({
+        action: 'respond',
+        requestId,
+        offerId,
+        accepted: true,
+        agreementVersionId: agreementId,
+      }),
+    )
+    expect(response.status).toBe(409)
+    expect(await response.json()).toEqual({ error: 'OFFER_EXPIRED' })
+  })
+  it('retains phone verification and MFA on offer reads and answers', async () => {
+    mocks.assurance.mockResolvedValue({
+      data: { currentLevel: 'aal1', nextLevel: 'aal2' },
+      error: null,
+    })
+    expect((await offerPost(request({ action: 'read', offerId }))).status).toBe(
+      403,
+    )
+    expect(mocks.rpc).not.toHaveBeenCalled()
+  })
+  it('bounds list scope and refuses unrequested offer summaries', async () => {
+    expect(
+      (
+        await offerPost(
+          request({ action: 'list', requestIds: Array(26).fill(requestId) }),
+        )
+      ).status,
+    ).toBe(400)
+    mocks.rpc.mockResolvedValue({
+      data: {
+        offers: [
+          {
+            id: offerId,
+            requestId: photoId,
+            tenantId,
+            sellerAmountOre: '40000',
+            expectedSalePriceOre: '100000',
+            currency: 'SEK',
+            agreementVersionId: agreementId,
+            createdAt: '2026-11-10T12:00:00Z',
+            expiresAt: '2026-11-12T12:00:00Z',
+            serverNow: '2026-11-10T12:00:00Z',
+            status: 'offered',
+            canAccept: true,
+            canDecline: true,
+            response: null,
+          },
+        ],
+        serverNow: '2026-11-10T12:00:00Z',
+      },
+      error: null,
+    })
+    expect(
+      (await offerPost(request({ action: 'list', requestIds: [requestId] })))
+        .status,
+    ).toBe(503)
+  })
+  it('accepts only exact positive integer ore for staff offers', () => {
+    const c = {
+      action: 'offer',
+      tenantId,
+      commandId: offerId,
+      requestId,
+      previousOfferId: null,
+      sellerAmountOre: '40000',
+      expectedSalePriceOre: '100000',
+      agreementVersionId: agreementId,
+    }
+    expect(issueExternalOfferCommand.safeParse(c).success).toBe(true)
+    for (const sellerAmountOre of ['1.5', '1e5', '0', '-1', '100000000000'])
+      expect(
+        issueExternalOfferCommand.safeParse({ ...c, sellerAmountOre }).success,
+      ).toBe(false)
+  })
+})
 
 describe('external request phone boundary', () => {
   it('canonicalizes UUID casing before replay comparisons and duplicate detection', async () => {

@@ -743,7 +743,9 @@
     "communication.push_failed": "Notificación push · Fallida",
     "communication.push_unconfirmed": "Notificación push · Sin confirmar",
     "communication.push_pending": "Notificación push · Pendiente",
-    "central_app.recipient_changed": "Se ha cambiado el destinatario de las solicitudes de la app de Komisio"
+    "central_app.recipient_changed": "Se ha cambiado el destinatario de las solicitudes de la app de Komisio",
+    "external_offer.issued": "Oferta enviada",
+    "external_offer.responded": "El vendedor respondió a la oferta"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -5416,5 +5418,43 @@
     "sekRequired": "La tienda receptora debe utilizar SEK.",
     "uncertain": "No se pudo confirmar el cambio. Recarga la página para comprobar lo guardado.",
     "reload": "Recargar página"
+  },
+  "externalOffers": {
+    "title": "Solicitudes",
+    "intro": "Artículos enviados a Komisio desde la app.",
+    "empty": "Aún no hay solicitudes.",
+    "sellerAmount": "Importe garantizado al vendedor (SEK)",
+    "salePrice": "Precio de venta previsto (SEK)",
+    "fixedHint": "El importe del vendedor es fijo, independientemente del precio de venta.",
+    "duration": "La oferta es válida durante 48 horas.",
+    "send": "Enviar oferta",
+    "decline": "Rechazar",
+    "note": "Motivo para el vendedor (opcional)",
+    "noAgreement": "Publica un acuerdo de vendedor antes de enviar una oferta.",
+    "agreement": "Acuerdo de vendedor",
+    "waiting": "Pendiente de revisión",
+    "offered": "Pendiente de respuesta",
+    "accepted": "El vendedor ha aceptado",
+    "declined": "Cerrada",
+    "expired": "Oferta caducada",
+    "superseded": "Sustituida por una nueva oferta",
+    "deadline": "Responder antes de",
+    "failure": "No se pudo confirmar el resultado. Reintenta con los mismos datos.",
+    "changed": "La solicitud ha cambiado. Carga su estado actual antes de continuar.",
+    "reload": "Cargar estado actual",
+    "invalidAmount": "Introduce un importe mayor que 0 con un máximo de dos decimales.",
+    "saved": "Guardado",
+    "photos": "Fotos",
+    "desiredPrice": "Precio deseado por el vendedor",
+    "retry": "Reintentar",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "condition": "Estado",
+    "conditions": {
+      "like_new": "Como nuevo",
+      "very_good": "Muy bueno",
+      "good": "Bueno",
+      "worn": "Desgastado"
+    }
   }
 }

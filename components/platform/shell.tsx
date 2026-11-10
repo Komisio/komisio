@@ -42,6 +42,7 @@ export function Shell({
   host = false,
   sidebarCollapsed = false,
   sellerAccess = false,
+  centralOffers,
   pendingRegistrations,
   supportMode = false,
 }: {
@@ -56,6 +57,7 @@ export function Shell({
   host?: boolean
   sidebarCollapsed?: boolean
   sellerAccess?: boolean
+  centralOffers?: boolean
   pendingRegistrations?: number
   supportMode?: boolean
 }) {
@@ -66,6 +68,7 @@ export function Shell({
   const [signingOut, setSigningOut] = useBusyState(false)
   const confirmNavigation = useConfirmNavigation()
   const groups = buildNavigation(d, {
+    centralOffers,
     pendingRegistrations,
     intakeEnabled,
     host,
@@ -154,6 +157,7 @@ export function Shell({
         {d.skipToContent}
       </a>
       <Sidebar
+        centralOffers={centralOffers}
         pendingRegistrations={pendingRegistrations}
         d={d}
         tenants={tenants}

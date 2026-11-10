@@ -115,4 +115,3 @@ select throws_ok($$select my_external_item_requests()$$,'42501',null,'anonymous 
 select throws_ok($$select * from external_item_requests$$,'42501',null,'anonymous reads are denied');
 select * from finish();
 rollback;
-

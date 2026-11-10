@@ -13,19 +13,22 @@ import {
 import { HostPlans } from '@/components/platform/host-plans'
 import { HostAi } from '@/components/platform/host-ai'
 import { readAiPlatformSettings } from '@/lib/engine/ai-credits'
+import { readCentralAppIntake } from '@/lib/engine/central-app-intake'
+import { HostCentralApp } from '@/components/platform/host-central-app'
 
 /** Platform host overview: every store's plan state and manual activation. */
 export default async function Host() {
   const ctx = await requirePlatform(false)
   if (!(await isPlatformHost(ctx.client))) notFound()
   const d = dictionary(ctx.locale)
-  const [rows, activity, ai, plan] = await Promise.all([
+  const [rows, activity, ai, plan, central] = await Promise.all([
     readHostOverview(ctx.client),
     readHostActivity(ctx.client),
     readAiPlatformSettings(ctx.client),
     ctx.active
       ? readPlanStatus(ctx.client, ctx.active.id)
       : Promise.resolve(null),
+    readCentralAppIntake(ctx.client),
   ])
   return (
     <div className="host-console">
@@ -44,6 +47,15 @@ export default async function Host() {
         supportActive={!!ctx.support}
       />
       {!ctx.support && <HostAi settings={ai} d={d.credits.host} />}
+      {!ctx.support && (
+        <HostCentralApp
+          initial={central}
+          stores={ctx.tenants.filter(
+            (t) => t.role === 'owner' || t.role === 'admin',
+          )}
+          d={d.centralApp}
+        />
+      )}
       <div className="host-privacy">
         <Link
           className="text-link"

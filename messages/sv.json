@@ -742,7 +742,8 @@
     "communication.push_sent": "Pushnotis · Överlämnad till Apple/Google",
     "communication.push_failed": "Pushnotis · Misslyckad",
     "communication.push_unconfirmed": "Pushnotis · Ej bekräftad",
-    "communication.push_pending": "Pushnotis · Väntar"
+    "communication.push_pending": "Pushnotis · Väntar",
+    "central_app.recipient_changed": "Mottagare för Komisios appförfrågningar ändrad"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -5393,5 +5394,21 @@
     "availableHint": "Beloppet som är tillgängligt efter reservationer för utbetalning.",
     "credited": "Från försäljningar, totalt",
     "paid": "Utbetalt, totalt"
+  },
+  "centralApp": {
+    "title": "Förfrågningar till Komisio",
+    "intro": "Välj verksamheten som tar emot appens nya varuförfrågningar. Piloten gäller inlämnare bosatta i Sverige och belopp i SEK.",
+    "recipient": "Mottagande butik",
+    "paused": "Pausat – inga nya förfrågningar",
+    "hint": "Du behöver vara ägare eller administratör i mottagarbutiken. Butikernas bildförhandsbedömning påverkas inte.",
+    "otherRecipient": "Nuvarande mottagare",
+    "save": "Spara mottagare",
+    "busy": "Sparar…",
+    "saved": "Mottagaren är sparad.",
+    "failed": "Mottagaren kunde inte sparas.",
+    "changed": "Inställningen har ändrats. Läs in sidan igen.",
+    "sekRequired": "Mottagarbutiken måste använda SEK.",
+    "uncertain": "Det gick inte att bekräfta ändringen. Läs in sidan för att se vad som sparats.",
+    "reload": "Läs in sidan igen"
   }
 }

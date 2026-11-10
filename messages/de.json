@@ -742,7 +742,8 @@
     "communication.push_sent": "Push-Mitteilung · An Apple/Google übergeben",
     "communication.push_failed": "Push-Mitteilung · Fehlgeschlagen",
     "communication.push_unconfirmed": "Push-Mitteilung · Unbestätigt",
-    "communication.push_pending": "Push-Mitteilung · Ausstehend"
+    "communication.push_pending": "Push-Mitteilung · Ausstehend",
+    "central_app.recipient_changed": "Empfänger für Komisio-App-Anfragen geändert"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -5399,5 +5400,21 @@
     "availableHint": "Der nach Auszahlungsreservierungen verfügbare Betrag.",
     "credited": "Aus Verkäufen, gesamt",
     "paid": "Ausgezahlt, gesamt"
+  },
+  "centralApp": {
+    "title": "Anfragen an Komisio",
+    "intro": "Wählen Sie den Betrieb, der neue Artikelanfragen aus der App erhält. Der Pilot gilt für Personen mit Wohnsitz in Schweden und Beträge in SEK.",
+    "recipient": "Empfangendes Geschäft",
+    "paused": "Pausiert – keine neuen Anfragen",
+    "hint": "Sie müssen Inhaber oder Administrator des empfangenden Geschäfts sein. Die Fotovorprüfung der Geschäfte bleibt unverändert.",
+    "otherRecipient": "Aktueller Empfänger",
+    "save": "Empfänger speichern",
+    "busy": "Wird gespeichert…",
+    "saved": "Empfänger gespeichert.",
+    "failed": "Der Empfänger konnte nicht gespeichert werden.",
+    "changed": "Die Einstellung wurde geändert. Laden Sie die Seite neu.",
+    "sekRequired": "Das empfangende Geschäft muss SEK verwenden.",
+    "uncertain": "Die Änderung konnte nicht bestätigt werden. Laden Sie die Seite neu, um den gespeicherten Stand zu prüfen.",
+    "reload": "Seite neu laden"
   }
 }

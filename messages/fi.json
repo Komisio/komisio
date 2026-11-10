@@ -742,7 +742,8 @@
     "communication.push_sent": "Push-ilmoitus · Välitetty Applelle/Googlelle",
     "communication.push_failed": "Push-ilmoitus · Epäonnistui",
     "communication.push_unconfirmed": "Push-ilmoitus · Vahvistamaton",
-    "communication.push_pending": "Push-ilmoitus · Odottaa"
+    "communication.push_pending": "Push-ilmoitus · Odottaa",
+    "central_app.recipient_changed": "Komision sovelluspyyntöjen vastaanottaja muutettu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -5399,5 +5400,21 @@
     "availableHint": "Maksuvarauksien jälkeen käytettävissä oleva summa.",
     "credited": "Myynneistä yhteensä",
     "paid": "Maksettu yhteensä"
+  },
+  "centralApp": {
+    "title": "Pyynnöt Komisiolle",
+    "intro": "Valitse yritys, joka vastaanottaa sovelluksen uudet tuotepyynnöt. Pilotti koskee Ruotsissa asuvia henkilöitä ja SEK-summia.",
+    "recipient": "Vastaanottava kauppa",
+    "paused": "Keskeytetty – ei uusia pyyntöjä",
+    "hint": "Sinun on oltava vastaanottavan kaupan omistaja tai ylläpitäjä. Kauppojen kuvien ennakkoarviointi ei muutu.",
+    "otherRecipient": "Nykyinen vastaanottaja",
+    "save": "Tallenna vastaanottaja",
+    "busy": "Tallennetaan…",
+    "saved": "Vastaanottaja tallennettu.",
+    "failed": "Vastaanottajaa ei voitu tallentaa.",
+    "changed": "Asetus on muuttunut. Lataa sivu uudelleen.",
+    "sekRequired": "Vastaanottavan kaupan valuutan on oltava SEK.",
+    "uncertain": "Muutosta ei voitu vahvistaa. Tarkista tallennettu tila lataamalla sivu uudelleen.",
+    "reload": "Lataa sivu uudelleen"
   }
 }

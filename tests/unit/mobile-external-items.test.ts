@@ -42,6 +42,22 @@ const identity = {
   phone_confirmed_at: '2026-11-10',
   app_metadata: {},
 }
+it('persists seller compensation meaning explicitly while keeping legacy requests distinguishable', async () => {
+  mocks.rpc.mockResolvedValue({ data: requestId, error: null })
+  expect(
+    (await POST(request({ ...input, priceBasis: 'seller_amount' }))).status,
+  ).toBe(200)
+  expect(mocks.rpc).toHaveBeenLastCalledWith(
+    'submit_external_item_request',
+    expect.objectContaining({
+      p_price_basis: 'seller_amount',
+      p_price_ore: '10000',
+    }),
+  )
+  mocks.rpc.mockClear()
+  expect((await POST(request())).status).toBe(200)
+  expect(mocks.rpc.mock.calls[0][1]).not.toHaveProperty('p_price_basis')
+})
 function request(body: unknown = input, headers: Record<string, string> = {}) {
   return new Request('https://api.example.test/api/mobile/v1/external-items', {
     method: 'POST',

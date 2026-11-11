@@ -54,11 +54,22 @@ const copy: Record<
   },
 }
 export function renderSellerPush(
-  kind: 'item_registered' | 'item_sold',
+  kind:
+    | 'item_registered'
+    | 'item_sold'
+    | 'external_item_offered'
+    | 'external_item_declined',
   locale: Locale,
   item: string,
   store: string,
 ) {
+  if (kind === 'external_item_offered' || kind === 'external_item_declined') {
+    const [offered, declined, body] = requestCopy[locale]
+    return {
+      title: kind === 'external_item_offered' ? offered : declined,
+      body,
+    }
+  }
   const d = copy[locale]
   return {
     title: kind === 'item_registered' ? d.registered : d.sold,
@@ -68,4 +79,47 @@ export function renderSellerPush(
         (key === 'item' ? item : store).replace(/\s+/g, ' ').trim(),
     ),
   }
+}
+
+const requestCopy: Record<Locale, [string, string, string]> = {
+  sv: [
+    'Du har fått ett erbjudande',
+    'Komisio kan inte ta emot din vara',
+    'Öppna appen för att se beskedet.',
+  ],
+  en: [
+    'You have an offer',
+    'Komisio cannot accept your item',
+    'Open the app to see the decision.',
+  ],
+  no: [
+    'Du har fått et tilbud',
+    'Komisio kan ikke ta imot varen',
+    'Åpne appen for å se svaret.',
+  ],
+  dk: [
+    'Du har fået et tilbud',
+    'Komisio kan ikke modtage varen',
+    'Åbn appen for at se svaret.',
+  ],
+  fi: [
+    'Olet saanut tarjouksen',
+    'Komisio ei voi vastaanottaa tuotettasi',
+    'Avaa sovellus nähdäksesi vastauksen.',
+  ],
+  de: [
+    'Du hast ein Angebot erhalten',
+    'Komisio kann deinen Artikel nicht annehmen',
+    'Öffne die App, um die Antwort zu sehen.',
+  ],
+  es: [
+    'Has recibido una oferta',
+    'Komisio no puede aceptar tu artículo',
+    'Abre la app para ver la respuesta.',
+  ],
+  it: [
+    'Hai ricevuto un’offerta',
+    'Komisio non può accettare il tuo articolo',
+    'Apri l’app per vedere la risposta.',
+  ],
 }

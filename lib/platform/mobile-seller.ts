@@ -37,7 +37,7 @@ export function mobileOrigin(request: Request): string | null {
 
 async function mobileVerifiedClient(
   request: Request,
-  identity: 'email' | 'phone',
+  identity: 'email' | 'phone' | 'push',
 ) {
   const authorization = request.headers.get('authorization') ?? ''
   const token =
@@ -66,6 +66,12 @@ async function mobileVerifiedClient(
   }
   if (!data.user) throw new MobileRequestError('AUTH_REQUIRED', 401)
   if (identity === 'email' && !data.user.email_confirmed_at)
+    throw new MobileRequestError('AUTH_REQUIRED', 401)
+  if (
+    identity === 'push' &&
+    !data.user.email_confirmed_at &&
+    !(data.user.phone_confirmed_at && data.user.phone)
+  )
     throw new MobileRequestError('AUTH_REQUIRED', 401)
   if (
     identity === 'phone' &&
@@ -99,6 +105,11 @@ export function mobileIdentityClient(request: Request) {
 /** External intake only; never a substitute for the registered-seller boundary. */
 export function mobilePhoneClient(request: Request) {
   return mobileVerifiedClient(request, 'phone')
+}
+
+/** Installation consent only; the engine separately checks event ownership. */
+export function mobilePushClient(request: Request) {
+  return mobileVerifiedClient(request, 'push')
 }
 
 export async function mobileSellerClient(

@@ -25,6 +25,7 @@ export const externalItemSubmission = z.strictObject({
     .nullable(),
   currency: z.string().regex(/^[A-Z]{3}$/),
   senderCountry: z.literal('SE').optional(),
+  priceBasis: z.literal('seller_amount').optional(),
   photos: z
     .array(uuid)
     .min(1)
@@ -76,6 +77,7 @@ const externalRequest = z.object({
   condition: externalItemSubmission.shape.condition,
   notes: z.string(),
   desired_price_ore: externalItemSubmission.shape.desiredPriceOre,
+  price_basis: z.enum(['resale', 'seller_amount']).optional(),
   currency: externalItemSubmission.shape.currency,
   photos: externalItemSubmission.shape.photos,
   sender_country: z.literal('SE').nullable().optional(),
@@ -106,6 +108,7 @@ export async function executeExternalItemCommand(
       p_currency: c.currency,
       p_photos: c.photos,
       p_sender_country: c.senderCountry ?? null,
+      ...(c.priceBasis ? { p_price_basis: c.priceBasis } : {}),
     })
     checkError(result.error)
     if (result.data !== c.requestId) throw new Error('UNCONFIRMED_RESULT')

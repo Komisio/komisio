@@ -1,16 +1,38 @@
 import { z } from 'zod'
 
-export const pushClaim = z.strictObject({
-  id: z.uuid(),
-  token: z.string().regex(/^Expo(nent)?PushToken\[[A-Za-z0-9_-]{1,200}\]$/),
-  platform: z.enum(['ios', 'android']),
-  kind: z.enum(['item_registered', 'item_sold']),
-  tenantId: z.uuid(),
-  sellerId: z.uuid(),
-  itemId: z.guid(),
-  title: z.string().min(1).max(200),
-  body: z.string().min(1).max(1000),
-})
+export const pushClaim = z
+  .strictObject({
+    id: z.uuid(),
+    token: z.string().regex(/^Expo(nent)?PushToken\[[A-Za-z0-9_-]{1,200}\]$/),
+    platform: z.enum(['ios', 'android']),
+    kind: z.enum([
+      'item_registered',
+      'item_sold',
+      'external_item_offered',
+      'external_item_declined',
+    ]),
+    tenantId: z.uuid(),
+    sellerId: z.uuid().nullable(),
+    itemId: z.guid().nullable(),
+    requestId: z.uuid().nullable().optional(),
+    ownerId: z.uuid().nullable().optional(),
+    offerId: z.uuid().nullable().optional(),
+    title: z.string().min(1).max(200),
+    body: z.string().min(1).max(1000),
+  })
+  .refine((c) =>
+    c.kind.startsWith('external_')
+      ? c.sellerId === null &&
+        c.itemId === null &&
+        !!c.requestId &&
+        !!c.ownerId &&
+        (c.kind === 'external_item_offered' ? !!c.offerId : c.offerId == null)
+      : !!c.sellerId &&
+        !!c.itemId &&
+        c.requestId == null &&
+        c.ownerId == null &&
+        c.offerId == null,
+  )
 export type PushClaim = z.infer<typeof pushClaim>
 export type PushSend = {
   status: 'accepted' | 'failed' | 'unconfirmed'
@@ -40,24 +62,40 @@ function headers(env: Record<string, string | undefined>) {
   }
 }
 export function expoPayload(c: PushClaim) {
+  const external = c.kind.startsWith('external_')
   return {
     to: c.token,
     title: c.title,
     body: c.body,
-    sound: c.kind === 'item_registered' ? 'registeredstore.wav' : 'sale.wav',
-    channelId:
-      c.kind === 'item_registered'
+    sound: external
+      ? 'default'
+      : c.kind === 'item_registered'
+        ? 'registeredstore.wav'
+        : 'sale.wav',
+    channelId: external
+      ? 'komisio-requests-v1'
+      : c.kind === 'item_registered'
         ? 'komisio-registered-v1'
         : 'komisio-sold-v1',
     ttl: 3600,
-    data: {
-      v: 1,
-      notificationId: c.id,
-      kind: c.kind,
-      tenantId: c.tenantId,
-      sellerId: c.sellerId,
-      itemId: c.itemId,
-    },
+    data: external
+      ? {
+          v: 2,
+          notificationId: c.id,
+          kind: c.kind,
+          tenantId: c.tenantId,
+          ownerId: c.ownerId,
+          requestId: c.requestId,
+          offerId: c.offerId ?? null,
+        }
+      : {
+          v: 1,
+          notificationId: c.id,
+          kind: c.kind,
+          tenantId: c.tenantId,
+          sellerId: c.sellerId,
+          itemId: c.itemId,
+        },
   }
 }
 export async function sendExpoPush(

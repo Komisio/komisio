@@ -3,6 +3,7 @@ export { verifyAuthEmailSignature }
 import { z } from 'zod'
 import { dictionary, isLocale, type Locale } from '../i18n'
 import { authEmailCopy, authEmailLocale } from './auth-email-copy'
+import { mobileAuthEmailCopy } from './mobile-auth-email-copy'
 
 type Env = Record<string, string | undefined>
 const escape = (text: string) =>
@@ -107,7 +108,28 @@ export async function handleAuthEmail(
       destination.origin === origin && destination.pathname === '/auth/activate'
     const ticket = destination.searchParams.get('ticket')
     const mails: Mail[] = []
-    if (activation && ticket) {
+    const mobileCode =
+      destination.origin === origin &&
+      destination.pathname === '/auth/callback' &&
+      destination.searchParams.get('mobile_code') === '1' &&
+      ['signup', 'magiclink'].includes(e.email_action_type)
+    if (mobileCode) {
+      // The signed Auth event selects presentation only; Auth verifies the OTP.
+      const requestedLocale = destination.searchParams.get('locale')
+      if (isLocale(requestedLocale)) locale = requestedLocale
+      const code = z
+        .string()
+        .regex(/^\d{6,10}$/)
+        .parse(e.token)
+      const copy = mobileAuthEmailCopy(locale)
+      mails.push(
+        render(
+          user.email,
+          copy.subject,
+          `${copy.intro}\n\n${code}\n\n${copy.note}`,
+        ),
+      )
+    } else if (activation && ticket) {
       if (
         !['signup', 'magiclink'].includes(e.email_action_type) ||
         !/^[a-f0-9]{64}$/.test(ticket)

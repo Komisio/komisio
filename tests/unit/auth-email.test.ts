@@ -48,6 +48,62 @@ function signed(
     }),
   }
 }
+
+it('sends mobile email codes for new and returning users in each supported language', async () => {
+  for (const locale of locales)
+    for (const action of ['signup', 'magiclink']) {
+      const { raw, headers } = signed(
+        action,
+        `https://app.example.test/auth/callback?mobile_code=1&locale=${locale}`,
+        { token: '12345678' },
+      )
+      const request = vi.fn().mockResolvedValue(Response.json({ id: 'sent' }))
+      expect(await handleAuthEmail(raw, headers, env, request)).toBe(200)
+      expect(request).toHaveBeenCalledTimes(1)
+      const mail = JSON.parse(request.mock.calls[0][1].body)
+      expect(mail.to).toEqual(['seller@example.test'])
+      expect(mail.text).toContain('\n\n12345678\n\n')
+      expect(mail.text).not.toContain(token)
+      expect(mail.html).not.toContain('href=')
+    }
+})
+
+it('never selects mobile code mail from metadata, a foreign origin or another path', async () => {
+  for (const redirect of [
+    'https://other.example.test/auth/callback?mobile_code=1',
+    'https://app.example.test/elsewhere?mobile_code=1',
+    'https://app.example.test/auth/callback?mobile_code=0',
+  ]) {
+    const { raw, headers } = signed(
+      'magiclink',
+      redirect,
+      { token: '12345678' },
+      Date.now(),
+      { user_metadata: { mobile_code: '1' } },
+    )
+    const request = vi.fn().mockResolvedValue(Response.json({ id: 'sent' }))
+    expect(await handleAuthEmail(raw, headers, env, request)).toBe(200)
+    const mail = JSON.parse(request.mock.calls[0][1].body)
+    expect(mail.text).not.toContain('12345678')
+    expect(mail.html).toContain('/auth/activate?')
+  }
+})
+
+it('rejects malformed mobile codes and leaves password recovery on its existing link flow', async () => {
+  const redirect = 'https://app.example.test/auth/callback?mobile_code=1'
+  for (const code of ['', '123', '<script>', undefined]) {
+    const { raw, headers } = signed('signup', redirect, { token: code })
+    const request = vi.fn()
+    expect(await handleAuthEmail(raw, headers, env, request)).toBe(400)
+    expect(request).not.toHaveBeenCalled()
+  }
+  const { raw, headers } = signed('recovery', redirect, { token: '12345678' })
+  const request = vi.fn().mockResolvedValue(Response.json({ id: 'sent' }))
+  expect(await handleAuthEmail(raw, headers, env, request)).toBe(200)
+  const mail = JSON.parse(request.mock.calls[0][1].body)
+  expect(mail.text).not.toContain('12345678')
+  expect(mail.html).toContain('type=recovery')
+})
 it('sends the frozen personalized copy and language for new and existing accounts in all languages', async () => {
   for (const locale of locales)
     for (const action of ['signup', 'magiclink']) {

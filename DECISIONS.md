@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-11: Owner approves store-independent mobile signup with Apple, Google and email codes. A signed Auth hook renders codes only for the exact mobile email-code destination; existing activation and recovery mail remain unchanged. No tenant membership or seller record is created.
+
 - 2026-11-11: Push workers explicitly request protocol 2 for central request events. Protocol 1 retains its exact ordinary-event candidate and claim shapes during rolling deployments and rollback. All versions share consent checks and the claimed-once queue.
 - 2026-11-11: External intake asks for the seller's desired compensation, not a resale price. Persist the meaning with the amount; ignore legacy resale wishes in review. Wishes never set guarantees. Existing offers and agreements remain immutable.
 - 2026-11-11: Central request owners may consent to device push after SMS verification, without store membership. Queue committed offers and staff declines once; recheck ownership, session and device consent before delivery. Existing store notifications keep their email and policy boundaries.

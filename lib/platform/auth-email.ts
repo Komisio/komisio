@@ -16,7 +16,10 @@ const escape = (text: string) =>
 const hash = z.string().regex(/^(?:pkce_)?[a-f0-9]{56,64}$/)
 const eventSchema = z.object({
   user: z.object({
-    email: z.email(),
+    email: z
+      .union([z.email(), z.literal('')])
+      .nullish()
+      .transform((value) => value ?? ''),
     new_email: z.string().nullish(),
     user_metadata: z.record(z.string(), z.unknown()).nullish(),
   }),
@@ -94,6 +97,9 @@ export async function handleAuthEmail(
     )
       return 200
     const { user, email_data: e } = eventSchema.parse(payload)
+    // A phone owner adding their first verified email has no old address.
+    // Other actions still require their established email recipient.
+    if (!user.email && e.email_action_type !== 'email_change') return 400
     const origin = new URL(env.NEXT_PUBLIC_APP_URL).origin
     let locale: Locale = authEmailLocale(user.user_metadata)
     const destination = new URL(e.redirect_to || origin)
@@ -205,7 +211,7 @@ export async function handleAuthEmail(
         const label = copy.button
         const body = `${copy.intro}\n\n${label}\n\n${copy.note}`
         // Supabase's hash_new belongs to the CURRENT address (documented API).
-        if (e.token_hash_new)
+        if (e.token_hash_new && user.email)
           mails.push(
             render(user.email, copy.subject, body, {
               label,

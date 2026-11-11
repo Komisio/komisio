@@ -19,12 +19,14 @@ function signed(
   redirect = `https://app.example.test/auth/activate?ticket=${ticket}`,
   extra = {},
   now = Date.now(),
+  user = {},
 ) {
   const raw = JSON.stringify({
     user: {
       email: 'seller@example.test',
       new_email: 'new@example.test',
       user_metadata: { locale: 'en' },
+      ...user,
     },
     email_data: {
       email_action_type: action,
@@ -152,6 +154,50 @@ it('preserves confirmation, recovery and secure email-change verification paths'
       expect(mails[1].to).toEqual(['new@example.test'])
       expect(mails[1].html).toContain(token)
     }
+  }
+})
+it('confirms the first email of a phone account without inventing an old recipient', async () => {
+  for (const email of [undefined, null, '']) {
+    const request = vi.fn().mockResolvedValue(Response.json({ id: 'sent' }))
+    const event = signed(
+      'email_change',
+      'https://app.example.test/auth/callback',
+      {},
+      Date.now(),
+      { email },
+    )
+    expect(await handleAuthEmail(event.raw, event.headers, env, request)).toBe(
+      200,
+    )
+    expect(request).toHaveBeenCalledTimes(1)
+    const mail = JSON.parse(request.mock.calls[0][1].body)
+    expect(mail.to).toEqual(['new@example.test'])
+    expect(mail.html).toContain(`type=email_change`)
+    expect(mail.html).toContain(token)
+  }
+})
+it('rejects missing recipients outside first-email confirmation and invalid new addresses', async () => {
+  for (const [action, user] of [
+    ['recovery', { email: '' }],
+    ['signup', { email: null }],
+    ['reauthentication', { email: undefined }],
+    ['email_change', { email: 'invalid' }],
+    ['email_change', { email: '', new_email: '' }],
+    ['email_change', { email: '', new_email: 'invalid' }],
+    ['email_change', { email: '', new_email: undefined }],
+  ] as const) {
+    const request = vi.fn()
+    const event = signed(
+      action,
+      'https://app.example.test/auth/callback',
+      {},
+      Date.now(),
+      user,
+    )
+    expect(await handleAuthEmail(event.raw, event.headers, env, request)).toBe(
+      400,
+    )
+    expect(request).not.toHaveBeenCalled()
   }
 })
 it('handles verification codes and account-security notices without silently accepting unknown actions', async () => {

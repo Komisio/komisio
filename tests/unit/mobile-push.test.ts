@@ -55,6 +55,27 @@ beforeEach(() => {
   })
 })
 afterEach(() => vi.unstubAllEnvs())
+it('accepts verified phone identity for device consent without accepting an unverified account', async () => {
+  mocks.getUser.mockResolvedValue({
+    data: {
+      user: {
+        id: deviceId,
+        phone: '46700000001',
+        phone_confirmed_at: '2026-11-11',
+        app_metadata: {},
+      },
+    },
+    error: null,
+  })
+  expect((await POST(request())).status).toBe(200)
+  mocks.rpc.mockClear()
+  mocks.getUser.mockResolvedValue({
+    data: { user: { id: deviceId, phone: '46700000001', app_metadata: {} } },
+    error: null,
+  })
+  expect((await POST(request())).status).toBe(401)
+  expect(mocks.rpc).not.toHaveBeenCalled()
+})
 it('derives identity from bearer authentication and returns uncached device state', async () => {
   const r = await POST(request())
   expect(r.status).toBe(200)

@@ -1,5 +1,8 @@
 # Decision Log
 
+- 2026-11-11: External intake asks for the seller's desired compensation, not a resale price. Persist the meaning with the amount; ignore legacy resale wishes in review. Wishes never set guarantees. Existing offers and agreements remain immutable.
+- 2026-11-11: Central request owners may consent to device push after SMS verification, without store membership. Queue committed offers and staff declines once; recheck ownership, session and device consent before delivery. Existing store notifications keep their email and policy boundaries.
+
 - 2026-11-11: Owner selects 46elks for Supabase phone verification. Use a separately signed SMS hook, fixed Komisio sender and no message-history text. Auth owns codes and limits; never log codes or grant membership. Existing email login is unchanged; hosted activation is a separate release.
 
 - 2026-11-10: Staff register physically received central items through the guaranteed intake engine, reusing reception photos and item records. Freeze the accepted agreement and guarantee, independently of selling price. Ordinary commission, calendar periods and end actions cannot replace central terms.

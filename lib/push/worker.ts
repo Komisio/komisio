@@ -10,9 +10,17 @@ const candidates = z
     z.strictObject({
       id: z.uuid(),
       tenantId: z.uuid(),
-      sellerId: z.uuid(),
-      itemId: z.guid(),
-      kind: z.enum(['item_registered', 'item_sold']),
+      sellerId: z.uuid().nullable(),
+      itemId: z.guid().nullable(),
+      requestId: z.uuid().nullable().optional(),
+      ownerId: z.uuid().nullable().optional(),
+      offerId: z.uuid().nullable().optional(),
+      kind: z.enum([
+        'item_registered',
+        'item_sold',
+        'external_item_offered',
+        'external_item_declined',
+      ]),
       createdAt: z.iso.datetime({ offset: true }),
       locale: z.enum(locales),
       storeName: z.string().max(120),
@@ -108,6 +116,9 @@ export async function runSellerPush(
         claim.tenantId !== c.tenantId ||
         claim.sellerId !== c.sellerId ||
         claim.itemId !== c.itemId ||
+        (claim.requestId ?? null) !== (c.requestId ?? null) ||
+        (claim.ownerId ?? null) !== (c.ownerId ?? null) ||
+        (claim.offerId ?? null) !== (c.offerId ?? null) ||
         claim.kind !== c.kind
       )
         throw new Error('PUSH_CLAIM_MISMATCH')

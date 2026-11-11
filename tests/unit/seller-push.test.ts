@@ -22,6 +22,38 @@ const claim: PushClaim = {
   title: 'Registered',
   body: 'Test item in Test store',
 }
+it('request decisions use ordinary sound and versioned phone-owner navigation without compensation or rejection text', () => {
+  const external: PushClaim = {
+    ...claim,
+    kind: 'external_item_offered',
+    sellerId: null,
+    itemId: null,
+    requestId: id,
+    ownerId: id,
+    offerId: id,
+  }
+  expect(expoPayload(external)).toMatchObject({
+    sound: 'default',
+    channelId: 'komisio-requests-v1',
+    data: { v: 2, ownerId: id, requestId: id, offerId: id },
+  })
+  expect(expoPayload(external).data).not.toHaveProperty('sellerId')
+  expect(expoPayload(external).data).not.toHaveProperty('url')
+  expect(
+    expoPayload({ ...external, kind: 'external_item_declined', offerId: null })
+      .data.offerId,
+  ).toBeNull()
+  for (const locale of locales) {
+    const text = renderSellerPush(
+      'external_item_declined',
+      locale,
+      'PRIVATE ITEM',
+      'PRIVATE STORE',
+    )
+    expect(text.title.length).toBeGreaterThan(0)
+    expect(text.body).not.toContain('PRIVATE')
+  }
+})
 it('uses original event sounds, bounded TTL and an identity-only navigation payload', () => {
   expect(expoPayload(claim)).toMatchObject({
     sound: 'registeredstore.wav',
@@ -90,7 +122,11 @@ it('sanitizes provider failures and distinguishes missing receipts', async () =>
   )
   expect(good.get(id)?.status).toBe('sent')
 })
-function fixture(outcome: 'claim' | 'lost' | 'stale', finishError = false) {
+function fixture(
+  outcome: 'claim' | 'lost' | 'stale',
+  finishError = false,
+  event: PushClaim = claim,
+) {
   const rpc = vi.fn(async (name: string, args?: Record<string, unknown>) => {
     if (name === 'expire_seller_push_claims') return { data: 0, error: null }
     if (name === 'seller_push_receipts') return { data: [], error: null }
@@ -100,9 +136,12 @@ function fixture(outcome: 'claim' | 'lost' | 'stale', finishError = false) {
           {
             id,
             tenantId: id,
-            sellerId: id,
-            itemId: id,
-            kind: claim.kind,
+            sellerId: event.sellerId,
+            itemId: event.itemId,
+            requestId: event.requestId,
+            ownerId: event.ownerId,
+            offerId: event.offerId,
+            kind: event.kind,
             createdAt: '2026-11-05T12:00:00Z',
             locale: 'sv',
             storeName: 'Test store',
@@ -115,7 +154,7 @@ function fixture(outcome: 'claim' | 'lost' | 'stale', finishError = false) {
       return {
         data:
           outcome === 'claim'
-            ? { ...claim, title: args!.p_subject, body: args!.p_body }
+            ? { ...event, title: args!.p_subject, body: args!.p_body }
             : null,
         error: outcome === 'lost' ? {} : null,
       }
@@ -125,6 +164,69 @@ function fixture(outcome: 'claim' | 'lost' | 'stale', finishError = false) {
   })
   return { rpc, client: { rpc } as unknown as SupabaseClient }
 }
+it.each(['external_item_offered', 'external_item_declined'] as const)(
+  'sends and acknowledges a claimed %s without requiring a seller account',
+  async (kind) => {
+    const event: PushClaim = {
+      ...claim,
+      kind,
+      sellerId: null,
+      itemId: null,
+      ownerId: id,
+      requestId: id,
+      offerId: kind === 'external_item_offered' ? id : null,
+    }
+    const f = fixture('claim', false, event)
+    const send = vi
+      .fn()
+      .mockResolvedValue({ status: 'accepted', ticket: id, error: '' })
+    expect(await runSellerPush(f.client, {}, send)).toEqual({
+      attempted: 1,
+      receipts: 0,
+      failed: false,
+    })
+    expect(send).toHaveBeenCalledOnce()
+    expect(send.mock.calls[0][0]).toMatchObject({
+      kind,
+      ownerId: id,
+      requestId: id,
+      sellerId: null,
+    })
+    expect(f.rpc).toHaveBeenCalledWith('finish_seller_push', {
+      p_id: id,
+      p_status: 'accepted',
+      p_ticket: id,
+      p_error: '',
+    })
+  },
+)
+it('never sends a request notification whose claimed owner differs from the candidate', async () => {
+  const event: PushClaim = {
+    ...claim,
+    kind: 'external_item_offered',
+    sellerId: null,
+    itemId: null,
+    ownerId: id,
+    requestId: id,
+    offerId: id,
+  }
+  const f = fixture('claim', false, event)
+  const original = f.rpc.getMockImplementation()!
+  f.rpc.mockImplementation(async (name, args) => {
+    const result = await original(name, args)
+    if (name === 'claim_seller_push')
+      return {
+        ...result,
+        data: { ...event, ownerId: 'f0000000-0000-4000-8000-000000000768' },
+      }
+    return result
+  })
+  const send = vi.fn()
+  await expect(runSellerPush(f.client, {}, send)).rejects.toThrow(
+    'PUSH_CLAIM_MISMATCH',
+  )
+  expect(send).not.toHaveBeenCalled()
+})
 it.each(['lost', 'stale'] as const)(
   'does not send after a %s claim response',
   async (outcome) => {

@@ -162,6 +162,7 @@ export default async function Item({
         }
         markSoldHref={
           active.role !== 'readonly' &&
+          !t.externalGuarantee &&
           (await searchSaleItems(ctx.client, active.id, item.id)).some(
             (row) => row.id === item.id,
           )
@@ -313,7 +314,23 @@ export default async function Item({
               <summary>{d.terms}</summary>
               <p>{d.termsHint}</p>
               <dl className="item-detail-facts">
-                {item.ownership === 'consignment' ? (
+                {t.externalGuarantee ? (
+                  <>
+                    <div>
+                      <dt>{all.externalOffers.sellerAmount}</dt>
+                      <dd>{formatOre(t.externalGuarantee.amountOre)} SEK</dd>
+                    </div>
+                    <div>
+                      <dt>{all.externalOffers.guaranteeDue}</dt>
+                      <dd>
+                        <EventTime
+                          value={t.externalGuarantee.dueAt}
+                          locale={ctx.locale}
+                        />
+                      </dd>
+                    </div>
+                  </>
+                ) : item.ownership === 'consignment' ? (
                   <div>
                     <dt>{d.commission}</dt>
                     <dd>
@@ -341,7 +358,9 @@ export default async function Item({
                   <dt>{d.salePeriod}</dt>
                   <dd>
                     {t.salePeriodDays} {d.days} ·{' '}
-                    {all.storePolicy[t.endOfPeriodAction]}
+                    {t.endOfPeriodAction === 'guaranteed_purchase'
+                      ? all.externalOffers.guaranteedPurchase
+                      : all.storePolicy[t.endOfPeriodAction]}
                   </dd>
                 </div>
                 <div>
@@ -363,6 +382,7 @@ export default async function Item({
               </dl>
             </details>
             {transferTargets.length > 0 &&
+              !t.externalGuarantee &&
               item.ownership === 'consignment' &&
               !ended && (
                 <section className="card intake-form">

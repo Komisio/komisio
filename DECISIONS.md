@@ -1,5 +1,13 @@
 # Decision Log
 
+- 2026-11-10: Staff register physically received central items through the guaranteed intake engine, reusing reception photos and item records. Freeze the accepted agreement and guarantee, independently of selling price. Ordinary commission, calendar periods and end actions cannot replace central terms.
+- 2026-11-10: Guaranteed registration reuses one receipt-bound reception and records the exact command hash. Retry returns the same item; competing commands cannot register it twice. Financial execution remains closed until the guarantee-aware sale and acquisition paths are implemented.
+
+- 2026-11-10: The owner approves immutable per-item guarantees with append-only registration, sale, acquisition and credit links. Freeze the accepted SEK amount and a 45-day deadline at physical receipt; later inventory registration must not restart the clock. One guarantee permits one credit.
+- 2026-11-10: A central seller keeps the fixed credited amount after a customer return. Komisio bears the return and a resale gives no second seller credit. Ordinary percentage-based returns are unchanged; acquisition and accounting rules remain separate.
+
+- 2026-11-10: Central offer reads include the linked handover's actual status, receipt time and grouped count for the same authorized owner or store. Accepted requests open their existing handover directly; receipt never implies saleable inventory, a sale or balance credit.
+
 - 2026-11-10: Owner selects host-managed central app intake into an ordinary tenant branded Komisio. Store self-service opt-in is retired; photo pre-review stays separate. New submissions require a Sweden residence declaration and SEK. Existing request recipients remain immutable.
 - 2026-11-10: Central offers promise fixed seller compensation regardless of resale price. Credit on sale or 45 days after physical receipt; acquire unsold goods for that amount on day 45 without double credit. Inority AB is named in the agreement. Financial execution awaits reviewed accounting rules.
 - 2026-11-10: A person host with owner/admin access to a SEK tenant may designate the central recipient using revision-checked engine writes. No default tenant by name or email, no implicit membership, and no host-wide access to request evidence. Preserve old exact retries and deny new legacy submissions.
@@ -1325,3 +1333,8 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-08: #793 simplifies the store overview to two receiving actions, existing localized totals and active follow-ups. Zero queues and all setup steps remain expandable; unknown reads stay visible. Reference lookup gains a visible label. Permissions and financial rules are unchanged.
 
 - 2026-11-08: #795 shares colored item status badges across inventory, handover, seller and lifecycle lists. Localized labels, seller-facing stage projection and markdown details remain visible; lifecycle facts, permissions and financial behavior are unchanged.
+- 2026-11-10: Owner approves immutable central item offers with fixed SEK compensation, a 48-hour server deadline and a frozen store agreement version. Owner-bound responses append yes/no evidence. Acceptance may link ordinary seller registration and H-handovers; it does not itself credit money.
+- 2026-11-10: Central intake uses the recipient's ordinary seller agreement. New versions require consent for subsequent uploads; previous items keep their agreed version. Acquisition accounting and post-credit returns remain unresolved before automatic guarantee execution.
+- 2026-11-10: Owner approves an explicit SMS-user link to a separate central seller; contact email never grants access or merges sellers. Existing store email identities remain unchanged. Account and bank details, consent and an invited H-handover are completed atomically after an offer.
+- 2026-11-10: Central accepted items share an open H-handover only for the same seller and saved agreement version. Staff still confirm physical receipt; receipt preserves those terms and creates no sale or credit. Ordinary self-dropoff settings and handovers are unchanged.
+- 2026-11-10: Explicit phone-owned sellers cannot enter ordinary percentage-based item acceptance. Central guaranteed item registration is a separate next slice; account consent and physical receipt never imply saleable inventory or credit.

@@ -1,5 +1,6 @@
 import { raceInlinePrice } from './inline-price-race.mjs'
 import { raceExternalRequests } from './external-item-request-race.mjs'
+import { raceExternalOffers } from './external-item-offer-race.mjs'
 import { raceItemRegistration } from './item-registration-race.mjs'
 import { raceLabelFields } from './label-fields-race.mjs'
 import { raceSalePayment } from './sale-payment-race.mjs'
@@ -140,6 +141,7 @@ try {
   }
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceExternalRequests({ setup, connectionString: parsed.toString() })
+  await raceExternalOffers({ setup, connectionString: parsed.toString() })
   await raceRegistrationCategory({ setup, connectionString: parsed.toString() })
   await raceCatalogReadiness({ setup, connectionString: parsed.toString() })
   await raceItemCollection({ setup, connectionString: parsed.toString() })

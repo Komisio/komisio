@@ -17,6 +17,7 @@ export function buildNavigation(
     intakeEnabled: boolean
     host: boolean
     audit?: boolean
+    centralOffers?: boolean
     pendingRegistrations?: number
   },
 ): NavGroup[] {
@@ -32,6 +33,15 @@ export function buildNavigation(
           // The one-screen reception first: it is the default intake profile.
           { path: '/intake/quick', label: d.quickIntake.title, icon: 'Zap' },
           { path: '/intake', label: n.receiveBag, icon: 'Inbox' },
+          ...(options.centralOffers
+            ? [
+                {
+                  path: '/intake/requests',
+                  label: d.externalOffers.title,
+                  icon: 'Camera',
+                },
+              ]
+            : []),
         ],
       },
       {

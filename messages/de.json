@@ -743,7 +743,11 @@
     "communication.push_failed": "Push-Mitteilung · Fehlgeschlagen",
     "communication.push_unconfirmed": "Push-Mitteilung · Unbestätigt",
     "communication.push_pending": "Push-Mitteilung · Ausstehend",
-    "central_app.recipient_changed": "Empfänger für Komisio-App-Anfragen geändert"
+    "central_app.recipient_changed": "Empfänger für Komisio-App-Anfragen geändert",
+    "external_offer.issued": "Angebot gesendet",
+    "external_offer.responded": "Verkäufer hat auf Angebot geantwortet",
+    "external_item.guarantee_frozen": "Garantiebetrag und Frist gespeichert",
+    "external_item.registered": "Registriert"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -3238,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "Die Verbindung wird aktualisiert. Bitte später erneut versuchen.",
       "PAYPAL_RECONNECT_REQUIRED": "Zum Fortfahren erneut verbinden.",
       "PAYPAL_CONNECTION_CHANGED": "Zum Fortfahren erneut verbinden.",
-      "PAYPAL_APP_UNAVAILABLE": "Die PayPal POS-Verbindung wurde von Komisio noch nicht aktiviert."
+      "PAYPAL_APP_UNAVAILABLE": "Die PayPal POS-Verbindung wurde von Komisio noch nicht aktiviert.",
+      "GUARANTEED_SALE_REQUIRED": "Der Verkauf von Artikeln mit garantiertem Verkäuferbetrag ist noch nicht verfügbar."
     },
     "approvalHint": "Zugeordnete Belege werden automatisch erfasst. Nur Ausnahmen müssen untersucht werden; ein zweiter Genehmiger ist nicht erforderlich.",
     "held": "Der Beleg konnte nicht erfasst werden. Untersuchen Sie, bevor Sie es erneut versuchen.",
@@ -5416,5 +5421,59 @@
     "sekRequired": "Das empfangende Geschäft muss SEK verwenden.",
     "uncertain": "Die Änderung konnte nicht bestätigt werden. Laden Sie die Seite neu, um den gespeicherten Stand zu prüfen.",
     "reload": "Seite neu laden"
+  },
+  "externalOffers": {
+    "title": "Anfragen",
+    "intro": "Über die App an Komisio gesendete Artikel.",
+    "empty": "Noch keine Anfragen.",
+    "sellerAmount": "Garantierter Verkäuferbetrag (SEK)",
+    "salePrice": "Geplanter Verkaufspreis (SEK)",
+    "fixedHint": "Der Verkäuferbetrag ist fest, unabhängig vom Verkaufspreis.",
+    "duration": "Das Angebot gilt 48 Stunden.",
+    "send": "Angebot senden",
+    "decline": "Ablehnen",
+    "note": "Begründung für den Verkäufer (optional)",
+    "noAgreement": "Veröffentlichen Sie vor dem Angebot eine Verkäufervereinbarung.",
+    "agreement": "Verkäufervereinbarung",
+    "waiting": "Wartet auf Prüfung",
+    "offered": "Wartet auf Antwort",
+    "accepted": "Verkäufer hat angenommen",
+    "declined": "Abgeschlossen",
+    "expired": "Angebot abgelaufen",
+    "superseded": "Durch neues Angebot ersetzt",
+    "deadline": "Antwort bis",
+    "failure": "Das Ergebnis konnte nicht bestätigt werden. Mit denselben Angaben erneut versuchen.",
+    "changed": "Die Anfrage hat sich geändert. Laden Sie vor dem Fortfahren den aktuellen Status.",
+    "reload": "Aktuellen Status laden",
+    "invalidAmount": "Betrag über 0 mit höchstens zwei Nachkommastellen eingeben.",
+    "saved": "Gespeichert",
+    "photos": "Fotos",
+    "desiredPrice": "Preiswunsch des Verkäufers",
+    "retry": "Erneut versuchen",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "condition": "Zustand",
+    "conditions": {
+      "like_new": "Wie neu",
+      "very_good": "Sehr gut",
+      "good": "Gut",
+      "worn": "Abgenutzt"
+    },
+    "openHandover": "Abgabe öffnen",
+    "groupedItems": "Artikel in dieser Abgabe: {count}",
+    "receivedAt": "Eingegangen",
+    "handoverStatuses": {
+      "open": "Wartet auf Abgabe",
+      "received": "Eingegangen",
+      "cancelled": "Abgabe storniert"
+    },
+    "register": "Artikel registrieren",
+    "registered": "Registriert",
+    "openItem": "Artikel öffnen",
+    "itemDescription": "Beschreibung",
+    "registrationPrice": "Verkaufspreis (SEK)",
+    "registrationPriceInvalid": "Geben Sie einen Preis zwischen 0,01 und 999.999,99 SEK ein.",
+    "guaranteeDue": "Garantierte Gutschrift bis",
+    "guaranteedPurchase": "Geschäft kauft unverkauften Artikel"
   }
 }

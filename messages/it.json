@@ -743,7 +743,11 @@
     "communication.push_failed": "Notifica push · Non riuscita",
     "communication.push_unconfirmed": "Notifica push · Non confermata",
     "communication.push_pending": "Notifica push · In attesa",
-    "central_app.recipient_changed": "Destinatario delle richieste dell’app Komisio modificato"
+    "central_app.recipient_changed": "Destinatario delle richieste dell’app Komisio modificato",
+    "external_offer.issued": "Offerta inviata",
+    "external_offer.responded": "Il venditore ha risposto all’offerta",
+    "external_item.guarantee_frozen": "Importo garantito e scadenza salvati",
+    "external_item.registered": "Registrato"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -3238,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "Il collegamento si sta aggiornando. Riprova tra poco.",
       "PAYPAL_RECONNECT_REQUIRED": "Ricollega per continuare.",
       "PAYPAL_CONNECTION_CHANGED": "Ricollega per continuare.",
-      "PAYPAL_APP_UNAVAILABLE": "Komisio non ha ancora attivato il collegamento a PayPal POS."
+      "PAYPAL_APP_UNAVAILABLE": "Komisio non ha ancora attivato il collegamento a PayPal POS.",
+      "GUARANTEED_SALE_REQUIRED": "La vendita di articoli con importo garantito al venditore non è ancora disponibile."
     },
     "approvalHint": "Gli scontrini abbinati vengono registrati automaticamente. Solo le eccezioni richiedono una verifica; non serve un secondo approvatore.",
     "held": "Impossibile registrare lo scontrino. Verifica prima di riprovare.",
@@ -5410,5 +5415,59 @@
     "sekRequired": "Il negozio destinatario deve usare SEK.",
     "uncertain": "Impossibile confermare la modifica. Ricarica la pagina per verificare i dati salvati.",
     "reload": "Ricarica pagina"
+  },
+  "externalOffers": {
+    "title": "Richieste",
+    "intro": "Articoli inviati a Komisio tramite l’app.",
+    "empty": "Nessuna richiesta.",
+    "sellerAmount": "Importo garantito al venditore (SEK)",
+    "salePrice": "Prezzo di vendita previsto (SEK)",
+    "fixedHint": "L’importo del venditore è fisso, indipendentemente dal prezzo di vendita.",
+    "duration": "L’offerta è valida per 48 ore.",
+    "send": "Invia offerta",
+    "decline": "Rifiuta",
+    "note": "Motivo per il venditore (facoltativo)",
+    "noAgreement": "Pubblica un accordo del venditore prima di inviare un’offerta.",
+    "agreement": "Accordo del venditore",
+    "waiting": "In attesa di valutazione",
+    "offered": "In attesa della risposta",
+    "accepted": "Il venditore ha accettato",
+    "declined": "Chiusa",
+    "expired": "Offerta scaduta",
+    "superseded": "Sostituita da una nuova offerta",
+    "deadline": "Rispondi entro",
+    "failure": "Impossibile confermare il risultato. Riprova con gli stessi dati.",
+    "changed": "La richiesta è cambiata. Carica lo stato attuale prima di continuare.",
+    "reload": "Carica stato attuale",
+    "invalidAmount": "Inserisci un importo maggiore di 0 con al massimo due decimali.",
+    "saved": "Salvato",
+    "photos": "Foto",
+    "desiredPrice": "Prezzo desiderato dal venditore",
+    "retry": "Riprova",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "condition": "Condizioni",
+    "conditions": {
+      "like_new": "Come nuovo",
+      "very_good": "Ottime",
+      "good": "Buone",
+      "worn": "Usurato"
+    },
+    "openHandover": "Apri consegna",
+    "groupedItems": "Articoli in questa consegna: {count}",
+    "receivedAt": "Ricevuto",
+    "handoverStatuses": {
+      "open": "In attesa di consegna",
+      "received": "Ricevuto",
+      "cancelled": "Consegna annullata"
+    },
+    "register": "Registra articolo",
+    "registered": "Registrato",
+    "openItem": "Apri articolo",
+    "itemDescription": "Descrizione",
+    "registrationPrice": "Prezzo di vendita (SEK)",
+    "registrationPriceInvalid": "Inserisci un prezzo tra 0,01 e 999.999,99 SEK.",
+    "guaranteeDue": "Accredito garantito entro",
+    "guaranteedPurchase": "Il negozio acquista l’articolo invenduto"
   }
 }

@@ -12,10 +12,35 @@ Ordinary stores retain their own photo pre-review and consignment flows. Central
 compensation is fixed regardless of resale price; credit occurs on sale or 45 days
 after physical receipt, with acquisition of unsold goods on that date. This
 supersedes the store-discovery direction below. The acquisition accounting,
-returns after credit, loss/damage handling, offer expiry, agreement text and legal
-identity details still need resolution before financial execution. No automatic
+loss/damage handling and legal identity details still need
+resolution before financial execution. The owner sets offer expiry to 48 hours
+and selects the recipient store's ordinary seller agreement; later versions
+require consent for subsequent uploads without changing earlier items. The owner
+approves immutable offers and separate seller responses, with later links to
+ordinary seller registration and H-handovers. No automatic
 bank transfer, cross-border intake, currency conversion or production activation
 is authorized by the implementation work.
+
+Resolved by the owner on 2026-11-10: the verified phone identity owns a separate
+central seller record. Email is contact-only; it never grants access or merges
+existing sellers. Account, bank details, frozen agreement consent and an invited
+H-handover use that explicit identity. Ordinary store email access is unchanged.
+
+Resolved by the owner on 2026-11-10: a customer return does not reverse the
+central seller's fixed credit, and resale creates no second credit. The owner
+approves immutable per-item guarantee records and append-only fulfillment
+events. Physical receipt freezes the accepted amount and the 45-day clock;
+later inventory registration links to that evidence without restarting it.
+Sales below the fixed amount and late POS imports still need defined acquisition
+and accounting reconciliation without negative commission or duplicate credit.
+Existing percentage-based sales and returns remain unchanged. Guarantee records
+alone do not create inventory, ledger credit, purchases or accounting exports.
+
+Owner follow-up 2026-11-10: accounting for sales below the guarantee and day-45
+acquisitions must be discussed before implementation. Late-import reconciliation
+also remains undecided. Neither the proposed separate cost accounts nor automatic
+day-45 credit with manual reconciliation is approved. Continue nonfinancial
+inventory registration; keep sale/acquisition execution closed for these items.
 
 External app intake (2026-11-09): the owner confirms fixed seller compensation
 regardless of sale price, 45 days from physical receipt, and credit to the seller
@@ -26,10 +51,11 @@ no store is enabled automatically. The directory alone grants no seller access o
 submission authority. On 2026-11-10 the owner approved phone-verified request/image
 records for one chosen store, without membership, seller registration or balance,
 and a server-enforced ten-active-request limit. Prepare Supabase Phone Auth;
-provider choice and hosted SMS activation remain deferred. Offers, receipt links
-and financial execution remain future work. Offer/request expiry, identity
-recovery when a phone/email belongs to another account, and acquisition accounting
-remain open. Existing email seller access must remain unchanged.
+provider choice and hosted SMS activation remain deferred. Fixed offers and
+receipt links follow the decisions above; financial execution remains future
+work. Request expiry, identity recovery after losing access to a phone number,
+and acquisition accounting remain open. Existing email seller access must remain
+unchanged.
 
 Sales summary (#655, scope clarified 2026-10-26): the owner selected a separate
 sales-information document and then explicitly requested a simple summary of

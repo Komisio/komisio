@@ -743,7 +743,11 @@
     "communication.push_failed": "Pushnotifikation · Mislykket",
     "communication.push_unconfirmed": "Pushnotifikation · Ikke bekræftet",
     "communication.push_pending": "Pushnotifikation · Afventer",
-    "central_app.recipient_changed": "Modtager af Komisios appforespørgsler ændret"
+    "central_app.recipient_changed": "Modtager af Komisios appforespørgsler ændret",
+    "external_offer.issued": "Tilbud sendt",
+    "external_offer.responded": "Sælgeren svarede på tilbuddet",
+    "external_item.guarantee_frozen": "Garantibeløb og frist gemt",
+    "external_item.registered": "Registreret"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -3238,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "Forbindelsen opdateres. Prøv igen om lidt.",
       "PAYPAL_RECONNECT_REQUIRED": "Tilslut igen for at fortsætte.",
       "PAYPAL_CONNECTION_CHANGED": "Tilslut igen for at fortsætte.",
-      "PAYPAL_APP_UNAVAILABLE": "PayPal POS-forbindelsen er endnu ikke aktiveret af Komisio."
+      "PAYPAL_APP_UNAVAILABLE": "PayPal POS-forbindelsen er endnu ikke aktiveret af Komisio.",
+      "GUARANTEED_SALE_REQUIRED": "Salg af varer med garanteret beløb er endnu ikke tilgængeligt."
     },
     "approvalHint": "Matchede kvitteringer registreres automatisk. Kun undtagelser kræver undersøgelse; der kræves ingen anden godkender.",
     "held": "Kvitteringen kunne ikke registreres. Undersøg, før du prøver igen.",
@@ -5410,5 +5415,59 @@
     "sekRequired": "Modtagerbutikken skal bruge SEK.",
     "uncertain": "Ændringen kunne ikke bekræftes. Genindlæs siden for at kontrollere, hvad der er gemt.",
     "reload": "Genindlæs siden"
+  },
+  "externalOffers": {
+    "title": "Forespørgsler",
+    "intro": "Varer sendt til Komisio via appen.",
+    "empty": "Ingen forespørgsler endnu.",
+    "sellerAmount": "Garanteret til sælgeren (SEK)",
+    "salePrice": "Planlagt salgspris (SEK)",
+    "fixedHint": "Beløbet til sælgeren er fast, uanset salgsprisen.",
+    "duration": "Tilbuddet gælder i 48 timer.",
+    "send": "Send tilbud",
+    "decline": "Afvis",
+    "note": "Begrundelse til sælgeren (valgfrit)",
+    "noAgreement": "Udgiv en sælgeraftale, før du sender et tilbud.",
+    "agreement": "Sælgeraftale",
+    "waiting": "Afventer vurdering",
+    "offered": "Afventer sælgerens svar",
+    "accepted": "Sælgeren har accepteret",
+    "declined": "Afsluttet",
+    "expired": "Tilbuddet er udløbet",
+    "superseded": "Erstattet af et nyt tilbud",
+    "deadline": "Svar senest",
+    "failure": "Resultatet kunne ikke bekræftes. Prøv igen med de samme oplysninger.",
+    "changed": "Forespørgslen er ændret. Hent den aktuelle status, før du fortsætter.",
+    "reload": "Hent aktuel status",
+    "invalidAmount": "Angiv et beløb over 0 med højst to decimaler.",
+    "saved": "Gemt",
+    "photos": "Billeder",
+    "desiredPrice": "Sælgerens ønskede pris",
+    "retry": "Prøv igen",
+    "previous": "Forrige",
+    "next": "Næste",
+    "condition": "Stand",
+    "conditions": {
+      "like_new": "Som ny",
+      "very_good": "Meget god",
+      "good": "God",
+      "worn": "Slidt"
+    },
+    "openHandover": "Åbn indleveringen",
+    "groupedItems": "Varer i samme indlevering: {count}",
+    "receivedAt": "Modtaget",
+    "handoverStatuses": {
+      "open": "Afventer indlevering",
+      "received": "Modtaget",
+      "cancelled": "Indleveringen er annulleret"
+    },
+    "register": "Registrer vare",
+    "registered": "Registreret",
+    "openItem": "Åbn varen",
+    "itemDescription": "Beskrivelse",
+    "registrationPrice": "Salgspris (SEK)",
+    "registrationPriceInvalid": "Angiv en pris mellem 0,01 og 999.999,99 SEK.",
+    "guaranteeDue": "Garanteret saldo senest",
+    "guaranteedPurchase": "Butikken køber usolgt vare"
   }
 }

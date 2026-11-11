@@ -743,7 +743,11 @@
     "communication.push_failed": "Notificación push · Fallida",
     "communication.push_unconfirmed": "Notificación push · Sin confirmar",
     "communication.push_pending": "Notificación push · Pendiente",
-    "central_app.recipient_changed": "Se ha cambiado el destinatario de las solicitudes de la app de Komisio"
+    "central_app.recipient_changed": "Se ha cambiado el destinatario de las solicitudes de la app de Komisio",
+    "external_offer.issued": "Oferta enviada",
+    "external_offer.responded": "El vendedor respondió a la oferta",
+    "external_item.guarantee_frozen": "Importe garantizado y plazo guardados",
+    "external_item.registered": "Registrado"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -3238,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "La conexión se está actualizando. Inténtalo de nuevo en un momento.",
       "PAYPAL_RECONNECT_REQUIRED": "Vuelve a conectar para continuar.",
       "PAYPAL_CONNECTION_CHANGED": "Vuelve a conectar para continuar.",
-      "PAYPAL_APP_UNAVAILABLE": "Komisio aún no ha activado la conexión con PayPal POS."
+      "PAYPAL_APP_UNAVAILABLE": "Komisio aún no ha activado la conexión con PayPal POS.",
+      "GUARANTEED_SALE_REQUIRED": "La venta de artículos con un importe garantizado al vendedor aún no está disponible."
     },
     "approvalHint": "Los recibos coincidentes se registran automáticamente. Solo las excepciones necesitan investigación; no se requiere un segundo aprobador.",
     "held": "No se pudo registrar el recibo. Investiga antes de reintentar.",
@@ -5416,5 +5421,59 @@
     "sekRequired": "La tienda receptora debe utilizar SEK.",
     "uncertain": "No se pudo confirmar el cambio. Recarga la página para comprobar lo guardado.",
     "reload": "Recargar página"
+  },
+  "externalOffers": {
+    "title": "Solicitudes",
+    "intro": "Artículos enviados a Komisio desde la app.",
+    "empty": "Aún no hay solicitudes.",
+    "sellerAmount": "Importe garantizado al vendedor (SEK)",
+    "salePrice": "Precio de venta previsto (SEK)",
+    "fixedHint": "El importe del vendedor es fijo, independientemente del precio de venta.",
+    "duration": "La oferta es válida durante 48 horas.",
+    "send": "Enviar oferta",
+    "decline": "Rechazar",
+    "note": "Motivo para el vendedor (opcional)",
+    "noAgreement": "Publica un acuerdo de vendedor antes de enviar una oferta.",
+    "agreement": "Acuerdo de vendedor",
+    "waiting": "Pendiente de revisión",
+    "offered": "Pendiente de respuesta",
+    "accepted": "El vendedor ha aceptado",
+    "declined": "Cerrada",
+    "expired": "Oferta caducada",
+    "superseded": "Sustituida por una nueva oferta",
+    "deadline": "Responder antes de",
+    "failure": "No se pudo confirmar el resultado. Reintenta con los mismos datos.",
+    "changed": "La solicitud ha cambiado. Carga su estado actual antes de continuar.",
+    "reload": "Cargar estado actual",
+    "invalidAmount": "Introduce un importe mayor que 0 con un máximo de dos decimales.",
+    "saved": "Guardado",
+    "photos": "Fotos",
+    "desiredPrice": "Precio deseado por el vendedor",
+    "retry": "Reintentar",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "condition": "Estado",
+    "conditions": {
+      "like_new": "Como nuevo",
+      "very_good": "Muy bueno",
+      "good": "Bueno",
+      "worn": "Desgastado"
+    },
+    "openHandover": "Abrir entrega",
+    "groupedItems": "Artículos en esta entrega: {count}",
+    "receivedAt": "Recibido",
+    "handoverStatuses": {
+      "open": "Pendiente de entrega",
+      "received": "Recibido",
+      "cancelled": "Entrega cancelada"
+    },
+    "register": "Registrar artículo",
+    "registered": "Registrado",
+    "openItem": "Abrir artículo",
+    "itemDescription": "Descripción",
+    "registrationPrice": "Precio de venta (SEK)",
+    "registrationPriceInvalid": "Introduce un precio entre 0,01 y 999.999,99 SEK.",
+    "guaranteeDue": "Abono garantizado antes del",
+    "guaranteedPurchase": "La tienda compra el artículo no vendido"
   }
 }

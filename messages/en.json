@@ -743,7 +743,11 @@
     "communication.push_failed": "Push notification · Failed",
     "communication.push_unconfirmed": "Push notification · Unconfirmed",
     "communication.push_pending": "Push notification · Pending",
-    "central_app.recipient_changed": "Komisio app request recipient changed"
+    "central_app.recipient_changed": "Komisio app request recipient changed",
+    "external_offer.issued": "Offer issued",
+    "external_offer.responded": "Seller responded to offer",
+    "external_item.guarantee_frozen": "Guaranteed amount and deadline saved",
+    "external_item.registered": "Registered"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -3238,7 +3242,8 @@
       "PAYPAL_REFRESH_BUSY": "The connection is updating. Try again shortly.",
       "PAYPAL_RECONNECT_REQUIRED": "Reconnect to continue.",
       "PAYPAL_CONNECTION_CHANGED": "Reconnect to continue.",
-      "PAYPAL_APP_UNAVAILABLE": "The PayPal POS connection has not yet been enabled by Komisio."
+      "PAYPAL_APP_UNAVAILABLE": "The PayPal POS connection has not yet been enabled by Komisio.",
+      "GUARANTEED_SALE_REQUIRED": "Sales of items with guaranteed seller amounts are not yet available."
     },
     "approvalHint": "Matched receipts are recorded automatically. Only exceptions need investigation; no second approver is required.",
     "held": "The receipt could not be recorded. Investigate before retrying.",
@@ -5410,5 +5415,59 @@
     "sekRequired": "The receiving store must use SEK.",
     "uncertain": "The change could not be confirmed. Reload to check what was saved.",
     "reload": "Reload page"
+  },
+  "externalOffers": {
+    "title": "Requests",
+    "intro": "Items sent to Komisio through the app.",
+    "empty": "No requests yet.",
+    "sellerAmount": "Guaranteed seller amount (SEK)",
+    "salePrice": "Planned selling price (SEK)",
+    "fixedHint": "The seller amount is fixed, regardless of the selling price.",
+    "duration": "The offer is valid for 48 hours.",
+    "send": "Send offer",
+    "decline": "Decline",
+    "note": "Reason for the seller (optional)",
+    "noAgreement": "Publish a seller agreement before sending an offer.",
+    "agreement": "Seller agreement",
+    "waiting": "Awaiting review",
+    "offered": "Awaiting seller response",
+    "accepted": "Seller accepted",
+    "declined": "Closed",
+    "expired": "Offer expired",
+    "superseded": "Replaced by a new offer",
+    "deadline": "Respond by",
+    "failure": "The result could not be confirmed. Retry with the same details.",
+    "changed": "The request has changed. Reload its current status before continuing.",
+    "reload": "Reload current status",
+    "invalidAmount": "Enter an amount above 0 with at most two decimal places.",
+    "saved": "Saved",
+    "photos": "Photos",
+    "desiredPrice": "Seller’s requested price",
+    "retry": "Retry",
+    "previous": "Previous",
+    "next": "Next",
+    "condition": "Condition",
+    "conditions": {
+      "like_new": "Like new",
+      "very_good": "Very good",
+      "good": "Good",
+      "worn": "Worn"
+    },
+    "openHandover": "Open handover",
+    "groupedItems": "Items in this handover: {count}",
+    "receivedAt": "Received",
+    "handoverStatuses": {
+      "open": "Waiting for drop-off",
+      "received": "Received",
+      "cancelled": "Handover cancelled"
+    },
+    "register": "Register item",
+    "registered": "Registered",
+    "openItem": "Open item",
+    "itemDescription": "Description",
+    "registrationPrice": "Selling price (SEK)",
+    "registrationPriceInvalid": "Enter a price between 0.01 and 999,999.99 SEK.",
+    "guaranteeDue": "Guaranteed balance credit by",
+    "guaranteedPurchase": "Store purchases unsold item"
   }
 }

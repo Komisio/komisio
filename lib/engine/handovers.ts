@@ -124,7 +124,7 @@ export async function readHandover(
   const result = await client
     .from('seller_handovers')
     .select(
-      'id,reference,seller_id,kind,estimated_items,note,status,created_at,received_at,received_bag_id',
+      'id,reference,seller_id,kind,estimated_items,note,status,created_at,received_at,received_bag_id,external_item_handover_links(count)',
     )
     .eq('tenant_id', tenantId)
     .eq('id', z.uuid().parse(id))
@@ -146,7 +146,8 @@ export async function readHandover(
     sellerId: row.seller_id,
     sellerName: seller.data.name,
     kind: row.kind,
-    estimatedItems: row.estimated_items,
+    estimatedItems:
+      row.external_item_handover_links?.[0]?.count || row.estimated_items,
     note: row.note,
     status: row.status,
     createdAt: row.created_at,

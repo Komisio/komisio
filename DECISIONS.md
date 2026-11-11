@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-11: Owner selects 46elks for Supabase phone verification. Use a separately signed SMS hook, fixed Komisio sender and no message-history text. Auth owns codes and limits; never log codes or grant membership. Existing email login is unchanged; hosted activation is a separate release.
+
 - 2026-11-10: Staff register physically received central items through the guaranteed intake engine, reusing reception photos and item records. Freeze the accepted agreement and guarantee, independently of selling price. Ordinary commission, calendar periods and end actions cannot replace central terms.
 - 2026-11-10: Guaranteed registration reuses one receipt-bound reception and records the exact command hash. Retry returns the same item; competing commands cannot register it twice. Financial execution remains closed until the guarantee-aware sale and acquisition paths are implemented.
 

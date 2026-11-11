@@ -17,6 +17,10 @@ recipient, session and device consent; stale/answered offers are suppressed.
 Request delivery outcomes stay in the private push queue because the request
 may not have a seller account yet. Verify offer/rejection taps, denied consent
 and cold launch in TestFlight before reporting physical-device delivery verified.
+New workers request queue protocol 2. The no-argument queue retains ordinary
+events and their exact legacy shape, including claims, so an older deployment
+can continue those deliveries during promotion or rollback. Central events wait
+for a protocol-2 worker; both versions share the same claim-once rows.
 
 Before enabling transport, deploy the seller-push migration and mobile API,
 then build the mobile app with the `expo-notifications` plugin and the bundled

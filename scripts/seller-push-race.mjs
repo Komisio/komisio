@@ -24,8 +24,10 @@ try {
     new URL('../supabase/tests/0462_seller_push.test.sql', import.meta.url),
     'utf8',
   )
+  const claimStart = fixture.indexOf("select set_config('test.first_claim'")
+  assert(claimStart > 0, 'Fixture must stop before its first send claim')
   fixture = fixture
-    .slice(0, fixture.indexOf('select is(claim_seller_push'))
+    .slice(0, claimStart)
     .replace(/\\ir bag-reception-fixture.inc/, () =>
       readFileSync(
         new URL('../supabase/tests/bag-reception-fixture.inc', import.meta.url),

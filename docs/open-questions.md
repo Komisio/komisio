@@ -4,6 +4,13 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Resolved 2026-11-11: mobile users may create an account without selecting a store,
+using Apple, Google or an email code. Existing password and SMS login remain.
+Phone verification is still required before the first central submission.
+Explicit provider linking preserves the existing Auth identity; contact-email
+matching does not merge seller records or grant tenant membership. Hosted provider
+configuration and real-device verification remain release checks.
+
 External intake feedback (resolved 2026-11-11): the optional amount is the
 seller's desired compensation. Legacy resale-price wishes are ignored in
 staff review without changing offers or agreements. The owner requests push

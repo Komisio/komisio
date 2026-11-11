@@ -1,7 +1,7 @@
 import { executePushDevice, pushDeviceCommand } from '@/lib/engine/seller-push'
 import {
   MobileRequestError,
-  mobileIdentityClient,
+  mobilePushClient,
   mobileJson,
   mobileOrigin,
 } from '@/lib/platform/mobile-seller'
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     origin = mobileOrigin(request)
     const parsed = pushDeviceCommand.safeParse(await mobileJson(request))
     if (!parsed.success) throw new MobileRequestError('INVALID_INPUT', 400)
-    const client = await mobileIdentityClient(request)
+    const client = await mobilePushClient(request)
     return Response.json(await executePushDevice(client, parsed.data), {
       headers: headers(origin),
     })

@@ -7,6 +7,17 @@ Both default to off. Sellers explicitly enable notifications on each phone;
 changing the selected store does not unsubscribe from their other stores.
 Email settings are independent. Existing items/sales are not backfilled.
 
+The host-designated central intake also notifies SMS-verified request owners
+when staff send an offer or reject a request. This uses the same installation
+consent and worker, with default notification sound and no seller membership
+requirement. It does not enable ordinary stores' registered/sold notifications.
+Only future decisions are queued; a seller declining an offer does not create a
+store-rejection notification. The sender rechecks request ownership, the central
+recipient, session and device consent; stale/answered offers are suppressed.
+Request delivery outcomes stay in the private push queue because the request
+may not have a seller account yet. Verify offer/rejection taps, denied consent
+and cold launch in TestFlight before reporting physical-device delivery verified.
+
 Before enabling transport, deploy the seller-push migration and mobile API,
 then build the mobile app with the `expo-notifications` plugin and the bundled
 `registeredstore.wav` and `sale.wav`. These original legacy assets are reused

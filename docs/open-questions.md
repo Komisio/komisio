@@ -4,6 +4,12 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+External intake feedback (resolved 2026-11-11): the optional amount is the
+seller's desired compensation. Legacy resale-price wishes are ignored in
+staff review without changing offers or agreements. The owner requests push
+for committed central offers and staff declines, using the verified phone
+identity and explicit device permission; ordinary store notification rules remain.
+
 SMS provider (resolved 2026-11-11): the owner selected 46elks and created the
 company account. Implement a separately signed Supabase Send SMS hook with
 Komisio as sender and message-history text disabled. Provider credentials,

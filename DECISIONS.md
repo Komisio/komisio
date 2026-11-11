@@ -1344,3 +1344,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-10: Owner approves an explicit SMS-user link to a separate central seller; contact email never grants access or merges sellers. Existing store email identities remain unchanged. Account and bank details, consent and an invited H-handover are completed atomically after an offer.
 - 2026-11-10: Central accepted items share an open H-handover only for the same seller and saved agreement version. Staff still confirm physical receipt; receipt preserves those terms and creates no sale or credit. Ordinary self-dropoff settings and handovers are unchanged.
 - 2026-11-10: Explicit phone-owned sellers cannot enter ordinary percentage-based item acceptance. Central guaranteed item registration is a separate next slice; account consent and physical receipt never imply saleable inventory or credit.
+
+- 2026-11-11: Phone owners may verify an email and choose a password on the same Auth user. First-email confirmation sends only to the new address; existing secure email changes retain both recipients. No contact-email matching, seller merge or membership change occurs.

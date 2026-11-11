@@ -1017,3 +1017,5 @@ read access from the store list and associated database changes. Visits require
 a reason, last at most 60 minutes, retain the real actor and preserve membership.
 Explicit exit ends access; expiry or removed authority fails closed. Write access
 and impersonation are outside this approval.
+
+Mobile identity (resolved 2026-11-11): the owner approved verified email/password login on the existing SMS identity. Contact email alone remains insufficient, address conflicts never merge accounts, and existing store authorization stays unchanged.

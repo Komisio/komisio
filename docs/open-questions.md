@@ -4,6 +4,12 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+SMS provider (resolved 2026-11-11): the owner selected 46elks and created the
+company account. Implement a separately signed Supabase Send SMS hook with
+Komisio as sender and message-history text disabled. Provider credentials,
+protected staging/production activation and a real verification-code delivery
+remain to be verified. Existing email authentication and membership are unchanged.
+
 Central app intake (2026-11-10): the owner replaces the external-store opt-in
 directory with one host-designated ordinary tenant branded Komisio. The pilot
 accepts Swedish residents and SEK only. Inority AB and its registration number
@@ -51,7 +57,7 @@ no store is enabled automatically. The directory alone grants no seller access o
 submission authority. On 2026-11-10 the owner approved phone-verified request/image
 records for one chosen store, without membership, seller registration or balance,
 and a server-enforced ten-active-request limit. Prepare Supabase Phone Auth;
-provider choice and hosted SMS activation remain deferred. Fixed offers and
+provider choice is resolved above; hosted SMS activation remains separate. Fixed offers and
 receipt links follow the decisions above; financial execution remains future
 work. Request expiry, identity recovery after losing access to a phone number,
 and acquisition accounting remain open. Existing email seller access must remain

@@ -16,6 +16,7 @@ import { POST as photoPost } from '../../app/api/mobile/v1/external-items/photos
 import { POST as sellerPost } from '../../app/api/mobile/v1/seller/route'
 import { POST as offerPost } from '../../app/api/mobile/v1/external-items/offers/route'
 import { POST as onboardingPost } from '../../app/api/mobile/v1/external-items/onboarding/route'
+import { POST as analysisPost } from '../../app/api/mobile/v1/external-items/assistance/route'
 import { issueExternalOfferCommand } from '../../lib/engine/external-item-offers'
 import { externalItemSubmission } from '../../lib/engine/external-item-requests'
 
@@ -120,6 +121,73 @@ beforeEach(() => {
   mocks.remove.mockResolvedValue({ error: null })
 })
 afterEach(() => vi.unstubAllEnvs())
+
+describe('central photo analysis identity', () => {
+  const command = {
+    action: 'analyze',
+    requestId,
+    tenantId,
+    photos: [photoId],
+    language: 'sv',
+  }
+  it('ignores a caller-supplied capability and uses only the server secret', async () => {
+    vi.stubEnv('KOMISIO_SELLER_AI_SERVER_KEY', 'a'.repeat(64))
+    mocks.rpc.mockResolvedValue({
+      data: {
+        id: requestId,
+        tenantId,
+        photos: [photoId],
+        language: 'sv',
+        status: 'pending',
+        output: null,
+      },
+      error: null,
+    })
+    expect(
+      (
+        await analysisPost(
+          request(command, { 'x-komisio-seller-ai': 'forged' }),
+        )
+      ).status,
+    ).toBe(200)
+    expect(mocks.createClient.mock.calls[0][2].global.headers).toEqual({
+      Authorization: 'Bearer synthetic.access.token',
+      'x-komisio-seller-ai': 'a'.repeat(64),
+    })
+  })
+  it('retains phone verification and MFA even for result reads', async () => {
+    mocks.getUser.mockResolvedValue({
+      data: { user: { ...identity, phone_confirmed_at: null } },
+      error: null,
+    })
+    expect(
+      (await analysisPost(request({ action: 'read', requestId }))).status,
+    ).toBe(403)
+    expect(mocks.rpc).not.toHaveBeenCalled()
+    mocks.getUser.mockResolvedValue({ data: { user: identity }, error: null })
+    mocks.assurance.mockResolvedValue({
+      data: { currentLevel: 'aal1', nextLevel: 'aal2' },
+      error: null,
+    })
+    expect(
+      (await analysisPost(request({ action: 'read', requestId }))).status,
+    ).toBe(403)
+    expect(mocks.rpc).not.toHaveBeenCalled()
+  })
+  it('can recover results without enabling the provider or supplying a model secret', async () => {
+    vi.stubEnv('KOMISIO_SELLER_AI_SERVER_KEY', '')
+    mocks.rpc.mockResolvedValue({ data: null, error: null })
+    expect(
+      (await analysisPost(request({ action: 'read', requestId }))).status,
+    ).toBe(200)
+    expect(
+      mocks.createClient.mock.calls[0][2].global.headers,
+    ).not.toHaveProperty('x-komisio-seller-ai')
+    expect(
+      (await analysisPost(request({ ...command, ownerId: owner }))).status,
+    ).toBe(400)
+  })
+})
 
 describe('central offer boundary', () => {
   const agreementId = 'f6100000-0000-4000-8000-000000000401'

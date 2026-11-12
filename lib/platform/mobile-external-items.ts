@@ -51,6 +51,11 @@ export function externalItemFailure(error: unknown, origin: string | null) {
     PHOTO_IN_USE: 409,
     PHOTO_STILL_STORED: 409,
     PLAN_READ_ONLY: 409,
+    SHIPPING_UNAVAILABLE: 503,
+    SHIPPING_CONTACT_UNSUPPORTED: 409,
+    PARCEL_EXISTS: 409,
+    PARCEL_GROUP_UNSUPPORTED: 409,
+    HANDOVER_CLOSED: 409,
   }
   const known = Object.hasOwn(statuses, message)
   return Response.json(

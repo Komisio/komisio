@@ -38,6 +38,7 @@ export function mobileOrigin(request: Request): string | null {
 async function mobileVerifiedClient(
   request: Request,
   identity: 'email' | 'phone' | 'push',
+  serverHeaders: Record<string, string> = {},
 ) {
   const authorization = request.headers.get('authorization') ?? ''
   const token =
@@ -49,7 +50,7 @@ async function mobileVerifiedClient(
   const { url, key } = supabaseEnv()
   // Deliberately stateless: cookies and any staff session cannot supply identity.
   const client = createClient(url, key, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
+    global: { headers: { ...serverHeaders, Authorization: `Bearer ${token}` } },
     auth: {
       persistSession: false,
       autoRefreshToken: false,
@@ -105,6 +106,13 @@ export function mobileIdentityClient(request: Request) {
 /** External intake only; never a substitute for the registered-seller boundary. */
 export function mobilePhoneClient(request: Request) {
   return mobileVerifiedClient(request, 'phone')
+}
+
+/** Server capability is never copied from a caller-controlled header. */
+export function mobileShippingClient(request: Request, serverKey: string) {
+  return mobileVerifiedClient(request, 'phone', {
+    'x-komisio-shipping': serverKey,
+  })
 }
 
 /** Installation consent only; the engine separately checks event ownership. */

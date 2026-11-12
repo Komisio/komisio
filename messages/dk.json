@@ -743,6 +743,8 @@
     "communication.push_failed": "Pushnotifikation · Mislykket",
     "communication.push_unconfirmed": "Pushnotifikation · Ikke bekræftet",
     "communication.push_pending": "Pushnotifikation · Afventer",
+    "central_parcel.dispatched": "Pakkefragt startet",
+    "central_parcel.booking_recorded": "Svar på fragtbestilling registreret",
     "central_app.recipient_changed": "Modtager af Komisios appforespørgsler ændret",
     "external_offer.issued": "Tilbud sendt",
     "external_offer.responded": "Sælgeren svarede på tilbuddet",

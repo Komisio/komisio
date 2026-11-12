@@ -4,6 +4,20 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+## Central parcel shipping (2026-11-12)
+
+Resolved by the owner: Swedish senders only, Komisio pays PostNord shipping,
+one accepted item per parcel initially, separate package/item/booking records,
+and no central drop-off alternative. Carrier events do not establish custody
+or change the guarantee. Ordinary stores retain their existing intake.
+
+Activation still requires the operator's PostNord API credentials, application
+ID, customer-number access and a verified sandbox return label with the correct
+direction and billing party. A business-portal account alone is insufficient.
+Real booking, service eligibility and contract charges have not been verified.
+Unknown provider outcomes require reconciliation before another booking; this
+slice never assumes that a timeout means a shipment was not created.
+
 Resolved 2026-11-11: mobile users may create an account without selecting a store,
 using Apple, Google or an email code. Existing password and SMS login remain.
 Phone verification is still required before the first central submission.

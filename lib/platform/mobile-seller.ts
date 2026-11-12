@@ -38,6 +38,7 @@ export function mobileOrigin(request: Request): string | null {
 async function mobileVerifiedClient(
   request: Request,
   identity: 'email' | 'phone' | 'push',
+  serverHeaders: Record<string, string> = {},
 ) {
   const authorization = request.headers.get('authorization') ?? ''
   const token =
@@ -49,7 +50,7 @@ async function mobileVerifiedClient(
   const { url, key } = supabaseEnv()
   // Deliberately stateless: cookies and any staff session cannot supply identity.
   const client = createClient(url, key, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
+    global: { headers: { ...serverHeaders, Authorization: `Bearer ${token}` } },
     auth: {
       persistSession: false,
       autoRefreshToken: false,
@@ -105,6 +106,14 @@ export function mobileIdentityClient(request: Request) {
 /** External intake only; never a substitute for the registered-seller boundary. */
 export function mobilePhoneClient(request: Request) {
   return mobileVerifiedClient(request, 'phone')
+}
+
+/** The capability is server-owned; incoming request headers cannot supply it. */
+export function mobilePhotoAiClient(request: Request) {
+  const key = process.env.KOMISIO_SELLER_AI_SERVER_KEY
+  if (!key || !/^[a-f0-9]{64}$/i.test(key))
+    throw new Error('ASSISTANCE_DISABLED')
+  return mobileVerifiedClient(request, 'phone', { 'x-komisio-seller-ai': key })
 }
 
 /** Installation consent only; the engine separately checks event ownership. */

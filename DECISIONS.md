@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-12: Owner approves immutable central photo AI attempts/results bound to the phone-verified user, uploaded photos and recipient. Explicit analysis uses that store's existing AI budget; replay never invokes AI twice. Analysis creates no seller, request, membership or balance.
+
 - 2026-11-11: Owner approves store-independent mobile signup with Apple, Google and email codes. A signed Auth hook renders codes only for the exact mobile email-code destination; existing activation and recovery mail remain unchanged. No tenant membership or seller record is created.
 
 - 2026-11-11: Push workers explicitly request protocol 2 for central request events. Protocol 1 retains its exact ordinary-event candidate and claim shapes during rolling deployments and rollback. All versions share consent checks and the claimed-once queue.

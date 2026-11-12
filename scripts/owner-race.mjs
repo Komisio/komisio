@@ -1,6 +1,7 @@
 import { raceInlinePrice } from './inline-price-race.mjs'
 import { raceExternalRequests } from './external-item-request-race.mjs'
 import { raceExternalOffers } from './external-item-offer-race.mjs'
+import { raceExternalPhotoAI } from './external-photo-ai-race.mjs'
 import { raceItemRegistration } from './item-registration-race.mjs'
 import { raceLabelFields } from './label-fields-race.mjs'
 import { raceSalePayment } from './sale-payment-race.mjs'
@@ -84,6 +85,8 @@ try {
   clients.push(setup)
   await setup.connect()
   await setup.query(`create schema extensions;
+ create extension if not exists pgcrypto with schema extensions;
+ grant usage on schema extensions to authenticated,anon;
  create schema auth;
  create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,deleted_at timestamptz,
   encrypted_password text,raw_user_meta_data jsonb,raw_app_meta_data jsonb,recovery_token text,recovery_sent_at timestamptz,phone text,phone_confirmed_at timestamptz);
@@ -142,6 +145,7 @@ try {
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceExternalRequests({ setup, connectionString: parsed.toString() })
   await raceExternalOffers({ setup, connectionString: parsed.toString() })
+  await raceExternalPhotoAI({ setup, connectionString: parsed.toString() })
   await raceRegistrationCategory({ setup, connectionString: parsed.toString() })
   await raceCatalogReadiness({ setup, connectionString: parsed.toString() })
   await raceItemCollection({ setup, connectionString: parsed.toString() })

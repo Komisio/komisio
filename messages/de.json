@@ -1748,6 +1748,8 @@
     "otherChanges": "Weitere Kontobewegungen"
   },
   "handovers": {
+    "parcelContents": "Im selben Paket: {reference}",
+    "parcelReceiptHint": "Inhalt prüfen und den Empfang jeder Abgabe bestätigen.",
     "title": "Angekündigte Übergaben",
     "intro": "Bestätige den Empfang, sobald die Waren im Geschäft sind.",
     "disabled": "Voranmeldungen sind deaktiviert.",

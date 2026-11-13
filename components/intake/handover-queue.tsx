@@ -4,7 +4,7 @@ import Link from '@/components/platform/working-link'
 import { useRouter } from '@/components/platform/use-working-router'
 import type { Dictionary } from '@/lib/i18n'
 import { EventTime } from '@/components/ui/event-time'
-import type { HandoverQueueRow } from '@/lib/engine/handovers'
+import type { HandoverQueueRow, HandoverParcel } from '@/lib/engine/handovers'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
 
@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 export function HandoverQueue({
   tenantId,
   rows,
+  parcels = [],
   write,
   focus,
   locale,
@@ -20,6 +21,7 @@ export function HandoverQueue({
 }: {
   tenantId: string
   rows: HandoverQueueRow[]
+  parcels?: HandoverParcel[]
   write: boolean
   focus: string | null
   locale: string
@@ -64,6 +66,33 @@ export function HandoverQueue({
             ).replace('{count}', String(h.estimatedItems))}
           </p>
           {h.note && <p className="handover-card-note">{h.note}</p>}
+          {parcels
+            .filter(
+              (p) =>
+                p.items.length > 1 &&
+                p.items.some((i) => i.handoverId === h.id),
+            )
+            .map((p) => (
+              <div key={p.reference} className="intake-notice">
+                <strong>
+                  {d.parcelContents.replace('{reference}', p.reference)}
+                </strong>
+                <ul>
+                  {p.items.map((i) => (
+                    <li key={i.offerId}>
+                      <Link
+                        className="text-link"
+                        href={`/intake/handovers?focus=${i.handoverId}`}
+                      >
+                        {i.reference} · {i.description}
+                      </Link>{' '}
+                      · {d.statuses[i.status]}
+                    </li>
+                  ))}
+                </ul>
+                <p>{d.parcelReceiptHint}</p>
+              </div>
+            ))}
           <p className="handover-card-meta">
             <span>
               {d.announced} <EventTime value={h.createdAt} locale={locale} />

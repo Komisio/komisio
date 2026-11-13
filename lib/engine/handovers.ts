@@ -1,5 +1,25 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { parcelItem } from './central-parcel-schema'
+
+const handoverParcel = z.object({
+  reference: z.string().regex(/^P-[1-9][0-9]{0,11}$/),
+  items: z.array(parcelItem).min(1).max(10),
+})
+export type HandoverParcel = z.infer<typeof handoverParcel>
+export async function readHandoverParcels(
+  client: SupabaseClient,
+  tenant: string,
+  handovers: string[],
+) {
+  if (!handovers.length) return []
+  const r = await client.rpc('handover_parcels', {
+    p_tenant: z.uuid().parse(tenant),
+    p_handovers: z.array(z.uuid()).max(100).parse(handovers),
+  })
+  if (r.error) throw new Error('Unable to read parcel contents')
+  return z.array(handoverParcel).max(100).parse(r.data)
+}
 
 // Self drop-off (P3): a seller announces a handover, the store receives it
 // as an ordinary bag receipt. Boundary validation only; SQL owns the rules.

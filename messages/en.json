@@ -1748,6 +1748,8 @@
     "otherChanges": "Other account events"
   },
   "handovers": {
+    "parcelContents": "In the same parcel: {reference}",
+    "parcelReceiptHint": "Check the contents and confirm receipt of each handover.",
     "title": "Announced drop-offs",
     "intro": "Confirm receipt when the items are in the store.",
     "disabled": "Pre-announcements are turned off.",

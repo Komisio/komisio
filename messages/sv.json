@@ -1748,6 +1748,8 @@
     "otherChanges": "Övriga kontohändelser"
   },
   "handovers": {
+    "parcelContents": "I samma paket: {reference}",
+    "parcelReceiptHint": "Kontrollera innehållet och bekräfta mottagningen för varje inlämning.",
     "title": "Föranmälningar",
     "intro": "Bekräfta mottagandet när varorna är i butiken.",
     "disabled": "Föranmälningar är avstängda.",

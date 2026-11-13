@@ -1748,6 +1748,8 @@
     "otherChanges": "Muut tilitapahtumat"
   },
   "handovers": {
+    "parcelContents": "Samassa paketissa: {reference}",
+    "parcelReceiptHint": "Tarkista sisältö ja vahvista jokaisen luovutuksen vastaanotto.",
     "title": "Ennakkoilmoitukset",
     "intro": "Vahvista vastaanotto, kun tavarat ovat myymälässä.",
     "disabled": "Ennakkoilmoitukset on poistettu käytöstä.",

@@ -11,14 +11,15 @@ one accepted item per parcel initially, separate package/item/booking records,
 and no central drop-off alternative. Carrier events do not establish custody
 or change the guarantee. Ordinary stores retain their existing intake.
 
-Activation still requires the operator's PostNord API credentials, application
-ID, customer-number access and a verified sandbox return label with the correct
-direction and billing party. A business-portal account alone is insufficient.
-Real booking, service eligibility and contract charges have not been verified.
-The sandbox-only probe is available via `npm run test:postnord`; development
-can continue using a separate Sandbox subscription without waiting for production
-activation. Test API key, application ID and customer number are still needed for
-a real provider run. Local tests use synthetic replies, not carrier acceptance.
+The sandbox-only probe completed one real PostNord Sandbox booking on 2026-11-13:
+HTTP 200, validated return/tracking IDs and a readable QR matching the return ID.
+It used synthetic contacts, the test account's customer number and the documented
+example application ID; this does not establish an assigned production ID.
+Retrieving the existing PDF label by tracking ID returned `FAIL / id not found`.
+PostNord must confirm the service-point label/direction, authorized production
+application ID, service eligibility and company billing before activation.
+No production booking or application shipping activation has occurred. Test
+credentials and provider evidence remain in ignored local files, not the repo.
 Unknown provider outcomes require reconciliation before another booking; this
 slice never assumes that a timeout means a shipment was not created.
 

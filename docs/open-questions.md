@@ -16,8 +16,13 @@ HTTP 200, validated return/tracking IDs and a readable QR matching the return ID
 It used synthetic contacts, the test account's customer number and the documented
 example application ID; this does not establish an assigned production ID.
 Retrieving the existing PDF label by tracking ID returned `FAIL / id not found`.
-PostNord must confirm the service-point label/direction, authorized production
-application ID, service eligibility and company billing before activation.
+The owner authorizes production testing with separate Komisio portal applications
+and omission of the unassigned Booking application ID. Swagger requires only the
+application name, while the guide asks for an assigned ID; production acceptance
+is not yet verified. A second Sandbox booking with the separate Komisio client
+and no application ID returned HTTP 200 and a QR decoding to the exact return ID.
+Service-point label/direction, service eligibility and company
+billing remain carrier/device checks before general availability.
 No production booking or application shipping activation has occurred. Test
 credentials and provider evidence remain in ignored local files, not the repo.
 Unknown provider outcomes require reconciliation before another booking; this

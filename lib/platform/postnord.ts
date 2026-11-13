@@ -9,7 +9,10 @@ import {
 const configuration = z.object({
   environment: z.enum(['sandbox', 'production']),
   apiKey: z.string().min(8).max(512),
-  applicationId: z.string().regex(/^[0-9]{1,4}$/),
+  applicationId: z
+    .string()
+    .regex(/^[0-9]{1,4}$/)
+    .optional(),
   customerNumber: z.string().regex(/^[0-9]{1,17}$/),
   serverKey: z.string().regex(/^[a-f0-9]{64}$/),
 })
@@ -21,7 +24,7 @@ export function postNordConfiguration(
   const parsed = configuration.safeParse({
     environment: env.KOMISIO_POSTNORD_ENVIRONMENT,
     apiKey: env.KOMISIO_POSTNORD_API_KEY,
-    applicationId: env.KOMISIO_POSTNORD_APPLICATION_ID,
+    applicationId: env.KOMISIO_POSTNORD_APPLICATION_ID?.trim() || undefined,
     customerNumber: env.KOMISIO_POSTNORD_CUSTOMER_NUMBER,
     serverKey: env.KOMISIO_SHIPPING_SERVER_KEY,
   })
@@ -29,8 +32,8 @@ export function postNordConfiguration(
 }
 
 /** PostNord Booking v3, "Book Return using EDI". Not a pickup or home collection.
- * https://guide.developer.postnord.com/ -- customer-number and application ID
- * must be issued for this integration. Confirm the label in sandbox before use.
+ * Booking 3.5.29.1 Swagger requires application.name, but not applicationId.
+ * Include an assigned ID when configured; never substitute a documentation ID.
  */
 export function postNordReturnBody(
   config: PostNordConfiguration,
@@ -65,7 +68,9 @@ export function postNordReturnBody(
     messageFunction: 'Instruction',
     messageId,
     application: {
-      applicationId: Number(config.applicationId),
+      ...(config.applicationId === undefined
+        ? {}
+        : { applicationId: Number(config.applicationId) }),
       name: 'Komisio',
       version: '1.0',
     },

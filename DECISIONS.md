@@ -1357,3 +1357,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-12: Carrier booking and tracking never establish custody or start the 45-day guarantee. Staff physical receipt remains authoritative. Ordinary store handovers retain their existing flow; central sellers see postal shipping instead of a drop-off option.
 
 - 2026-11-13: PostNord verification uses a sandbox-only operator probe with dedicated test credentials and synthetic contacts. Each local run claims one dispatch durably; unknown replies are inspected, never automatically rebooked. The probe cannot change application data or enable shipping.
+- 2026-11-13: Owner authorizes separate Komisio API clients and real production shipping tests. Booking applicationId is omitted when unassigned, as allowed by Swagger; supplied IDs remain validated. No example ID fallback or automatic retry is permitted.

@@ -10,7 +10,6 @@ import type { CentralParcel } from '../lib/engine/central-parcel-schema'
 
 const required = [
   'POSTNORD_SANDBOX_API_KEY',
-  'POSTNORD_SANDBOX_APPLICATION_ID',
   'POSTNORD_SANDBOX_CUSTOMER_NUMBER',
 ] as const
 

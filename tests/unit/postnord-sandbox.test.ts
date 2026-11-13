@@ -51,6 +51,18 @@ it('checks configuration without dispatch and never uses production credentials 
   expect(transport).not.toHaveBeenCalled()
 })
 
+it('allows an unassigned application ID without reporting it as missing', async () => {
+  const result = await runPostNordSandbox({
+    mode: 'check',
+    env: { ...env, POSTNORD_SANDBOX_APPLICATION_ID: '' },
+  })
+  expect(result).toMatchObject({
+    configuration: 'ready',
+    missing: [],
+    networkRequests: 0,
+  })
+})
+
 it('holds an unknown outcome durably and refuses a second or concurrent dispatch', async () => {
   const root = await workspace()
   const transport = vi

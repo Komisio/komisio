@@ -163,6 +163,56 @@ describe('central parcel boundary', () => {
       ),
     ).toThrow('SHIPPING_UNAVAILABLE')
   })
+  it('omits an unassigned application ID in both environments without a fallback', async () => {
+    for (const environment of ['sandbox', 'production'] as const) {
+      for (const applicationId of [undefined, '', '   ']) {
+        const parsed = postNordConfiguration({
+          KOMISIO_POSTNORD_ENABLED: 'true',
+          KOMISIO_POSTNORD_ENVIRONMENT: environment,
+          KOMISIO_POSTNORD_API_KEY: config.apiKey,
+          KOMISIO_POSTNORD_CUSTOMER_NUMBER: config.customerNumber,
+          KOMISIO_SHIPPING_SERVER_KEY: config.serverKey,
+          KOMISIO_POSTNORD_APPLICATION_ID: applicationId,
+        })
+        expect(parsed).not.toBeNull()
+        const transport = vi
+          .fn()
+          .mockResolvedValue(Response.json(await reply()))
+        await bookPostNordReturn(
+          parsed!,
+          { ...parcel, environment },
+          'H-1',
+          'K1',
+          transport,
+        )
+        expect(transport).toHaveBeenCalledTimes(1)
+        const [url, init] = transport.mock.calls[0]
+        expect(url.origin).toBe(
+          environment === 'sandbox'
+            ? 'https://atapi2.postnord.com'
+            : 'https://api2.postnord.com',
+        )
+        expect(JSON.parse(init.body).application).toEqual({
+          name: 'Komisio',
+          version: '1.0',
+        })
+      }
+    }
+  })
+  it('refuses malformed configured application IDs instead of silently omitting them', () => {
+    for (const applicationId of ['Komisio', '12345', '-1', '12.5']) {
+      expect(
+        postNordConfiguration({
+          KOMISIO_POSTNORD_ENABLED: 'true',
+          KOMISIO_POSTNORD_ENVIRONMENT: 'production',
+          KOMISIO_POSTNORD_API_KEY: config.apiKey,
+          KOMISIO_POSTNORD_CUSTOMER_NUMBER: config.customerNumber,
+          KOMISIO_SHIPPING_SERVER_KEY: config.serverKey,
+          KOMISIO_POSTNORD_APPLICATION_ID: applicationId,
+        }),
+      ).toBeNull()
+    }
+  })
   it('binds provider QR, item and customer reference before exposing the code', async () => {
     const response = await reply()
     expect((await parsePostNordBooking(response, 'H-1')).trackingId).toBe(

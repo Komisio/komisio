@@ -17,9 +17,14 @@ assistance rather than truncated or sent as an invalid booking.
 ## Configuration and verification
 
 Use a PostNord Developer customer subscription for the central recipient's
-business contract. Obtain an API key, Booking API application ID and authorized
-customer number from PostNord. Check the agreed service and charges with
-PostNord before activation. The implementation calls Booking v3
+business contract. Obtain an API key and authorized customer number from PostNord.
+Use separate portal applications and keys for sandbox and production. An assigned
+Booking application ID can be configured, but is omitted when empty. Booking
+3.5.29.1 Swagger requires only `name` within `application`; the integration guide
+separately asks for a PostNord-assigned ID in production. Omitting it is therefore
+a compatibility test, not proof of production acceptance. Never substitute the
+guide's example ID. Production bookings may incur contract charges.
+The implementation calls Booking v3
 `/rest/shipment/v3/returns/edi`, service 24 with Print Label C2, and displays the
 returned QR image. It requests neither SMS nor email delivery of the QR.
 
@@ -45,20 +50,22 @@ Use secret management and parameterized operator tooling; never commit addresses
 customer numbers, keys or real shipment replies. The API key and customer number
 remain in server configuration, not in the mobile app or database replies.
 
-Before production, book a synthetic sandbox parcel and confirm with PostNord:
+Before general availability, book a synthetic sandbox parcel and confirm:
 the sender is the private person, the recipient is the contracted company,
 the company pays, and the code prints the intended label at a service point.
 The app labels sandbox codes as test bookings. The EDI sends the package weight
 in KGM and item dimensions in CMT, as defined by Booking 3.5.29.1. QR generation
 explicitly requests PNG, STANDARD service-point printing and onlyQRCode.
 Do not treat mocked tests as provider acceptance.
+Owner-authorized production testing may precede service-point verification;
+record provider rejection or uncertain outcomes without automatic rebooking.
 
 ### Sandbox probe
 
 Development need not wait for production activation. PostNord's developer guide
 describes a separate Sandbox plan and test API key through the AT Developer
-Portal. Confirm access to Booking v3 and obtain the application ID and customer
-number intended for that test account. Documentation examples are not evidence
+Portal. Confirm access to Booking v3 and obtain the customer number intended for
+that test account. The application ID is optional when unassigned. Documentation examples are not evidence
 that an arbitrary ID is authorized. A successful sandbox request does not confirm
 production contract eligibility or charges.
 
@@ -92,7 +99,7 @@ HTTP 401/403 indicates an access problem; 400 requires checking request/account
 requirements; 429 or 5xx requires provider investigation before a new attempt.
 The probe records all failures as unconfirmed rather than inventing a rejection.
 Sandbox codes must never be used to send a real parcel. Inspect the returned code
-and label/direction with PostNord before production activation.
+and label/direction before general availability.
 
 ## Uncertain bookings and receiving
 

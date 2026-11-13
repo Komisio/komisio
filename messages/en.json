@@ -743,6 +743,8 @@
     "communication.push_failed": "Push notification · Failed",
     "communication.push_unconfirmed": "Push notification · Unconfirmed",
     "communication.push_pending": "Push notification · Pending",
+    "central_parcel.dispatched": "Parcel shipping initiated",
+    "central_parcel.booking_recorded": "Shipping booking response recorded",
     "central_app.recipient_changed": "Komisio app request recipient changed",
     "external_offer.issued": "Offer issued",
     "external_offer.responded": "Seller responded to offer",

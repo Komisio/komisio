@@ -108,6 +108,13 @@ export function mobilePhoneClient(request: Request) {
   return mobileVerifiedClient(request, 'phone')
 }
 
+/** Server capability is never copied from a caller-controlled header. */
+export function mobileShippingClient(request: Request, serverKey: string) {
+  return mobileVerifiedClient(request, 'phone', {
+    'x-komisio-shipping': serverKey,
+  })
+}
+
 /** The capability is server-owned; incoming request headers cannot supply it. */
 export function mobilePhotoAiClient(request: Request) {
   const key = process.env.KOMISIO_SELLER_AI_SERVER_KEY

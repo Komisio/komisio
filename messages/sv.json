@@ -743,6 +743,8 @@
     "communication.push_failed": "Pushnotis · Misslyckad",
     "communication.push_unconfirmed": "Pushnotis · Ej bekräftad",
     "communication.push_pending": "Pushnotis · Väntar",
+    "central_parcel.dispatched": "Paketfrakt påbörjad",
+    "central_parcel.booking_recorded": "Svar från fraktbokning registrerat",
     "central_app.recipient_changed": "Mottagare för Komisios appförfrågningar ändrad",
     "external_offer.issued": "Erbjudande skickat",
     "external_offer.responded": "Säljaren svarade på erbjudandet",

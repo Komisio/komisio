@@ -743,6 +743,8 @@
     "communication.push_failed": "Push-ilmoitus · Epäonnistui",
     "communication.push_unconfirmed": "Push-ilmoitus · Vahvistamaton",
     "communication.push_pending": "Push-ilmoitus · Odottaa",
+    "central_parcel.dispatched": "Paketin lähetys aloitettu",
+    "central_parcel.booking_recorded": "Lähetysvarauksen vastaus tallennettu",
     "central_app.recipient_changed": "Komision sovelluspyyntöjen vastaanottaja muutettu",
     "external_offer.issued": "Tarjous lähetetty",
     "external_offer.responded": "Myyjä vastasi tarjoukseen",

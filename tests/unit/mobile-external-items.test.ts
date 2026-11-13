@@ -16,6 +16,7 @@ import { POST as photoPost } from '../../app/api/mobile/v1/external-items/photos
 import { POST as sellerPost } from '../../app/api/mobile/v1/seller/route'
 import { POST as offerPost } from '../../app/api/mobile/v1/external-items/offers/route'
 import { POST as onboardingPost } from '../../app/api/mobile/v1/external-items/onboarding/route'
+import { POST as shippingPost } from '../../app/api/mobile/v1/external-items/shipping/route'
 import { POST as analysisPost } from '../../app/api/mobile/v1/external-items/assistance/route'
 import { issueExternalOfferCommand } from '../../lib/engine/external-item-offers'
 import { externalItemSubmission } from '../../lib/engine/external-item-requests'
@@ -43,6 +44,36 @@ const identity = {
   phone_confirmed_at: '2026-11-10',
   app_metadata: {},
 }
+it('shipping reads require bearer phone identity and never trust caller capability headers', async () => {
+  mocks.rpc.mockResolvedValue({
+    data: { offerId: requestId, configured: false, parcel: null },
+    error: null,
+  })
+  const response = await shippingPost(
+    request(
+      { action: 'read', offerId: requestId },
+      { 'x-komisio-shipping': 'attacker' },
+    ),
+  )
+  expect(response.status).toBe(200)
+  expect(await response.json()).toEqual({
+    offerId: requestId,
+    parcel: null,
+    available: false,
+  })
+  expect(response.headers.get('cache-control')).toBe('private, no-store')
+  expect(mocks.createClient.mock.calls[0][2].global.headers).toEqual({
+    Authorization: 'Bearer synthetic.access.token',
+  })
+  mocks.getUser.mockResolvedValue({
+    data: { user: { ...identity, phone_confirmed_at: null } },
+    error: null,
+  })
+  expect(
+    (await shippingPost(request({ action: 'read', offerId: requestId })))
+      .status,
+  ).toBe(403)
+})
 it('persists seller compensation meaning explicitly while keeping legacy requests distinguishable', async () => {
   mocks.rpc.mockResolvedValue({ data: requestId, error: null })
   expect(

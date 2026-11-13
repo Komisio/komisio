@@ -200,7 +200,7 @@ export async function raceExternalOffers({ setup, connectionString }) {
       0,
     )
     // Two final consents from separate app sessions share one explicit account
-    // and one same-version handover, even when neither had an account yet.
+    // and independently receivable handovers, even without an account yet.
     const completionOffers = []
     for (let i = 0; i < 2; i++) {
       const requestId = randomUUID(),
@@ -245,7 +245,71 @@ export async function raceExternalOffers({ setup, connectionString }) {
         [completionOffers],
       )
     ).rows[0]
-    assert.deepEqual(grouped, { sellers: 1, handovers: 1, links: 2 })
+    assert.deepEqual(grouped, { sellers: 1, handovers: 2, links: 2 })
+    // Booking uses the same owner serialization boundary as final consent.
+    await setup.query(
+      `insert into komisio_private.central_shipping_runtime(singleton,key_hash,tenant_id,environment,recipient)
+       values(true,encode(sha256(convert_to(repeat('7',64),'UTF8')),'hex'),$1,'sandbox',$2)`,
+      [
+        tenant,
+        JSON.stringify({
+          name: 'Synthetic company',
+          street: 'Testgatan 1',
+          postalCode: '12345',
+          city: 'Teststad',
+          country: 'SE',
+          phone: '+46700000000',
+          email: 'shipping@example.test',
+        }),
+      ],
+    )
+    for (const c of clients)
+      await c.query("select set_config('request.headers',$1,false)", [
+        JSON.stringify({ 'x-komisio-shipping': '7'.repeat(64) }),
+      ])
+    const parcelId = randomUUID()
+    const book = (c, id, offer) =>
+      c
+        .query(
+          "select claim_central_parcel($1,$2,$3,1000,400,300,200,'sandbox') result",
+          [
+            id,
+            offer,
+            JSON.stringify({
+              street: 'Testvägen 2',
+              postalCode: '12345',
+              city: 'Teststad',
+            }),
+          ],
+        )
+        .then(
+          (r) => (r.rows[0].result.dispatch ? 'dispatch' : 'replay'),
+          (e) => e.message,
+        )
+    assert.deepEqual(
+      await together(() =>
+        clients.map((c) => book(c, parcelId, completionOffers[0])),
+      ),
+      ['dispatch', 'replay'],
+    )
+    assert.deepEqual(
+      await together(() =>
+        clients.map((c) => book(c, randomUUID(), completionOffers[1])),
+      ),
+      ['PARCEL_EXISTS', 'dispatch'],
+    )
+    assert.equal(
+      (
+        await setup.query(
+          'select count(*)::int n from central_parcels where tenant_id=$1',
+          [tenant],
+        )
+      ).rows[0].n,
+      2,
+    )
+    console.log(
+      'PASS: concurrent parcel claims dispatch once; competing IDs cannot buy duplicate labels',
+    )
     assert.equal(
       (
         await setup.query(
@@ -292,7 +356,7 @@ export async function raceExternalOffers({ setup, connectionString }) {
         [completionOffers],
       )
     ).rows[0]
-    assert.deepEqual(guarantees, { n: 2, clocks: 1, exact: true })
+    assert.deepEqual(guarantees, { n: 1, clocks: 1, exact: true })
     const guarantee = (
       await setup.query(
         'select id from external_item_guarantees where offer_id=$1',
@@ -365,10 +429,10 @@ export async function raceExternalOffers({ setup, connectionString }) {
       0,
     )
     console.log(
-      'PASS: concurrent receipt retries freeze one guarantee per grouped item, one physical clock and no credit',
+      'PASS: concurrent receipt retries freeze only the received item guarantee, one physical clock and no credit',
     )
     console.log(
-      'PASS: concurrent first accounts, grouped handovers, exact onboarding retries and expired completion',
+      'PASS: concurrent first accounts, separate handovers, exact onboarding retries and expired completion',
     )
     console.log(
       'PASS: competing offers, yes/no, exact retries and expiry after lock contention',

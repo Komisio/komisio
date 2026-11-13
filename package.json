@@ -20,6 +20,7 @@
     "pricing:evaluate": "node --import tsx scripts/evaluate-pricing.ts",
     "test:e2e": "playwright test",
     "test:assistance": "node scripts/test-assistance.mjs",
+    "test:postnord": "node --import tsx scripts/postnord-sandbox.ts",
     "test:zettle-automation": "node --import tsx scripts/test-zettle-automation.mjs",
     "test:fortnox-automation": "node --import tsx scripts/test-fortnox-automation.mjs",
     "test:mcp": "node scripts/test-mcp.mjs",

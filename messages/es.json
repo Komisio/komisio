@@ -743,6 +743,8 @@
     "communication.push_failed": "Notificación push · Fallida",
     "communication.push_unconfirmed": "Notificación push · Sin confirmar",
     "communication.push_pending": "Notificación push · Pendiente",
+    "central_parcel.dispatched": "Envío de paquete iniciado",
+    "central_parcel.booking_recorded": "Respuesta de reserva de envío registrada",
     "central_app.recipient_changed": "Se ha cambiado el destinatario de las solicitudes de la app de Komisio",
     "external_offer.issued": "Oferta enviada",
     "external_offer.responded": "El vendedor respondió a la oferta",

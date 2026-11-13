@@ -34,6 +34,7 @@ const config = {
 const parcel: CentralParcel = {
   id,
   reference: 'P-1',
+  items: [],
   environment: 'sandbox',
   sender: contact,
   recipient: {
@@ -337,6 +338,69 @@ describe('central parcel boundary', () => {
         transport,
       ),
     ).rejects.toThrow('SHIPPING_UNAVAILABLE')
+    expect(transport).not.toHaveBeenCalled()
+  })
+})
+
+describe('combined parcel selection', () => {
+  const second = 'f7800000-0000-4000-8000-000000000402'
+  const grouped = {
+    action: 'book',
+    requestId: id,
+    offerId: offer,
+    offerIds: [offer, second],
+    address: command.address,
+  }
+  it('rejects ambiguous selections before calling the database or carrier', () => {
+    expect(bookCentralParcel.parse(grouped)).toEqual(grouped)
+    for (const offerIds of [
+      [],
+      [second],
+      [offer, offer],
+      [offer, null],
+      Array(11).fill(offer),
+    ])
+      expect(
+        bookCentralParcel.safeParse({ ...grouped, offerIds }).success,
+      ).toBe(false)
+    expect(
+      bookCentralParcel.safeParse({ ...command, offerIds: [offer, second] })
+        .success,
+    ).toBe(false)
+  })
+  it('claims the whole selection once and never redispatches a saved group', async () => {
+    const rpc = vi
+      .fn()
+      .mockResolvedValue({ data: { dispatch: false, parcel }, error: null })
+    const transport = vi.fn()
+    await executeCentralParcel(
+      { rpc } as unknown as SupabaseClient,
+      grouped,
+      config,
+      transport,
+    )
+    expect(rpc).toHaveBeenCalledExactlyOnceWith('claim_central_parcel_group', {
+      p_id: id,
+      p_offer: offer,
+      p_offers: [offer, second],
+      p_address: command.address,
+      p_environment: 'sandbox',
+    })
+    expect(transport).not.toHaveBeenCalled()
+  })
+  it('does not dispatch anything when any selected item is already booked', async () => {
+    const rpc = vi
+      .fn()
+      .mockResolvedValue({ data: null, error: { message: 'PARCEL_EXISTS' } })
+    const transport = vi.fn()
+    await expect(
+      executeCentralParcel(
+        { rpc } as unknown as SupabaseClient,
+        grouped,
+        config,
+        transport,
+      ),
+    ).rejects.toThrow('PARCEL_EXISTS')
     expect(transport).not.toHaveBeenCalled()
   })
 })

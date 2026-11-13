@@ -1748,6 +1748,8 @@
     "otherChanges": "Other account events"
   },
   "handovers": {
+    "parcelContents": "In the same parcel: {reference}",
+    "parcelReceiptHint": "Check the contents and confirm receipt of each handover.",
     "title": "Announced drop-offs",
     "intro": "Confirm receipt when the items are in the store.",
     "disabled": "Pre-announcements are turned off.",
@@ -5471,6 +5473,40 @@
     "registrationPrice": "Selling price (SEK)",
     "registrationPriceInvalid": "Enter a price between 0.01 and 999,999.99 SEK.",
     "guaranteeDue": "Guaranteed balance credit by",
-    "guaranteedPurchase": "Store purchases unsold item"
+    "guaranteedPurchase": "Store purchases unsold item",
+    "queue": {
+      "search": "Search item or brand",
+      "searchHint": "For example a dress or vase",
+      "status": "Status",
+      "apply": "Show",
+      "reset": "Clear",
+      "results": "{count} requests",
+      "newest": "Newest first",
+      "noResults": "No requests match your search.",
+      "noResultsHint": "Try another status or search term.",
+      "desiredAmount": "Seller would like",
+      "noDesiredAmount": "No amount specified",
+      "offeredAmount": "Offered to seller",
+      "salePrice": "Planned retail price",
+      "review": "Review",
+      "details": "View details",
+      "photosCount": "{count} photos",
+      "offerHeading": "Your offer",
+      "itemDetails": "About the item",
+      "page": "Page {page} of {pages}",
+      "statuses": {
+        "all": "All statuses",
+        "waiting": "Needs review",
+        "offered": "Awaiting reply",
+        "accepted": "Seller accepted",
+        "open": "Awaiting handover",
+        "received": "Received",
+        "registered": "Registered",
+        "expired": "Offer expired",
+        "rejected": "Declined by Komisio",
+        "declined": "Seller declined",
+        "cancelled": "Handover cancelled"
+      }
+    }
   }
 }

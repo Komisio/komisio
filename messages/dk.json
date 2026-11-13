@@ -1748,6 +1748,8 @@
     "otherChanges": "Øvrige kontohændelser"
   },
   "handovers": {
+    "parcelContents": "I samme pakke: {reference}",
+    "parcelReceiptHint": "Kontrollér indholdet, og bekræft modtagelsen af hver indlevering.",
     "title": "Forhåndsanmeldelser",
     "intro": "Bekræft modtagelsen, når varerne er i butikken.",
     "disabled": "Forhåndstilmeldinger er slået fra.",
@@ -5471,6 +5473,40 @@
     "registrationPrice": "Salgspris (SEK)",
     "registrationPriceInvalid": "Angiv en pris mellem 0,01 og 999.999,99 SEK.",
     "guaranteeDue": "Garanteret saldo senest",
-    "guaranteedPurchase": "Butikken køber usolgt vare"
+    "guaranteedPurchase": "Butikken køber usolgt vare",
+    "queue": {
+      "search": "Søg efter vare eller mærke",
+      "searchHint": "For eksempel kjole eller vase",
+      "status": "Status",
+      "apply": "Vis",
+      "reset": "Nulstil",
+      "results": "{count} forespørgsler",
+      "newest": "Nyeste først",
+      "noResults": "Ingen forespørgsler matcher din søgning.",
+      "noResultsHint": "Prøv en anden status eller søgetekst.",
+      "desiredAmount": "Sælgeren ønsker",
+      "noDesiredAmount": "Intet beløb angivet",
+      "offeredAmount": "Tilbudt til sælgeren",
+      "salePrice": "Planlagt kundepris",
+      "review": "Vurder",
+      "details": "Vis detaljer",
+      "photosCount": "{count} billeder",
+      "offerHeading": "Dit tilbud",
+      "itemDetails": "Om varen",
+      "page": "Side {page} af {pages}",
+      "statuses": {
+        "all": "Alle statusser",
+        "waiting": "Til vurdering",
+        "offered": "Afventer svar",
+        "accepted": "Sælgeren har accepteret",
+        "open": "Afventer indlevering",
+        "received": "Modtaget",
+        "registered": "Registreret",
+        "expired": "Tilbuddet er udløbet",
+        "rejected": "Afvist af Komisio",
+        "declined": "Sælgeren afslog",
+        "cancelled": "Indlevering annulleret"
+      }
+    }
   }
 }

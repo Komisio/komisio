@@ -1748,6 +1748,8 @@
     "otherChanges": "Andre kontohendelser"
   },
   "handovers": {
+    "parcelContents": "I samme pakke: {reference}",
+    "parcelReceiptHint": "Kontroller innholdet og bekreft mottak for hver innlevering.",
     "title": "Forhåndsmeldinger",
     "intro": "Bekreft mottak når varene er i butikken.",
     "disabled": "Forhåndsmeldinger er slått av.",
@@ -5471,6 +5473,40 @@
     "registrationPrice": "Salgspris (SEK)",
     "registrationPriceInvalid": "Oppgi en pris mellom 0,01 og 999 999,99 SEK.",
     "guaranteeDue": "Garantert saldo senest",
-    "guaranteedPurchase": "Butikken kjøper usolgt vare"
+    "guaranteedPurchase": "Butikken kjøper usolgt vare",
+    "queue": {
+      "search": "Søk etter vare eller merke",
+      "searchHint": "For eksempel kjole eller vase",
+      "status": "Status",
+      "apply": "Vis",
+      "reset": "Nullstill",
+      "results": "{count} forespørsler",
+      "newest": "Nyeste først",
+      "noResults": "Ingen forespørsler samsvarer med søket.",
+      "noResultsHint": "Prøv en annen status eller søketekst.",
+      "desiredAmount": "Selgeren ønsker",
+      "noDesiredAmount": "Beløp ikke oppgitt",
+      "offeredAmount": "Tilbudt til selgeren",
+      "salePrice": "Planlagt kundepris",
+      "review": "Vurder",
+      "details": "Vis detaljer",
+      "photosCount": "{count} bilder",
+      "offerHeading": "Ditt tilbud",
+      "itemDetails": "Om varen",
+      "page": "Side {page} av {pages}",
+      "statuses": {
+        "all": "Alle statuser",
+        "waiting": "Til vurdering",
+        "offered": "Venter på svar",
+        "accepted": "Selgeren har takket ja",
+        "open": "Venter på innlevering",
+        "received": "Mottatt",
+        "registered": "Registrert",
+        "expired": "Tilbudet har utløpt",
+        "rejected": "Avvist av Komisio",
+        "declined": "Selgeren takket nei",
+        "cancelled": "Innlevering avbrutt"
+      }
+    }
   }
 }

@@ -62,6 +62,8 @@ it('shipping reads require bearer phone identity and never trust caller capabili
     parcel: null,
     available: false,
     measurementsOptional: true,
+    bundlingAvailable: true,
+    eligibleItems: [],
   })
   expect(response.headers.get('cache-control')).toBe('private, no-store')
   expect(mocks.createClient.mock.calls[0][2].global.headers).toEqual({

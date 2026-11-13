@@ -1748,6 +1748,8 @@
     "otherChanges": "Muut tilitapahtumat"
   },
   "handovers": {
+    "parcelContents": "Samassa paketissa: {reference}",
+    "parcelReceiptHint": "Tarkista sisältö ja vahvista jokaisen luovutuksen vastaanotto.",
     "title": "Ennakkoilmoitukset",
     "intro": "Vahvista vastaanotto, kun tavarat ovat myymälässä.",
     "disabled": "Ennakkoilmoitukset on poistettu käytöstä.",
@@ -5477,6 +5479,40 @@
     "registrationPrice": "Myyntihinta (SEK)",
     "registrationPriceInvalid": "Anna hinta väliltä 0,01–999 999,99 SEK.",
     "guaranteeDue": "Taattu saldohyvitys viimeistään",
-    "guaranteedPurchase": "Myymälä ostaa myymättä jääneen tuotteen"
+    "guaranteedPurchase": "Myymälä ostaa myymättä jääneen tuotteen",
+    "queue": {
+      "search": "Hae tuotetta tai merkkiä",
+      "searchHint": "Esimerkiksi mekko tai maljakko",
+      "status": "Tila",
+      "apply": "Näytä",
+      "reset": "Tyhjennä",
+      "results": "{count} pyyntöä",
+      "newest": "Uusimmat ensin",
+      "noResults": "Hakua vastaavia pyyntöjä ei löytynyt.",
+      "noResultsHint": "Kokeile toista tilaa tai hakusanaa.",
+      "desiredAmount": "Myyjän toive",
+      "noDesiredAmount": "Summaa ei ilmoitettu",
+      "offeredAmount": "Myyjälle tarjottu",
+      "salePrice": "Suunniteltu myyntihinta",
+      "review": "Arvioi",
+      "details": "Näytä tiedot",
+      "photosCount": "{count} kuvaa",
+      "offerHeading": "Tarjouksesi",
+      "itemDetails": "Tuotteen tiedot",
+      "page": "Sivu {page}/{pages}",
+      "statuses": {
+        "all": "Kaikki tilat",
+        "waiting": "Odottaa arviota",
+        "offered": "Odottaa vastausta",
+        "accepted": "Myyjä hyväksyi",
+        "open": "Odottaa toimitusta",
+        "received": "Vastaanotettu",
+        "registered": "Rekisteröity",
+        "expired": "Tarjous vanhentunut",
+        "rejected": "Komisio hylkäsi",
+        "declined": "Myyjä hylkäsi",
+        "cancelled": "Toimitus peruttu"
+      }
+    }
   }
 }

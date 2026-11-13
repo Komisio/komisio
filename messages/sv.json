@@ -1748,6 +1748,8 @@
     "otherChanges": "Övriga kontohändelser"
   },
   "handovers": {
+    "parcelContents": "I samma paket: {reference}",
+    "parcelReceiptHint": "Kontrollera innehållet och bekräfta mottagningen för varje inlämning.",
     "title": "Föranmälningar",
     "intro": "Bekräfta mottagandet när varorna är i butiken.",
     "disabled": "Föranmälningar är avstängda.",
@@ -5471,6 +5473,40 @@
     "registrationPrice": "Försäljningspris (SEK)",
     "registrationPriceInvalid": "Ange ett pris mellan 0,01 och 999 999,99 SEK.",
     "guaranteeDue": "Garanterat saldo senast",
-    "guaranteedPurchase": "Butiken köper osåld vara"
+    "guaranteedPurchase": "Butiken köper osåld vara",
+    "queue": {
+      "search": "Sök vara eller märke",
+      "searchHint": "Till exempel klänning eller vas",
+      "status": "Status",
+      "apply": "Visa",
+      "reset": "Rensa",
+      "results": "{count} förfrågningar",
+      "newest": "Senast inkomna först",
+      "noResults": "Inga förfrågningar matchar din sökning.",
+      "noResultsHint": "Prova en annan status eller söktext.",
+      "desiredAmount": "Säljaren önskar",
+      "noDesiredAmount": "Inget belopp angivet",
+      "offeredAmount": "Erbjudet till säljaren",
+      "salePrice": "Planerat kundpris",
+      "review": "Bedöm",
+      "details": "Visa detaljer",
+      "photosCount": "{count} bilder",
+      "offerHeading": "Ditt erbjudande",
+      "itemDetails": "Om varan",
+      "page": "Sida {page} av {pages}",
+      "statuses": {
+        "all": "Alla statusar",
+        "waiting": "Att bedöma",
+        "offered": "Inväntar svar",
+        "accepted": "Säljaren har tackat ja",
+        "open": "Inväntar inlämning",
+        "received": "Mottagen",
+        "registered": "Registrerad",
+        "expired": "Erbjudandet har gått ut",
+        "rejected": "Avvisad av Komisio",
+        "declined": "Säljaren tackade nej",
+        "cancelled": "Inlämning avbruten"
+      }
+    }
   }
 }

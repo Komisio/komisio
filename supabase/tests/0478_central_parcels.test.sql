@@ -28,6 +28,15 @@ select complete_external_item_offer('f7800000-0000-4000-8000-000000000502','f780
 select read_external_item_onboarding('f7800000-0000-4000-8000-000000000401')#>>'{handover,id}' as handover \gset
 select isnt(read_external_item_onboarding('f7800000-0000-4000-8000-000000000402')#>>'{handover,id}',:'handover','new central items have independent physical receipt');
 select is(read_central_parcel('f7800000-0000-4000-8000-000000000401')->'parcel','null'::jsonb,'no parcel is fabricated before booking');
+select read_my_central_shipping_address()#>>'{account,sellerId}' as seller_id \gset
+select is(read_my_central_shipping_address()#>'{account,address}','null'::jsonb,'new seller has no invented address');
+select lives_ok(format($$select save_my_central_shipping_address('f7800000-0000-4000-8000-000000000701',%L,%L,0,'{"street":"Testvägen 2","postalCode":"12345","city":"Teststad"}')$$,:'tenant',:'seller_id'),'phone owner saves address without membership');
+select is(read_my_central_shipping_address()#>>'{account,address,street}','Testvägen 2','profile address is reusable');
+select is(read_my_central_shipping_address()#>>'{account,revision}','1','address save creates a profile revision');
+select lives_ok(format($$select save_my_central_shipping_address('f7800000-0000-4000-8000-000000000701',%L,%L,0,'{"street":"Testvägen 2","postalCode":"12345","city":"Teststad"}')$$,:'tenant',:'seller_id'),'address save replays without a second revision');
+select throws_like(format($$select save_my_central_shipping_address('f7800000-0000-4000-8000-000000000702',%L,%L,0,'{"street":"Other street","postalCode":"12345","city":"Teststad"}')$$,:'tenant',:'seller_id'),'%PROFILE_CHANGED%','stale address edit cannot overwrite the profile');
+select throws_like(format($$select save_my_central_shipping_address('f7800000-0000-4000-8000-000000000701',%L,%L,0,'{"street":"Other street","postalCode":"12345","city":"Teststad"}')$$,:'tenant',:'seller_id'),'%REQUEST_CONFLICT%','address request cannot be reused with different input');
+select throws_like(format($$select save_my_central_shipping_address(gen_random_uuid(),%L,%L,1,'{"street":"Testvägen 2","postalCode":"12345","city":"Teststad","notes":"injected"}')$$,:'tenant',:'seller_id'),'%INVALID_INPUT%','seller cannot inject other profile fields');
 select throws_ok($$insert into central_parcels(id) values(gen_random_uuid())$$,'42501',null,'direct parcel writes denied');
 select throws_ok($$select claim_central_parcel('f7800000-0000-4000-8000-000000000601','f7800000-0000-4000-8000-000000000401','{"street":"Testvägen 2","postalCode":"12345","city":"Teststad"}',1000,400,300,200,'sandbox')$$,'42501',null,'seller cannot dispatch without server capability');
 select set_config('request.headers',jsonb_build_object('x-komisio-shipping',repeat('7',64))::text,true);
@@ -50,6 +59,14 @@ select throws_like($$select claim_central_parcel('f7800000-0000-4000-8000-000000
 select throws_like($$select claim_central_parcel(gen_random_uuid(),'f7800000-0000-4000-8000-000000000401','{"street":"Testvägen 2","postalCode":"12345","city":"Teststad"}',1000,400,300,200,'sandbox')$$,'%PARCEL_EXISTS%','another request cannot buy a second label for the item');
 select is(read_central_parcel('f7800000-0000-4000-8000-000000000401')#>>'{parcel,status}','pending','dispatch without confirmation stays pending');
 select is(read_central_parcel('f7800000-0000-4000-8000-000000000401')#>>'{parcel,sender,phone}','+46700007802','phone comes from verified identity');
+select lives_ok(format($$select save_my_central_shipping_address('f7800000-0000-4000-8000-000000000702',%L,%L,1,'{"street":"Testvägen 3","postalCode":"12345","city":"Teststad"}')$$,:'tenant',:'seller_id'),'address may be changed for future parcels');
+select is(read_central_parcel('f7800000-0000-4000-8000-000000000401')#>>'{parcel,sender,street}','Testvägen 2','address edit does not rewrite existing booking');
+select lives_ok(format($$select save_my_central_shipping_address('f7800000-0000-4000-8000-000000000701',%L,%L,0,'{"street":"Testvägen 2","postalCode":"12345","city":"Teststad"}')$$,:'tenant',:'seller_id'),'late retry of old address is idempotent after newer edit');
+select is(read_my_central_shipping_address()#>>'{account,address,street}','Testvägen 3','late retry never restores old address');
+select throws_like($$select claim_central_parcel('f7800000-0000-4000-8000-000000000602','f7800000-0000-4000-8000-000000000402','{"street":"Testvägen 3","postalCode":"12345","city":"Teststad"}',1000,null,null,null,'sandbox')$$,'%INVALID_INPUT%','partial measurements are rejected');
+select is(claim_central_parcel('f7800000-0000-4000-8000-000000000602','f7800000-0000-4000-8000-000000000402','{"street":"Testvägen 3","postalCode":"12345","city":"Teststad"}',null,null,null,null,'sandbox')->>'dispatch','true','Return booking may omit all measurements');
+select is(read_central_parcel('f7800000-0000-4000-8000-000000000402')#>'{parcel,weightG}','null'::jsonb,'unknown weight is not a guessed value');
+select is(claim_central_parcel('f7800000-0000-4000-8000-000000000602','f7800000-0000-4000-8000-000000000402','{"street":"Testvägen 3","postalCode":"12345","city":"Teststad"}',null,null,null,null,'sandbox')->>'dispatch','false','measurement-free booking also dispatches at most once');
 select set_config('request.headers','{}',true);
 select throws_ok($$select finish_central_parcel('f7800000-0000-4000-8000-000000000601',null)$$,'42501',null,'seller cannot forge provider confirmation');
 select set_config('request.headers',jsonb_build_object('x-komisio-shipping',repeat('7',64))::text,true);
@@ -60,6 +77,8 @@ select throws_like($$select finish_central_parcel('f7800000-0000-4000-8000-00000
 select is(read_external_item_onboarding('f7800000-0000-4000-8000-000000000401')#>>'{handover,status}','open','booking never records receipt');
 select is((select count(*) from external_item_guarantees where tenant_id=:'tenant'),0::bigint,'booking does not start 45-day clock');
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000003","role":"authenticated"}';
+select is(read_my_central_shipping_address()->'account','null'::jsonb,'unlinked identity cannot see another profile');
+select throws_ok(format($$select save_my_central_shipping_address(gen_random_uuid(),%L,%L,2,'{"street":"Injected street","postalCode":"12345","city":"Teststad"}')$$,:'tenant',:'seller_id'),'42501',null,'other identity cannot change saved address');
 select throws_ok($$select read_central_parcel('f7800000-0000-4000-8000-000000000401')$$,'42501',null,'another user cannot read parcel addresses or QR');
 select is((select count(*) from central_parcels),0::bigint,'RLS hides other sellers parcels');
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000001","role":"authenticated"}';
@@ -67,6 +86,8 @@ select lives_ok(format($$select receive_handover(%L,gen_random_uuid(),%L,'staff_
 select is((select count(*) from external_item_guarantees where tenant_id=:'tenant'),1::bigint,'receiving one package starts only its guarantee');
 select is((select count(*) from seller_ledger_entries where tenant_id=:'tenant'),0::bigint,'shipping and receipt never credit or deduct seller money');
 reset role;
+select is((select name from sellers where id=:'seller_id'),'Synthetic seller','address save preserves seller identity');
+select is((select count(*) from seller_profile_versions where seller_id=:'seller_id'),3::bigint,'original and two revisions remain immutable evidence');
 select throws_like($$update central_parcels set weight_g=1 where id='f7800000-0000-4000-8000-000000000601'$$,'%IMMUTABLE%','frozen package measurements cannot be overwritten');
 select * from finish();
 rollback;

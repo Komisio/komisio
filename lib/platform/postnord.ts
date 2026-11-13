@@ -82,7 +82,11 @@ export function postNordReturnBody(
         dateAndTimes: { loadingDate: parcel.createdAt },
         service: { basicServiceCode: '24', additionalServiceCode: ['C2'] },
         numberOfPackages: { value: 1 },
-        totalGrossWeight: { value: parcel.weightG / 1000, unit: 'KGM' },
+        ...(parcel.weightG === null
+          ? {}
+          : {
+              totalGrossWeight: { value: parcel.weightG / 1000, unit: 'KGM' },
+            }),
         references: [{ referenceNo: handoverReference, referenceType: 'CU' }],
         parties: {
           // The person sends the return; Komisio's contracted customer number pays.
@@ -104,12 +108,25 @@ export function postNordReturnBody(
             items: [
               {
                 itemIdentification: { itemId: '0' },
-                grossWeight: { value: parcel.weightG / 1000, unit: 'KGM' },
-                dimensions: {
-                  length: { value: parcel.lengthMm / 10, unit: 'CMT' },
-                  width: { value: parcel.widthMm / 10, unit: 'CMT' },
-                  height: { value: parcel.heightMm / 10, unit: 'CMT' },
-                },
+                ...(parcel.weightG === null
+                  ? {}
+                  : {
+                      grossWeight: {
+                        value: parcel.weightG / 1000,
+                        unit: 'KGM',
+                      },
+                    }),
+                ...(parcel.lengthMm === null ||
+                parcel.widthMm === null ||
+                parcel.heightMm === null
+                  ? {}
+                  : {
+                      dimensions: {
+                        length: { value: parcel.lengthMm / 10, unit: 'CMT' },
+                        width: { value: parcel.widthMm / 10, unit: 'CMT' },
+                        height: { value: parcel.heightMm / 10, unit: 'CMT' },
+                      },
+                    }),
               },
             ],
           },

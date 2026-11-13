@@ -18,15 +18,24 @@ example application ID; this does not establish an assigned production ID.
 Retrieving the existing PDF label by tracking ID returned `FAIL / id not found`.
 The owner authorizes production testing with separate Komisio portal applications
 and omission of the unassigned Booking application ID. Swagger requires only the
-application name, while the guide asks for an assigned ID; production acceptance
-is not yet verified. A second Sandbox booking with the separate Komisio client
+application name, while the guide asks for an assigned ID. A second Sandbox booking with the separate Komisio client
 and no application ID returned HTTP 200 and a QR decoding to the exact return ID.
 Service-point label/direction, service eligibility and company
 billing remain carrier/device checks before general availability.
-No production booking or application shipping activation has occurred. Test
-credentials and provider evidence remain in ignored local files, not the repo.
+Owner testing subsequently confirmed a real production booking, matching the
+carrier's tracking entry and QR return ID. Service-point printing and actual
+charges remain unverified. A separate synthetic Sandbox request without weight,
+dimensions or volume returned HTTP 200 and a validated QR on 2026-11-13; omission
+has not yet been verified in production. Credentials and private provider evidence
+remain in ignored local files, not the repo.
 Unknown provider outcomes require reconciliation before another booking; this
 slice never assumes that a timeout means a shipment was not created.
+
+Resolved 2026-11-13: retain Return for now, save and reuse the central seller's
+address through existing profile revisions, and simplify the seller's booking
+form without AI measurement guesses. Home/Home Small selection is deferred:
+service eligibility, business-account QR support and package classification
+(packed weight and dimensions, not item category alone) still need verification.
 
 Resolved 2026-11-12: The owner approved user-owned central photo analysis attempts/results and retained one-time phone verification before AI photo upload. Analysis uses the central recipient's existing AI budget and produces editable suggestions only; it does not submit an item.
 

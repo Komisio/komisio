@@ -6,13 +6,25 @@ phone identity, MFA/recovery checks and item ownership. Ordinary store
 handovers do not use this endpoint.
 
 `read` takes `offerId`. `book` also takes a durable `requestId`, a Swedish
-`address` (`street`, five-digit `postalCode`, `city`) and integer `weightG`,
-`lengthMm`, `widthMm`, `heightMm`. Dimensions are ordered longest first. One
+`address` (`street`, five-digit `postalCode`, `city`). Legacy callers may also
+send integer `weightG`, `lengthMm`, `widthMm`, `heightMm`, all together, ordered
+longest first. New callers omit all four; unknown measurements stay null and
+are omitted from the carrier request, never estimated. `read` advertises
+`measurementsOptional: true` so updated apps do not send simplified bookings to
+an older backend. Old pending commands retain their original payload. One
 accepted, fully onboarded item can have one parcel; the recipient and seller
 contact details are supplied by the server/database, never by the app.
 PostNord field limits are checked before dispatch: street 50, city 35, name 60
 and email 70 characters. An incompatible saved profile is refused for staff
 assistance rather than truncated or sent as an invalid booking.
+
+`POST /api/mobile/v1/external-items/shipping/address` reads the phone owner's
+central seller address with `{action: "read"}`. Saving takes `action: "save"`,
+`requestId`, `tenantId`, `sellerId`, `expectedRevision` and `address`. It changes
+only the existing central seller's address fields and appends a profile revision.
+The database pins ownership and the central tenant; ordinary store profiles,
+membership, contact identity and previously booked parcels are unchanged.
+Profile conflicts require a fresh read; an uncertain save retries the same ID.
 
 ## Configuration and verification
 
@@ -22,7 +34,8 @@ Use separate portal applications and keys for sandbox and production. An assigne
 Booking application ID can be configured, but is omitted when empty. Booking
 3.5.29.1 Swagger requires only `name` within `application`; the integration guide
 separately asks for a PostNord-assigned ID in production. Omitting it is therefore
-a compatibility test, not proof of production acceptance. Never substitute the
+a compatibility test; an owner-run production booking subsequently succeeded.
+That does not establish service eligibility or final billing. Never substitute the
 guide's example ID. Production bookings may incur contract charges.
 The implementation calls Booking v3
 `/rest/shipment/v3/returns/edi`, service 24 with Print Label C2, and displays the

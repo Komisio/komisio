@@ -22,6 +22,11 @@ export function externalItemFailure(error: unknown, origin: string | null) {
     )
   const message = error instanceof Error ? error.message : ''
   const statuses: Record<string, number> = {
+    ASSISTANCE_DISABLED: 409,
+    ASSISTANCE_LIMIT: 429,
+    AI_CREDITS_EXHAUSTED: 409,
+    AI_CAP_REACHED: 409,
+    USAGE_QUOTA_EXCEEDED: 409,
     PHONE_VERIFICATION_REQUIRED: 403,
     AUTH_REQUIRED: 401,
     FORBIDDEN: 403,

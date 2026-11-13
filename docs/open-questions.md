@@ -18,6 +18,8 @@ Real booking, service eligibility and contract charges have not been verified.
 Unknown provider outcomes require reconciliation before another booking; this
 slice never assumes that a timeout means a shipment was not created.
 
+Resolved 2026-11-12: The owner approved user-owned central photo analysis attempts/results and retained one-time phone verification before AI photo upload. Analysis uses the central recipient's existing AI budget and produces editable suggestions only; it does not submit an item.
+
 Resolved 2026-11-11: mobile users may create an account without selecting a store,
 using Apple, Google or an email code. Existing password and SMS login remain.
 Phone verification is still required before the first central submission.

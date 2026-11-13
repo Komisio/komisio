@@ -115,6 +115,14 @@ export function mobileShippingClient(request: Request, serverKey: string) {
   })
 }
 
+/** The capability is server-owned; incoming request headers cannot supply it. */
+export function mobilePhotoAiClient(request: Request) {
+  const key = process.env.KOMISIO_SELLER_AI_SERVER_KEY
+  if (!key || !/^[a-f0-9]{64}$/i.test(key))
+    throw new Error('ASSISTANCE_DISABLED')
+  return mobileVerifiedClient(request, 'phone', { 'x-komisio-seller-ai': key })
+}
+
 /** Installation consent only; the engine separately checks event ownership. */
 export function mobilePushClient(request: Request) {
   return mobileVerifiedClient(request, 'push')

@@ -4,6 +4,30 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+## Central parcel shipping (2026-11-12)
+
+Resolved by the owner: Swedish senders only, Komisio pays PostNord shipping,
+one accepted item per parcel initially, separate package/item/booking records,
+and no central drop-off alternative. Carrier events do not establish custody
+or change the guarantee. Ordinary stores retain their existing intake.
+
+The sandbox-only probe completed one real PostNord Sandbox booking on 2026-11-13:
+HTTP 200, validated return/tracking IDs and a readable QR matching the return ID.
+It used synthetic contacts, the test account's customer number and the documented
+example application ID; this does not establish an assigned production ID.
+Retrieving the existing PDF label by tracking ID returned `FAIL / id not found`.
+The owner authorizes production testing with separate Komisio portal applications
+and omission of the unassigned Booking application ID. Swagger requires only the
+application name, while the guide asks for an assigned ID; production acceptance
+is not yet verified. A second Sandbox booking with the separate Komisio client
+and no application ID returned HTTP 200 and a QR decoding to the exact return ID.
+Service-point label/direction, service eligibility and company
+billing remain carrier/device checks before general availability.
+No production booking or application shipping activation has occurred. Test
+credentials and provider evidence remain in ignored local files, not the repo.
+Unknown provider outcomes require reconciliation before another booking; this
+slice never assumes that a timeout means a shipment was not created.
+
 Resolved 2026-11-12: The owner approved user-owned central photo analysis attempts/results and retained one-time phone verification before AI photo upload. Analysis uses the central recipient's existing AI budget and produces editable suggestions only; it does not submit an item.
 
 Resolved 2026-11-11: mobile users may create an account without selecting a store,

@@ -743,6 +743,8 @@
     "communication.push_failed": "Push-Mitteilung · Fehlgeschlagen",
     "communication.push_unconfirmed": "Push-Mitteilung · Unbestätigt",
     "communication.push_pending": "Push-Mitteilung · Ausstehend",
+    "central_parcel.dispatched": "Paketversand eingeleitet",
+    "central_parcel.booking_recorded": "Antwort der Versandbuchung gespeichert",
     "central_app.recipient_changed": "Empfänger für Komisio-App-Anfragen geändert",
     "external_offer.issued": "Angebot gesendet",
     "external_offer.responded": "Verkäufer hat auf Angebot geantwortet",

@@ -1361,3 +1361,4 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-13: Central sellers save their Swedish shipping address in existing profile revisions and reuse it for parcels. New Return bookings may omit all measurements, never substitute estimates. Existing parcel facts and ordinary stores remain unchanged. Home service selection stays deferred.
 
 - 2026-11-13: Central sellers may select up to ten accepted, unreceived items for one Return parcel. The immutable selection shares one booking; overlapping claims serialize. Staff see all linked H-handovers and confirm receipt individually. Legacy grouped handovers remain unsplittable.
+- 2026-11-13: Central request review uses compact expandable rows and tenant-scoped status/text filters before pagination. Display states project existing offer, receipt and registration evidence; filtering and disclosure preserve unsaved work and do not change terms or financial rules.

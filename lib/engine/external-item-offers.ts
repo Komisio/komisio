@@ -1,5 +1,23 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
+export const externalRequestStatuses = [
+  'all',
+  'waiting',
+  'offered',
+  'accepted',
+  'open',
+  'received',
+  'registered',
+  'expired',
+  'rejected',
+  'declined',
+  'cancelled',
+] as const
+export type ExternalRequestStatus = (typeof externalRequestStatuses)[number]
+export type ExternalRequestFilters = {
+  status: ExternalRequestStatus
+  query: string
+}
 
 const uuid = z.uuid().transform((value) => value.toLowerCase())
 const ore = z.string().regex(/^[1-9]\d{0,10}$/)
@@ -202,6 +220,7 @@ export async function issueExternalOffer(
 }
 
 const queueRow = z.object({
+  queue_status: z.enum(externalRequestStatuses).exclude(['all']),
   id: uuid,
   owner_id: uuid,
   description: z.string(),
@@ -217,14 +236,18 @@ const queueRow = z.object({
   agreement_version_id: uuid.nullable(),
   offer: externalOfferSummary.nullable(),
 })
+export type ExternalRequestRow = z.infer<typeof queueRow>
 export async function readExternalOfferQueue(
   client: SupabaseClient,
   tenantId: string,
   page: number,
+  filters: ExternalRequestFilters = { status: 'all', query: '' },
 ) {
-  const r = await client.rpc('external_item_offer_queue', {
+  const r = await client.rpc('external_item_offer_queue_filtered', {
     p_tenant: uuid.parse(tenantId),
     p_offset: (z.number().int().min(1).max(4001).parse(page) - 1) * 25,
+    p_status: z.enum(externalRequestStatuses).parse(filters.status),
+    p_query: z.string().trim().max(120).parse(filters.query),
   })
   check(r.error)
   return z

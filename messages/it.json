@@ -5473,6 +5473,40 @@
     "registrationPrice": "Prezzo di vendita (SEK)",
     "registrationPriceInvalid": "Inserisci un prezzo tra 0,01 e 999.999,99 SEK.",
     "guaranteeDue": "Accredito garantito entro",
-    "guaranteedPurchase": "Il negozio acquista l’articolo invenduto"
+    "guaranteedPurchase": "Il negozio acquista l’articolo invenduto",
+    "queue": {
+      "search": "Cerca articolo o marca",
+      "searchHint": "Ad esempio abito o vaso",
+      "status": "Stato",
+      "apply": "Mostra",
+      "reset": "Azzera",
+      "results": "{count} richieste",
+      "newest": "Più recenti prima",
+      "noResults": "Nessuna richiesta corrisponde alla ricerca.",
+      "noResultsHint": "Prova un altro stato o termine di ricerca.",
+      "desiredAmount": "Il venditore desidera",
+      "noDesiredAmount": "Importo non indicato",
+      "offeredAmount": "Offerto al venditore",
+      "salePrice": "Prezzo di vendita previsto",
+      "review": "Valuta",
+      "details": "Mostra dettagli",
+      "photosCount": "{count} foto",
+      "offerHeading": "La tua offerta",
+      "itemDetails": "Informazioni sull’articolo",
+      "page": "Pagina {page} di {pages}",
+      "statuses": {
+        "all": "Tutti gli stati",
+        "waiting": "Da valutare",
+        "offered": "In attesa di risposta",
+        "accepted": "Il venditore ha accettato",
+        "open": "In attesa di consegna",
+        "received": "Ricevuto",
+        "registered": "Registrato",
+        "expired": "Offerta scaduta",
+        "rejected": "Rifiutato da Komisio",
+        "declined": "Il venditore ha rifiutato",
+        "cancelled": "Consegna annullata"
+      }
+    }
   }
 }

@@ -50,6 +50,8 @@ select throws_like(format($$select end_sale_period(%L,gen_random_uuid(),%L,'char
 select throws_like(format($$select extend_sale_period(%L,gen_random_uuid(),%L,10,'Synthetic extension')$$,:'tenant',:'item'),'%GUARANTEED_LIFECYCLE_REQUIRED%','ordinary extensions cannot move the guarantee deadline');
 select is((select count(*) from seller_ledger_entries where tenant_id=:'tenant'),0::bigint,'registration does not credit or charge the seller');
 select is(items_search_page(:'tenant','{}','title','asc',25,0)->>'total','1','registered item remains readable in the ordinary inventory');
+select is(external_item_offer_queue_filtered(:'tenant',0,'registered')->>'total','1','request filter follows actual registration evidence');
+select is(external_item_offer_queue_filtered(:'tenant',0,'received')->>'total','0','registered item is no longer in the received-only filter');
 select is(items_search_page(:'tenant','{}','title','asc',25,0)#>>'{items,0,photoCount}','1','inventory includes the copied original photo');
 select is(items_search_page(:'tenant','{}','title','asc',25,0)#>>'{items,0,paypal,canExport}','false','percentage-based POS preparation remains unavailable');
 reset role;

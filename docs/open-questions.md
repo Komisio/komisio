@@ -6,8 +6,13 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 ## Central parcel shipping (2026-11-12)
 
+Resolved 2026-11-13: sellers may choose several accepted items for one parcel.
+The selection is frozen at booking; all linked items show the same code. Staff
+retain separate physical receipt confirmations. Existing multi-item legacy
+handovers cannot be split; they still require staff assistance.
+
 Resolved by the owner: Swedish senders only, Komisio pays PostNord shipping,
-one accepted item per parcel initially, separate package/item/booking records,
+separate package/item/booking records, initially one item per parcel,
 and no central drop-off alternative. Carrier events do not establish custody
 or change the guarantee. Ordinary stores retain their existing intake.
 

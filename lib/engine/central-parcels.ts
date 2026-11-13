@@ -1,6 +1,10 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { centralParcel, centralParcelCommand } from './central-parcel-schema'
+import {
+  centralParcel,
+  centralParcelCommand,
+  parcelItem,
+} from './central-parcel-schema'
 import {
   bookPostNordReturn,
   type PostNordConfiguration,
@@ -39,6 +43,7 @@ export async function executeCentralParcel(
         offerId: z.literal(c.offerId),
         configured: z.boolean(),
         parcel: centralParcel.nullable(),
+        eligibleItems: z.array(parcelItem).max(10).default([]),
       })
       .parse(r.data)
     return {
@@ -46,19 +51,28 @@ export async function executeCentralParcel(
       parcel: data.parcel,
       available: config !== null && data.configured,
       measurementsOptional: true,
+      bundlingAvailable: true,
+      eligibleItems: data.eligibleItems,
     }
   }
   if (!config) throw new Error('SHIPPING_UNAVAILABLE')
-  const r = await client.rpc('claim_central_parcel', {
-    p_id: c.requestId,
-    p_offer: c.offerId,
-    p_address: c.address,
-    p_weight: c.weightG ?? null,
-    p_length: c.lengthMm ?? null,
-    p_width: c.widthMm ?? null,
-    p_height: c.heightMm ?? null,
-    p_environment: config.environment,
-  })
+  const r = await client.rpc(
+    c.offerIds ? 'claim_central_parcel_group' : 'claim_central_parcel',
+    {
+      p_id: c.requestId,
+      p_offer: c.offerId,
+      p_address: c.address,
+      ...(c.offerIds
+        ? { p_offers: c.offerIds }
+        : {
+            p_weight: c.weightG ?? null,
+            p_length: c.lengthMm ?? null,
+            p_width: c.widthMm ?? null,
+            p_height: c.heightMm ?? null,
+          }),
+      p_environment: config.environment,
+    },
+  )
   if (r.error) failure(r.error.message)
   const claim = z
     .object({

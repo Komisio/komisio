@@ -1748,6 +1748,8 @@
     "otherChanges": "Øvrige kontohændelser"
   },
   "handovers": {
+    "parcelContents": "I samme pakke: {reference}",
+    "parcelReceiptHint": "Kontrollér indholdet, og bekræft modtagelsen af hver indlevering.",
     "title": "Forhåndsanmeldelser",
     "intro": "Bekræft modtagelsen, når varerne er i butikken.",
     "disabled": "Forhåndstilmeldinger er slået fra.",

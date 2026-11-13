@@ -20,6 +20,13 @@ export const parcelBooking = z.strictObject({
     .max(98304)
     .regex(/^data:image\/png;base64,iVBORw0KGgo[A-Za-z0-9+/=]*$/),
 })
+export const parcelItem = z.object({
+  offerId: z.uuid(),
+  description: z.string().min(1).max(160),
+  handoverId: z.uuid(),
+  reference: z.string().regex(/^H-[1-9][0-9]{0,11}$/),
+  status: z.enum(['open', 'received', 'cancelled']),
+})
 export const centralParcel = z
   .object({
     id: z.uuid(),
@@ -34,6 +41,7 @@ export const centralParcel = z
     status: z.enum(['pending', 'needs_review', 'booked']),
     booking: parcelBooking.nullable(),
     createdAt: z.string(),
+    items: z.array(parcelItem).max(10).default([]),
   })
   .refine((p) => (p.status === 'booked') === (p.booking !== null))
   .refine((p) => validParcelMeasurements(p))
@@ -42,6 +50,7 @@ export const bookCentralParcel = z
     action: z.literal('book'),
     requestId: z.uuid(),
     offerId: z.uuid(),
+    offerIds: z.array(z.uuid()).min(1).max(10).optional(),
     address: parcelAddress,
     weightG: z.number().int().min(1).max(20000).optional(),
     lengthMm: z.number().int().min(1).max(1500).optional(),
@@ -49,6 +58,13 @@ export const bookCentralParcel = z
     heightMm: z.number().int().min(1).max(1500).optional(),
   })
   .refine((p) => validParcelMeasurements(p))
+  .refine(
+    (p) =>
+      !p.offerIds ||
+      (p.offerIds.includes(p.offerId) &&
+        new Set(p.offerIds).size === p.offerIds.length &&
+        p.weightG === undefined),
+  )
 function validParcelMeasurements(p: {
   weightG?: number | null
   lengthMm?: number | null

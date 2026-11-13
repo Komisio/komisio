@@ -92,6 +92,7 @@ export async function runPostNordSandbox(
   const parcel: CentralParcel = {
     id: randomUUID(),
     reference: 'P-1',
+    items: [],
     environment: 'sandbox',
     sender: contact,
     recipient: {

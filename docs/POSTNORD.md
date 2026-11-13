@@ -11,8 +11,15 @@ send integer `weightG`, `lengthMm`, `widthMm`, `heightMm`, all together, ordered
 longest first. New callers omit all four; unknown measurements stay null and
 are omitted from the carrier request, never estimated. `read` advertises
 `measurementsOptional: true` so updated apps do not send simplified bookings to
-an older backend. Old pending commands retain their original payload. One
-accepted, fully onboarded item can have one parcel; the recipient and seller
+an older backend. Old pending commands retain their original payload.
+
+The read response also advertises `bundlingAvailable: true`, `eligibleItems`
+and the booked parcel’s `items`. A new booking may include `offerIds` (1–10
+unique IDs including `offerId`) to combine accepted, fully onboarded, unreceived
+items owned by the same seller in the central tenant. Omit measurements for
+this command. Selection order is irrelevant to replay; changing the selection
+or reusing any already-booked item is rejected atomically. An item belongs
+to at most one parcel. All selected items show the same code and contents; the recipient and seller
 contact details are supplied by the server/database, never by the app.
 PostNord field limits are checked before dispatch: street 50, city 35, name 60
 and email 70 characters. An incompatible saved profile is refused for staff
@@ -25,6 +32,11 @@ only the existing central seller's address fields and appends a profile revision
 The database pins ownership and the central tenant; ordinary store profiles,
 membership, contact identity and previously booked parcels are unchanged.
 Profile conflicts require a fresh read; an uncertain save retries the same ID.
+
+The label keeps the originating H-reference. Staff opening any linked handover
+see the complete parcel contents and links to each separate receipt. Booking
+does not merge handovers or confirm receipt. Legacy grouped handovers still
+require assistance and cannot be split into parcels.
 
 ## Configuration and verification
 

@@ -10,6 +10,7 @@ import {
   readHandover,
   readHandoverQueue,
   readHandoverQueuePage,
+  readHandoverParcels,
 } from '@/lib/engine/handovers'
 import { readStorePolicy } from '@/lib/engine/store-policy'
 import { HandoverQueue } from '@/components/intake/handover-queue'
@@ -64,6 +65,11 @@ export default async function Handovers({
   const rows =
     result?.handovers ?? (await readHandoverQueue(ctx.client, active.id))
   if (focus.success && rows.length === 0) notFound()
+  const parcels = await readHandoverParcels(
+    ctx.client,
+    active.id,
+    rows.map((h) => h.id),
+  )
   const common = all.sellersList
   const pager =
     !focus.success && result && pages > 1 ? (
@@ -190,6 +196,7 @@ export default async function Handovers({
             key={active.id}
             tenantId={active.id}
             rows={rows}
+            parcels={parcels}
             write={active.role !== 'readonly'}
             focus={focus.success ? focus.data : null}
             locale={ctx.locale}

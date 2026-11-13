@@ -1748,6 +1748,8 @@
     "otherChanges": "Altri movimenti"
   },
   "handovers": {
+    "parcelContents": "Nello stesso pacco: {reference}",
+    "parcelReceiptHint": "Controlla il contenuto e conferma la ricezione di ogni consegna.",
     "title": "Consegne annunciate",
     "intro": "Conferma la ricezione quando gli articoli sono in negozio.",
     "disabled": "I preavvisi di consegna sono disattivati.",

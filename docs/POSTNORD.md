@@ -53,6 +53,47 @@ in KGM and item dimensions in CMT, as defined by Booking 3.5.29.1. QR generation
 explicitly requests PNG, STANDARD service-point printing and onlyQRCode.
 Do not treat mocked tests as provider acceptance.
 
+### Sandbox probe
+
+Development need not wait for production activation. PostNord's developer guide
+describes a separate Sandbox plan and test API key through the AT Developer
+Portal. Confirm access to Booking v3 and obtain the application ID and customer
+number intended for that test account. Documentation examples are not evidence
+that an arbitrary ID is authorized. A successful sandbox request does not confirm
+production contract eligibility or charges.
+
+Use the same booking adapter without touching Supabase, accepting offers or
+enabling shipping in an application environment. Place these values in an ignored
+local `.env.postnord-sandbox` file, using **test** credentials only:
+
+```dotenv
+POSTNORD_SANDBOX_API_KEY=
+POSTNORD_SANDBOX_APPLICATION_ID=
+POSTNORD_SANDBOX_CUSTOMER_NUMBER=
+```
+
+```sh
+node --env-file=.env.postnord-sandbox --import tsx scripts/postnord-sandbox.ts --check
+node --env-file=.env.postnord-sandbox --import tsx scripts/postnord-sandbox.ts --book first-test
+node --import tsx scripts/postnord-sandbox.ts --inspect first-test
+```
+
+`--check` performs no network request. `--book` sends one synthetic 1 kg,
+40 × 30 × 20 cm return to `atapi2.postnord.com`, using service 24/C2 without
+carrier email or SMS. Production environment variables are never a fallback.
+The attempt, validated reply and QR PNG are stored under the ignored
+`private/postnord-sandbox/<run-id>/` directory. No secret or raw provider error is
+printed. Run IDs cannot traverse outside this directory.
+
+A durable exclusive attempt file prevents repeat or concurrent dispatch with the
+same run ID, including interrupted runs. Use `--inspect` after a lost response;
+do not delete its evidence or choose a new ID to bypass an uncertain result.
+HTTP 401/403 indicates an access problem; 400 requires checking request/account
+requirements; 429 or 5xx requires provider investigation before a new attempt.
+The probe records all failures as unconfirmed rather than inventing a rejection.
+Sandbox codes must never be used to send a real parcel. Inspect the returned code
+and label/direction with PostNord before production activation.
+
 ## Uncertain bookings and receiving
 
 The database atomically claims one dispatch. A concurrent or repeated command

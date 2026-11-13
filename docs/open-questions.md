@@ -15,6 +15,10 @@ Activation still requires the operator's PostNord API credentials, application
 ID, customer-number access and a verified sandbox return label with the correct
 direction and billing party. A business-portal account alone is insufficient.
 Real booking, service eligibility and contract charges have not been verified.
+The sandbox-only probe is available via `npm run test:postnord`; development
+can continue using a separate Sandbox subscription without waiting for production
+activation. Test API key, application ID and customer number are still needed for
+a real provider run. Local tests use synthetic replies, not carrier acceptance.
 Unknown provider outcomes require reconciliation before another booking; this
 slice never assumes that a timeout means a shipment was not created.
 

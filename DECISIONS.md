@@ -1355,3 +1355,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-12: Central intake uses prepaid Swedish PostNord parcels, one accepted item per parcel initially. New central offers get separate H-handovers, superseding automatic grouping. Existing links stay immutable; grouped legacy handovers cannot be split into parcels.
 - 2026-11-12: Owner approves immutable parcels, item links and booking evidence with frozen addresses and measurements. Komisio pays shipping. Server capability plus seller identity guards booking; an uncertain dispatch is held, never automatically rebooked.
 - 2026-11-12: Carrier booking and tracking never establish custody or start the 45-day guarantee. Staff physical receipt remains authoritative. Ordinary store handovers retain their existing flow; central sellers see postal shipping instead of a drop-off option.
+
+- 2026-11-13: PostNord verification uses a sandbox-only operator probe with dedicated test credentials and synthetic contacts. Each local run claims one dispatch durably; unknown replies are inspected, never automatically rebooked. The probe cannot change application data or enable shipping.

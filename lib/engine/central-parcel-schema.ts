@@ -27,32 +27,46 @@ export const centralParcel = z
     environment: z.enum(['sandbox', 'production']),
     sender: parcelContact,
     recipient: parcelContact,
-    weightG: z.number().int().min(1).max(20000),
-    lengthMm: z.number().int().min(1).max(1500),
-    widthMm: z.number().int().min(1).max(1500),
-    heightMm: z.number().int().min(1).max(1500),
+    weightG: z.number().int().min(1).max(20000).nullable(),
+    lengthMm: z.number().int().min(1).max(1500).nullable(),
+    widthMm: z.number().int().min(1).max(1500).nullable(),
+    heightMm: z.number().int().min(1).max(1500).nullable(),
     status: z.enum(['pending', 'needs_review', 'booked']),
     booking: parcelBooking.nullable(),
     createdAt: z.string(),
   })
   .refine((p) => (p.status === 'booked') === (p.booking !== null))
+  .refine((p) => validParcelMeasurements(p))
 export const bookCentralParcel = z
   .strictObject({
     action: z.literal('book'),
     requestId: z.uuid(),
     offerId: z.uuid(),
     address: parcelAddress,
-    weightG: z.number().int().min(1).max(20000),
-    lengthMm: z.number().int().min(1).max(1500),
-    widthMm: z.number().int().min(1).max(1500),
-    heightMm: z.number().int().min(1).max(1500),
+    weightG: z.number().int().min(1).max(20000).optional(),
+    lengthMm: z.number().int().min(1).max(1500).optional(),
+    widthMm: z.number().int().min(1).max(1500).optional(),
+    heightMm: z.number().int().min(1).max(1500).optional(),
   })
-  .refine(
-    (p) =>
+  .refine((p) => validParcelMeasurements(p))
+function validParcelMeasurements(p: {
+  weightG?: number | null
+  lengthMm?: number | null
+  widthMm?: number | null
+  heightMm?: number | null
+}) {
+  const values = [p.weightG, p.lengthMm, p.widthMm, p.heightMm]
+  return (
+    values.every((v) => v == null) ||
+    (p.weightG != null &&
+      p.lengthMm != null &&
+      p.widthMm != null &&
+      p.heightMm != null &&
       p.lengthMm >= p.widthMm &&
       p.widthMm >= p.heightMm &&
-      p.lengthMm + 2 * (p.widthMm + p.heightMm) <= 3000,
+      p.lengthMm + 2 * (p.widthMm + p.heightMm) <= 3000)
   )
+}
 export const centralParcelCommand = z.union([
   z.strictObject({ action: z.literal('read'), offerId: z.uuid() }),
   bookCentralParcel,

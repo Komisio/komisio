@@ -1358,3 +1358,4 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-11-13: PostNord verification uses a sandbox-only operator probe with dedicated test credentials and synthetic contacts. Each local run claims one dispatch durably; unknown replies are inspected, never automatically rebooked. The probe cannot change application data or enable shipping.
 - 2026-11-13: Owner authorizes separate Komisio API clients and real production shipping tests. Booking applicationId is omitted when unassigned, as allowed by Swagger; supplied IDs remain validated. No example ID fallback or automatic retry is permitted.
+- 2026-11-13: Central sellers save their Swedish shipping address in existing profile revisions and reuse it for parcels. New Return bookings may omit all measurements, never substitute estimates. Existing parcel facts and ordinary stores remain unchanged. Home service selection stays deferred.

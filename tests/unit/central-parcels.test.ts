@@ -101,6 +101,34 @@ async function reply() {
   }
 }
 describe('central parcel boundary', () => {
+  it('omits unknown measurements entirely while preserving legacy payloads', () => {
+    const { weightG, lengthMm, widthMm, heightMm, ...simple } = command
+    expect(bookCentralParcel.parse(simple)).toEqual(simple)
+    for (const extra of [
+      { weightG },
+      { lengthMm, widthMm, heightMm },
+      { weightG: null },
+    ])
+      expect(bookCentralParcel.safeParse({ ...simple, ...extra }).success).toBe(
+        false,
+      )
+    const shipment = postNordReturnBody(
+      config,
+      {
+        ...parcel,
+        weightG: null,
+        lengthMm: null,
+        widthMm: null,
+        heightMm: null,
+      },
+      'H-1',
+      'K1',
+    ).shipment[0]
+    expect(shipment).not.toHaveProperty('totalGrossWeight')
+    expect(shipment.goodsItem[0].items[0]).toEqual({
+      itemIdentification: { itemId: '0' },
+    })
+  })
   it('rejects payer/recipient injection, overweight and oversized parcels', () => {
     expect(bookCentralParcel.safeParse(command).success).toBe(true)
     for (const extra of [

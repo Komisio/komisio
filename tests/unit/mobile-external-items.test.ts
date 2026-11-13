@@ -17,6 +17,7 @@ import { POST as sellerPost } from '../../app/api/mobile/v1/seller/route'
 import { POST as offerPost } from '../../app/api/mobile/v1/external-items/offers/route'
 import { POST as onboardingPost } from '../../app/api/mobile/v1/external-items/onboarding/route'
 import { POST as shippingPost } from '../../app/api/mobile/v1/external-items/shipping/route'
+import { POST as shippingAddressPost } from '../../app/api/mobile/v1/external-items/shipping/address/route'
 import { POST as analysisPost } from '../../app/api/mobile/v1/external-items/assistance/route'
 import { issueExternalOfferCommand } from '../../lib/engine/external-item-offers'
 import { externalItemSubmission } from '../../lib/engine/external-item-requests'
@@ -60,6 +61,7 @@ it('shipping reads require bearer phone identity and never trust caller capabili
     offerId: requestId,
     parcel: null,
     available: false,
+    measurementsOptional: true,
   })
   expect(response.headers.get('cache-control')).toBe('private, no-store')
   expect(mocks.createClient.mock.calls[0][2].global.headers).toEqual({
@@ -73,6 +75,33 @@ it('shipping reads require bearer phone identity and never trust caller capabili
     (await shippingPost(request({ action: 'read', offerId: requestId })))
       .status,
   ).toBe(403)
+})
+it('shipping address reads and saves require phone identity and preserve explicit conflicts', async () => {
+  mocks.rpc.mockResolvedValue({ data: { account: null }, error: null })
+  const response = await shippingAddressPost(request({ action: 'read' }))
+  expect(response.status).toBe(200)
+  expect(response.headers.get('cache-control')).toBe('private, no-store')
+  expect(await response.json()).toEqual({ account: null })
+  mocks.rpc.mockResolvedValue({
+    data: null,
+    error: { message: 'PROFILE_CHANGED' },
+  })
+  const command = {
+    action: 'save',
+    requestId,
+    tenantId,
+    sellerId: photoId,
+    expectedRevision: 0,
+    address: { street: 'Testgatan 1', postalCode: '12345', city: 'Teststad' },
+  }
+  const conflict = await shippingAddressPost(request(command))
+  expect(conflict.status).toBe(409)
+  expect(await conflict.json()).toEqual({ error: 'PROFILE_CHANGED' })
+  mocks.getUser.mockResolvedValue({
+    data: { user: { ...identity, phone_confirmed_at: null } },
+    error: null,
+  })
+  expect((await shippingAddressPost(request(command))).status).toBe(403)
 })
 it('persists seller compensation meaning explicitly while keeping legacy requests distinguishable', async () => {
   mocks.rpc.mockResolvedValue({ data: requestId, error: null })

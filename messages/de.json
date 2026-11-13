@@ -5479,6 +5479,40 @@
     "registrationPrice": "Verkaufspreis (SEK)",
     "registrationPriceInvalid": "Geben Sie einen Preis zwischen 0,01 und 999.999,99 SEK ein.",
     "guaranteeDue": "Garantierte Gutschrift bis",
-    "guaranteedPurchase": "Geschäft kauft unverkauften Artikel"
+    "guaranteedPurchase": "Geschäft kauft unverkauften Artikel",
+    "queue": {
+      "search": "Artikel oder Marke suchen",
+      "searchHint": "Zum Beispiel Kleid oder Vase",
+      "status": "Status",
+      "apply": "Anzeigen",
+      "reset": "Zurücksetzen",
+      "results": "{count} Anfragen",
+      "newest": "Neueste zuerst",
+      "noResults": "Keine Anfragen entsprechen Ihrer Suche.",
+      "noResultsHint": "Versuchen Sie einen anderen Status oder Suchbegriff.",
+      "desiredAmount": "Verkäuferwunsch",
+      "noDesiredAmount": "Kein Betrag angegeben",
+      "offeredAmount": "Dem Verkäufer angeboten",
+      "salePrice": "Geplanter Verkaufspreis",
+      "review": "Prüfen",
+      "details": "Details anzeigen",
+      "photosCount": "{count} Fotos",
+      "offerHeading": "Ihr Angebot",
+      "itemDetails": "Zum Artikel",
+      "page": "Seite {page} von {pages}",
+      "statuses": {
+        "all": "Alle Status",
+        "waiting": "Zu prüfen",
+        "offered": "Antwort ausstehend",
+        "accepted": "Verkäufer hat angenommen",
+        "open": "Einlieferung ausstehend",
+        "received": "Eingegangen",
+        "registered": "Registriert",
+        "expired": "Angebot abgelaufen",
+        "rejected": "Von Komisio abgelehnt",
+        "declined": "Verkäufer hat abgelehnt",
+        "cancelled": "Einlieferung abgebrochen"
+      }
+    }
   }
 }

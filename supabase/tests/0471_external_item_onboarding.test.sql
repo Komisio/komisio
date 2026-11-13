@@ -78,6 +78,7 @@ select is((select count(*) from sellers where tenant_id=:'tenant'),2::bigint,'ce
 select is((select count(*) from seller_bank_versions where tenant_id=:'tenant' and seller_id=:'seller'),1::bigint,'retry and second item do not duplicate bank versions');
 select is((select count(*) from bag_receipts where tenant_id=:'tenant'),0::bigint,'account completion creates no physical custody');
 select is((select count(*) from seller_ledger_entries where tenant_id=:'tenant'),0::bigint,'account completion creates no credit');
+select is(external_item_offer_queue_filtered(:'tenant',0,'open')->>'total','3','accepted handovers appear under awaiting handover, before custody');
 select lives_ok(format($$select receive_handover(%L,'f7200000-0000-4000-8000-000000000601',%L,'staff_receipt','')$$,:'tenant',:'handover'),'staff records physical receipt after later agreement publication');
 select is((select agreement_version_id from bag_receipts where tenant_id=:'tenant'),'f7200000-0000-4000-8000-000000000101'::uuid,'physical receipt preserves the accepted frozen agreement');
 select lives_ok(format($$select receive_handover(%L,'f7200000-0000-4000-8000-000000000601',%L,'staff_receipt','')$$,:'tenant',:'handover'),'staff receipt retries exactly once');
@@ -87,6 +88,8 @@ select is(read_external_item_offer('f7200000-0000-4000-8000-000000000401')#>>'{h
 select ok(read_external_item_offer('f7200000-0000-4000-8000-000000000401')#>>'{handover,receivedAt}' is not null,'received offer includes the actual receipt time');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000004","role":"authenticated"}';
 select is((select x#>>'{offer,handover,status}' from jsonb_array_elements(external_item_offer_queue(:'tenant')->'rows') x where x->>'id'='f7200000-0000-4000-8000-000000000301'),'received','read-only store queue sees the same actual receipt');
+select is(external_item_offer_queue_filtered(:'tenant',0,'received')#>>'{rows,0,queue_status}','received','received filter projects physical custody');
+select is(external_item_offer_queue_filtered(:'tenant',0,'registered')->>'total','0','physical receipt alone does not mean registered');
 reset role;
 select is((select count(*) from tenant_members where user_id='f7200000-0000-4000-8000-000000000002'),0::bigint,'onboarding creates no tenant membership');
 select throws_like(format($$update sellers set external_owner_id=null where id=%L$$,:'seller'),'%IMMUTABLE%','explicit identity cannot be cleared to enable email matching');

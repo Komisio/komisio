@@ -38,6 +38,7 @@ export function externalItemFailure(error: unknown, origin: string | null) {
     PHOTO_TOO_LARGE: 413,
     REQUEST_CONFLICT: 409,
     REQUEST_CHANGED: 409,
+    PROFILE_CHANGED: 409,
     REQUEST_NOT_FOUND: 404,
     OFFER_NOT_FOUND: 404,
     GUARANTEE_NOT_FOUND: 404,

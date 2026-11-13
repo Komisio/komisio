@@ -45,6 +45,7 @@ export async function executeCentralParcel(
       offerId: data.offerId,
       parcel: data.parcel,
       available: config !== null && data.configured,
+      measurementsOptional: true,
     }
   }
   if (!config) throw new Error('SHIPPING_UNAVAILABLE')
@@ -52,10 +53,10 @@ export async function executeCentralParcel(
     p_id: c.requestId,
     p_offer: c.offerId,
     p_address: c.address,
-    p_weight: c.weightG,
-    p_length: c.lengthMm,
-    p_width: c.widthMm,
-    p_height: c.heightMm,
+    p_weight: c.weightG ?? null,
+    p_length: c.lengthMm ?? null,
+    p_width: c.widthMm ?? null,
+    p_height: c.heightMm ?? null,
     p_environment: config.environment,
   })
   if (r.error) failure(r.error.message)

@@ -750,7 +750,8 @@
     "external_offer.issued": "Erbjudande skickat",
     "external_offer.responded": "Säljaren svarade på erbjudandet",
     "external_item.guarantee_frozen": "Garantibelopp och slutdatum sparade",
-    "external_item.registered": "Registrerad"
+    "external_item.registered": "Registrerad",
+    "external_request.withdrawn": "Varuförfrågan återkallad"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -5505,8 +5506,13 @@
         "expired": "Erbjudandet har gått ut",
         "rejected": "Avvisad av Komisio",
         "declined": "Säljaren tackade nej",
-        "cancelled": "Inlämning avbruten"
+        "cancelled": "Inlämning avbruten",
+        "withdrawn": "Återkallad av säljaren",
+        "sold": "Såld",
+        "acquired": "Inköpt av Komisio",
+        "ended": "Avslutad"
       }
-    }
+    },
+    "minimumGuidance": "Riktlinje för Komisio: minst 500 kr till säljaren. Du kan göra undantag efter bedömning."
   }
 }

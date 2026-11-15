@@ -750,7 +750,8 @@
     "external_offer.issued": "Offerta inviata",
     "external_offer.responded": "Il venditore ha risposto all’offerta",
     "external_item.guarantee_frozen": "Importo garantito e scadenza salvati",
-    "external_item.registered": "Registrato"
+    "external_item.registered": "Registrato",
+    "external_request.withdrawn": "Richiesta articolo ritirata"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -5505,8 +5506,13 @@
         "expired": "Offerta scaduta",
         "rejected": "Rifiutato da Komisio",
         "declined": "Il venditore ha rifiutato",
-        "cancelled": "Consegna annullata"
+        "cancelled": "Consegna annullata",
+        "withdrawn": "Ritirato dal venditore",
+        "sold": "Venduto",
+        "acquired": "Acquistato da Komisio",
+        "ended": "Concluso"
       }
-    }
+    },
+    "minimumGuidance": "Linea guida Komisio: almeno 500 SEK al venditore. Puoi fare eccezioni dopo la valutazione."
   }
 }

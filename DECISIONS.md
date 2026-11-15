@@ -1,5 +1,10 @@
 # Decision Log
 
+- 2026-11-15: Central intake recommends items yielding at least SEK 500 to the seller. This is guidance, not a submission or offer floor; staff may make exceptions. Ordinary stores keep their own terms. The optional seller wish remains nonbinding.
+
+- 2026-11-15: Central intake allows 30 active requests per identity. Staff/seller declines, withdrawals, expired unanswered offers and evidenced sold/acquired/ended items free capacity. Unreviewed requests do not expire. Accepted offers survive their deadline; history and financial rules remain unchanged.
+- 2026-11-15: Owners may withdraw only waiting central requests through an idempotent engine command. Preserve immutable evidence and owner/MFA locks. Mobile lists separate active requests from history; registered dates describe submission, never dispatch of a parcel.
+
 - 2026-11-12: Owner approves immutable central photo AI attempts/results bound to the phone-verified user, uploaded photos and recipient. Explicit analysis uses that store's existing AI budget; replay never invokes AI twice. Analysis creates no seller, request, membership or balance.
 
 - 2026-11-12: Central draft AI allows ten attempts per verified user and 100 per recipient in a rolling day, with a 20-second user cooldown. Failed attempts consume capacity. Existing store quota, credit reservation and platform cost cap still apply; manual completion remains available.

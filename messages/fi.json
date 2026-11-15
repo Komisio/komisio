@@ -750,7 +750,8 @@
     "external_offer.issued": "Tarjous lähetetty",
     "external_offer.responded": "Myyjä vastasi tarjoukseen",
     "external_item.guarantee_frozen": "Takuusumma ja määräaika tallennettu",
-    "external_item.registered": "Rekisteröity"
+    "external_item.registered": "Rekisteröity",
+    "external_request.withdrawn": "Tuotepyyntö peruutettu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -5511,8 +5512,13 @@
         "expired": "Tarjous vanhentunut",
         "rejected": "Komisio hylkäsi",
         "declined": "Myyjä hylkäsi",
-        "cancelled": "Toimitus peruttu"
+        "cancelled": "Toimitus peruttu",
+        "withdrawn": "Myyjä peruutti",
+        "sold": "Myyty",
+        "acquired": "Komisio osti",
+        "ended": "Päättynyt"
       }
-    }
+    },
+    "minimumGuidance": "Komision ohje: vähintään 500 SEK myyjälle. Voit tehdä poikkeuksia arvioinnin perusteella."
   }
 }

@@ -38,6 +38,13 @@ export const externalItemCommand = z.discriminatedUnion('action', [
     action: z.literal('list'),
     offset: z.number().int().min(0).max(100000).default(0),
     requestId: uuid.nullable().default(null),
+    protocol: z.literal(2).optional(),
+    group: z.enum(['all', 'active', 'history']).default('all'),
+  }),
+  z.strictObject({
+    action: z.literal('withdraw'),
+    requestId: uuid,
+    operationId: uuid,
   }),
   z.strictObject({ action: z.literal('discardPhoto'), photoId: uuid }),
 ])
@@ -84,9 +91,31 @@ const externalRequest = z.object({
   created_at: z.iso.datetime({ offset: true }),
   status: z.enum(['waiting', 'declined']),
   decline_note: z.string().nullable(),
+  lifecycleStatus: z
+    .enum([
+      'waiting',
+      'offered',
+      'accepted',
+      'open',
+      'received',
+      'registered',
+      'expired',
+      'rejected',
+      'declined',
+      'cancelled',
+      'withdrawn',
+      'sold',
+      'acquired',
+      'ended',
+    ])
+    .optional(),
+  active: z.boolean().optional(),
+  canWithdraw: z.boolean().optional(),
 })
 export const externalRequestPage = z.object({
-  activeCount: z.number().int().min(0).max(10),
+  activeCount: z.number().int().min(0).max(30),
+  activeLimit: z.literal(30).optional(),
+  historyCount: z.number().int().nonnegative().optional(),
   hasMore: z.boolean(),
   requests: z.array(externalRequest).max(25),
 })
@@ -115,12 +144,27 @@ export async function executeExternalItemCommand(
     return { id: c.requestId }
   }
   if (c.action === 'list') {
-    const result = await client.rpc('my_external_item_requests', {
+    const result = await client.rpc('my_external_item_requests_page', {
       p_offset: c.offset,
       p_id: c.requestId,
+      p_group: c.group,
     })
     checkError(result.error)
-    return externalRequestPage.parse(result.data)
+    const page = externalRequestPage.parse(result.data)
+    // Existing TestFlight/App Store builds reject counts above ten. Protocol 2
+    // opts into the new capacity; the database still enforces the real limit.
+    return c.protocol === 2
+      ? page
+      : { ...page, activeCount: Math.min(10, page.activeCount) }
+  }
+  if (c.action === 'withdraw') {
+    const result = await client.rpc('withdraw_external_item_request', {
+      p_id: c.operationId,
+      p_request: c.requestId,
+    })
+    checkError(result.error)
+    if (result.data !== c.operationId) throw new Error('UNCONFIRMED_RESULT')
+    return { id: c.operationId }
   }
   const claimed = await client.rpc('discard_external_item_photo', {
     p_id: c.photoId,

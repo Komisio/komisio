@@ -750,7 +750,8 @@
     "external_offer.issued": "Offer issued",
     "external_offer.responded": "Seller responded to offer",
     "external_item.guarantee_frozen": "Guaranteed amount and deadline saved",
-    "external_item.registered": "Registered"
+    "external_item.registered": "Registered",
+    "external_request.withdrawn": "Item request withdrawn"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -5505,8 +5506,13 @@
         "expired": "Offer expired",
         "rejected": "Declined by Komisio",
         "declined": "Seller declined",
-        "cancelled": "Handover cancelled"
+        "cancelled": "Handover cancelled",
+        "withdrawn": "Withdrawn by seller",
+        "sold": "Sold",
+        "acquired": "Purchased by Komisio",
+        "ended": "Completed"
       }
-    }
+    },
+    "minimumGuidance": "Komisio guideline: at least SEK 500 to the seller. You may make exceptions after review."
   }
 }

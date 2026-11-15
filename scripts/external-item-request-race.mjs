@@ -142,7 +142,7 @@ export async function raceExternalRequests({ setup, connectionString }) {
     await submit(a, original)
     assert.equal(await outcome(submit(a, randomUUID())), 'STORE_UNAVAILABLE')
     await designate(tenant)
-    for (let i = 0; i < 8; i++) await submit(a, randomUUID())
+    for (let i = 0; i < 28; i++) await submit(a, randomUUID())
     assert.deepEqual(
       await together(() => [
         outcome(submit(a, randomUUID())),
@@ -153,7 +153,7 @@ export async function raceExternalRequests({ setup, connectionString }) {
     assert.equal(
       (await a.query('select my_external_item_requests() as result')).rows[0]
         .result.activeCount,
-      10,
+      30,
     )
     assert.deepEqual(
       await together(() => [
@@ -165,7 +165,7 @@ export async function raceExternalRequests({ setup, connectionString }) {
     assert.equal(
       (await a.query('select my_external_item_requests() as result')).rows[0]
         .result.activeCount,
-      10,
+      30,
     )
 
     await reviewer.query("select decline_external_item_request($1,$2,$3,'')", [
@@ -227,6 +227,42 @@ export async function raceExternalRequests({ setup, connectionString }) {
       ]),
       ['PHOTO_LIMIT', 'saved'],
     )
+    const agreement = randomUUID()
+    await reviewer.query(
+      "select publish_seller_agreement($1,$2,null,'Synthetic terms','Synthetic terms','sv',true)",
+      [tenant, agreement],
+    )
+    const waitingRequest = (
+      await setup.query(
+        "select id from external_item_requests where owner_id=$1 and komisio_private.external_request_state(id)='waiting' limit 1",
+        [owner],
+      )
+    ).rows[0].id
+    assert.deepEqual(
+      await together(() => [
+        outcome(
+          a.query('select withdraw_external_item_request($1,$2)', [
+            randomUUID(),
+            waitingRequest,
+          ]),
+        ),
+        outcome(
+          reviewer.query(
+            'select issue_external_item_offer($1,$2,$3,null,40000,100000,$4)',
+            [tenant, randomUUID(), waitingRequest, agreement],
+          ),
+        ),
+      ]),
+      ['REQUEST_CHANGED', 'saved'],
+    )
+    const evidence = (
+      await setup.query(
+        `select (select count(*) from external_item_offers where request_id=$1)::int as offers,
+       (select count(*) from external_item_request_declines where request_id=$1 and withdrawn)::int as withdrawals`,
+        [waitingRequest],
+      )
+    ).rows[0]
+    assert.equal(evidence.offers + evidence.withdrawals, 1)
     console.log(
       'PASS: central requests serialize host pause, capacity, replay, photo discard and upload quota across independent connections.',
     )

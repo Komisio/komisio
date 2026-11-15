@@ -112,7 +112,10 @@ records for one chosen store, without membership, seller registration or balance
 and a server-enforced ten-active-request limit. Prepare Supabase Phone Auth;
 provider choice is resolved above; hosted SMS activation remains separate. Fixed offers and
 receipt links follow the decisions above; financial execution remains future
-work. Request expiry, identity recovery after losing access to a phone number,
+work. Resolved 2026-11-15: the owner raises capacity to 30 active requests;
+unanswered offers close at their existing 48-hour deadline, while unreviewed
+requests remain open until reviewed or withdrawn. Terminal evidence releases
+capacity without deleting history. Identity recovery after losing access to a phone number,
 and acquisition accounting remain open. Existing email seller access must remain
 unchanged.
 

@@ -750,7 +750,8 @@
     "external_offer.issued": "Tilbud sendt",
     "external_offer.responded": "Sælgeren svarede på tilbuddet",
     "external_item.guarantee_frozen": "Garantibeløb og frist gemt",
-    "external_item.registered": "Registreret"
+    "external_item.registered": "Registreret",
+    "external_request.withdrawn": "Vareforespørgsel trukket tilbage"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -5505,8 +5506,13 @@
         "expired": "Tilbuddet er udløbet",
         "rejected": "Afvist af Komisio",
         "declined": "Sælgeren afslog",
-        "cancelled": "Indlevering annulleret"
+        "cancelled": "Indlevering annulleret",
+        "withdrawn": "Trukket tilbage af sælger",
+        "sold": "Solgt",
+        "acquired": "Købt af Komisio",
+        "ended": "Afsluttet"
       }
-    }
+    },
+    "minimumGuidance": "Komisios retningslinje: mindst 500 SEK til sælgeren. Du kan gøre undtagelser efter vurdering."
   }
 }

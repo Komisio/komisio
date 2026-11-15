@@ -147,6 +147,7 @@ export function ExternalRequestReview({
             <p className="muted">
               {d.fixedHint} {d.duration}
             </p>
+            <p className="muted">{d.minimumGuidance}</p>
           </>
         ) : (
           <label>

@@ -34,8 +34,7 @@ export function ExternalRequestQueue({
   return (
     <div className={styles.list}>
       {rows.map((row) => {
-        const reviewable =
-          !row.declined && (!row.offer || row.offer.status === 'expired')
+        const reviewable = row.queue_status === 'waiting'
         const agreement = agreements.find(
           (a) => a.id === row.agreement_version_id,
         )

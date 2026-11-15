@@ -12,6 +12,10 @@ export const externalRequestStatuses = [
   'rejected',
   'declined',
   'cancelled',
+  'withdrawn',
+  'sold',
+  'acquired',
+  'ended',
 ] as const
 export type ExternalRequestStatus = (typeof externalRequestStatuses)[number]
 export type ExternalRequestFilters = {

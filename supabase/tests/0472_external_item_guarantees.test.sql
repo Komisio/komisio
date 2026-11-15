@@ -51,6 +51,7 @@ select is((select count(*) from items where tenant_id=:'tenant'),0::bigint,'rece
 select is((select count(*) from seller_ledger_entries where tenant_id=:'tenant'),0::bigint,'receipt alone creates no seller credit');
 select is((select count(*) from external_item_guarantee_events where tenant_id=:'tenant'),0::bigint,'no fabricated fulfillment events');
 select is((select count(*) from purchase_receipts where tenant_id=:'tenant'),0::bigint,'receipt alone does not buy the item');
+select is(komisio_private.external_request_state('f7300000-0000-4000-8000-000000000301',now()+interval '60 days'),'received','45 days passing alone never frees capacity');
 -- Only this synthetic fixture bypasses the still-closed inventory entry point.
 -- It exercises future fulfillment constraints without introducing a live sale API.
 alter table public.items disable trigger guaranteed_item_intake;
@@ -61,6 +62,7 @@ set constraints all immediate;
 alter table public.items enable trigger guaranteed_item_intake;
 insert into external_item_guarantee_events(id,tenant_id,guarantee_id,kind,item_id,recorded_by)
 values('f7300000-0000-4000-8000-000000000703',:'tenant',:'guarantee','registered','f7300000-0000-4000-8000-000000000701','f7300000-0000-4000-8000-000000000001');
+select is(komisio_private.external_request_state('f7300000-0000-4000-8000-000000000301'),'registered','registered inventory retains its active slot');
 select throws_ok(format($$insert into external_item_guarantee_events(id,tenant_id,guarantee_id,kind,item_id,recorded_by)
  values(gen_random_uuid(),%L,%L,'registered','f7300000-0000-4000-8000-000000000701','f7300000-0000-4000-8000-000000000001')$$,:'tenant',:'guarantee'),'23505',null,'one promise cannot register its item twice');
 insert into sales(id,tenant_id,provider,external_id,currency,occurred_at,total_ore,recorded_by)
@@ -72,6 +74,10 @@ values('f7300000-0000-4000-8000-000000000712',:'tenant',:'seller','credit_sale',
 insert into external_item_guarantee_events(id,tenant_id,guarantee_id,kind,item_id,sale_line_id,ledger_id,recorded_by)
 values('f7300000-0000-4000-8000-000000000713',:'tenant',:'guarantee','credited','f7300000-0000-4000-8000-000000000701','f7300000-0000-4000-8000-000000000711','f7300000-0000-4000-8000-000000000712','f7300000-0000-4000-8000-000000000001');
 select ok(read_external_item_offer('f7300000-0000-4000-8000-000000000401')#>>'{guarantee,creditedAt}' is not null,'credit time comes from actual linked ledger evidence');
+insert into external_item_guarantee_events(id,tenant_id,guarantee_id,kind,item_id,sale_line_id,recorded_by)
+values(gen_random_uuid(),:'tenant',:'guarantee','sold','f7300000-0000-4000-8000-000000000701','f7300000-0000-4000-8000-000000000711','f7300000-0000-4000-8000-000000000001');
+select is(komisio_private.external_request_state('f7300000-0000-4000-8000-000000000301'),'sold','actual sale evidence closes the request');
+select ok(not komisio_private.external_request_active('f7300000-0000-4000-8000-000000000301'),'sale evidence releases capacity');
 select throws_like($$update external_item_guarantee_events set kind='sold' where id='f7300000-0000-4000-8000-000000000713'$$,'%IMMUTABLE%','credit evidence cannot be rewritten');
 select throws_like($$delete from external_item_guarantee_events where id='f7300000-0000-4000-8000-000000000713'$$,'%IMMUTABLE%','credit evidence cannot be removed to allow a second credit');
 insert into sale_returns(id,tenant_id,sale_line_id,item_id,refund_ore,reason,occurred_at,recorded_by)
@@ -79,6 +85,7 @@ values('f7300000-0000-4000-8000-000000000714',:'tenant','f7300000-0000-4000-8000
 insert into external_item_guarantee_events(id,tenant_id,guarantee_id,kind,item_id,sale_line_id,return_id,recorded_by)
 values('f7300000-0000-4000-8000-000000000715',:'tenant',:'guarantee','returned','f7300000-0000-4000-8000-000000000701','f7300000-0000-4000-8000-000000000711','f7300000-0000-4000-8000-000000000714','f7300000-0000-4000-8000-000000000001');
 select is((select count(*) from external_item_guarantee_events where guarantee_id=:'guarantee' and kind='credited'),1::bigint,'return evidence retains the original fulfillment');
+select ok(not komisio_private.external_request_active('f7300000-0000-4000-8000-000000000301'),'a customer return does not reclaim the seller slot');
 -- A later sale has a different sale-line identity: uniqueness is per promise,
 -- not merely a duplicate of the first transaction's source reference.
 insert into sales(id,tenant_id,provider,external_id,currency,occurred_at,total_ore,recorded_by)

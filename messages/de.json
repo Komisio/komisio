@@ -750,7 +750,8 @@
     "external_offer.issued": "Angebot gesendet",
     "external_offer.responded": "Verkäufer hat auf Angebot geantwortet",
     "external_item.guarantee_frozen": "Garantiebetrag und Frist gespeichert",
-    "external_item.registered": "Registriert"
+    "external_item.registered": "Registriert",
+    "external_request.withdrawn": "Artikelanfrage zurückgezogen"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -5511,8 +5512,13 @@
         "expired": "Angebot abgelaufen",
         "rejected": "Von Komisio abgelehnt",
         "declined": "Verkäufer hat abgelehnt",
-        "cancelled": "Einlieferung abgebrochen"
+        "cancelled": "Einlieferung abgebrochen",
+        "withdrawn": "Vom Verkäufer zurückgezogen",
+        "sold": "Verkauft",
+        "acquired": "Von Komisio gekauft",
+        "ended": "Abgeschlossen"
       }
-    }
+    },
+    "minimumGuidance": "Komisio-Richtlinie: mindestens 500 SEK für den Verkäufer. Nach Prüfung sind Ausnahmen möglich."
   }
 }

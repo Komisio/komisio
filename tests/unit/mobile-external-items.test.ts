@@ -564,8 +564,49 @@ describe('external request phone boundary', () => {
       200,
     )
     expect(mocks.rpc).toHaveBeenCalledExactlyOnceWith(
-      'my_external_item_requests',
-      { p_offset: 0, p_id: requestId },
+      'my_external_item_requests_page',
+      { p_offset: 0, p_id: requestId, p_group: 'all' },
+    )
+  })
+  it('negotiates the thirty-item cap without breaking old mobile parsers', async () => {
+    mocks.rpc.mockResolvedValue({
+      data: {
+        activeCount: 30,
+        activeLimit: 30,
+        historyCount: 7,
+        hasMore: false,
+        requests: [],
+      },
+      error: null,
+    })
+    const modern = await POST(
+      request({ action: 'list', protocol: 2, group: 'history', offset: 25 }),
+    )
+    expect((await modern.json()).activeCount).toBe(30)
+    expect(mocks.rpc).toHaveBeenLastCalledWith(
+      'my_external_item_requests_page',
+      { p_offset: 25, p_id: null, p_group: 'history' },
+    )
+    const legacy = await POST(request({ action: 'list' }))
+    expect((await legacy.json()).activeCount).toBe(10)
+  })
+  it('withdraws through the owner engine with an exact receipt and stale-state errors', async () => {
+    const command = { action: 'withdraw', requestId, operationId: requestId }
+    mocks.rpc.mockResolvedValue({ data: requestId, error: null })
+    expect((await POST(request(command))).status).toBe(200)
+    expect(mocks.rpc).toHaveBeenLastCalledWith(
+      'withdraw_external_item_request',
+      { p_id: requestId, p_request: requestId },
+    )
+    mocks.rpc.mockResolvedValue({ data: photoId, error: null })
+    expect((await POST(request(command))).status).toBe(503)
+    mocks.rpc.mockResolvedValue({
+      data: null,
+      error: { message: 'REQUEST_CHANGED' },
+    })
+    expect((await POST(request(command))).status).toBe(409)
+    expect((await POST(request({ ...command, ownerId: owner }))).status).toBe(
+      400,
     )
   })
 })

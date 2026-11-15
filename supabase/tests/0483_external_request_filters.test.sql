@@ -53,9 +53,9 @@ select throws_ok($$select external_item_offer_queue_filtered('f7900000-0000-4000
 select is(external_item_offer_queue(:'tenant')->>'total','32','old read contract remains available');
 select ok(not has_function_privilege('anon','public.external_item_offer_queue_filtered(uuid,integer,text,text)','execute'),'anonymous callers cannot execute the filtered read');
 set local request.jwt.claims='{"sub":"f7900000-0000-4000-8000-000000000001","role":"authenticated"}';
-select issue_external_item_offer(:'tenant','f7900000-0000-4000-8000-000000000406','f7900000-0000-4000-8000-000000000302','f7900000-0000-4000-8000-000000000402',40000,100000,'f7900000-0000-4000-8000-000000000101');
-select is(external_item_offer_queue_filtered(:'tenant',0,'expired')->>'total','0','a superseded expired offer no longer matches');
-select is(external_item_offer_queue_filtered(:'tenant',0,'offered')->>'total','2','only the latest offer determines the display state');
+select throws_like(format($$select issue_external_item_offer(%L,'f7900000-0000-4000-8000-000000000406','f7900000-0000-4000-8000-000000000302','f7900000-0000-4000-8000-000000000402',40000,100000,'f7900000-0000-4000-8000-000000000101');$$,:'tenant'),'%REQUEST_CHANGED%','expiry closes the request instead of allowing a replacement');
+select is(external_item_offer_queue_filtered(:'tenant',0,'expired')->>'total','1','the closed offer remains in expired history');
+select is(external_item_offer_queue_filtered(:'tenant',0,'offered')->>'total','1','an expired request cannot become offered again');
 reset role;
 select * from finish();
 rollback;

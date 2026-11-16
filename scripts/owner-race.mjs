@@ -92,6 +92,8 @@ try {
  create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,deleted_at timestamptz,
   encrypted_password text,raw_user_meta_data jsonb,raw_app_meta_data jsonb,recovery_token text,recovery_sent_at timestamptz,phone text,phone_confirmed_at timestamptz);
  create table auth.mfa_factors(user_id uuid,status text);
+ -- Identity lookup used by deletion requests; real Auth behavior is covered by pgTAP/browser tests.
+ create table auth.identities(id uuid primary key default gen_random_uuid(),user_id uuid references auth.users(id) on delete cascade,provider text not null);
  create type auth.aal_level as enum ('aal1','aal2','aal3');
  create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id),
   not_after timestamptz,aal auth.aal_level);

@@ -12,6 +12,19 @@ test('in-app API receipt and host handling survive a lost response without erasu
 }, testInfo) => {
   const email = `deletion-ui-${randomUUID()}@example.test`,
     password = `K!${randomUUID()}`
+  await page.goto('/login')
+  const signedOut = await page.request.post('/api/host/account-deletion', {
+    headers: { Origin: new URL(page.url()).origin },
+    data: {
+      kind: 'processing',
+      eventId: randomUUID(),
+      requestId: randomUUID(),
+      expected: null,
+      evidence: {},
+    },
+  })
+  expect(signedOut.status()).toBe(401)
+  expect(await signedOut.json()).toEqual({ error: 'AUTH_REQUIRED' })
   await register(page, email, password)
   const config = parseEnv(
     readFileSync(new URL('../../.env.local', import.meta.url), 'utf8'),

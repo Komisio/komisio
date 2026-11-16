@@ -6,7 +6,7 @@ import {
   parcelItem,
 } from './central-parcel-schema'
 import {
-  bookPostNordReturn,
+  bookPostNordParcel,
   type PostNordConfiguration,
 } from '../platform/postnord'
 
@@ -18,6 +18,7 @@ const allowedErrors = new Set([
   'REQUEST_CONFLICT',
   'PARCEL_EXISTS',
   'PARCEL_GROUP_UNSUPPORTED',
+  'PARCEL_WEIGHT_LIMIT',
   'HANDOVER_CLOSED',
   'SHIPPING_UNAVAILABLE',
   'SHIPPING_CONTACT_UNSUPPORTED',
@@ -42,6 +43,7 @@ export async function executeCentralParcel(
       .object({
         offerId: z.literal(c.offerId),
         configured: z.boolean(),
+        selectionWeightLimitG: z.literal(2000).nullish(),
         parcel: centralParcel.nullable(),
         eligibleItems: z.array(parcelItem).max(10).default([]),
       })
@@ -53,6 +55,9 @@ export async function executeCentralParcel(
       measurementsOptional: true,
       bundlingAvailable: true,
       eligibleItems: data.eligibleItems,
+      ...(data.selectionWeightLimitG === 2000
+        ? { selectionWeightLimitG: data.selectionWeightLimitG }
+        : {}),
     }
   }
   if (!config) throw new Error('SHIPPING_UNAVAILABLE')
@@ -88,7 +93,7 @@ export async function executeCentralParcel(
     try {
       if (!claim.handoverReference || !claim.messageId)
         throw new Error('INVALID_CLAIM')
-      result = await bookPostNordReturn(
+      result = await bookPostNordParcel(
         config,
         claim.parcel,
         claim.handoverReference,

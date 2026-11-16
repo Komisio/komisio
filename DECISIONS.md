@@ -1367,3 +1367,8 @@ configuration blocks checkout rather than silently charging another currency.
 
 - 2026-11-13: Central sellers may select up to ten accepted, unreceived items for one Return parcel. The immutable selection shares one booking; overlapping claims serialize. Staff see all linked H-handovers and confirm receipt individually. Legacy grouped handovers remain unsplittable.
 - 2026-11-13: Central request review uses compact expandable rows and tenant-scoped status/text filters before pagination. Display states project existing offer, receipt and registration evidence; filtering and disclosure preserve unsaved work and do not change terms or financial rules.
+- 2026-11-16: Central shipping targets PostNord Home Small (11/C2). Runtime selection is frozen per parcel; existing Return codes and unknown claims never change or resend. Legacy returnId carries the carrier's label code. Activation is separate from migration.
+
+- 2026-11-16: Owner confirms PostNord accepts the central Home Small arrangement, including higher values and estimated weight. Cap parcel selection at 2000 g estimated item weight; keep 1000 g allowance for packaging and uncertainty. Unknown estimates are never treated as zero.
+
+- 2026-11-16: Central photo AI estimates item grams without packaging. Freeze the latest matching owned photo analysis on submission and retain it with the request; expose estimates only to staff. Unknown weight uses the full 2000 g selection budget, never zero; no measured-weight claim.

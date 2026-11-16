@@ -3,7 +3,7 @@ import { mkdir, open, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import {
-  bookPostNordReturn,
+  bookPostNordParcel,
   postNordConfiguration,
 } from '../lib/platform/postnord'
 import type { CentralParcel } from '../lib/engine/central-parcel-schema'
@@ -56,6 +56,9 @@ export async function runPostNordSandbox(
   }
 
   // Deliberately do not fall back to the application's production configuration.
+  const serviceCode = env.POSTNORD_SANDBOX_SERVICE_CODE ?? '24'
+  if (serviceCode !== '24' && serviceCode !== '11')
+    throw new Error('Unsupported sandbox service')
   const missing = required.filter((key) => !env[key]?.trim())
   const config = postNordConfiguration({
     KOMISIO_POSTNORD_ENABLED: 'true',
@@ -71,7 +74,10 @@ export async function runPostNordSandbox(
       environment: 'sandbox',
       configuration: config ? 'ready' : 'missing-or-invalid',
       missing,
-      endpoint: 'https://atapi2.postnord.com/rest/shipment/v3/returns/edi',
+      endpoint:
+        serviceCode === '11'
+          ? 'https://atapi2.postnord.com/rest/shipment/v3/edi'
+          : 'https://atapi2.postnord.com/rest/shipment/v3/returns/edi',
       networkRequests: 0,
     }
 
@@ -94,6 +100,7 @@ export async function runPostNordSandbox(
     reference: 'P-1',
     items: [],
     environment: 'sandbox',
+    serviceCode,
     sender: contact,
     recipient: {
       ...contact,
@@ -129,7 +136,7 @@ export async function runPostNordSandbox(
   let httpStatus: number | null = null
   let result
   try {
-    const booking = await bookPostNordReturn(
+    const booking = await bookPostNordParcel(
       config,
       parcel,
       reference,

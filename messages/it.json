@@ -5494,6 +5494,8 @@
       "photosCount": "{count} foto",
       "offerHeading": "La tua offerta",
       "itemDetails": "Informazioni sull’articolo",
+      "estimatedWeight": "Peso approssimativo (IA): {grams} g",
+      "estimatedWeightHint": "Peso dell’articolo senza imballaggio. La stima non è il peso misurato del pacco.",
       "page": "Pagina {page} di {pages}",
       "statuses": {
         "all": "Tutti gli stati",

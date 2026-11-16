@@ -224,6 +224,7 @@ export async function issueExternalOffer(
 }
 
 const queueRow = z.object({
+  estimated_weight_g: z.number().int().min(1).max(100000).nullish(),
   queue_status: z.enum(externalRequestStatuses).exclude(['all']),
   id: uuid,
   owner_id: uuid,

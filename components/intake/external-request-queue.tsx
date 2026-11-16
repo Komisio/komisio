@@ -124,6 +124,18 @@ export function ExternalRequestQueue({
                   ))}
                 </div>
                 {row.notes ? <p className={styles.notes}>{row.notes}</p> : null}
+                {row.estimated_weight_g != null ? (
+                  <p className={styles.notes}>
+                    <strong>
+                      {t.estimatedWeight.replace(
+                        '{grams}',
+                        row.estimated_weight_g.toLocaleString(locale),
+                      )}
+                    </strong>
+                    <br />
+                    {t.estimatedWeightHint}
+                  </p>
+                ) : null}
                 {row.decline_note ? (
                   <p className={styles.notes}>{row.decline_note}</p>
                 ) : null}

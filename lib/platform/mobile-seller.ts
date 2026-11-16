@@ -37,7 +37,7 @@ export function mobileOrigin(request: Request): string | null {
 
 async function mobileVerifiedClient(
   request: Request,
-  identity: 'email' | 'phone' | 'push',
+  identity: 'email' | 'phone' | 'push' | 'account',
   serverHeaders: Record<string, string> = {},
 ) {
   const authorization = request.headers.get('authorization') ?? ''
@@ -126,6 +126,11 @@ export function mobilePhotoAiClient(request: Request) {
 /** Installation consent only; the engine separately checks event ownership. */
 export function mobilePushClient(request: Request) {
   return mobileVerifiedClient(request, 'push')
+}
+
+/** Self-only privacy requests need no store or extra phone verification. */
+export function mobileAccountClient(request: Request) {
+  return mobileVerifiedClient(request, 'account')
 }
 
 export async function mobileSellerClient(

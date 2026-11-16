@@ -15,6 +15,7 @@ import { HostAi } from '@/components/platform/host-ai'
 import { readAiPlatformSettings } from '@/lib/engine/ai-credits'
 import { readCentralAppIntake } from '@/lib/engine/central-app-intake'
 import { HostCentralApp } from '@/components/platform/host-central-app'
+import { accountDeletionCopy } from '@/lib/platform/account-deletion-copy'
 
 /** Platform host overview: every store's plan state and manual activation. */
 export default async function Host() {
@@ -57,6 +58,11 @@ export default async function Host() {
         />
       )}
       <div className="host-privacy">
+        {!ctx.support && (
+          <Link className="text-link" href="/host/account-deletion">
+            {accountDeletionCopy(ctx.locale).title}
+          </Link>
+        )}
         <Link
           className="text-link"
           href="/intake/integrations/privacy?unmatched=1"

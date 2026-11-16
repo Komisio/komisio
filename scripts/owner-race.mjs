@@ -29,6 +29,7 @@ import { raceShopifySettings } from './shopify-settings-race.mjs'
 import { raceShopifyPrivacy } from './shopify-privacy-race.mjs'
 import { raceStoreCreation } from './store-creation-race.mjs'
 import { raceHostSupport } from './host-support-race.mjs'
+import { raceAccountDeletion } from './account-deletion-race.mjs'
 import { raceMarketingConsent } from './marketing-consent-race.mjs'
 import { raceStoreMailAuto } from './store-mail-auto-race.mjs'
 import { raceStoreMail } from './store-mail-race.mjs'
@@ -206,6 +207,7 @@ try {
     }),
   )
   await raceHostSupport({ setup, connectionString: parsed.toString() })
+  await raceAccountDeletion({ setup, connectionString: parsed.toString() })
   await raceStoreCreation({ setup, sessions })
   await raceMarketingConsent({ setup, sessions })
   await raceStoreMail({ setup, sessions, tenant })

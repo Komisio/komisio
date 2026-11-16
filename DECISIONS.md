@@ -1,5 +1,8 @@
 # Decision Log
 
+- 2026-11-16: Owner approves in-app deletion requests and append-only host case history. Manual handling within one month covers linked stores, Auth, Apple and personal data; retain required evidence. Submission never deletes goods, money or memberships or claims completed erasure.
+- 2026-11-16: Account deletion uses Apple's documented manual-revocation fallback when usable Apple tokens are unavailable. Erasure never depends on the user's optional revocation step. Native revocation events end the app session without blocking later email/phone sign-in.
+
 - 2026-11-15: Central intake recommends items yielding at least SEK 500 to the seller. This is guidance, not a submission or offer floor; staff may make exceptions. Ordinary stores keep their own terms. The optional seller wish remains nonbinding.
 
 - 2026-11-15: Central intake allows 30 active requests per identity. Staff/seller declines, withdrawals, expired unanswered offers and evidenced sold/acquired/ended items free capacity. Unreviewed requests do not expire. Accepted offers survive their deadline; history and financial rules remain unchanged.

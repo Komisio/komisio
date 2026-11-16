@@ -1,0 +1,32 @@
+.case {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.case h2 {
+  overflow-wrap: anywhere;
+}
+.case .checks {
+  display: grid;
+  gap: 0.35rem;
+}
+.case .form fieldset {
+  display: grid;
+  gap: 1rem;
+}
+.case .form .choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  font-weight: 400;
+}
+.case .form input[type='checkbox'] {
+  appearance: auto;
+  width: 1.125rem;
+  height: 1.125rem;
+  min-height: 1.125rem;
+  flex: 0 0 auto;
+  padding: 0;
+  margin: 0.2rem 0 0;
+}

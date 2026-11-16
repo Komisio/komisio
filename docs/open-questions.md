@@ -699,8 +699,16 @@ wording is decided per template when the notification policy is built.
     append new events. Shared Auth accounts and other stores are untouched.
     This is contact erasure, not completion of every GDPR obligation. Automatic
     age-based deletion, retention expiry enforcement, global follow-up reminders,
-    unstructured/imported files, external copies/backups and a separate Auth
-    account-deletion procedure remain open. A follow-up date is not a legal
+    unstructured/imported files and automated external-copy/backup cleanup remain
+    open. Owner-approved manual account-deletion workflow (2026-11-16):
+    accept account-wide requests in the app and maintain a host-only handling queue,
+    with a response within one month. Completion requires actual Auth removal,
+    revoked access, reviewed personal data and a confirmation; submitting a request
+    never reports that the account has already been erased. This does not authorize
+    automatic financial corrections or deletion of required evidence. The
+    operator procedure is documented in `docs/ACCOUNT-DELETION.md`; it does not
+    introduce an automatic Auth or personal-data erasure worker.
+    A follow-up date is not a legal
     retention deadline or an automatic deletion instruction.
 19. **Partly answered 2026-09-12:** mobile reception reviews may include pinned,
     reduced photos from the exact source revision; originals stay internal.

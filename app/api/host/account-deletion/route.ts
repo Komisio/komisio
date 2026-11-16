@@ -22,10 +22,12 @@ export async function POST(request: Request) {
     }
     const command = handleDeletionCommand.safeParse(input)
     if (!command.success) throw new MobileRequestError('INVALID_INPUT', 400)
-    return Response.json(
-      await handleDeletion(await serverClient(), command.data),
-      { headers: deletionHeaders() },
-    )
+    const client = await serverClient()
+    const { data, error } = await client.auth.getUser()
+    if (error || !data.user) throw new MobileRequestError('AUTH_REQUIRED', 401)
+    return Response.json(await handleDeletion(client, command.data), {
+      headers: deletionHeaders(),
+    })
   } catch (error) {
     return deletionFailure(error)
   }

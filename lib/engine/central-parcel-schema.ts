@@ -26,12 +26,16 @@ export const parcelItem = z.object({
   handoverId: z.uuid(),
   reference: z.string().regex(/^H-[1-9][0-9]{0,11}$/),
   status: z.enum(['open', 'received', 'cancelled']),
+  selectionWeightG: z.number().int().min(1).max(100000).optional(),
 })
 export const centralParcel = z
   .object({
     id: z.uuid(),
     reference: z.string().regex(/^P-[1-9][0-9]{0,11}$/),
     environment: z.enum(['sandbox', 'production']),
+    // Missing only when talking to a pre-service-selection database.
+    serviceCode: z.enum(['24', '11']).optional(),
+    estimatedWeightG: z.number().int().min(1001).max(3000).nullish(),
     sender: parcelContact,
     recipient: parcelContact,
     weightG: z.number().int().min(1).max(20000).nullable(),

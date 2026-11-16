@@ -5500,6 +5500,8 @@
       "photosCount": "{count} kuvaa",
       "offerHeading": "Tarjouksesi",
       "itemDetails": "Tuotteen tiedot",
+      "estimatedWeight": "Arvioitu paino (tekoäly): {grams} g",
+      "estimatedWeightHint": "Tuotteen paino ilman pakkausta. Arvio ei ole punnittu paketin paino.",
       "page": "Sivu {page}/{pages}",
       "statuses": {
         "all": "Kaikki tilat",

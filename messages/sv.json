@@ -5494,6 +5494,8 @@
       "photosCount": "{count} bilder",
       "offerHeading": "Ditt erbjudande",
       "itemDetails": "Om varan",
+      "estimatedWeight": "Ungefärlig vikt (AI): {grams} g",
+      "estimatedWeightHint": "Varans vikt utan emballage. Uppskattningen är inte en uppmätt paketvikt.",
       "page": "Sida {page} av {pages}",
       "statuses": {
         "all": "Alla statusar",

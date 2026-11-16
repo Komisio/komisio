@@ -9,7 +9,8 @@ handovers do not use this endpoint.
 `address` (`street`, five-digit `postalCode`, `city`). Legacy callers may also
 send integer `weightG`, `lengthMm`, `widthMm`, `heightMm`, all together, ordered
 longest first. New callers omit all four; unknown measurements stay null and
-are omitted from the carrier request, never estimated. `read` advertises
+are omitted for legacy Return bookings. Home Small uses the separately retained
+packed-weight estimate described below. `read` advertises
 `measurementsOptional: true` so updated apps do not send simplified bookings to
 an older backend. Old pending commands retain their original payload.
 
@@ -25,6 +26,21 @@ PostNord field limits are checked before dispatch: street 50, city 35, name 60
 and email 70 characters. An incompatible saved profile is refused for staff
 assistance rather than truncated or sent as an invalid booking.
 
+With Home Small selected, `read` adds `selectionWeightLimitG: 2000` and each
+eligible item has `selectionWeightG`. Central photo AI estimates one item's grams
+without packaging; the exact owned photo result is frozen on submission. Only
+staff see the estimate as text. Unknown estimates consume the entire 2000 g
+budget, allowing one unknown item per parcel. The server repeats the sum check
+under the existing owner/tenant locks and returns `PARCEL_WEIGHT_LIMIT` (409)
+before creating a claim if the selection exceeds the budget. Remaining items
+can be booked separately; each parcel has its own code.
+
+Home Small claims retain `estimated_weight_g` as the item sum plus 1000 g for
+packaging and uncertainty, at most 3000 g. This is separate from legacy measured
+`weight_g`; no historical measurement or booking is rewritten. The carrier
+request includes the applicable weight in KGM. The mobile form does not ask the
+seller for measurements. Installed clients retain the existing parcel/QR shape.
+
 `POST /api/mobile/v1/external-items/shipping/address` reads the phone owner's
 central seller address with `{action: "read"}`. Saving takes `action: "save"`,
 `requestId`, `tenantId`, `sellerId`, `expectedRevision` and `address`. It changes
@@ -39,6 +55,23 @@ does not merge handovers or confirm receipt. Legacy grouped handovers still
 require assistance and cannot be split into parcels.
 
 ## Configuration and verification
+
+The private runtime row's `service_code` selects new claims: `24` is PostNord
+Return; `11` is PostNord Home Small. Migration defaults to `24` and does not
+activate a service change. Deploy the adapter and compatible mobile selection
+first, then change this server-owned field through the approved runtime
+provisioning. The database freezes the service on every parcel. Replays and
+already booked parcels retain it even if runtime configuration changes. Roll
+back runtime to `24` before deploying an older adapter; existing Home Small
+claims and codes must remain intact.
+
+Home Small uses ordinary `/rest/shipment/v3/edi` with `11/C2`, not the returns
+endpoint. Its unwrapped response has an item ID, an ALQ label code and a QR URL.
+The adapter validates the exact customer reference, single item/code and
+environment-bound QR URL, then renders that carrier code locally as PNG. It
+never fetches arbitrary response URLs. The compatibility field `returnId` carries
+the ALQ code for installed apps; it does not mean the shipment is a return.
+Return continues using the original endpoint and response parser.
 
 Use a PostNord Developer customer subscription for the central recipient's
 business contract. Obtain an API key and authorized customer number from PostNord.
@@ -102,6 +135,7 @@ local `.env.postnord-sandbox` file, using **test** credentials only:
 POSTNORD_SANDBOX_API_KEY=
 POSTNORD_SANDBOX_APPLICATION_ID=
 POSTNORD_SANDBOX_CUSTOMER_NUMBER=
+POSTNORD_SANDBOX_SERVICE_CODE=11
 ```
 
 ```sh
@@ -111,8 +145,9 @@ node --import tsx scripts/postnord-sandbox.ts --inspect first-test
 ```
 
 `--check` performs no network request. `--book` sends one synthetic 1 kg,
-40 × 30 × 20 cm return to `atapi2.postnord.com`, using service 24/C2 without
-carrier email or SMS. Production environment variables are never a fallback.
+40 × 30 × 20 cm parcel to `atapi2.postnord.com`, using the selected service with
+C2. Omit `POSTNORD_SANDBOX_SERVICE_CODE` to retain Return (24); only 11 and 24
+are accepted. Production environment variables are never a fallback.
 The attempt, validated reply and QR PNG are stored under the ignored
 `private/postnord-sandbox/<run-id>/` directory. No secret or raw provider error is
 printed. Run IDs cannot traverse outside this directory.

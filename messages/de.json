@@ -5500,6 +5500,8 @@
       "photosCount": "{count} Fotos",
       "offerHeading": "Ihr Angebot",
       "itemDetails": "Zum Artikel",
+      "estimatedWeight": "Ungefähres Gewicht (KI): {grams} g",
+      "estimatedWeightHint": "Artikelgewicht ohne Verpackung. Die Schätzung ist kein gewogenes Paketgewicht.",
       "page": "Seite {page} von {pages}",
       "statuses": {
         "all": "Alle Status",

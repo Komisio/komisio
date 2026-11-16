@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import sharp from 'sharp'
+import { toSVG } from '@bwip-js/generic'
 import {
   parcelBooking,
   type CentralParcel,
@@ -89,7 +90,7 @@ export function postNordReturnBody(
             }),
         references: [{ referenceNo: handoverReference, referenceType: 'CU' }],
         parties: {
-          // The person sends the return; Komisio's contracted customer number pays.
+          // The person sends the parcel; the contracted customer number pays.
           consignor: {
             issuerCode: 'Z12',
             partyIdentification: {
@@ -229,31 +230,86 @@ export async function bookPostNordReturn(
   messageId: string,
   transport: typeof fetch = fetch,
 ) {
+  if (parcel.serviceCode && parcel.serviceCode !== '24')
+    throw new Error('SHIPPING_UNAVAILABLE')
+  return dispatchPostNord(config, parcel, reference, messageId, transport, '24')
+}
+
+/** Select the adapter from the immutable claim, never from mutable runtime/env. */
+export async function bookPostNordParcel(
+  config: PostNordConfiguration,
+  parcel: CentralParcel,
+  reference: string,
+  messageId: string,
+  transport: typeof fetch = fetch,
+) {
+  const service = parcel.serviceCode ?? '24'
+  if (service !== '11' && service !== '24')
+    throw new Error('SHIPPING_UNAVAILABLE')
+  return dispatchPostNord(
+    config,
+    parcel,
+    reference,
+    messageId,
+    transport,
+    service,
+  )
+}
+
+async function dispatchPostNord(
+  config: PostNordConfiguration,
+  parcel: CentralParcel,
+  reference: string,
+  messageId: string,
+  transport: typeof fetch,
+  service: '11' | '24',
+) {
   const host =
     config.environment === 'sandbox'
       ? 'https://atapi2.postnord.com'
       : 'https://api2.postnord.com'
-  const url = new URL('/rest/shipment/v3/returns/edi', host)
+  const url = new URL(
+    service === '11'
+      ? '/rest/shipment/v3/edi'
+      : '/rest/shipment/v3/returns/edi',
+    host,
+  )
   url.search = new URLSearchParams({
     apikey: config.apiKey,
     generateQrcodeImage: 'true',
     qrCodeScale: '4',
     qrCodeFormat: 'PNG',
-    functionality: 'STANDARD',
-    definePrintout: 'onlyQRCode',
-    emailQRcode: 'false',
-    smsQRcode: 'false',
+    ...(service === '24'
+      ? {
+          functionality: 'STANDARD',
+          definePrintout: 'onlyQRCode',
+          emailQRcode: 'false',
+          smsQRcode: 'false',
+        }
+      : {}),
     locale: 'sv',
   }).toString()
+  const body = postNordReturnBody(config, parcel, reference, messageId)
+  body.shipment[0].service.basicServiceCode = service
+  if (service === '11') {
+    // The owner's approved estimate includes a 1 kg allowance. It is retained
+    // separately from any legacy measured weight and never supplied by the app.
+    const grams = parcel.weightG ?? parcel.estimatedWeightG
+    if (!grams || !Number.isInteger(grams) || grams < 1 || grams > 3000)
+      throw new Error('SHIPPING_UNAVAILABLE')
+    body.shipment[0].totalGrossWeight = { value: grams / 1000, unit: 'KGM' }
+    body.shipment[0].goodsItem[0].items[0].grossWeight = {
+      value: grams / 1000,
+      unit: 'KGM',
+    }
+  }
   // Never retry this POST, follow redirects, log the URL/key or expose provider errors.
   const response = await transport(url, {
     method: 'POST',
     redirect: 'error',
     signal: AbortSignal.timeout(20000),
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(
-      postNordReturnBody(config, parcel, reference, messageId),
-    ),
+    body: JSON.stringify(body),
   })
   if (!response.ok || !response.body) throw new Error('BOOKING_UNCONFIRMED')
   const reader = response.body.getReader(),
@@ -273,8 +329,87 @@ export async function bookPostNordReturn(
   } finally {
     reader.releaseLock()
   }
-  return parsePostNordBooking(
-    JSON.parse(Buffer.concat(chunks).toString('utf8')),
-    reference,
+  const value: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8'))
+  return service === '11'
+    ? parsePostNordHomeSmallBooking(value, reference, config.environment)
+    : parsePostNordBooking(value, reference)
+}
+
+const homeReply = z.object({
+  bookingId: z.string().regex(/^[A-Za-z0-9_-]{1,200}$/),
+  idInformation: z
+    .array(
+      z.object({
+        status: z.literal('OK'),
+        references: z.object({
+          shipment: z
+            .array(
+              z.object({ referenceType: z.string(), referenceNo: z.string() }),
+            )
+            .max(20),
+          item: z
+            .array(
+              z.object({ referenceType: z.string(), referenceNo: z.string() }),
+            )
+            .max(20),
+        }),
+        ids: z
+          .array(z.object({ idType: z.string(), value: z.string() }))
+          .length(1),
+        urls: z.array(z.object({ type: z.string(), url: z.string() })).max(10),
+      }),
+    )
+    .length(1),
+})
+
+/** Ordinary EDI has no returnId. ALQ is the carrier's Print Label code.
+ * Retain the legacy wire field so installed apps can display Home Small codes too.
+ * Generate the QR from the validated carrier code, never an internal reference;
+ * this exact payload was checked against the carrier's own Sandbox QR.
+ */
+export async function parsePostNordHomeSmallBooking(
+  value: unknown,
+  reference: string,
+  environment: PostNordConfiguration['environment'],
+): Promise<ParcelBooking> {
+  const reply = homeReply.parse(value)
+  const info = reply.idInformation[0]
+  const codes = info.references.item.filter((r) => r.referenceType === 'ALQ')
+  const refs = info.references.shipment.filter((r) => r.referenceType === 'CU')
+  const urls = info.urls.filter((u) => u.type === 'QRCODE')
+  const code = codes[0]?.referenceNo
+  const host =
+    environment === 'sandbox'
+      ? 'https://atapi2.postnord.com'
+      : 'https://api2.postnord.com'
+  if (
+    codes.length !== 1 ||
+    !/^[A-Z0-9]{1,128}$/.test(code ?? '') ||
+    refs.length !== 1 ||
+    refs[0].referenceNo !== reference ||
+    info.ids[0].idType !== 'itemId' ||
+    urls.length !== 1 ||
+    urls[0].url !== `${host}/booking/${code}`
   )
+    throw new Error('INVALID_PROVIDER_RESPONSE')
+  // No requests to provider-supplied URLs, and no second booking after a bad reply.
+  const png = await sharp(
+    Buffer.from(
+      toSVG({
+        bcid: 'qrcode',
+        text: code,
+        scale: 4,
+        padding: 8,
+        backgroundcolor: 'FFFFFF',
+      }),
+    ),
+  )
+    .png()
+    .toBuffer()
+  return parcelBooking.parse({
+    bookingId: reply.bookingId,
+    returnId: code,
+    trackingId: info.ids[0].value,
+    qrPng: `data:image/png;base64,${png.toString('base64')}`,
+  })
 }

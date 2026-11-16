@@ -81,6 +81,7 @@ export async function runExternalPhotoAnalysis(
     p_photos: c.photos,
     p_model: model,
     p_language: c.language,
+    p_prompt_version: 'central-photo-v2-weight',
   })
   if (start.error) throw new Error(start.error.message)
   const run = z

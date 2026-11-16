@@ -6,6 +6,14 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 ## Central parcel shipping (2026-11-12)
 
+Owner confirmation 2026-11-16: after contacting PostNord, the owner confirms
+Home Small is acceptable for the intended contents values and estimated weight.
+Home Small (11/C2) is the selected service; the intervening Home instruction was
+corrected. Cap each package at 2000 g estimated item weight, with 1000 g allowance
+for packaging/uncertainty. No estimate means unknown, never zero. Sandbox accepted
+11/C2 via ordinary Booking v3 EDI. Physical printing and actual charges remain
+release/pilot checks. Existing Return bookings retain their service and code.
+
 Resolved 2026-11-13: sellers may choose several accepted items for one parcel.
 The selection is frozen at booking; all linked items show the same code. Staff
 retain separate physical receipt confirmations. Existing multi-item legacy

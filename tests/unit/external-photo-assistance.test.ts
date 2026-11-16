@@ -2,7 +2,10 @@ import { createHash } from 'node:crypto'
 import { describe, expect, it, vi } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { runExternalPhotoAnalysis } from '../../lib/engine/external-photo-assistance'
-import { generateExternalPhotoSuggestion } from '../../lib/assistance/external-photo'
+import {
+  externalPhotoAnalysisOutput,
+  generateExternalPhotoSuggestion,
+} from '../../lib/assistance/external-photo'
 
 const id = (n: number) =>
   `f4780000-0000-4000-8000-${String(n).padStart(12, '0')}`
@@ -19,6 +22,7 @@ const output = {
   condition: 'good',
   notes: '',
 }
+const internalOutput = { ...output, estimatedWeightG: 400 }
 const pending = {
   id: id(1),
   tenantId: id(2),
@@ -56,10 +60,18 @@ function fixture(existing: unknown = null) {
         error: null,
       }
     if (name === 'complete_external_photo_analysis') {
+      const saved = args.p_output as typeof internalOutput | null
       result = {
         ...pending,
         status: args.p_output ? 'ready' : 'failed',
-        output: args.p_output,
+        output: saved
+          ? {
+              description: saved.description,
+              brand: saved.brand,
+              condition: saved.condition,
+              notes: saved.notes,
+            }
+          : null,
       }
       return { data: null, error: null }
     }
@@ -76,7 +88,9 @@ function fixture(existing: unknown = null) {
       output: [
         {
           type: 'message',
-          content: [{ type: 'output_text', text: JSON.stringify(output) }],
+          content: [
+            { type: 'output_text', text: JSON.stringify(internalOutput) },
+          ],
         },
       ],
     }),
@@ -98,11 +112,16 @@ describe('central photo analysis', () => {
     expect(f.transport).toHaveBeenCalledTimes(1)
     expect(f.rpc).toHaveBeenCalledWith('complete_external_photo_analysis', {
       p_id: id(1),
-      p_output: output,
+      p_output: internalOutput,
       p_input: 200,
       p_output_tokens: 30,
     })
     const sent = JSON.parse(f.transport.mock.calls[0][1]!.body as string)
+    expect(f.rpc).toHaveBeenCalledWith(
+      'begin_external_photo_analysis',
+      expect.objectContaining({ p_prompt_version: 'central-photo-v2-weight' }),
+    )
+    expect(result.result?.output).not.toHaveProperty('estimatedWeightG')
     expect(sent.store).toBe(false)
     expect(
       sent.input[0].content.filter(
@@ -185,7 +204,10 @@ describe('central photo analysis', () => {
             content: [
               {
                 type: 'output_text',
-                text: JSON.stringify({ ...output, condition: 'perfect' }),
+                text: JSON.stringify({
+                  ...internalOutput,
+                  condition: 'perfect',
+                }),
               },
             ],
           },
@@ -201,5 +223,25 @@ describe('central photo analysis', () => {
     )
     expect(result.output).toBeNull()
     expect(result.usage.input_tokens).toBe(200)
+  })
+
+  it.each([0, -1, 400.5, 100001, '400', undefined])(
+    'rejects invalid internal weight %s',
+    (estimatedWeightG) => {
+      expect(
+        externalPhotoAnalysisOutput.safeParse({ ...output, estimatedWeightG })
+          .success,
+      ).toBe(false)
+    },
+  )
+  it('preserves unknown and heavy estimates instead of forcing shipping eligibility', () => {
+    expect(
+      externalPhotoAnalysisOutput.parse({ ...output, estimatedWeightG: null })
+        .estimatedWeightG,
+    ).toBeNull()
+    expect(
+      externalPhotoAnalysisOutput.parse({ ...output, estimatedWeightG: 4500 })
+        .estimatedWeightG,
+    ).toBe(4500)
   })
 })

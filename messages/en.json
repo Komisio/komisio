@@ -5494,6 +5494,8 @@
       "photosCount": "{count} photos",
       "offerHeading": "Your offer",
       "itemDetails": "About the item",
+      "estimatedWeight": "Approximate weight (AI): {grams} g",
+      "estimatedWeightHint": "Item weight without packaging. This estimate is not a measured parcel weight.",
       "page": "Page {page} of {pages}",
       "statuses": {
         "all": "All statuses",

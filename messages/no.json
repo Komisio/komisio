@@ -5494,6 +5494,8 @@
       "photosCount": "{count} bilder",
       "offerHeading": "Ditt tilbud",
       "itemDetails": "Om varen",
+      "estimatedWeight": "Omtrentlig vekt (AI): {grams} g",
+      "estimatedWeightHint": "Varens vekt uten emballasje. Anslaget er ikke en målt pakkevekt.",
       "page": "Side {page} av {pages}",
       "statuses": {
         "all": "Alle statuser",

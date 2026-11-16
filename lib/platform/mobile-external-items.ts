@@ -61,6 +61,7 @@ export function externalItemFailure(error: unknown, origin: string | null) {
     SHIPPING_CONTACT_UNSUPPORTED: 409,
     PARCEL_EXISTS: 409,
     PARCEL_GROUP_UNSUPPORTED: 409,
+    PARCEL_WEIGHT_LIMIT: 409,
     HANDOVER_CLOSED: 409,
   }
   const known = Object.hasOwn(statuses, message)

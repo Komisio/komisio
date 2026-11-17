@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-17: Central registration publishes staff-confirmed description and price. Preserve the submitted brand in immutable request evidence; do not promote it to an observed item attribute without staff verification. Unverified brand suggestions must not block registration.
+
 - 2026-11-16: Owner approves in-app deletion requests and append-only host case history. Manual handling within one month covers linked stores, Auth, Apple and personal data; retain required evidence. Submission never deletes goods, money or memberships or claims completed erasure.
 - 2026-11-16: Account deletion uses Apple's documented manual-revocation fallback when usable Apple tokens are unavailable. Erasure never depends on the user's optional revocation step. Native revocation events end the app session without blocking later email/phone sign-in.
 

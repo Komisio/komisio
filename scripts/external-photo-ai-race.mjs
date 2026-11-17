@@ -18,8 +18,8 @@ export async function raceExternalPhotoAI({ setup, connectionString }) {
     [owner, `${owner}@example.test`],
   )
   await setup.query(
-    'insert into auth.users(id,phone,phone_confirmed_at) values($1,$2,now())',
-    [user, `467${Date.now()}`],
+    'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
+    [user, `${user}@example.test`],
   )
   await setup.query("select set_config('request.jwt.claims',$1,false)", [
     JSON.stringify({ sub: owner, role: 'authenticated' }),

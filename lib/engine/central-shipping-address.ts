@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { parcelAddress } from './central-parcel-schema'
+import { parcelAddress, shippingContact } from './central-parcel-schema'
 
 export const centralAddressCommand = z.union([
   z.strictObject({ action: z.literal('read') }),
@@ -11,6 +11,7 @@ export const centralAddressCommand = z.union([
     sellerId: z.uuid(),
     expectedRevision: z.number().int().min(0).max(2147483646),
     address: parcelAddress,
+    contact: shippingContact,
   }),
 ])
 const account = z.object({
@@ -18,9 +19,10 @@ const account = z.object({
   sellerId: z.uuid(),
   revision: z.number().int().nonnegative(),
   address: parcelAddress.nullable(),
+  contact: shippingContact.nullable(),
 })
 const errors = new Set([
-  'PHONE_VERIFICATION_REQUIRED',
+  'AUTH_REQUIRED',
   'FORBIDDEN',
   'SUPPORT_READ_ONLY',
   'INVALID_INPUT',
@@ -48,6 +50,7 @@ export async function executeCentralShippingAddress(
     p_seller: c.sellerId,
     p_expected: c.expectedRevision,
     p_address: c.address,
+    p_contact: c.contact,
   })
   if (r.error) failure(r.error.message)
   if (r.data !== c.requestId) throw new Error('REQUEST_FAILED')

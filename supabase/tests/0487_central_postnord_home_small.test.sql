@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f7800000-0000-4000-8000-000000000001','parcel-staff@example.test',now(),null,null),
- ('f7800000-0000-4000-8000-000000000002',null,null,'46700007802',now()),
- ('f7800000-0000-4000-8000-000000000003',null,null,'46700007803',now());
+ ('f7800000-0000-4000-8000-000000000002','f7800000-0000-4000-8000-000000000002@example.test',now(),'46700007802',now()),
+ ('f7800000-0000-4000-8000-000000000003','f7800000-0000-4000-8000-000000000003@example.test',now(),'46700007803',now());
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000001","role":"authenticated"}';
 select create_tenant('Synthetic parcel recipient','synthetic-parcel-recipient',gen_random_uuid()) as tenant \gset
@@ -27,7 +27,7 @@ select complete_external_item_offer('f7800000-0000-4000-8000-000000000501','f780
 select complete_external_item_offer('f7800000-0000-4000-8000-000000000502','f7800000-0000-4000-8000-000000000402','f7800000-0000-4000-8000-000000000101',null,null);
 
 select set_config('request.headers',jsonb_build_object('x-komisio-shipping',repeat('7',64))::text,true);
-select is(claim_central_parcel('f7800000-0000-4000-8000-000000000601','f7800000-0000-4000-8000-000000000401','{"street":"Testgatan 2","postalCode":"12345","city":"Teststad"}',null,null,null,null,'sandbox')#>>'{parcel,serviceCode}','24','existing configuration still claims Return');
+select is(claim_central_parcel('f7800000-0000-4000-8000-000000000601','f7800000-0000-4000-8000-000000000401','{"firstName":"Synthetic","lastName":"sender","phone":"+46700007802","street":"Testgatan 2","postalCode":"12345","city":"Teststad"}',null,null,null,null,'sandbox')#>>'{parcel,serviceCode}','24','existing configuration still claims Return');
 select finish_central_parcel('f7800000-0000-4000-8000-000000000601','{"bookingId":"legacy","returnId":"legacy-return","trackingId":"003700000000000001","qrPng":"data:image/png;base64,iVBORw0KGgo="}');
 select throws_ok($$update komisio_private.central_shipping_runtime set service_code='11'$$,'42501',null,'seller cannot choose carrier service');
 reset role;
@@ -36,14 +36,14 @@ select throws_ok($$update komisio_private.central_shipping_runtime set service_c
 set local role authenticated;
 select is(read_central_parcel('f7800000-0000-4000-8000-000000000401')#>>'{parcel,serviceCode}','24','service switch does not rewrite an old parcel');
 select is(read_central_parcel('f7800000-0000-4000-8000-000000000401')#>>'{parcel,booking,returnId}','legacy-return','old QR code survives the switch');
-select is(claim_central_parcel('f7800000-0000-4000-8000-000000000601','f7800000-0000-4000-8000-000000000401','{"street":"Testgatan 2","postalCode":"12345","city":"Teststad"}',null,null,null,null,'sandbox')->>'dispatch','false','replaying old request never creates a Home Small shipment');
-select is(claim_central_parcel_group('f7800000-0000-4000-8000-000000000602','f7800000-0000-4000-8000-000000000402',array['f7800000-0000-4000-8000-000000000402']::uuid[],'{"street":"Testgatan 2","postalCode":"12345","city":"Teststad"}','sandbox')#>>'{parcel,serviceCode}','11','new group freezes Home Small from server configuration');
+select is(claim_central_parcel('f7800000-0000-4000-8000-000000000601','f7800000-0000-4000-8000-000000000401','{"firstName":"Synthetic","lastName":"sender","phone":"+46700007802","street":"Testgatan 2","postalCode":"12345","city":"Teststad"}',null,null,null,null,'sandbox')->>'dispatch','false','replaying old request never creates a Home Small shipment');
+select is(claim_central_parcel_group('f7800000-0000-4000-8000-000000000602','f7800000-0000-4000-8000-000000000402',array['f7800000-0000-4000-8000-000000000402']::uuid[],'{"firstName":"Synthetic","lastName":"sender","phone":"+46700007802","street":"Testgatan 2","postalCode":"12345","city":"Teststad"}','sandbox')#>>'{parcel,serviceCode}','11','new group freezes Home Small from server configuration');
 reset role;
 select throws_like($$update central_parcels set service_code='24' where id='f7800000-0000-4000-8000-000000000602'$$,'%IMMUTABLE%','claimed service cannot be edited');
 update komisio_private.central_shipping_runtime set service_code='24';
 set local role authenticated;
 select is(read_central_parcel('f7800000-0000-4000-8000-000000000402')#>>'{parcel,serviceCode}','11','configuration rollback does not rewrite a Home Small attempt');
-select is(claim_central_parcel_group('f7800000-0000-4000-8000-000000000602','f7800000-0000-4000-8000-000000000402',array['f7800000-0000-4000-8000-000000000402']::uuid[],'{"street":"Testgatan 2","postalCode":"12345","city":"Teststad"}','sandbox')->>'dispatch','false','uncertain Home Small attempt remains held without redispatch');
+select is(claim_central_parcel_group('f7800000-0000-4000-8000-000000000602','f7800000-0000-4000-8000-000000000402',array['f7800000-0000-4000-8000-000000000402']::uuid[],'{"firstName":"Synthetic","lastName":"sender","phone":"+46700007802","street":"Testgatan 2","postalCode":"12345","city":"Teststad"}','sandbox')->>'dispatch','false','uncertain Home Small attempt remains held without redispatch');
 select finish_central_parcel('f7800000-0000-4000-8000-000000000602','{"bookingId":"home-booking","returnId":"RSAPN0100SYNTHETIC","trackingId":"003700000000000002","qrPng":"data:image/png;base64,iVBORw0KGgo="}');
 select is(read_central_parcel('f7800000-0000-4000-8000-000000000402')#>>'{parcel,booking,returnId}','RSAPN0100SYNTHETIC','Home Small label code uses the compatible mobile field');
 select is((select count(*) from seller_ledger_entries),0::bigint,'service selection has no balance effects');

@@ -13,8 +13,8 @@ export async function raceExternalRequests({ setup, connectionString }) {
     )
   ).rows[0]
   await setup.query(
-    'insert into auth.users(id,phone,phone_confirmed_at) values($1,$2,now())',
-    [owner, '46700006199'],
+    'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',
+    [owner, `${owner}@example.test`],
   )
   await setup.query(
     'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now())',

@@ -5,6 +5,16 @@ export const parcelAddress = z.strictObject({
   postalCode: z.string().regex(/^[1-9][0-9]{4}$/),
   city: z.string().trim().min(1).max(35),
 })
+export const shippingContact = z
+  .strictObject({
+    firstName: z.string().trim().min(1).max(58),
+    lastName: z.string().trim().min(1).max(58),
+    phone: z.string().regex(/^\+[1-9][0-9]{7,14}$/),
+  })
+  .refine((c) => (c.firstName + ' ' + c.lastName).length <= 60)
+export const senderAddress = parcelAddress
+  .extend(shippingContact.shape)
+  .refine((c) => (c.firstName + ' ' + c.lastName).length <= 60)
 export const parcelContact = parcelAddress.extend({
   name: z.string().trim().min(1).max(60),
   email: z.email().max(70),
@@ -55,7 +65,7 @@ export const bookCentralParcel = z
     requestId: z.uuid(),
     offerId: z.uuid(),
     offerIds: z.array(z.uuid()).min(1).max(10).optional(),
-    address: parcelAddress,
+    address: senderAddress,
     weightG: z.number().int().min(1).max(20000).optional(),
     lengthMm: z.number().int().min(1).max(1500).optional(),
     widthMm: z.number().int().min(1).max(1500).optional(),

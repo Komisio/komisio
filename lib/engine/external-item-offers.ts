@@ -145,7 +145,7 @@ export async function reviewExternalRequest(
   return { id: c.commandId }
 }
 const safeErrors = new Set([
-  'PHONE_VERIFICATION_REQUIRED',
+  'AUTH_REQUIRED',
   'AUTH_REQUIRED',
   'FORBIDDEN',
   'SUPPORT_READ_ONLY',

@@ -11,7 +11,7 @@ import {
 } from '../platform/postnord'
 
 const allowedErrors = new Set([
-  'PHONE_VERIFICATION_REQUIRED',
+  'AUTH_REQUIRED',
   'FORBIDDEN',
   'SUPPORT_READ_ONLY',
   'INVALID_INPUT',

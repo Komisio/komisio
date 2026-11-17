@@ -37,7 +37,7 @@ export function mobileOrigin(request: Request): string | null {
 
 async function mobileVerifiedClient(
   request: Request,
-  identity: 'email' | 'phone' | 'push' | 'account',
+  identity: 'email' | 'account',
   serverHeaders: Record<string, string> = {},
 ) {
   const authorization = request.headers.get('authorization') ?? ''
@@ -66,19 +66,13 @@ async function mobileVerifiedClient(
     )
   }
   if (!data.user) throw new MobileRequestError('AUTH_REQUIRED', 401)
-  if (identity === 'email' && !data.user.email_confirmed_at)
-    throw new MobileRequestError('AUTH_REQUIRED', 401)
   if (
-    identity === 'push' &&
-    !data.user.email_confirmed_at &&
-    !(data.user.phone_confirmed_at && data.user.phone)
+    identity === 'email' &&
+    (!data.user.email ||
+      !data.user.email_confirmed_at ||
+      data.user.is_anonymous)
   )
     throw new MobileRequestError('AUTH_REQUIRED', 401)
-  if (
-    identity === 'phone' &&
-    (!data.user.phone_confirmed_at || !data.user.phone)
-  )
-    throw new MobileRequestError('PHONE_VERIFICATION_REQUIRED', 403)
   if (data.user.app_metadata.komisio_password_recovery_pending === true)
     throw new MobileRequestError('PASSWORD_UPDATE_REQUIRED', 409)
   const assurance = await client.auth.mfa.getAuthenticatorAssuranceLevel(token)
@@ -103,14 +97,14 @@ export function mobileIdentityClient(request: Request) {
   return mobileVerifiedClient(request, 'email')
 }
 
-/** External intake only; never a substitute for the registered-seller boundary. */
-export function mobilePhoneClient(request: Request) {
-  return mobileVerifiedClient(request, 'phone')
+/** External intake only; ownership remains separate from store seller identity. */
+export function mobileExternalIdentityClient(request: Request) {
+  return mobileVerifiedClient(request, 'email')
 }
 
 /** Server capability is never copied from a caller-controlled header. */
 export function mobileShippingClient(request: Request, serverKey: string) {
-  return mobileVerifiedClient(request, 'phone', {
+  return mobileVerifiedClient(request, 'email', {
     'x-komisio-shipping': serverKey,
   })
 }
@@ -120,15 +114,15 @@ export function mobilePhotoAiClient(request: Request) {
   const key = process.env.KOMISIO_SELLER_AI_SERVER_KEY
   if (!key || !/^[a-f0-9]{64}$/i.test(key))
     throw new Error('ASSISTANCE_DISABLED')
-  return mobileVerifiedClient(request, 'phone', { 'x-komisio-seller-ai': key })
+  return mobileVerifiedClient(request, 'email', { 'x-komisio-seller-ai': key })
 }
 
 /** Installation consent only; the engine separately checks event ownership. */
 export function mobilePushClient(request: Request) {
-  return mobileVerifiedClient(request, 'push')
+  return mobileVerifiedClient(request, 'email')
 }
 
-/** Self-only privacy requests need no store or extra phone verification. */
+/** Self-only privacy requests need no store membership. */
 export function mobileAccountClient(request: Request) {
   return mobileVerifiedClient(request, 'account')
 }

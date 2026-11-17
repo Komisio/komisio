@@ -89,7 +89,7 @@ try {
  create extension if not exists pgcrypto with schema extensions;
  grant usage on schema extensions to authenticated,anon;
  create schema auth;
- create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,deleted_at timestamptz,
+ create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,deleted_at timestamptz,is_anonymous boolean default false,
   encrypted_password text,raw_user_meta_data jsonb,raw_app_meta_data jsonb,recovery_token text,recovery_sent_at timestamptz,phone text,phone_confirmed_at timestamptz);
  create table auth.mfa_factors(user_id uuid,status text);
  -- Identity lookup used by deletion requests; real Auth behavior is covered by pgTAP/browser tests.

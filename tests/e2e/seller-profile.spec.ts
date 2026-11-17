@@ -12,6 +12,38 @@ test('staff edits optional seller details without rewriting an issued statement'
   await register(page, email, `K!${randomBytes(16).toString('hex')}`)
   const f = await p2Fixture(email)
   try {
+    const sender = {
+      firstName: 'Alex',
+      lastName: 'Example',
+      phone: '+46701234567',
+    }
+    const current = (
+      await f.db.query(
+        'select profile_revision as revision,profile,name,email,phone from sellers where id=$1',
+        [f.seller],
+      )
+    ).rows[0]
+    await f.db.query('select save_seller_profile($1,$2,$3,$4,$5)', [
+      f.tenant,
+      randomUUID(),
+      f.seller,
+      current.revision,
+      JSON.stringify({
+        ...(current.profile ?? {
+          name: current.name,
+          email: current.email,
+          phone: current.phone,
+          addressLine1: '',
+          addressLine2: '',
+          postalCode: '',
+          city: '',
+          country: '',
+          language: '',
+          notes: '',
+        }),
+        shippingContact: sender,
+      }),
+    ])
     const statement = (
       await f.db.query(
         "select issue_statement($1,$2,$3,'2020-01-01','2020-02-01',null) id",
@@ -53,6 +85,14 @@ test('staff edits optional seller details without rewriting an issued statement'
       }),
     ).toBeVisible()
     await page.reload()
+    expect(
+      (
+        await f.db.query(
+          'select profile from seller_profile_versions where seller_id=$1 order by revision desc limit 1',
+          [f.seller],
+        )
+      ).rows[0].profile.shippingContact,
+    ).toEqual(sender)
     await expect(
       page.getByText('SYNTHETIC-EDITED-ID', { exact: false }).first(),
     ).toBeVisible()

@@ -41,11 +41,11 @@ const input = {
 }
 const identity = {
   id: owner,
-  phone: '46700006102',
-  phone_confirmed_at: '2026-11-10',
+  email: 'synthetic@example.test',
+  email_confirmed_at: '2026-11-10',
   app_metadata: {},
 }
-it('shipping reads require bearer phone identity and never trust caller capability headers', async () => {
+it('shipping reads require bearer email identity and never trust caller capability headers', async () => {
   mocks.rpc.mockResolvedValue({
     data: { offerId: requestId, configured: false, parcel: null },
     error: null,
@@ -70,15 +70,15 @@ it('shipping reads require bearer phone identity and never trust caller capabili
     Authorization: 'Bearer synthetic.access.token',
   })
   mocks.getUser.mockResolvedValue({
-    data: { user: { ...identity, phone_confirmed_at: null } },
+    data: { user: { ...identity, email_confirmed_at: null } },
     error: null,
   })
   expect(
     (await shippingPost(request({ action: 'read', offerId: requestId })))
       .status,
-  ).toBe(403)
+  ).toBe(401)
 })
-it('shipping address reads and saves require phone identity and preserve explicit conflicts', async () => {
+it('shipping address reads and saves require email identity and preserve explicit conflicts', async () => {
   mocks.rpc.mockResolvedValue({ data: { account: null }, error: null })
   const response = await shippingAddressPost(request({ action: 'read' }))
   expect(response.status).toBe(200)
@@ -95,15 +95,16 @@ it('shipping address reads and saves require phone identity and preserve explici
     sellerId: photoId,
     expectedRevision: 0,
     address: { street: 'Testgatan 1', postalCode: '12345', city: 'Teststad' },
+    contact: { firstName: 'Alex', lastName: 'Reviewer', phone: '+46700007802' },
   }
   const conflict = await shippingAddressPost(request(command))
   expect(conflict.status).toBe(409)
   expect(await conflict.json()).toEqual({ error: 'PROFILE_CHANGED' })
   mocks.getUser.mockResolvedValue({
-    data: { user: { ...identity, phone_confirmed_at: null } },
+    data: { user: { ...identity, email_confirmed_at: null } },
     error: null,
   })
-  expect((await shippingAddressPost(request(command))).status).toBe(403)
+  expect((await shippingAddressPost(request(command))).status).toBe(401)
 })
 it('persists seller compensation meaning explicitly while keeping legacy requests distinguishable', async () => {
   mocks.rpc.mockResolvedValue({ data: requestId, error: null })
@@ -217,14 +218,14 @@ describe('central photo analysis identity', () => {
       'x-komisio-seller-ai': 'a'.repeat(64),
     })
   })
-  it('retains phone verification and MFA even for result reads', async () => {
+  it('retains email verification and MFA even for result reads', async () => {
     mocks.getUser.mockResolvedValue({
-      data: { user: { ...identity, phone_confirmed_at: null } },
+      data: { user: { ...identity, email_confirmed_at: null } },
       error: null,
     })
     expect(
       (await analysisPost(request({ action: 'read', requestId }))).status,
-    ).toBe(403)
+    ).toBe(401)
     expect(mocks.rpc).not.toHaveBeenCalled()
     mocks.getUser.mockResolvedValue({ data: { user: identity }, error: null })
     mocks.assurance.mockResolvedValue({
@@ -297,7 +298,7 @@ describe('central offer boundary', () => {
     expect(response.status).toBe(409)
     expect(await response.json()).toEqual({ error: 'OFFER_EXPIRED' })
   })
-  it('retains phone verification and MFA on offer reads and answers', async () => {
+  it('retains email verification and MFA on offer reads and answers', async () => {
     mocks.assurance.mockResolvedValue({
       data: { currentLevel: 'aal1', nextLevel: 'aal2' },
       error: null,
@@ -363,7 +364,7 @@ describe('central offer boundary', () => {
   })
 })
 
-describe('external request phone boundary', () => {
+describe('external request identity boundary', () => {
   it('canonicalizes UUID casing before replay comparisons and duplicate detection', async () => {
     expect(
       (
@@ -384,7 +385,7 @@ describe('external request phone boundary', () => {
       }).success,
     ).toBe(false)
   })
-  it('accepts a real verified phone without email or membership, retaining the frozen request ID and exact ore', async () => {
+  it('accepts a real verified email without email or membership, retaining the frozen request ID and exact ore', async () => {
     const response = await POST(request())
     expect(response.status).toBe(200)
     expect(await response.json()).toEqual({ id: requestId })
@@ -406,7 +407,8 @@ describe('external request phone boundary', () => {
     expect(mocks.createClient.mock.calls[0][2].auth.persistSession).toBe(false)
     expect(response.headers.get('cache-control')).toBe('private, no-store')
   })
-  it('keeps phone-only identities out of existing payout commands', async () => {
+  it('central identity does not grant a store seller account', async () => {
+    mocks.rpc.mockResolvedValue({ data: [], error: null })
     const response = await sellerPost(
       request({
         action: 'requestPayout',
@@ -416,24 +418,23 @@ describe('external request phone boundary', () => {
         amountOre: 10000,
       }),
     )
-    expect(response.status).toBe(401)
-    expect(mocks.rpc).not.toHaveBeenCalled()
+    expect(response.status).toBe(403)
+    expect(mocks.rpc).toHaveBeenCalledWith('my_seller_accounts')
   })
   it.each([
-    { ...identity, phone_confirmed_at: null },
-    { ...identity, phone: '' },
+    { ...identity, email_confirmed_at: null },
+    { ...identity, email: '' },
     {
       ...identity,
-      phone_confirmed_at: null,
-      email_confirmed_at: '2026-11-10',
-      user_metadata: { phone_confirmed_at: '2026-11-10' },
+      email_confirmed_at: null,
+      user_metadata: { email_confirmed_at: '2026-11-10' },
     },
-  ])('rejects missing or user-editable phone verification', async (user) => {
+  ])('rejects missing or user-editable email verification', async (user) => {
     mocks.getUser.mockResolvedValue({ data: { user }, error: null })
-    expect((await POST(request())).status).toBe(403)
+    expect((await POST(request())).status).toBe(401)
     expect(mocks.rpc).not.toHaveBeenCalled()
   })
-  it('requires MFA for enrolled phone accounts', async () => {
+  it('requires MFA for enrolled accounts', async () => {
     mocks.assurance.mockResolvedValue({
       data: { currentLevel: 'aal1', nextLevel: 'aal2' },
       error: null,
@@ -749,14 +750,14 @@ describe('central account and handover boundary', () => {
     )
     expect(r.headers.get('cache-control')).toBe('private, no-store')
   })
-  it('requires verified phone and current MFA before reading account data', async () => {
+  it('requires verified email and current MFA before reading account data', async () => {
     mocks.getUser.mockResolvedValue({
-      data: { user: { ...identity, phone_confirmed_at: null } },
+      data: { user: { ...identity, email_confirmed_at: null } },
       error: null,
     })
     expect(
       (await onboardingPost(request({ action: 'read', offerId }))).status,
-    ).toBe(403)
+    ).toBe(401)
     mocks.getUser.mockResolvedValue({ data: { user: identity }, error: null })
     mocks.assurance.mockResolvedValue({
       data: { currentLevel: 'aal1', nextLevel: 'aal2' },
@@ -770,7 +771,7 @@ describe('central account and handover boundary', () => {
     const data = {
       offerId,
       tenantId,
-      phone: identity.phone,
+      phone: '',
       store: { address: null, openingHours: [] },
       account: {
         id: owner,

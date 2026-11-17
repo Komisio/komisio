@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f7200000-0000-4000-8000-000000000001','account-staff@example.test',now(),null,null),
- ('f7200000-0000-4000-8000-000000000002',null,null,'46700007202',now()),
- ('f7200000-0000-4000-8000-000000000003',null,null,'46700007203',now()),
+ ('f7200000-0000-4000-8000-000000000002','f7200000-0000-4000-8000-000000000002@example.test',now(),'46700007202',now()),
+ ('f7200000-0000-4000-8000-000000000003','f7200000-0000-4000-8000-000000000003@example.test',now(),'46700007203',now()),
  ('f7200000-0000-4000-8000-000000000004','account-reader@example.test',now(),null,null);
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000001","role":"authenticated"}';
@@ -31,7 +31,7 @@ select throws_ok($$insert into external_item_handover_links(id) values(gen_rando
 reset role;
 insert into auth.mfa_factors(id,created_at,updated_at,user_id,status,factor_type,friendly_name) values(gen_random_uuid(),now(),now(),'f7200000-0000-4000-8000-000000000002','verified','totp','Synthetic onboarding MFA');
 set local role authenticated;
-select throws_like($$select read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')$$,'%PHONE_VERIFICATION_REQUIRED%','MFA downgrade blocks account reads');
+select throws_like($$select read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')$$,'%AUTH_REQUIRED%','MFA downgrade blocks account reads');
 select throws_ok($$select read_external_item_offer('f7200000-0000-4000-8000-000000000401')$$,'42501',null,'MFA downgrade cannot obtain handover progress through the offer read');
 reset role;
 delete from auth.mfa_factors where user_id='f7200000-0000-4000-8000-000000000002';

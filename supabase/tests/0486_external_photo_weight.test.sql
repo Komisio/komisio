@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f4860000-0000-4000-8000-000000000001','weight-owner@example.test',now(),null,null),
- ('f4860000-0000-4000-8000-000000000002',null,null,'46700004862',now()),
- ('f4860000-0000-4000-8000-000000000003',null,null,'46700004863',now());
+ ('f4860000-0000-4000-8000-000000000002','f4860000-0000-4000-8000-000000000002@example.test',now(),'46700004862',now()),
+ ('f4860000-0000-4000-8000-000000000003','f4860000-0000-4000-8000-000000000003@example.test',now(),'46700004863',now());
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f4860000-0000-4000-8000-000000000001","role":"authenticated"}';
 select create_tenant('Synthetic weight intake','synthetic-weight-intake',gen_random_uuid()) as tenant \gset
@@ -39,7 +39,7 @@ select is(my_external_photo_analysis('f4860000-0000-4000-8000-000000000201')#>>'
 select submit_external_item_request('f4860000-0000-4000-8000-000000000301',:'tenant','Dress','','good','',null,'SEK',array['f4860000-0000-4000-8000-000000000101']::uuid[],'SE','seller_amount');
 select submit_external_item_request('f4860000-0000-4000-8000-000000000302',:'tenant','Other item','','good','',null,'SEK',array['f4860000-0000-4000-8000-000000000102']::uuid[],'SE','seller_amount');
 select submit_external_item_request('f4860000-0000-4000-8000-000000000303',:'tenant','Both photos','','good','',null,'SEK',array['f4860000-0000-4000-8000-000000000101','f4860000-0000-4000-8000-000000000102']::uuid[],'SE','seller_amount');
-select throws_like(format($$select external_item_offer_queue_filtered(%L)$$,:'tenant'),'%AUTH_REQUIRED%','phone-only seller cannot read staff estimates');
+select throws_like(format($$select external_item_offer_queue_filtered(%L)$$,:'tenant'),'%FORBIDDEN%','central seller without membership cannot read staff estimates');
 set local request.jwt.claims='{"sub":"f4860000-0000-4000-8000-000000000003","role":"authenticated"}';
 select is(my_external_photo_analysis('f4860000-0000-4000-8000-000000000201'),null::jsonb,'other user cannot read analysis');
 reset role;

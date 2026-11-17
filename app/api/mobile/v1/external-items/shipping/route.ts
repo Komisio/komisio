@@ -4,7 +4,7 @@ import { postNordConfiguration } from '@/lib/platform/postnord'
 import {
   mobileJson,
   mobileOrigin,
-  mobilePhoneClient,
+  mobileExternalIdentityClient,
   mobileShippingClient,
   MobileRequestError,
 } from '@/lib/platform/mobile-seller'
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const client =
       c.data.action === 'book' && config
         ? await mobileShippingClient(request, config.serverKey)
-        : await mobilePhoneClient(request)
+        : await mobileExternalIdentityClient(request)
     return Response.json(await executeCentralParcel(client, c.data, config), {
       headers: externalItemHeaders(origin),
     })

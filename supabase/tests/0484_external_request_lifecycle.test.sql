@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f8400000-0000-4000-8000-000000000001','lifecycle-staff@example.test',now(),null,null),
- ('f8400000-0000-4000-8000-000000000002',null,null,'46700008402',now()),
- ('f8400000-0000-4000-8000-000000000003',null,null,'46700008403',now());
+ ('f8400000-0000-4000-8000-000000000002','f8400000-0000-4000-8000-000000000002@example.test',now(),'46700008402',now()),
+ ('f8400000-0000-4000-8000-000000000003','f8400000-0000-4000-8000-000000000003@example.test',now(),'46700008403',now());
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f8400000-0000-4000-8000-000000000001","role":"authenticated"}';
 select create_tenant('Synthetic request lifecycle','synthetic-request-lifecycle',gen_random_uuid()) as tenant \gset

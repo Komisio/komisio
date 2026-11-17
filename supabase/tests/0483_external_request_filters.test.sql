@@ -2,7 +2,7 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f7900000-0000-4000-8000-000000000001','queue-staff@example.test',now(),null,null),
- ('f7900000-0000-4000-8000-000000000002',null,null,'46700007902',now()),
+ ('f7900000-0000-4000-8000-000000000002','f7900000-0000-4000-8000-000000000002@example.test',now(),'46700007902',now()),
  ('f7900000-0000-4000-8000-000000000003','queue-reader@example.test',now(),null,null);
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7900000-0000-4000-8000-000000000001","role":"authenticated"}';

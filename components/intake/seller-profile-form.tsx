@@ -57,10 +57,15 @@ export function SellerProfileForm({
     const parsed = sellerProfileBody.safeParse({
       ...Object.fromEntries(
         Object.keys(profile)
-          .filter((k) => k !== 'business' && k !== 'sellerType')
+          .filter(
+            (k) => !['business', 'sellerType', 'shippingContact'].includes(k),
+          )
           .map((k) => [k, String(data.get(k) ?? '').trim()]),
       ),
       ...businessFromFields(data),
+      ...(profile.shippingContact
+        ? { shippingContact: profile.shippingContact }
+        : {}),
     })
     if (!action.locked && !parsed.success) {
       setInvalid(true)
@@ -86,7 +91,7 @@ export function SellerProfileForm({
     }
   }
   const field = (
-    key: Exclude<keyof SellerProfile, 'business'>,
+    key: Exclude<keyof SellerProfile, 'business' | 'shippingContact'>,
     label: string,
     maxLength: number,
     type = 'text',

@@ -6,7 +6,7 @@ import {
   MobileRequestError,
   mobileJson,
   mobileOrigin,
-  mobilePhoneClient,
+  mobileExternalIdentityClient,
 } from '@/lib/platform/mobile-seller'
 import {
   externalItemsEnabled,
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     origin = mobileOrigin(request)
     const input = externalItemCommand.safeParse(await mobileJson(request))
     if (!input.success) throw new MobileRequestError('INVALID_INPUT', 400)
-    const client = await mobilePhoneClient(request)
+    const client = await mobileExternalIdentityClient(request)
     return Response.json(await executeExternalItemCommand(client, input.data), {
       headers: externalItemHeaders(origin),
     })

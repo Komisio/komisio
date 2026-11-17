@@ -4,6 +4,16 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+## Central identity and sender contact (resolved 2026-11-17)
+
+The owner retires SMS sign-in and all mandatory phone verification. Verified
+email accounts, including Apple/Google identities, authorize central intake;
+Auth user ID ownership, recovery and MFA checks remain. No phone-only migration
+or alternate SMS login is required. First name, last name and contact phone are
+saved with the Swedish shipping address and shown before booking. Phone is
+contact data, never an identity or automatic seller-linking key. Prior parcel
+and agreement evidence remains unchanged. This supersedes the SMS decisions below.
+
 ## Central parcel shipping (2026-11-12)
 
 Owner confirmation 2026-11-16: after contacting PostNord, the owner confirms

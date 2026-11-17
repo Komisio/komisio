@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f4780000-0000-4000-8000-000000000001','ai-owner@example.test',now(),null,null),
- ('f4780000-0000-4000-8000-000000000002',null,null,'46700004782',now()),
- ('f4780000-0000-4000-8000-000000000003',null,null,'46700004783',now());
+ ('f4780000-0000-4000-8000-000000000002','f4780000-0000-4000-8000-000000000002@example.test',now(),'46700004782',now()),
+ ('f4780000-0000-4000-8000-000000000003','f4780000-0000-4000-8000-000000000003@example.test',now(),'46700004783',now());
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f4780000-0000-4000-8000-000000000001","role":"authenticated"}';
 select create_tenant('Synthetic AI intake','synthetic-ai-intake',gen_random_uuid()) as tenant \gset
@@ -39,7 +39,7 @@ select is(my_external_photo_analysis('f4780000-0000-4000-8000-000000000201'),nul
 select throws_like(format($$select pg_temp.start_ai(gen_random_uuid(),%L)$$,:'tenant'),'%PHOTO_NOT_FOUND%','other user cannot analyze photos');
 select throws_like($$select complete_external_photo_analysis('f4780000-0000-4000-8000-000000000201',null,0,0)$$,'%FORBIDDEN%','server capability does not replace ownership');
 set local request.jwt.claims='{"sub":"f4780000-0000-4000-8000-000000000001","role":"authenticated"}';
-select throws_like(format($$select external_photo_ai_configuration(%L)$$,:'tenant'),'%PHONE_VERIFICATION_REQUIRED%','store access does not replace phone verification');
+select lives_ok(format($$select external_photo_ai_configuration(%L)$$,:'tenant'),'verified email can read AI configuration without a phone');
 reset role;
 select is((select count(*) from external_photo_ai_attempts where tenant_id=:'tenant'),1::bigint,'one immutable attempt');
 select is((select count(*) from external_photo_ai_results where tenant_id=:'tenant'),1::bigint,'one immutable result');

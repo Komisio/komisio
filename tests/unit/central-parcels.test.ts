@@ -56,6 +56,9 @@ const command = {
   requestId: id,
   offerId: offer,
   address: {
+    firstName: 'Synthetic',
+    lastName: 'sender',
+    phone: contact.phone,
     street: contact.street,
     postalCode: contact.postalCode,
     city: contact.city,

@@ -5,7 +5,7 @@ import {
 import {
   mobileJson,
   mobileOrigin,
-  mobilePhoneClient,
+  mobileExternalIdentityClient,
   MobileRequestError,
 } from '@/lib/platform/mobile-seller'
 import {
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     origin = mobileOrigin(request)
     const c = centralAddressCommand.safeParse(await mobileJson(request))
     if (!c.success) throw new MobileRequestError('INVALID_INPUT', 400)
-    const client = await mobilePhoneClient(request)
+    const client = await mobileExternalIdentityClient(request)
     return Response.json(await executeCentralShippingAddress(client, c.data), {
       headers: externalItemHeaders(origin),
     })

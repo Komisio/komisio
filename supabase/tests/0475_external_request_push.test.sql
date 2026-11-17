@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at,raw_app_meta_data) values
  ('f7500000-0000-4000-8000-000000000001','request-staff@example.test',now(),null,null,'{}'),
- ('f7500000-0000-4000-8000-000000000002',null,null,'46700007502',now(),'{}'),
- ('f7500000-0000-4000-8000-000000000003',null,null,'46700007503',now(),'{}'),
+ ('f7500000-0000-4000-8000-000000000002','f7500000-0000-4000-8000-000000000002@example.test',now(),'46700007502',now(),'{}'),
+ ('f7500000-0000-4000-8000-000000000003','f7500000-0000-4000-8000-000000000003@example.test',now(),'46700007503',now(),'{}'),
  ('f7500000-0000-4000-8000-000000000004','request-worker@example.test',now(),null,null,'{"komisio_push_worker":true}');
 insert into auth.sessions(id,user_id,aal) values
  ('f7500000-0000-4000-8000-000000000012','f7500000-0000-4000-8000-000000000002','aal1'),
@@ -21,7 +21,7 @@ select reserve_external_item_photo('f7500000-0000-4000-8000-000000000201',repeat
 insert into storage.objects(bucket_id,name) values('external-item-photos','f7500000-0000-4000-8000-000000000002/f7500000-0000-4000-8000-000000000201.jpg');
 select submit_external_item_request('f7500000-0000-4000-8000-000000000301',current_setting('test.tenant')::uuid,'Jacket','','good','',40000,'SEK',array['f7500000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 select is(set_my_push_device('f7500000-0000-4000-8000-000000000021',repeat('a',64),'f7500000-0000-4000-8000-000000000031',0,'ExpoPushToken[synthetic_external]','ios','sv',true)->>'enabled','true','phone request owner consents without email or seller membership');
-select is(my_push_device('f7500000-0000-4000-8000-000000000021',repeat('a',64))->>'enabled','true','phone owner can read device consent');
+select is(my_push_device('f7500000-0000-4000-8000-000000000021',repeat('a',64))->>'enabled','true','email owner can read device consent');
 select throws_ok($$select seller_push_candidates()$$,'42501','FORBIDDEN','request owner cannot read the worker queue');
 select throws_like($$select * from komisio_private.seller_push_devices$$,'%permission denied%','tokens remain private');
 set local request.jwt.claims='{"sub":"f7500000-0000-4000-8000-000000000001","role":"authenticated"}';
@@ -36,7 +36,7 @@ select set_config('test.delivery',(select id::text from komisio_private.seller_p
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7500000-0000-4000-8000-000000000004","role":"authenticated"}';
 select ok(not exists(select 1 from jsonb_array_elements(seller_push_candidates()) where value->>'id'=current_setting('test.delivery')),'legacy workers never receive unfamiliar external events');
-select is((select value->>'ownerId' from jsonb_array_elements(seller_push_candidates(2)) where value->>'id'=current_setting('test.delivery')),'f7500000-0000-4000-8000-000000000002','protocol 2 worker candidates retain the explicit phone owner');
+select is((select value->>'ownerId' from jsonb_array_elements(seller_push_candidates(2)) where value->>'id'=current_setting('test.delivery')),'f7500000-0000-4000-8000-000000000002','protocol 2 worker candidates retain the explicit email owner');
 select throws_like($$select seller_push_candidates(3)$$,'%INVALID_INPUT%','unknown queue protocols are rejected');
 select is(claim_seller_push(current_setting('test.delivery')::uuid,'sv','Synthetic offer','Open the app')->>'requestId','f7500000-0000-4000-8000-000000000301','claim binds the phone-owned request');
 select is(claim_seller_push(current_setting('test.delivery')::uuid,'sv','Synthetic offer','Open the app'),null::jsonb,'second claim cannot send again');

@@ -29,7 +29,6 @@ export const externalOnboardingCommand = z.discriminatedUnion('action', [
 export const externalOnboarding = z.object({
   offerId: uuid,
   tenantId: uuid,
-  phone: z.string().min(1).max(40),
   store: z.object({
     address: z
       .object({
@@ -100,7 +99,7 @@ export async function executeExternalOnboarding(
   if (r.error)
     throw new Error(
       [
-        'PHONE_VERIFICATION_REQUIRED',
+        'AUTH_REQUIRED',
         'FORBIDDEN',
         'SUPPORT_READ_ONLY',
         'INVALID_INPUT',

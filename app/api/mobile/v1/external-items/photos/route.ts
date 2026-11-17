@@ -3,7 +3,7 @@ import { uploadExternalItemPhoto } from '@/lib/engine/external-item-requests'
 import {
   MobileRequestError,
   mobileOrigin,
-  mobilePhoneClient,
+  mobileExternalIdentityClient,
 } from '@/lib/platform/mobile-seller'
 import {
   externalItemsEnabled,
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       .uuid()
       .safeParse(new URL(request.url).searchParams.get('photoId'))
     if (!id.success) throw new MobileRequestError('INVALID_INPUT', 400)
-    const client = await mobilePhoneClient(request)
+    const client = await mobileExternalIdentityClient(request)
     return Response.json(
       await uploadExternalItemPhoto(
         client,

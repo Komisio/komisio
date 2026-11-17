@@ -197,41 +197,28 @@ alongside the local app. Playwright starts it automatically; CI keeps it running
 for all Auth integration checks. The fixture sends only to `@example.test` and
 never calls the external email provider.
 
-### Phone verification with 46elks
+### Retiring phone authentication
 
-`/api/auth/sms` is a separately signed Supabase Send SMS hook. Configure
-`ELKS_API_USERNAME` and `ELKS_API_PASSWORD` as **server-only application secrets**;
-these are API credentials, not the 46elks account login. Set a separate random
-32-byte key as `KOMISIO_AUTH_SMS_HOOK_SECRET` (`v1,whsec_<base64>`), shared only
-with this environment's Auth hook. Use distinct signing keys for staging and
-production. No database schema, seller membership or email configuration changes
-are needed. The mobile app never receives the provider credentials.
+Central intake uses verified email identities, including Apple/Google sign-in.
+SMS sign-in, phone verification screens and the Send SMS endpoint are retired.
+Auth user IDs still own their requests, photos and explicit seller links. Phone
+is collected only as shipping contact data, with first/last name and address.
 
-After the reviewed handler is deployed and provider credentials are verified,
-run **Auth SMS hook** on main for staging. Test a real requested code, an invalid
-code, resend limits and existing email login before authorizing production.
-The workflow first verifies a signed, non-sending handler probe. It then enables
-the HTTP hook and phone login, requires confirmation and sets a minimum 60-second
-resend interval and at most 20 SMS per project per hour for the pilot, preserving
-stricter existing limits. It refuses another active SMS transport, hosted test
-codes or a mismatched environment and reads back the result. The probe proves
-handler configuration, not provider credentials or delivery. For self-hosting,
-configure these same controls in Auth and point its HTTP hook at `/api/auth/sms`.
+Deploy the additive identity/contact migration and matching application first.
+Run **Retire phone authentication** on main for staging, then production through
+the protected environment. It disables the Supabase Phone provider and Send SMS
+hook, clears the hook endpoint/key, and verifies all unrelated Auth settings are
+unchanged. Check email/password, email code, Apple/Google, MFA and central reads.
+Verify that a phone OTP request fails without invoking the former transport.
+Remove unused `ELKS_API_USERNAME`, `ELKS_API_PASSWORD` and
+`KOMISIO_AUTH_SMS_HOOK_SECRET` deployment secrets after retirement. Do not delete
+Auth users, identities, historical contacts or financial/contract evidence.
+No SMS provider credentials are needed for new installations.
 
-Auth generates and verifies the code. The hook sends a fixed Swedish message
-from **Komisio** over HTTPS and requests `dontlog=message`, which excludes message
-text from 46elks customer history; this does not erase operator traffic records.
-No numbers, codes, provider bodies or credentials are logged by the handler.
-Provider errors and timeouts return a generic non-retryable failure: the user
-may request a new code through Auth's limits. A lost HTTP response can still lead
-to a provider/Auth retry; delivery is not claimed to be exactly once.
-
-For rollback, disable Phone Auth first and then the Send SMS hook. Preserve the
-email hook and other Auth settings. Existing email sessions and store access do
-not depend on the SMS transport. Provider billing, traffic retention and recovery
-after losing access to a phone number remain separate operator responsibilities.
-See [Supabase SMS hooks](https://supabase.com/docs/guides/auth/auth-hooks/send-sms-hook)
-and [46elks SMS parameters](https://46elks.se/docs/send-sms).
+The new mobile version is required for sender contact collection. Older builds
+are not compatible with the retired phone flow; do not submit their App Review
+draft after switching. Roll back application and Auth configuration as a
+coordinated release, not by changing ownership or verification evidence.
 
 ## Recovery and operations before external pilot
 

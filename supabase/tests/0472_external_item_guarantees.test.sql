@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f7300000-0000-4000-8000-000000000001','guarantee-staff@example.test',now(),null,null),
- ('f7300000-0000-4000-8000-000000000002',null,null,'46700007302',now()),
- ('f7300000-0000-4000-8000-000000000003',null,null,'46700007303',now()),
+ ('f7300000-0000-4000-8000-000000000002','f7300000-0000-4000-8000-000000000002@example.test',now(),'46700007302',now()),
+ ('f7300000-0000-4000-8000-000000000003','f7300000-0000-4000-8000-000000000003@example.test',now(),'46700007303',now()),
  ('f7300000-0000-4000-8000-000000000004','guarantee-reader@example.test',now(),null,null);
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7300000-0000-4000-8000-000000000001","role":"authenticated"}';
@@ -41,7 +41,7 @@ select is((select count(*) from external_item_guarantees),1::bigint,'verified ow
 select is(read_external_item_offer('f7300000-0000-4000-8000-000000000401')#>>'{guarantee,amountOre}','40000','bounded offer read includes actual guarantee');
 select is(read_external_item_offer('f7300000-0000-4000-8000-000000000401')#>>'{guarantee,creditedAt}',null::text,'a receipt is not represented as a credit');
 set local request.jwt.claims='{"sub":"f7300000-0000-4000-8000-000000000003","role":"authenticated"}';
-select is((select count(*) from external_item_guarantees),0::bigint,'another phone owner cannot read guarantees');
+select is((select count(*) from external_item_guarantees),0::bigint,'another email owner cannot read guarantees');
 set local request.jwt.claims='{"sub":"f7300000-0000-4000-8000-000000000004","role":"authenticated"}';
 select is((select count(*) from external_item_guarantees),1::bigint,'authorized read-only staff can read guarantees');
 reset role;

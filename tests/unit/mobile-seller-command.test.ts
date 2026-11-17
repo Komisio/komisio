@@ -89,7 +89,12 @@ beforeEach(() => {
   })
   mocks.getUser.mockResolvedValue({
     data: {
-      user: { id: 'user', email_confirmed_at: '2026-10-29', app_metadata: {} },
+      user: {
+        id: 'user',
+        email: 'seller@example.test',
+        email_confirmed_at: '2026-10-29',
+        app_metadata: {},
+      },
     },
     error: null,
   })
@@ -189,6 +194,7 @@ describe('mobile seller authentication and scope', () => {
     mocks.getUser.mockResolvedValue({
       data: {
         user: {
+          email: 'seller@example.test',
           email_confirmed_at: '2026-10-29',
           app_metadata: { komisio_password_recovery_pending: true },
         },

@@ -13,6 +13,7 @@ const command = {
   tenantId: tenant,
   sellerId: seller,
   expectedRevision: 0,
+  contact: { firstName: 'Alex', lastName: 'Reviewer', phone: '+46700007802' },
   address: { street: 'Testgatan 1', postalCode: '12345', city: 'Teststad' },
 }
 describe('central shipping address', () => {
@@ -30,6 +31,7 @@ describe('central shipping address', () => {
       p_seller: seller,
       p_expected: 0,
       p_address: command.address,
+      p_contact: command.contact,
     })
     for (const extra of [
       { email: 'injected@example.test' },
@@ -48,6 +50,7 @@ describe('central shipping address', () => {
           sellerId: seller,
           revision: 1,
           address: command.address,
+          contact: command.contact,
           notes: 'private',
         },
       },
@@ -63,6 +66,7 @@ describe('central shipping address', () => {
         sellerId: seller,
         revision: 1,
         address: command.address,
+        contact: command.contact,
       },
     })
     rpc.mockResolvedValueOnce({ data: seller, error: null })

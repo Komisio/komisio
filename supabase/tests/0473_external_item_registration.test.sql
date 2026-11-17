@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f7400000-0000-4000-8000-000000000001','registration-staff@example.test',now(),null,null),
- ('f7400000-0000-4000-8000-000000000002',null,null,'46700007402',now()),
- ('f7400000-0000-4000-8000-000000000003',null,null,'46700007403',now()),
+ ('f7400000-0000-4000-8000-000000000002','f7400000-0000-4000-8000-000000000002@example.test',now(),'46700007402',now()),
+ ('f7400000-0000-4000-8000-000000000003','f7400000-0000-4000-8000-000000000003@example.test',now(),'46700007403',now()),
  ('f7400000-0000-4000-8000-000000000004','registration-reader@example.test',now(),null,null);
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7400000-0000-4000-8000-000000000001","role":"authenticated"}';
@@ -62,7 +62,7 @@ set constraints all immediate;
 select pass('the registration and immutable guarantee link satisfy deferred constraints');
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7400000-0000-4000-8000-000000000002","role":"authenticated"}';
-select throws_ok(format($$select prepare_external_item_registration(%L,%L)$$,:'tenant',:'guarantee'),'42501',null,'phone owner cannot register inventory');
+select throws_ok(format($$select prepare_external_item_registration(%L,%L)$$,:'tenant',:'guarantee'),'42501',null,'email owner cannot register inventory');
 select is(read_external_item_offer('f7400000-0000-4000-8000-000000000401')#>>'{guarantee,itemId}',:'item','owner can read actual registered-item evidence');
 set local request.jwt.claims='{"sub":"f7400000-0000-4000-8000-000000000004","role":"authenticated"}';
 select throws_ok(format($$select prepare_external_item_registration(%L,%L)$$,:'tenant',:'guarantee'),'42501',null,'read-only staff cannot prepare inventory');

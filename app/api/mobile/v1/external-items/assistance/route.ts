@@ -6,7 +6,7 @@ import {
   MobileRequestError,
   mobileJson,
   mobileOrigin,
-  mobilePhoneClient,
+  mobileExternalIdentityClient,
   mobilePhotoAiClient,
 } from '@/lib/platform/mobile-seller'
 import {
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     )
     if (!command.success) throw new MobileRequestError('INVALID_INPUT', 400)
     const client = await (command.data.action === 'read'
-      ? mobilePhoneClient(request)
+      ? mobileExternalIdentityClient(request)
       : mobilePhotoAiClient(request))
     // Finish and persist an already-started attempt even if the phone disconnects.
     const result = await runExternalPhotoAnalysis(

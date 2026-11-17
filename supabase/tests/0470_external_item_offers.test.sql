@@ -2,8 +2,8 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f7100000-0000-4000-8000-000000000001','offer-staff@example.test',now(),null,null),
- ('f7100000-0000-4000-8000-000000000002',null,null,'46700007102',now()),
- ('f7100000-0000-4000-8000-000000000003',null,null,'46700007103',now()),
+ ('f7100000-0000-4000-8000-000000000002','f7100000-0000-4000-8000-000000000002@example.test',now(),'46700007102',now()),
+ ('f7100000-0000-4000-8000-000000000003','f7100000-0000-4000-8000-000000000003@example.test',now(),'46700007103',now()),
  ('f7100000-0000-4000-8000-000000000004','offer-reader@example.test',now(),null,null);
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000001","role":"authenticated"}';
@@ -18,7 +18,7 @@ select reserve_external_item_photo('f7100000-0000-4000-8000-000000000201',repeat
 insert into storage.objects(bucket_id,name) values('external-item-photos','f7100000-0000-4000-8000-000000000002/f7100000-0000-4000-8000-000000000201.jpg');
 select submit_external_item_request('f7100000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',100000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE');
 select is((select agreement_version_id from external_item_requests where id='f7100000-0000-4000-8000-000000000301'),'f7100000-0000-4000-8000-000000000101'::uuid,'request retains the agreement version for its upload');
-select throws_ok(format($$select issue_external_item_offer(%L,'f7100000-0000-4000-8000-000000000401','f7100000-0000-4000-8000-000000000301',null,40000,100000,'f7100000-0000-4000-8000-000000000101')$$,:'tenant'),'42501',null,'phone owner cannot issue a store offer');
+select throws_ok(format($$select issue_external_item_offer(%L,'f7100000-0000-4000-8000-000000000401','f7100000-0000-4000-8000-000000000301',null,40000,100000,'f7100000-0000-4000-8000-000000000101')$$,:'tenant'),'42501',null,'email owner cannot issue a store offer');
 set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000004","role":"authenticated"}';
 select throws_ok(format($$select issue_external_item_offer(%L,'f7100000-0000-4000-8000-000000000401','f7100000-0000-4000-8000-000000000301',null,40000,100000,'f7100000-0000-4000-8000-000000000101')$$,:'tenant'),'42501',null,'readonly staff cannot issue offers');
 set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000001","role":"authenticated"}';
@@ -68,7 +68,7 @@ select throws_like($$select respond_external_item_offer(gen_random_uuid(),'f7100
 select is(read_external_item_offer('f7100000-0000-4000-8000-000000000403')->>'status','expired','expired deadline is explicit in the read model');
 select lives_ok($$select respond_external_item_offer(gen_random_uuid(),'f7100000-0000-4000-8000-000000000403',false,null)$$,'seller can close an expired offer without accepting it');
 select is(my_external_item_requests()->>'activeCount','1','closing an expired offer releases its slot');
-select throws_ok(format($$select external_item_offer_queue(%L,0)$$,:'tenant'),'42501',null,'phone owners cannot read the staff queue');
+select throws_ok(format($$select external_item_offer_queue(%L,0)$$,:'tenant'),'42501',null,'email owners cannot read the staff queue');
 set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000004","role":"authenticated"}';
 select is(external_item_offer_queue(:'tenant',0)->>'total','3','readonly staff can inspect their own queue');
 select is(jsonb_array_length(external_item_offer_queue(:'tenant',25)->'rows'),0,'queue offset is applied before returning rows');

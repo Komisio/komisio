@@ -2,12 +2,14 @@ import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { locales } from '../i18n'
 import { businessDetails, sellerType } from './seller-business'
+import { shippingContact } from './central-parcel-schema'
 import { agreementApproval } from './agreement-workspace'
 
 export const sellerProfileBody = z
   .strictObject({
     sellerType: sellerType.default('private'),
     business: businessDetails.optional(),
+    shippingContact: shippingContact.optional(),
     name: z.string().trim().min(1).max(120),
     email: z.union([z.literal(''), z.email().max(254)]),
     phone: z.string().trim().max(40),

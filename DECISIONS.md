@@ -1375,3 +1375,5 @@ configuration blocks checkout rather than silently charging another currency.
 - 2026-11-16: Owner confirms PostNord accepts the central Home Small arrangement, including higher values and estimated weight. Cap parcel selection at 2000 g estimated item weight; keep 1000 g allowance for packaging and uncertainty. Unknown estimates are never treated as zero.
 
 - 2026-11-16: Central photo AI estimates item grams without packaging. Freeze the latest matching owned photo analysis on submission and retain it with the request; expose estimates only to staff. Unknown weight uses the full 2000 g selection budget, never zero; no measured-weight claim.
+
+- 2026-11-17: Retire SMS authentication. Central intake requires verified email (including Apple/Google) and keeps Auth-ID ownership, MFA and recovery checks. Collect first/last name and contact phone with the shipping address; freeze each parcel's sender and preserve prior evidence (#843).

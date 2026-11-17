@@ -4,7 +4,7 @@ insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) val
  ('f4690000-0000-4000-8000-000000000001','central-host@example.test',now(),null,null),
  ('f4690000-0000-4000-8000-000000000002','central-other@example.test',now(),null,null),
  ('f4690000-0000-4000-8000-000000000003','central-billing@example.test',now(),null,null),
- ('f4690000-0000-4000-8000-000000000004',null,null,'46700004694',now());
+ ('f4690000-0000-4000-8000-000000000004','f4690000-0000-4000-8000-000000000004@example.test',now(),'46700004694',now());
 insert into platform_hosts(user_id,kind) values
  ('f4690000-0000-4000-8000-000000000001','person'),
  ('f4690000-0000-4000-8000-000000000003','billing');

@@ -2,9 +2,9 @@ begin;
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f6100000-0000-4000-8000-000000000001','external-staff@example.test',now(),null,null),
- ('f6100000-0000-4000-8000-000000000002',null,null,'46700006102',now()),
+ ('f6100000-0000-4000-8000-000000000002','f6100000-0000-4000-8000-000000000002@example.test',now(),'46700006102',now()),
  ('f6100000-0000-4000-8000-000000000003',null,null,'46700006103',null),
- ('f6100000-0000-4000-8000-000000000004',null,null,'46700006104',now()),
+ ('f6100000-0000-4000-8000-000000000004','f6100000-0000-4000-8000-000000000004@example.test',now(),'46700006104',now()),
  ('f6100000-0000-4000-8000-000000000005','external-readonly@example.test',now(),null,null),
  ('f6100000-0000-4000-8000-000000000006','external-other-staff@example.test',now(),null,null);
 set local role authenticated;
@@ -24,12 +24,12 @@ create function pg_temp.submit_request(i uuid,t uuid,p uuid[],price numeric defa
  select public.submit_external_item_request(i,t,'Jacket','Synthetic','good','',price,c,p,'SE');
 $$;
 set local role authenticated;
-select throws_like($$select reserve_external_item_photo(gen_random_uuid(),repeat('a',64),100)$$,'%PHONE_VERIFICATION_REQUIRED%','email verification is not phone verification');
+select lives_ok($$select reserve_external_item_photo(gen_random_uuid(),repeat('a',64),100)$$,'verified email also authorizes central photos');
 set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000003","role":"authenticated","phone_confirmed_at":"2026-01-01"}';
-select throws_like($$select reserve_external_item_photo(gen_random_uuid(),repeat('a',64),100)$$,'%PHONE_VERIFICATION_REQUIRED%','unverified Auth phone cannot be spoofed in claims');
+select throws_like($$select reserve_external_item_photo(gen_random_uuid(),repeat('a',64),100)$$,'%AUTH_REQUIRED%','unverified Auth phone cannot be spoofed in claims');
 set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000002","role":"authenticated"}';
-select is(public.verified_session(),false,'phone access does not relax existing email access');
-select is((select count(*) from tenant_members),0::bigint,'phone identity has no membership');
+select is(public.verified_session(),true,'verified email is a verified session without membership');
+select is((select count(*) from tenant_members),0::bigint,'email identity has no membership');
 select is(reserve_external_item_photo('f6100000-0000-4000-8000-000000000101',repeat('a',64),100),
  'f6100000-0000-4000-8000-000000000002/f6100000-0000-4000-8000-000000000101.jpg','photo path binds the real user');
 select lives_ok($$select reserve_external_item_photo('f6100000-0000-4000-8000-000000000101',repeat('a',64),100)$$,'photo reservation replays');
@@ -43,7 +43,7 @@ select throws_like(format($$select pg_temp.submit_request(gen_random_uuid(),%L,a
 select throws_like(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[],100,'EUR')$$,:'tenant'),'%STORE_CHANGED%','store currency is checked at submission');
 select throws_like(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101','f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'%INVALID_INPUT%','duplicate photos rejected');
 select is(pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',:'tenant',array['f6100000-0000-4000-8000-000000000101']::uuid[]),
- 'f6100000-0000-4000-8000-000000000201'::uuid,'phone-only user submits without becoming a seller');
+ 'f6100000-0000-4000-8000-000000000201'::uuid,'email user submits without becoming a seller');
 select lives_ok(format($$select pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'lost-response replay succeeds');
 select throws_like(format($$select pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',%L,array['f6100000-0000-4000-8000-000000000101']::uuid[],200)$$,:'tenant'),'%REQUEST_CONFLICT%','changed replay rejected');
 select is((select count(*) from external_item_requests),1::bigint,'one request after replay');
@@ -73,12 +73,12 @@ set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000006","rol
 select is((select count(*) from external_item_requests where tenant_id=:'tenant'),0::bigint,'another store cannot read the selected store requests');
 select throws_ok(format($$select decline_external_item_request(gen_random_uuid(),%L,'f6100000-0000-4000-8000-000000000201','')$$,:'tenant'),'42501','FORBIDDEN','another store cannot review a request');
 set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000004","role":"authenticated"}';
-select is((select count(*) from external_item_requests),0::bigint,'another phone identity cannot read requests');
-select is((select count(*) from external_item_photos),0::bigint,'another phone identity cannot read photos');
-select is(public.external_item_photo_access('f6100000-0000-4000-8000-000000000002/f6100000-0000-4000-8000-000000000101.jpg','read'),false,'another phone identity cannot download photos');
+select is((select count(*) from external_item_requests),0::bigint,'another email identity cannot read requests');
+select is((select count(*) from external_item_photos),0::bigint,'another email identity cannot read photos');
+select is(public.external_item_photo_access('f6100000-0000-4000-8000-000000000002/f6100000-0000-4000-8000-000000000101.jpg','read'),false,'another email identity cannot download photos');
 select throws_like($$select reserve_external_item_photo('f6100000-0000-4000-8000-000000000101',repeat('a',64),100)$$,'%REQUEST_CONFLICT%','another owner cannot steal reservation');
 select throws_like(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'%PHOTO_NOT_FOUND%','another owner cannot attach photos');
-select throws_ok(format($$select decline_external_item_request(gen_random_uuid(),%L,'f6100000-0000-4000-8000-000000000201','')$$,:'tenant'),'42501',null,'phone owner cannot impersonate staff');
+select throws_ok(format($$select decline_external_item_request(gen_random_uuid(),%L,'f6100000-0000-4000-8000-000000000201','')$$,:'tenant'),'42501',null,'email owner cannot impersonate staff');
 set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000001","role":"authenticated"}';
 select is((select count(*) from external_item_requests where tenant_id=:'tenant'),1::bigint,'recipient staff can read their queue');
 select is(public.external_item_photo_access('f6100000-0000-4000-8000-000000000002/f6100000-0000-4000-8000-000000000101.jpg','read'),true,'recipient staff can read submitted photos');
@@ -115,14 +115,14 @@ insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000002","role":"authenticated","aal":"aal1"}';
 select is((select count(*) from external_item_requests),0::bigint,'MFA assurance gates direct reads');
-select throws_like($$select my_external_item_requests()$$,'%PHONE_VERIFICATION_REQUIRED%','MFA assurance gates RPC reads');
+select throws_like($$select my_external_item_requests()$$,'%AUTH_REQUIRED%','MFA assurance gates RPC reads');
 set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000002","role":"authenticated","aal":"aal2"}';
 select is(my_external_item_requests()->>'activeCount','30','verified MFA restores only phone-scoped access');
 reset role;
 update auth.users set raw_app_meta_data='{"komisio_password_recovery_pending":true}' where id='f6100000-0000-4000-8000-000000000002';
 set local role authenticated;
 select is((select count(*) from external_item_requests),0::bigint,'protected recovery metadata gates direct request reads');
-select throws_like($$select my_external_item_requests()$$,'%PHONE_VERIFICATION_REQUIRED%','protected recovery metadata also gates RPCs');
+select throws_like($$select my_external_item_requests()$$,'%AUTH_REQUIRED%','protected recovery metadata also gates RPCs');
 set local role anon;
 select throws_ok($$select my_external_item_requests()$$,'42501',null,'anonymous requests are denied');
 select throws_ok($$select * from external_item_requests$$,'42501',null,'anonymous reads are denied');

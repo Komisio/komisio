@@ -12,6 +12,13 @@ This exclusion does not remove ordinary agreed return/donation workflows.
 
 ## Current delivery baseline (2026-09-28)
 
+Owner decision, 2026-11-17: retire SMS sign-in and mandatory phone verification.
+Central intake uses verified email (including Apple/Google), preserving Auth-ID
+ownership, MFA and tenant separation. Shipping collects and displays first name,
+last name, contact phone and address; parcel sender snapshots remain immutable.
+Hosted retirement and the matching mobile release are separate verification steps.
+
+
 Seller privacy now has a scoped owner/admin review and contact-erasure workflow.
 It checks unresolved goods, balances, fees, payouts and pending delivery; preserves
 justified legal/accounting evidence and the shared login; and records retention

@@ -78,6 +78,9 @@ const command = {
   requestId: parcel.id,
   offerId: 'f7800000-0000-4000-8000-000000000401',
   address: {
+    firstName: 'Alex',
+    lastName: 'Example',
+    phone: contact.phone,
     street: contact.street,
     city: contact.city,
     postalCode: contact.postalCode,

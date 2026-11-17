@@ -39,6 +39,7 @@ beforeEach(() => {
     data: {
       user: {
         id: deviceId,
+        email: 'synthetic@example.test',
         email_confirmed_at: '2026-11-05',
         app_metadata: {},
       },
@@ -55,13 +56,13 @@ beforeEach(() => {
   })
 })
 afterEach(() => vi.unstubAllEnvs())
-it('accepts verified phone identity for device consent without accepting an unverified account', async () => {
+it('accepts verified email identity for device consent without accepting an unverified account', async () => {
   mocks.getUser.mockResolvedValue({
     data: {
       user: {
         id: deviceId,
-        phone: '46700000001',
-        phone_confirmed_at: '2026-11-11',
+        email: 'synthetic@example.test',
+        email_confirmed_at: '2026-11-11',
         app_metadata: {},
       },
     },
@@ -70,7 +71,9 @@ it('accepts verified phone identity for device consent without accepting an unve
   expect((await POST(request())).status).toBe(200)
   mocks.rpc.mockClear()
   mocks.getUser.mockResolvedValue({
-    data: { user: { id: deviceId, phone: '46700000001', app_metadata: {} } },
+    data: {
+      user: { id: deviceId, email: 'synthetic@example.test', app_metadata: {} },
+    },
     error: null,
   })
   expect((await POST(request())).status).toBe(401)

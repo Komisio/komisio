@@ -1,6 +1,6 @@
 import pg from 'pg'
 import assert from 'node:assert/strict'
-import { randomUUID, randomInt } from 'node:crypto'
+import { randomUUID } from 'node:crypto'
 import { setTimeout as pause } from 'node:timers/promises'
 
 export async function raceExternalOffers({ setup, connectionString }) {
@@ -65,13 +65,8 @@ export async function raceExternalOffers({ setup, connectionString }) {
   }
   try {
     await setup.query(
-      'insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values($1,$2,now(),null,null),($3,null,null,$4,now())',
-      [
-        staff,
-        `${staff}@example.test`,
-        owner,
-        `467${randomInt(100000000, 999999999)}`,
-      ],
+      'insert into auth.users(id,email,email_confirmed_at) values($1,$2,now()),($3,$4,now())',
+      [staff, `${staff}@example.test`, owner, `${owner}@example.test`],
     )
     for (const c of clients) {
       await c.connect()
@@ -276,6 +271,9 @@ export async function raceExternalOffers({ setup, connectionString }) {
             id,
             offer,
             JSON.stringify({
+              firstName: 'Alex',
+              lastName: 'Example',
+              phone: '+46701234567',
               street: 'Testvägen 2',
               postalCode: '12345',
               city: 'Teststad',

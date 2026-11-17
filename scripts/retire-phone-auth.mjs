@@ -44,8 +44,8 @@ export async function retirePhoneAuth(
   const expected = {
     external_phone_enabled: false,
     hook_send_sms_enabled: false,
-    hook_send_sms_uri: '',
-    hook_send_sms_secrets: '',
+    hook_send_sms_uri: null,
+    hook_send_sms_secrets: null,
   }
   const response = await request(url, {
     ...options,
@@ -53,12 +53,16 @@ export async function retirePhoneAuth(
     body: JSON.stringify(expected),
     signal: AbortSignal.timeout(15000),
   })
-  if (!response.ok) throw new Error('Cannot retire phone authentication')
+  if (!response.ok)
+    throw new Error(
+      `Cannot retire phone authentication (HTTP ${response.status})`,
+    )
   const after = await read()
   if (
     after.external_phone_enabled !== false ||
     after.hook_send_sms_enabled !== false ||
-    after.hook_send_sms_uri
+    after.hook_send_sms_uri ||
+    after.hook_send_sms_secrets
   )
     throw new Error('Phone retirement verification failed')
   for (const key of Object.keys(before)) {

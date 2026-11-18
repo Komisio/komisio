@@ -1,5 +1,8 @@
 # Decision Log
 
+- 2026-11-18: Central identity accepts verified email from the same Auth user's linked Apple/Google identity when primary email is absent. Contact metadata never proves identity. Auth-ID ownership, MFA, recovery/deletion guards and ordinary store authorization remain unchanged (#861).
+- 2026-11-18: Owner approves temporary capability-owned guest photo AI before sign-in. Bind retries to images, central recipient and language; enforce shared AI budgets and guest limits. No user, seller or request is created. Submission still requires verified identity (#861).
+
 - 2026-11-18: Central intake collects sender details and agreement consent before submission, without bank details or membership. New requests bind a mandatory fixed seller amount. Staff accepts that amount or rejects it, never counteroffers. Existing store flows remain unchanged.
 - 2026-11-18: Central staff groups approved requests from one seller into parcels using saved sender details. Approval and booking are distinct facts; receipt starts the guarantee clock. Preserve weight limits, immutable manifests, exact retries and held unknown provider outcomes.
 

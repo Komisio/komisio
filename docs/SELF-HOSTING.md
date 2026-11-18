@@ -295,10 +295,10 @@ or change the independent day-close automation.
 Operators can connect shop creation to their own onboarding or notification tools.
 This is **off by default**. Configure these server-only environment variables:
 
-| Variable | Meaning |
-| --- | --- |
-| `KOMISIO_EVENTS_WEBHOOK_URL` | Optional HTTPS receiver. Unset means no request or background work. |
-| `KOMISIO_EVENTS_WEBHOOK_SECRET` | Required when a URL is set. Use a long random shared secret. |
+| Variable                            | Meaning                                                                        |
+| ----------------------------------- | ------------------------------------------------------------------------------ |
+| `KOMISIO_EVENTS_WEBHOOK_URL`        | Optional HTTPS receiver. Unset means no request or background work.            |
+| `KOMISIO_EVENTS_WEBHOOK_SECRET`     | Required when a URL is set. Use a long random shared secret.                   |
 | `KOMISIO_EVENTS_WEBHOOK_TIMEOUT_MS` | Optional timeout in milliseconds; default `3000`, integer from `1` to `30000`. |
 
 Invalid configuration (including a missing secret, non-HTTPS URL, embedded URL
@@ -355,7 +355,9 @@ function verify(rawBody, timestamp, signature, secret) {
     .update(rawBody)
     .digest()
   const supplied = Buffer.from(signature.slice(7), 'hex')
-  return supplied.length === expected.length && timingSafeEqual(supplied, expected)
+  return (
+    supplied.length === expected.length && timingSafeEqual(supplied, expected)
+  )
 }
 ```
 
@@ -447,6 +449,24 @@ form entries. Changing the registration language updates links immediately.
 This navigation does not collect consent, record accepted terms versions, change
 prices or supply legal wording. The operator must publish and approve its own
 documents and translations; a locale URL alone does not establish translated text.
+
+## Guest photo suggestions
+
+Guest photo AI uses the existing central recipient, AI provider configuration and
+`KOMISIO_SELLER_AI_SERVER_KEY` capability. It does not enable anonymous Auth users
+or access to seller photos. Requests contain at most eight 256 KiB JPEG copies;
+the server strips metadata and keeps image bytes only while analyzing them.
+Capability-owned result records expire after 24 hours. Run the protected
+`/api/automation/guest-photo-cleanup` endpoint hourly using `CRON_SECRET` (hosted
+Vercel scheduling is included). Immutable budget events and evidence explicitly
+adopted into an authenticated submission are retained independently.
+
+Limits are 10 analyses per guest capability, 20 per network and 100 combined
+central guest/authenticated analyses per 24 hours, plus the existing store budget.
+Only Vercel's overwritten network header is trusted. Other deployments use a
+shared network limit; do not trust arbitrary forwarded headers. Guest credentials
+and image payloads must not be logged by proxies. Sign-in, MFA and ownership are
+still required before submitting an item.
 
 ## Support contact
 

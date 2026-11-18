@@ -187,7 +187,7 @@ it.each(['external_item_offered', 'external_item_declined'] as const)(
     })
     expect(send).toHaveBeenCalledOnce()
     expect(f.rpc).toHaveBeenCalledWith('seller_push_candidates', {
-      p_protocol: 2,
+      p_protocol: 3,
     })
     expect(send.mock.calls[0][0]).toMatchObject({
       kind,

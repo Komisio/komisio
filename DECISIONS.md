@@ -1,5 +1,8 @@
 # Decision Log
 
+- 2026-11-18: Central intake collects sender details and agreement consent before submission, without bank details or membership. New requests bind a mandatory fixed seller amount. Staff accepts that amount or rejects it, never counteroffers. Existing store flows remain unchanged.
+- 2026-11-18: Central staff groups approved requests from one seller into parcels using saved sender details. Approval and booking are distinct facts; receipt starts the guarantee clock. Preserve weight limits, immutable manifests, exact retries and held unknown provider outcomes.
+
 - 2026-11-18: Existing mobile account and balance reads recognize the central seller by immutable external_owner_id and verified Auth identity. Contact email remains non-authoritative; no tenant membership or account merging is created. Ordinary store identity remains unchanged.
 
 - 2026-11-18: Central guarantees credit the fixed amount once on sale or receipt+45 days; unsold goods become store-owned, returns retain credit. Reuse immutable events. VAT, commission accounting and purchase tax documents remain pending, excluded from final exports.

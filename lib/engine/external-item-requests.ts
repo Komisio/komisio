@@ -26,6 +26,8 @@ export const externalItemSubmission = z.strictObject({
   currency: z.string().regex(/^[A-Z]{3}$/),
   senderCountry: z.literal('SE').optional(),
   priceBasis: z.literal('seller_amount').optional(),
+  approvalMode: z.literal('fixed').optional(),
+  agreementVersionId: uuid.optional(),
   photos: z
     .array(uuid)
     .min(1)
@@ -51,7 +53,6 @@ export const externalItemCommand = z.discriminatedUnion('action', [
 
 const errorCodes = new Set([
   'AUTH_REQUIRED',
-  'AUTH_REQUIRED',
   'FORBIDDEN',
   'SUPPORT_READ_ONLY',
   'INVALID_INPUT',
@@ -62,6 +63,10 @@ const errorCodes = new Set([
   'SWEDEN_REQUIRED',
   'PHOTO_NOT_FOUND',
   'PHOTO_LIMIT',
+  'PRICE_REQUIRED',
+  'AGREEMENT_REQUIRED',
+  'AGREEMENT_CHANGED',
+  'ACCOUNT_REQUIRED',
   'PHOTO_IN_USE',
   'PHOTO_STILL_STORED',
   'PLAN_READ_ONLY',
@@ -85,6 +90,8 @@ const externalRequest = z.object({
   notes: z.string(),
   desired_price_ore: externalItemSubmission.shape.desiredPriceOre,
   price_basis: z.enum(['resale', 'seller_amount']).optional(),
+  approval_mode: z.enum(['offer', 'fixed']).optional(),
+  agreement_version_id: uuid.nullable().optional(),
   currency: externalItemSubmission.shape.currency,
   photos: externalItemSubmission.shape.photos,
   sender_country: z.literal('SE').nullable().optional(),
@@ -126,19 +133,34 @@ export async function executeExternalItemCommand(
 ) {
   const c = externalItemCommand.parse(input)
   if (c.action === 'submit') {
-    const result = await client.rpc('submit_external_item_request', {
-      p_id: c.requestId,
-      p_tenant: c.tenantId,
-      p_description: c.description,
-      p_brand: c.brand,
-      p_condition: c.condition,
-      p_notes: c.notes,
-      p_price_ore: c.desiredPriceOre,
-      p_currency: c.currency,
-      p_photos: c.photos,
-      p_sender_country: c.senderCountry ?? null,
-      ...(c.priceBasis ? { p_price_basis: c.priceBasis } : {}),
-    })
+    if ((c.approvalMode === 'fixed') !== Boolean(c.agreementVersionId))
+      throw new Error('INVALID_INPUT')
+    if (c.approvalMode === 'fixed' && c.desiredPriceOre === null)
+      throw new Error('PRICE_REQUIRED')
+    const result = await client.rpc(
+      c.approvalMode === 'fixed'
+        ? 'submit_central_item_request'
+        : 'submit_external_item_request',
+      {
+        p_id: c.requestId,
+        p_tenant: c.tenantId,
+        p_description: c.description,
+        p_brand: c.brand,
+        p_condition: c.condition,
+        p_notes: c.notes,
+        p_price_ore: c.desiredPriceOre,
+        p_currency: c.currency,
+        p_photos: c.photos,
+        p_sender_country: c.senderCountry ?? null,
+        ...(c.priceBasis ? { p_price_basis: c.priceBasis } : {}),
+        ...(c.approvalMode === 'fixed'
+          ? {
+              p_agreement: c.agreementVersionId,
+              p_price_basis: 'seller_amount',
+            }
+          : {}),
+      },
+    )
     checkError(result.error)
     if (result.data !== c.requestId) throw new Error('UNCONFIRMED_RESULT')
     return { id: c.requestId }

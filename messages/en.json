@@ -755,7 +755,11 @@
     "external_item.registered": "Registered",
     "external_request.withdrawn": "Item request withdrawn",
     "external_item.guarantee_credited": "Guaranteed amount credited",
-    "external_item.guarantee_acquired": "Unsold guarantee item acquired"
+    "external_item.guarantee_acquired": "Unsold guarantee item acquired",
+    "central_intake.profile_saved": "Sender details and seller agreement saved",
+    "central_intake.group_reviewed": "Item requests approved",
+    "external_request.approved": "Seller amount approved",
+    "central_parcel.staff_dispatched": "Parcel shipping initiated"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -5529,6 +5533,20 @@
       "heading": "Guaranteed amount on day 45",
       "hint": "Automatically add the fixed amount to the seller balance 45 days after receipt unless already credited on sale. Bank payout is handled separately.",
       "notConfigured": "Automatic guarantee crediting is paused in this environment."
+    },
+    "fixed": {
+      "intro": "Accept the seller’s amount and select the items to send in one parcel.",
+      "allItems": "View all items from this seller",
+      "select": "Select {item}",
+      "selected": "{count} items selected",
+      "weight": "About {grams} g",
+      "weightLimit": "Select fewer items. Estimated item weight must not exceed 2,500 g per parcel.",
+      "approveBook": "Approve and book shipping",
+      "approve": "Approve – book shipping later",
+      "approved": "Approved. Select these items together when booking shipping.",
+      "booked": "Shipping booked. The seller sees one shipping code and every item in the parcel.",
+      "pending": "The booking needs confirmation. Do not create another booking for these items.",
+      "sellerAmount": "Seller amount"
     }
   }
 }

@@ -755,7 +755,11 @@
     "external_item.registered": "Registrato",
     "external_request.withdrawn": "Richiesta articolo ritirata",
     "external_item.guarantee_credited": "Importo garantito accreditato",
-    "external_item.guarantee_acquired": "Articolo garantito invenduto acquisito"
+    "external_item.guarantee_acquired": "Articolo garantito invenduto acquisito",
+    "central_intake.profile_saved": "Dati del mittente e accordo salvati",
+    "central_intake.group_reviewed": "Richieste approvate",
+    "external_request.approved": "Importo del venditore approvato",
+    "central_parcel.staff_dispatched": "Spedizione del pacco avviata"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -5529,6 +5533,20 @@
       "heading": "Importo garantito al giorno 45",
       "hint": "Accredita automaticamente l’importo fisso sul saldo del venditore 45 giorni dopo la ricezione, se non è già stato accreditato alla vendita. Il pagamento sul conto bancario avviene separatamente.",
       "notConfigured": "L’accredito automatico degli importi garantiti è sospeso in questo ambiente."
+    },
+    "fixed": {
+      "intro": "Accetta l’importo del venditore e seleziona gli articoli da spedire nello stesso pacco.",
+      "allItems": "Mostra tutti gli articoli del venditore",
+      "select": "Seleziona {item}",
+      "selected": "{count} articoli selezionati",
+      "weight": "Circa {grams} g",
+      "weightLimit": "Seleziona meno articoli. Il peso stimato non può superare 2.500 g per pacco.",
+      "approveBook": "Approva e prenota la spedizione",
+      "approve": "Approva – prenota la spedizione dopo",
+      "approved": "Approvato. Gli articoli possono essere selezionati insieme durante la prenotazione.",
+      "booked": "Spedizione prenotata. Il venditore vede un codice e tutti gli articoli del pacco.",
+      "pending": "La prenotazione deve essere confermata. Non creare un’altra prenotazione per questi articoli.",
+      "sellerAmount": "Importo del venditore"
     }
   }
 }

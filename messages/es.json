@@ -755,7 +755,11 @@
     "external_item.registered": "Registrado",
     "external_request.withdrawn": "Solicitud de artículo retirada",
     "external_item.guarantee_credited": "Importe garantizado abonado",
-    "external_item.guarantee_acquired": "Artículo garantizado no vendido adquirido"
+    "external_item.guarantee_acquired": "Artículo garantizado no vendido adquirido",
+    "central_intake.profile_saved": "Datos del remitente y contrato guardados",
+    "central_intake.group_reviewed": "Solicitudes aceptadas",
+    "external_request.approved": "Importe del vendedor aceptado",
+    "central_parcel.staff_dispatched": "Envío de paquete iniciado"
   },
   "errors": {
     "FORBIDDEN": "No tienes permiso para hacer esto.",
@@ -5535,6 +5539,20 @@
       "heading": "Importe garantizado el día 45",
       "hint": "Añade automáticamente el importe fijo al saldo del vendedor 45 días después de la recepción, salvo que ya se haya abonado al venderse. El pago a la cuenta bancaria se realiza por separado.",
       "notConfigured": "El abono automático de importes garantizados está pausado en este entorno."
+    },
+    "fixed": {
+      "intro": "Acepta el importe del vendedor y selecciona los artículos para un mismo paquete.",
+      "allItems": "Ver todos los artículos del vendedor",
+      "select": "Seleccionar {item}",
+      "selected": "{count} artículos seleccionados",
+      "weight": "Unos {grams} g",
+      "weightLimit": "Selecciona menos artículos. El peso estimado no puede superar los 2.500 g por paquete.",
+      "approveBook": "Aceptar y reservar envío",
+      "approve": "Aceptar – reservar envío después",
+      "approved": "Aceptado. Los artículos se pueden seleccionar juntos al reservar el envío.",
+      "booked": "Envío reservado. El vendedor ve un código de envío y todos los artículos del paquete.",
+      "pending": "La reserva necesita confirmación. No crees otra reserva para estos artículos.",
+      "sellerAmount": "Importe del vendedor"
     }
   }
 }

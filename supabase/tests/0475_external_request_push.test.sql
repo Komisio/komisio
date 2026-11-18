@@ -37,7 +37,7 @@ set local role authenticated;
 set local request.jwt.claims='{"sub":"f7500000-0000-4000-8000-000000000004","role":"authenticated"}';
 select ok(not exists(select 1 from jsonb_array_elements(seller_push_candidates()) where value->>'id'=current_setting('test.delivery')),'legacy workers never receive unfamiliar external events');
 select is((select value->>'ownerId' from jsonb_array_elements(seller_push_candidates(2)) where value->>'id'=current_setting('test.delivery')),'f7500000-0000-4000-8000-000000000002','protocol 2 worker candidates retain the explicit email owner');
-select throws_like($$select seller_push_candidates(3)$$,'%INVALID_INPUT%','unknown queue protocols are rejected');
+select throws_like($$select seller_push_candidates(4)$$,'%INVALID_INPUT%','unknown queue protocols are rejected');
 select is(claim_seller_push(current_setting('test.delivery')::uuid,'sv','Synthetic offer','Open the app')->>'requestId','f7500000-0000-4000-8000-000000000301','claim binds the phone-owned request');
 select is(claim_seller_push(current_setting('test.delivery')::uuid,'sv','Synthetic offer','Open the app'),null::jsonb,'second claim cannot send again');
 select finish_seller_push(current_setting('test.delivery')::uuid,'accepted','f7500000-0000-4000-8000-000000000501','');

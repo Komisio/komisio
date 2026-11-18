@@ -755,7 +755,11 @@
     "external_item.registered": "Registriert",
     "external_request.withdrawn": "Artikelanfrage zurückgezogen",
     "external_item.guarantee_credited": "Garantierter Betrag gutgeschrieben",
-    "external_item.guarantee_acquired": "Unverkaufter Garantieartikel übernommen"
+    "external_item.guarantee_acquired": "Unverkaufter Garantieartikel übernommen",
+    "central_intake.profile_saved": "Absenderdaten und Verkäufervertrag gespeichert",
+    "central_intake.group_reviewed": "Artikelanfragen angenommen",
+    "external_request.approved": "Verkäuferbetrag angenommen",
+    "central_parcel.staff_dispatched": "Paketversand eingeleitet"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -5535,6 +5539,20 @@
       "heading": "Garantierter Betrag am Tag 45",
       "hint": "Den festen Betrag 45 Tage nach Eingang automatisch dem Verkäuferguthaben gutschreiben, sofern dies nicht bereits beim Verkauf erfolgt ist. Die Bankauszahlung erfolgt separat.",
       "notConfigured": "Die automatische Garantiegutschrift ist in dieser Umgebung pausiert."
+    },
+    "fixed": {
+      "intro": "Bestätige den Betrag des Verkäufers und wähle die Artikel für ein gemeinsames Paket.",
+      "allItems": "Alle Artikel dieses Verkäufers anzeigen",
+      "select": "{item} auswählen",
+      "selected": "{count} Artikel ausgewählt",
+      "weight": "Etwa {grams} g",
+      "weightLimit": "Wähle weniger Artikel. Das geschätzte Artikelgewicht darf pro Paket höchstens 2.500 g betragen.",
+      "approveBook": "Bestätigen und Versand buchen",
+      "approve": "Bestätigen – Versand später buchen",
+      "approved": "Bestätigt. Diese Artikel können bei der Versandbuchung gemeinsam ausgewählt werden.",
+      "booked": "Versand gebucht. Der Verkäufer sieht einen Versandcode und alle Artikel im Paket.",
+      "pending": "Die Buchung muss bestätigt werden. Erstelle keine weitere Buchung für diese Artikel.",
+      "sellerAmount": "Verkäuferbetrag"
     }
   }
 }

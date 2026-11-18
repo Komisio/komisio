@@ -755,7 +755,11 @@
     "external_item.registered": "Registreret",
     "external_request.withdrawn": "Vareforespørgsel trukket tilbage",
     "external_item.guarantee_credited": "Garanteret beløb krediteret",
-    "external_item.guarantee_acquired": "Usolgt garantivare overtaget"
+    "external_item.guarantee_acquired": "Usolgt garantivare overtaget",
+    "central_intake.profile_saved": "Afsenderoplysninger og sælgeraftale gemt",
+    "central_intake.group_reviewed": "Vareforespørgsler godkendt",
+    "external_request.approved": "Sælgerens beløb godkendt",
+    "central_parcel.staff_dispatched": "Pakkefragt startet"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tilladelse til dette.",
@@ -5529,6 +5533,20 @@
       "heading": "Garantibeløb på dag 45",
       "hint": "Tilføj automatisk det faste beløb til sælgerens saldo 45 dage efter modtagelsen, hvis det ikke allerede er krediteret ved salg. Udbetaling til bankkonto sker separat.",
       "notConfigured": "Automatisk kreditering af garantibeløb er sat på pause i dette miljø."
+    },
+    "fixed": {
+      "intro": "Godkend sælgerens beløb og vælg varerne til samme pakke.",
+      "allItems": "Vis alle sælgerens varer",
+      "select": "Vælg {item}",
+      "selected": "{count} valgte varer",
+      "weight": "Cirka {grams} g",
+      "weightLimit": "Vælg færre varer. Anslået varevægt må højst være 2 500 g per pakke.",
+      "approveBook": "Godkend og bestil fragt",
+      "approve": "Godkend – bestil fragt senere",
+      "approved": "Godkendt. Varerne kan vælges sammen ved fragtbestilling.",
+      "booked": "Fragten er bestilt. Sælgeren ser én fragtkode og alle varer i pakken.",
+      "pending": "Bestillingen skal bekræftes. Opret ikke en ny bestilling for disse varer.",
+      "sellerAmount": "Sælgerens beløb"
     }
   }
 }

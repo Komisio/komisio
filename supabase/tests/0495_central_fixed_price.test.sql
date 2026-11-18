@@ -1,0 +1,82 @@
+begin;
+select no_plan();
+create function pg_temp.uid(n bigint) returns uuid language sql immutable as $$ select ('f4950000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid $$;
+insert into auth.users(id,email,email_confirmed_at) values
+(pg_temp.uid(1),'fixed-staff@example.test',now()),(pg_temp.uid(2),'fixed-seller@example.test',now()),
+(pg_temp.uid(3),'fixed-other@example.test',now()),(pg_temp.uid(4),'fixed-reader@example.test',now());
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select create_tenant('Synthetic central fixed price','synthetic-central-fixed-price',gen_random_uuid()) as tenant \gset
+select create_tenant('Synthetic ordinary store','synthetic-fixed-ordinary',gen_random_uuid()) as other \gset
+select publish_seller_agreement(:'tenant',pg_temp.uid(10),null,'Terms 1','Synthetic terms','sv',true);
+reset role;
+update platform_settings set central_app_tenant_id=:'tenant';
+insert into tenant_members(tenant_id,user_id,role) values(:'tenant',pg_temp.uid(4),'readonly');
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
+select is(read_central_intake_profile()->'account','null'::jsonb,'new seller has no account');
+select throws_like(format($$select save_central_intake_profile(%L,%L,%L,-1,'{"street":"Test street 1","postalCode":"12345","city":"Test city"}','{"firstName":"Test","lastName":"Seller","phone":"+46700000002"}',false)$$,pg_temp.uid(20),:'tenant',pg_temp.uid(10)),'%AGREEMENT_REQUIRED%','first use requires explicit consent');
+select is(save_central_intake_profile(pg_temp.uid(20),:'tenant',pg_temp.uid(10),-1,'{"street":"Test street 1","postalCode":"12345","city":"Test city"}','{"firstName":"Test","lastName":"Seller","phone":"+46700000002"}',true),pg_temp.uid(20),'profile and terms saved without bank');
+select lives_ok(format($$select save_central_intake_profile(%L,%L,%L,-1,'{"street":"Test street 1","postalCode":"12345","city":"Test city"}','{"firstName":"Test","lastName":"Seller","phone":"+46700000002"}',true)$$,pg_temp.uid(20),:'tenant',pg_temp.uid(10)),'exact profile retry');
+select is(read_central_intake_profile()->>'agreementAccepted','true','consent reused');
+select is(read_central_intake_profile()#>>'{account,contact,firstName}','Test','contact visible');
+select read_central_intake_profile()#>>'{account,sellerId}' as seller \gset
+select reserve_external_item_photo(pg_temp.uid(100),repeat('a',64),100);
+insert into storage.objects(bucket_id,name) values('external-item-photos',pg_temp.uid(2)||'/'||pg_temp.uid(100)||'.jpg');
+select throws_like(format($$select submit_central_item_request(%L,%L,'Dress','','good','',null,'SEK',array[%L]::uuid[],'SE','seller_amount',%L)$$,pg_temp.uid(101),:'tenant',pg_temp.uid(100),pg_temp.uid(10)),'%PRICE_REQUIRED%','seller amount mandatory');
+select is(submit_central_item_request(pg_temp.uid(101),:'tenant','Dress','','good','',60000,'SEK',array[pg_temp.uid(100)],'SE','seller_amount',pg_temp.uid(10)),pg_temp.uid(101),'fixed amount submitted');
+reset role;
+insert into auth.sessions(id,user_id,aal) values(pg_temp.uid(30),pg_temp.uid(2),'aal1');
+insert into auth.users(id,email,email_confirmed_at,raw_app_meta_data) values(pg_temp.uid(5),'fixed-worker@example.test',now(),'{"komisio_push_worker":true}');
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'session_id',pg_temp.uid(30),'role','authenticated')::text,true);
+select set_my_push_device(pg_temp.uid(31),repeat('c',64),pg_temp.uid(32),0,'ExpoPushToken[synthetic_fixed]','ios','sv',true);
+select is(submit_central_item_request(pg_temp.uid(101),:'tenant','Dress','','good','',60000,'SEK',array[pg_temp.uid(100)],'SE','seller_amount',pg_temp.uid(10)),pg_temp.uid(101),'submission retry');
+select throws_like(format($$select submit_central_item_request(%L,%L,'Dress','','good','',65000,'SEK',array[%L]::uuid[],'SE','seller_amount',%L)$$,pg_temp.uid(101),:'tenant',pg_temp.uid(100),pg_temp.uid(10)),'%REQUEST_CONFLICT%','retry cannot change price');
+reset role;
+select is((select count(*) from tenant_members where user_id=pg_temp.uid(2)),0::bigint,'no tenant membership');
+select is((select count(*) from seller_bank_versions where seller_id=:'seller'),0::bigint,'bank deferred');
+select is((select count(*) from seller_agreement_evidence where seller_id=:'seller' and recorded_by=pg_temp.uid(2)),1::bigint,'seller consent evidence attributed to seller');
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(4),'role','authenticated')::text,true);
+select throws_like(format($$select approve_central_item_request(%L,%L,%L,100000)$$,:'tenant',pg_temp.uid(201),pg_temp.uid(101)),'%FORBIDDEN%','readonly cannot approve');
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select throws_like(format($$select issue_external_item_offer(%L,%L,%L,null,55000,100000,%L)$$,:'tenant',pg_temp.uid(202),pg_temp.uid(101),pg_temp.uid(10)),'%FIXED_PRICE_REQUIRED%','ordinary offer path cannot counteroffer a fixed request');
+select is(approve_central_item_request(:'tenant',pg_temp.uid(201),pg_temp.uid(101),100000),pg_temp.uid(201),'staff approves exact requested amount');
+select is(approve_central_item_request(:'tenant',pg_temp.uid(201),pg_temp.uid(101),100000),pg_temp.uid(201),'approval retry');
+select throws_like(format($$select approve_central_item_request(%L,%L,%L,110000)$$,:'tenant',pg_temp.uid(201),pg_temp.uid(101)),'%REQUEST_CONFLICT%','approval retry cannot change planned price');
+select is(read_external_item_offer(pg_temp.uid(201))->>'sellerAmountOre','60000','seller amount is unchanged');
+select is(read_external_item_offer(pg_temp.uid(201))->>'status','accepted','no second seller acceptance');
+select is(read_external_item_offer(pg_temp.uid(201))#>>'{handover,status}','open','approval is readiness, not physical receipt');
+reset role;
+select is((select approval_actor_id from external_item_offer_responses where offer_id=pg_temp.uid(201)),pg_temp.uid(1),'staff acceptance records staff actor');
+select is((select count(*) from external_item_guarantees where offer_id=pg_temp.uid(201)),0::bigint,'no receipt guarantee yet');
+select is((select count(*) from seller_ledger_entries where seller_id=:'seller'),0::bigint,'approval credits no balance');
+set constraints all immediate;
+select is((select count(*) from komisio_private.seller_push_deliveries where tenant_id=:'tenant'),1::bigint,'approval queues one push despite immediate acceptance');
+select id as push from komisio_private.seller_push_deliveries where tenant_id=:'tenant' \gset
+select ok(komisio_private.external_push_eligible(:'push'),'approved request remains eligible for notification');
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(5),'role','authenticated')::text,true);
+select is(seller_push_candidates(3)#>>'{0,approved}','true','worker can render approval instead of offer');
+select ok(not(seller_push_candidates(2)->0 ? 'approved'),'old worker protocol remains unchanged');
+select is(claim_seller_push(:'push','sv','Synthetic approval','Open app')->>'requestId',pg_temp.uid(101)::text,'approval push can be claimed');
+select is(claim_seller_push(:'push','sv','Synthetic approval','Open app'),null::jsonb,'approval push is claimed once');
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select is(central_request_queue(:'tenant',0,'all','',pg_temp.uid(2))#>>'{rows,0,approval_mode}','fixed','staff queue identifies direct requests');
+select is(central_request_queue(:'tenant',0,'all','Test Seller',null)->>'total','1','search matches saved sender name');
+select is(central_request_queue(:'tenant',0,'all','',pg_temp.uid(3))->>'total','0','seller filter is exact');
+select publish_seller_agreement(:'tenant',pg_temp.uid(11),pg_temp.uid(10),'Terms 2','New synthetic terms','sv',true);
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
+select is(read_central_intake_profile()->>'agreementAccepted','false','new agreement needs real seller consent');
+select is(submit_central_item_request(pg_temp.uid(101),:'tenant','Dress','','good','',60000,'SEK',array[pg_temp.uid(100)],'SE','seller_amount',pg_temp.uid(10)),pg_temp.uid(101),'exact previous submission survives agreement update');
+select throws_like(format($$select submit_central_item_request(%L,%L,'Dress','','good','',60000,'SEK',array[%L]::uuid[],'SE','seller_amount',%L)$$,pg_temp.uid(102),:'tenant',pg_temp.uid(100),pg_temp.uid(10)),'%AGREEMENT_CHANGED%','new submission cannot use stale agreement');
+select throws_like(format($$select submit_central_item_request(%L,%L,'Dress','','good','',60000,'SEK',array[%L]::uuid[],'SE','seller_amount',%L)$$,pg_temp.uid(102),:'tenant',pg_temp.uid(100),pg_temp.uid(11)),'%AGREEMENT_REQUIRED%','new version is never silently accepted');
+select throws_like(format($$select central_request_queue(%L,0,'all','',null)$$,:'tenant'),'%FORBIDDEN%','seller cannot open staff queue');
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select read_external_item_offer(pg_temp.uid(201))#>>'{handover,id}' as handover \gset
+select lives_ok(format($$select receive_handover(%L,%L,%L,'staff_receipt','')$$,:'tenant',pg_temp.uid(400),:'handover'),'physical receipt works without a bank account');
+select is((select amount_ore::text from external_item_guarantees where offer_id=pg_temp.uid(201)),'60000','receipt retains the submitted fixed amount');
+select is((select due_at-received_at from external_item_guarantees where offer_id=pg_temp.uid(201)),interval '45 days','45 day clock begins at actual receipt');
+select * from finish(); rollback;

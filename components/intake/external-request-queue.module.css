@@ -306,6 +306,70 @@
   gap: 6px;
   margin-block: 16px;
 }
+.sellerGroup {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  overflow: hidden;
+}
+.groupHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  background: var(--surface);
+}
+.groupHeading h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+.groupHeading p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+.groupItem {
+  padding: 12px 20px;
+  border-top: 1px solid var(--line);
+}
+.selection {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.selection input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.groupPrice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+.groupPrice input {
+  width: 160px;
+  min-height: 44px;
+}
+.groupActions {
+  border-top: 1px solid var(--line);
+  padding: 20px;
+}
+.groupButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.parcelSummary {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
 .pagination {
   display: flex;
   align-items: center;

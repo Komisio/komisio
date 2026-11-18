@@ -1,6 +1,7 @@
 import { raceInlinePrice } from './inline-price-race.mjs'
 import { raceExternalRequests } from './external-item-request-race.mjs'
 import { raceExternalOffers } from './external-item-offer-race.mjs'
+import { raceCentralFixedPrice } from './central-fixed-price-race.mjs'
 import { raceExternalPhotoAI } from './external-photo-ai-race.mjs'
 import { raceItemRegistration } from './item-registration-race.mjs'
 import { raceLabelFields } from './label-fields-race.mjs'
@@ -125,10 +126,12 @@ try {
         ? await prepareStoreItemTypes(setup)
         : null
     await setup.query(
-      await readFile(
-        new URL(`../supabase/migrations/${file}`, import.meta.url),
-        'utf8',
-      ),
+      (
+        await readFile(
+          new URL(`../supabase/migrations/${file}`, import.meta.url),
+          'utf8',
+        )
+      ).replaceAll('\r\n', '\n'),
     )
     if (backfill) await verifyCategoryBackfill(setup, backfill)
     if (registrationCategories)
@@ -148,6 +151,7 @@ try {
   await raceConsignmentFees({ setup, connectionString: parsed.toString() })
   await raceExternalRequests({ setup, connectionString: parsed.toString() })
   await raceExternalOffers({ setup, connectionString: parsed.toString() })
+  await raceCentralFixedPrice({ setup, connectionString: parsed.toString() })
   await raceExternalPhotoAI({ setup, connectionString: parsed.toString() })
   await raceRegistrationCategory({ setup, connectionString: parsed.toString() })
   await raceCatalogReadiness({ setup, connectionString: parsed.toString() })

@@ -77,7 +77,11 @@ export function ExternalRequestQueue({
                 </span>
               </span>
               <span className={styles.wish}>
-                <span className={styles.caption}>{t.desiredAmount}</span>
+                <span className={styles.caption}>
+                  {row.approval_mode === 'fixed'
+                    ? d.fixed.sellerAmount
+                    : t.desiredAmount}
+                </span>
                 {row.desired_price_ore ? (
                   <strong>{externalOfferAmount(row.desired_price_ore)}</strong>
                 ) : (
@@ -88,7 +92,7 @@ export function ExternalRequestQueue({
                 <span className={styles.badge} data-status={row.queue_status}>
                   {t.statuses[row.queue_status]}
                 </span>
-                {row.offer ? (
+                {row.offer && row.approval_mode !== 'fixed' ? (
                   <span className={styles.offerAmount}>
                     {t.offeredAmount}:{' '}
                     <strong>
@@ -156,7 +160,11 @@ export function ExternalRequestQueue({
               >
                 {write && reviewable ? (
                   <>
-                    <h2>{t.offerHeading}</h2>
+                    <h2>
+                      {row.approval_mode === 'fixed'
+                        ? d.decline
+                        : t.offerHeading}
+                    </h2>
                     <ExternalRequestReview
                       tenantId={tenantId}
                       requestId={row.id}
@@ -164,6 +172,7 @@ export function ExternalRequestQueue({
                       agreementId={row.agreement_version_id}
                       d={d}
                       leaveWarning={leaveWarning}
+                      declineOnly={row.approval_mode === 'fixed'}
                     />
                   </>
                 ) : null}

@@ -40,6 +40,7 @@ export function ExternalRequestFilters({
             externalRequestFilters({
               q: String(data.get('q') ?? ''),
               status: String(data.get('status') ?? ''),
+              owner: filters.owner,
             }),
           ),
         )
@@ -76,7 +77,7 @@ export function ExternalRequestFilters({
       <button className="btn btn-primary" type="submit">
         {d.apply}
       </button>
-      {filters.query || filters.status !== 'all' ? (
+      {filters.query || filters.status !== 'all' || filters.owner ? (
         <NavigationLink className={styles.reset} href="/intake/requests">
           {d.reset}
         </NavigationLink>

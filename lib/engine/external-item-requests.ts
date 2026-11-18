@@ -3,6 +3,10 @@ import { z } from 'zod'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { receptionDerivative } from '../media/reception-image'
 import { photoType } from '../media/reception-photo'
+import {
+  adoptGuestPhotoAnalysis,
+  guestAnalysisProof,
+} from './guest-photo-assistance'
 
 const uuid = z.uuid().transform((value) => value.toLowerCase())
 const text = (max: number) =>
@@ -28,6 +32,7 @@ export const externalItemSubmission = z.strictObject({
   priceBasis: z.literal('seller_amount').optional(),
   approvalMode: z.literal('fixed').optional(),
   agreementVersionId: uuid.optional(),
+  guestAnalysis: guestAnalysisProof.optional(),
   photos: z
     .array(uuid)
     .min(1)
@@ -137,6 +142,13 @@ export async function executeExternalItemCommand(
       throw new Error('INVALID_INPUT')
     if (c.approvalMode === 'fixed' && c.desiredPriceOre === null)
       throw new Error('PRICE_REQUIRED')
+    if (c.guestAnalysis)
+      await adoptGuestPhotoAnalysis(
+        client,
+        c.guestAnalysis,
+        c.tenantId,
+        c.photos,
+      )
     const result = await client.rpc(
       c.approvalMode === 'fixed'
         ? 'submit_central_item_request'

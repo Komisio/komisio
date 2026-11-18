@@ -24,6 +24,7 @@ export function externalItemFailure(error: unknown, origin: string | null) {
   const statuses: Record<string, number> = {
     ASSISTANCE_DISABLED: 409,
     ASSISTANCE_LIMIT: 429,
+    GUEST_ANALYSIS_EXPIRED: 409,
     AI_CREDITS_EXHAUSTED: 409,
     AI_CAP_REACHED: 409,
     USAGE_QUOTA_EXCEEDED: 409,

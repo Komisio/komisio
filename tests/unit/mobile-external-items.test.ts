@@ -189,6 +189,61 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs())
 
 describe('central photo analysis identity', () => {
+  it('recognizes linked verified Apple email without a primary email but retains the ordinary store email boundary', async () => {
+    mocks.getUser.mockResolvedValue({
+      data: {
+        user: {
+          ...identity,
+          email: '',
+          identities: [
+            {
+              user_id: owner,
+              provider: 'apple',
+              identity_data: {
+                email: 'relay@example.test',
+                email_verified: true,
+              },
+            },
+          ],
+        },
+      },
+      error: null,
+    })
+    mocks.rpc.mockResolvedValue({ data: null, error: null })
+    expect(
+      (await analysisPost(request({ action: 'read', requestId }))).status,
+    ).toBe(200)
+    mocks.rpc.mockClear()
+    const { mobileIdentityClient } =
+      await import('../../lib/platform/mobile-seller')
+    await expect(mobileIdentityClient(request({}))).rejects.toThrow(
+      'AUTH_REQUIRED',
+    )
+    expect(mocks.rpc).not.toHaveBeenCalled()
+    mocks.getUser.mockResolvedValue({
+      data: {
+        user: {
+          ...identity,
+          email: '',
+          user_metadata: { email: 'fake@example.test', email_verified: true },
+          identities: [
+            {
+              user_id: owner,
+              provider: 'apple',
+              identity_data: {
+                email: 'relay@example.test',
+                email_verified: false,
+              },
+            },
+          ],
+        },
+      },
+      error: null,
+    })
+    expect(
+      (await analysisPost(request({ action: 'read', requestId }))).status,
+    ).toBe(401)
+  })
   const command = {
     action: 'analyze',
     requestId,

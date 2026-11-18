@@ -9,6 +9,7 @@
   },
   "regions": ["arn1"],
   "crons": [
+    { "path": "/api/automation/guest-photo-cleanup", "schedule": "17 * * * *" },
     { "path": "/api/automation/central-guarantees", "schedule": "* * * * *" },
     { "path": "/api/automation/seller-push", "schedule": "* * * * *" },
     { "path": "/api/automation/period-notices", "schedule": "*/10 * * * *" },

@@ -7,6 +7,7 @@ import {
   mobileJson,
   mobileOrigin,
   mobileExternalIdentityClient,
+  mobilePhotoAiClient,
 } from '@/lib/platform/mobile-seller'
 import {
   externalItemsEnabled,
@@ -27,7 +28,10 @@ export async function POST(request: Request) {
     origin = mobileOrigin(request)
     const input = externalItemCommand.safeParse(await mobileJson(request))
     if (!input.success) throw new MobileRequestError('INVALID_INPUT', 400)
-    const client = await mobileExternalIdentityClient(request)
+    const client = await (input.data.action === 'submit' &&
+    input.data.guestAnalysis
+      ? mobilePhotoAiClient(request)
+      : mobileExternalIdentityClient(request))
     return Response.json(await executeExternalItemCommand(client, input.data), {
       headers: externalItemHeaders(origin),
     })

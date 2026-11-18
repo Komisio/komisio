@@ -1115,3 +1115,8 @@ Explicit exit ends access; expiry or removed authority fails closed. Write acces
 and impersonation are outside this approval.
 
 Mobile identity (resolved 2026-11-11): the owner approved verified email/password login on the existing SMS identity. Contact email alone remains insufficient, address conflicts never merge accounts, and existing store authorization stays unchanged.
+
+Guest photo AI (resolved 2026-11-18): the owner approved temporary capability-owned
+analysis records, request limits and suggestions before sign-in. Verified identity
+is still required to submit a request. Guest analysis creates no Auth user,
+seller, membership or request. Existing account history stays Auth-ID bound.

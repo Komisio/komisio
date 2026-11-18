@@ -12,6 +12,12 @@ This exclusion does not remove ordinary agreed return/donation workflows.
 
 ## Current delivery baseline (2026-09-28)
 
+Owner decision, 2026-11-18: central photo suggestions may run before sign-in using
+temporary capability-owned analysis records with bounded usage. Submission still
+requires verified identity. A verified linked Apple/Google identity on the same
+Auth user qualifies for central ownership even without a primary email; ordinary
+store authorization and account-linking rules remain unchanged.
+
 Owner decision, 2026-11-17: retire SMS sign-in and mandatory phone verification.
 Central intake uses verified email (including Apple/Google), preserving Auth-ID
 ownership, MFA and tenant separation. Shipping collects and displays first name,

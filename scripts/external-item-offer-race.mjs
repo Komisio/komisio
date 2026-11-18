@@ -429,6 +429,58 @@ export async function raceExternalOffers({ setup, connectionString }) {
     console.log(
       'PASS: concurrent receipt retries freeze only the received item guarantee, one physical clock and no credit',
     )
+    // Race a factual pre-deadline sale against expiry using the private test
+    // clock. Both identified actors serialize on the same tenant lock.
+    await clients[1].query('reset role')
+    const saleId = randomUUID()
+    const occurred = new Date().toISOString()
+    const saleArgs = [
+      tenant,
+      saleId,
+      `guarantee-${saleId}`,
+      occurred,
+      JSON.stringify([{ itemId: registered[0].item_id, priceOre: 30000 }]),
+    ]
+    const sell = (c) =>
+      c.query("select record_sale($1,$2,'manual',$3,$4,'SEK',$5)", saleArgs)
+    const expire = (c) =>
+      c.query(
+        'select komisio_private.fulfill_due_guarantee($1,$2,(select due_at from external_item_guarantees where id=$2))',
+        [tenant, guarantee],
+      )
+    assert.deepEqual(
+      await together(
+        () => [outcome(sell(clients[0])), outcome(expire(clients[1]))],
+        tenant,
+      ),
+      ['saved', 'saved'],
+    )
+    await clients[0].query('reset role')
+    assert.deepEqual(
+      await together(() => clients.map((c) => outcome(expire(c))), tenant),
+      ['saved', 'saved'],
+    )
+    const facts = (
+      await setup.query(
+        `select
+      (select count(*)::int from seller_ledger_entries where tenant_id=$1 and reference_id=$2) credits,
+      (select count(*)::int from external_item_guarantee_events where guarantee_id=$2 and kind='credited') events,
+      (select amount_ore::int from seller_ledger_entries where tenant_id=$1 and reference_id=$2) amount,
+      (select amount_ore::int from external_item_guarantees where id=$2) promised`,
+        [tenant, guarantee],
+      )
+    ).rows[0]
+    assert.equal(facts.credits, 1)
+    assert.equal(facts.events, 1)
+    assert.equal(facts.amount, facts.promised)
+    for (const c of clients) await as(c, staff)
+    assert.deepEqual(
+      await together(() => clients.map((c) => outcome(sell(c))), tenant),
+      ['saved', 'saved'],
+    )
+    console.log(
+      'PASS: concurrent sale/expiry and repeated commands credit one fixed amount exactly once',
+    )
     console.log(
       'PASS: concurrent first accounts, separate handovers, exact onboarding retries and expired completion',
     )

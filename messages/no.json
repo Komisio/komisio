@@ -389,7 +389,8 @@
     "overviewHelpLabel": "Om innlevering",
     "payoutBankReviewRequired": "En eier eller administrator må først kontrollere selgerens kontoopplysninger under Utbetalinger.",
     "saleVatRequired": "Salget ble ikke registrert fordi butikkens momsbehandling ikke er valgt. En eier eller administrator må velge den i Butikkinnstillinger og publisere policyen før du prøver igjen.",
-    "payoutHistoryReview": "Eldre utbetalingsbilag må avstemmes. Ikke send samme betaling på nytt."
+    "payoutHistoryReview": "Eldre utbetalingsbilag må avstemmes. Ikke send samme betaling på nytt.",
+    "guaranteeAccountingPending": "Regnskap for garantivarer er ikke klart. Saldoen er lagret, men regnskapsbilag kan ikke opprettes ennå."
   },
   "brand": "Komisio",
   "tagline": "Mer plass til ting som kan leve videre.",
@@ -752,7 +753,9 @@
     "external_offer.responded": "Selgeren svarte på tilbudet",
     "external_item.guarantee_frozen": "Garantibeløp og frist lagret",
     "external_item.registered": "Registrert",
-    "external_request.withdrawn": "Vareforespørsel trukket tilbake"
+    "external_request.withdrawn": "Vareforespørsel trukket tilbake",
+    "external_item.guarantee_credited": "Garantert beløp kreditert",
+    "external_item.guarantee_acquired": "Usolgt garantivare overtatt"
   },
   "errors": {
     "FORBIDDEN": "Du har ikke tillatelse til å gjøre dette.",
@@ -1587,7 +1590,9 @@
       "swish": "Swish",
       "other": "Annet"
     },
-    "paymentHint": "Registrer hvordan betalingen allerede ble mottatt. Komisio tar ikke imot betaling."
+    "paymentHint": "Registrer hvordan betalingen allerede ble mottatt. Komisio tar ikke imot betaling.",
+    "guaranteeAccountingPending": "Selgerbeløpet er fast. Regnskap og mva venter på avstemming.",
+    "guaranteeCreditThisSale": "Lagt til saldoen ved dette salget"
   },
   "ledger": {
     "title": "Saldo og reskontro",
@@ -1606,7 +1611,8 @@
       "booking_charge": "Bookinggebyr",
       "adjustment": "Justering",
       "consignment_fee": "Månedsavgifter",
-      "consignment_fee_reversal": "Tilbakefør avgift"
+      "consignment_fee_reversal": "Tilbakefør avgift",
+      "credit_guarantee": "Garantert beløp"
     },
     "adjustHeading": "Juster reskontroen",
     "adjustHint": "Bare eier eller administrator. En korreksjon er en ny postering med en årsak; ingenting redigeres.",
@@ -3139,7 +3145,8 @@
       "FORTNOX_DAY_HISTORY_REVIEW": "Dagens tidligere bilag må avstemmes før en ny sending.",
       "FORTNOX_DAY_CONTEXT_CHANGED": "Kontoplanen eller det tilkoblede selskapet er endret. Avstem tidligere bilag.",
       "FORTNOX_BASELINE_CHANGED": "Grunnlaget er endret. Kontroller sendingen på nytt.",
-      "FORTNOX_NO_CHANGES": "Det er ingen nye beløp å sende."
+      "FORTNOX_NO_CHANGES": "Det er ingen nye beløp å sende.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Regnskap for garantivarer er ikke klart. Saldoen er lagret, men regnskapsbilag kan ikke opprettes ennå."
     },
     "companyName": "Firmanavn i Fortnox",
     "voucherUnknown": "Resultatet av sendingen er usikkert:",
@@ -5086,7 +5093,8 @@
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, mva- eller journalinnstillingene avviker fra forrige eksport. Avstem endringen før du fortsetter.",
       "ECONOMIC_BASELINE_CHANGED": "En annen eksport for denne datoen er bekreftet. Åpne dagsoppgjøret igjen og klargjør et nytt bilag med den gjenstående endringen.",
       "ECONOMIC_NO_CHANGES": "Ingen nye beløp gjenstår å sende for dette dagsoppgjøret.",
-      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Eldre utbetalingsbilag må avstemmes. Ikke send samme betaling på nytt."
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Eldre utbetalingsbilag må avstemmes. Ikke send samme betaling på nytt.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Regnskap for garantivarer er ikke klart. Saldoen er lagret, men regnskapsbilag kan ikke opprettes ennå."
     },
     "deltaHint": "Bare endringen siden forrige bekreftede eksport er inkludert.",
     "baselineLink": "Vis forrige eksport"

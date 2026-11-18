@@ -12,10 +12,10 @@ const totals = z.object({
   salesCount: z.number().int(),
   linesCount: z.number().int(),
   grossOre: ore,
-  vatOre: ore,
-  netOre: ore,
-  commissionOre: ore,
-  commissionVatOre: ore,
+  vatOre: ore.nullable(),
+  netOre: ore.nullable(),
+  commissionOre: ore.nullable(),
+  commissionVatOre: ore.nullable(),
   sellerCreditOre: ore,
   returnsCount: z.number().int(),
   refundsOre: ore,
@@ -153,8 +153,12 @@ export function renderBrief(
   },
 ) {
   const f = briefFacts(b)
-  const money = (v: number) =>
-    format ? format.money(v, b.currency) : `${formatSignedOre(v)} ${b.currency}`
+  const money = (v: number | null) =>
+    v === null
+      ? '—'
+      : format
+        ? format.money(v, b.currency)
+        : `${formatSignedOre(v)} ${b.currency}`
   const date = (iso: string) => (format ? format.date(iso) : iso)
   const render = (template: string, values: Record<string, string | number>) =>
     fill(

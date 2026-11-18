@@ -54,7 +54,12 @@ export function SellerTypeTotals({
                 {fields.map(([key, label]) => (
                   <div key={key}>
                     <dt>{labels[label]}</dt>
-                    <dd>{format.money(totals[type]?.[key] ?? 0, currency)}</dd>
+                    <dd>
+                      {format.money(
+                        totals[type] ? totals[type][key] : 0,
+                        currency,
+                      )}
+                    </dd>
                   </div>
                 ))}
               </dl>

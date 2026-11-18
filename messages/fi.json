@@ -389,7 +389,8 @@
     "overviewHelpLabel": "Tietoa vastaanotosta",
     "payoutBankReviewRequired": "Omistajan tai ylläpitäjän on ensin tarkistettava myyjän tilitiedot Maksut-osiossa.",
     "saleVatRequired": "Myyntiä ei kirjattu, koska myymälän ALV-käsittelyä ei ole valittu. Omistajan tai ylläpitäjän on valittava se myymälän asetuksissa ja julkaistava käytäntö ennen uutta yritystä.",
-    "payoutHistoryReview": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen."
+    "payoutHistoryReview": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen.",
+    "guaranteeAccountingPending": "Takuutuotteiden kirjanpito on kesken. Saldo on tallennettu, mutta kirjanpitoaineistoa ei voi vielä luoda."
   },
   "brand": "Komisio",
   "tagline": "Enemmän tilaa tavaroille elää uudelleen.",
@@ -752,7 +753,9 @@
     "external_offer.responded": "Myyjä vastasi tarjoukseen",
     "external_item.guarantee_frozen": "Takuusumma ja määräaika tallennettu",
     "external_item.registered": "Rekisteröity",
-    "external_request.withdrawn": "Tuotepyyntö peruutettu"
+    "external_request.withdrawn": "Tuotepyyntö peruutettu",
+    "external_item.guarantee_credited": "Taattu summa hyvitetty",
+    "external_item.guarantee_acquired": "Myymätön takuutuote lunastettu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -1587,7 +1590,9 @@
       "swish": "Swish",
       "other": "Muu"
     },
-    "paymentHint": "Kirjaa, miten maksu on jo vastaanotettu. Komisio ei peri maksua."
+    "paymentHint": "Kirjaa, miten maksu on jo vastaanotettu. Komisio ei peri maksua.",
+    "guaranteeAccountingPending": "Myyjän summa on kiinteä. Kirjanpito ja ALV odottavat tarkistusta.",
+    "guaranteeCreditThisSale": "Tämän myynnin yhteydessä hyvitetty"
   },
   "ledger": {
     "title": "Saldo ja tilikirja",
@@ -1606,7 +1611,8 @@
       "booking_charge": "Kirjausmaksu",
       "adjustment": "Oikaisu",
       "consignment_fee": "Kuukausimaksut",
-      "consignment_fee_reversal": "Hyvitä maksu"
+      "consignment_fee_reversal": "Hyvitä maksu",
+      "credit_guarantee": "Taattu summa"
     },
     "adjustHeading": "Oikaise tilikirjaa",
     "adjustHint": "Vain omistaja tai ylläpitäjä. Korjaus on uusi merkintä syyllä; mitään ei muokata.",
@@ -3139,7 +3145,8 @@
       "FORTNOX_DAY_HISTORY_REVIEW": "Päivän aiemmat tositteet on täsmäytettävä ennen uutta lähetystä.",
       "FORTNOX_DAY_CONTEXT_CHANGED": "Tilikartta tai yhdistetty yritys on muuttunut. Täsmäytä aiemmat tositteet.",
       "FORTNOX_BASELINE_CHANGED": "Vertailutiedot ovat muuttuneet. Tarkista lähetys uudelleen.",
-      "FORTNOX_NO_CHANGES": "Uusia lähetettäviä summia ei ole."
+      "FORTNOX_NO_CHANGES": "Uusia lähetettäviä summia ei ole.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Takuutuotteiden kirjanpito on kesken. Saldo on tallennettu, mutta kirjanpitoaineistoa ei voi vielä luoda."
     },
     "companyName": "Yrityksen nimi Fortnoxissa",
     "voucherUnknown": "Lähetyksen tulos on epävarma:",
@@ -5092,7 +5099,8 @@
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Tili-, alv- tai päiväkirja-asetukset eroavat edellisestä viennistä. Selvitä muutos ennen jatkamista.",
       "ECONOMIC_BASELINE_CHANGED": "Toinen vienti tälle päivälle on vahvistettu. Avaa päivän päätös uudelleen ja valmistele uusi vienti jäljellä olevasta muutoksesta.",
       "ECONOMIC_NO_CHANGES": "Tälle päivän päätökselle ei ole uusia lähetettäviä summia.",
-      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen."
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Takuutuotteiden kirjanpito on kesken. Saldo on tallennettu, mutta kirjanpitoaineistoa ei voi vielä luoda."
     },
     "deltaHint": "Mukana on vain muutos edellisen vahvistetun viennin jälkeen.",
     "baselineLink": "Näytä edellinen vienti"

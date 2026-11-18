@@ -41,20 +41,24 @@ const lineRow = z.object({
   line_no: z.number().int(),
   price_ore: ore,
   ownership: z.enum(['consignment', 'store']),
+  accounting_pending: z.boolean().default(false),
+  guaranteed_amount_ore: ore.nullable().optional(),
   commission_basis: z.enum(['inclusive', 'exclusive']).nullable(),
   commission_rate_percent: z.union([z.number(), z.string()]).nullable(),
-  commission_ore: ore,
-  commission_vat_ore: ore,
+  commission_ore: ore.nullable(),
+  commission_vat_ore: ore.nullable(),
   seller_credit_ore: ore,
-  vat_mode: z.enum([
-    'consignment_margin',
-    'consignment_full',
-    'consignment_business',
-    'store_margin',
-    'store_full',
-  ]),
-  vat_rate_bp: z.number().int(),
-  vat_ore: ore,
+  vat_mode: z
+    .enum([
+      'consignment_margin',
+      'consignment_full',
+      'consignment_business',
+      'store_margin',
+      'store_full',
+    ])
+    .nullable(),
+  vat_rate_bp: z.number().int().nullable(),
+  vat_ore: ore.nullable(),
 })
 const saleRow = z.object({
   id: z.uuid(),
@@ -73,7 +77,7 @@ export type SaleLineRow = z.infer<typeof lineRow>
 const saleColumns =
   'id,provider,external_id,currency,occurred_at,total_ore,status,recorded_at'
 const lineColumns =
-  'id,sale_id,item_id,line_no,price_ore,ownership,commission_basis,commission_rate_percent,commission_ore,commission_vat_ore,seller_credit_ore,vat_mode,vat_rate_bp,vat_ore'
+  'id,sale_id,item_id,line_no,price_ore,ownership,accounting_pending,commission_basis,commission_rate_percent,commission_ore,commission_vat_ore,seller_credit_ore,vat_mode,vat_rate_bp,vat_ore'
 
 export const salesFilter = z.strictObject({
   provider: saleProvider.optional(),

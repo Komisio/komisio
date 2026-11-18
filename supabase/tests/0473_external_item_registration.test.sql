@@ -57,7 +57,7 @@ select is(items_search_page(:'tenant','{}','title','asc',25,0)#>>'{items,0,paypa
 reset role;
 select is(komisio_private.item_lifecycle(:'tenant',:'item')->>'periodEnd',(select to_jsonb(due_at)#>>'{}' from external_item_guarantees where id=:'guarantee'),'the ordinary item projection uses the physical guarantee deadline');
 select is(komisio_private.item_lifecycle(:'tenant',:'item')->>'endOfPeriodAction',null::text,'ordinary lifecycle cannot offer charity or seller collection');
-select throws_like(format($$select komisio_private.sale_line_facts(%L,%L,30000,'{}')$$,:'tenant',:'item'),'%GUARANTEED_SALE_REQUIRED%','percentage sale accounting cannot execute a guaranteed sale');
+select is(komisio_private.sale_line_facts(:'tenant',:'item',30000,'{}')->>'accountingPending','true','central fixed-amount sale is operational while accounting remains undecided');
 set constraints all immediate;
 select pass('the registration and immutable guarantee link satisfy deferred constraints');
 set local role authenticated;

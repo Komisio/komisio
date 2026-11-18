@@ -389,7 +389,8 @@
     "overviewHelpLabel": "Über die Annahme",
     "payoutBankReviewRequired": "Ein Inhaber oder Administrator muss zuerst die Bankdaten des Verkäufers unter Auszahlungen prüfen.",
     "saleVatRequired": "Der Verkauf wurde nicht erfasst, da die Umsatzsteuerbehandlung des Geschäfts noch nicht ausgewählt wurde. Ein Inhaber oder Administrator muss sie in den Geschäftseinstellungen auswählen und die Richtlinie veröffentlichen, bevor du es erneut versuchst.",
-    "payoutHistoryReview": "Ältere Auszahlungsbelege müssen abgestimmt werden. Senden Sie dieselbe Zahlung nicht erneut."
+    "payoutHistoryReview": "Ältere Auszahlungsbelege müssen abgestimmt werden. Senden Sie dieselbe Zahlung nicht erneut.",
+    "guaranteeAccountingPending": "Die Buchhaltung für Garantieartikel ist noch offen. Das Guthaben ist gespeichert, Buchungsbelege können jedoch noch nicht erstellt werden."
   },
   "brand": "Komisio",
   "tagline": "Mehr Raum für Dinge, die weiterleben.",
@@ -752,7 +753,9 @@
     "external_offer.responded": "Verkäufer hat auf Angebot geantwortet",
     "external_item.guarantee_frozen": "Garantiebetrag und Frist gespeichert",
     "external_item.registered": "Registriert",
-    "external_request.withdrawn": "Artikelanfrage zurückgezogen"
+    "external_request.withdrawn": "Artikelanfrage zurückgezogen",
+    "external_item.guarantee_credited": "Garantierter Betrag gutgeschrieben",
+    "external_item.guarantee_acquired": "Unverkaufter Garantieartikel übernommen"
   },
   "errors": {
     "FORBIDDEN": "Sie haben keine Berechtigung dafür.",
@@ -1587,7 +1590,9 @@
       "swish": "Swish",
       "other": "Andere"
     },
-    "paymentHint": "Erfassen Sie, wie die Zahlung bereits eingegangen ist. Komisio zieht keine Zahlung ein."
+    "paymentHint": "Erfassen Sie, wie die Zahlung bereits eingegangen ist. Komisio zieht keine Zahlung ein.",
+    "guaranteeAccountingPending": "Der Verkäuferbetrag steht fest. Buchhaltung und Umsatzsteuer warten auf Prüfung.",
+    "guaranteeCreditThisSale": "Bei diesem Verkauf gutgeschrieben"
   },
   "ledger": {
     "title": "Guthaben und Konto",
@@ -1606,7 +1611,8 @@
       "booking_charge": "Buchungsgebühr",
       "adjustment": "Anpassung",
       "consignment_fee": "Monatsgebühren",
-      "consignment_fee_reversal": "Gebühr stornieren"
+      "consignment_fee_reversal": "Gebühr stornieren",
+      "credit_guarantee": "Garantierter Betrag"
     },
     "adjustHeading": "Konto anpassen",
     "adjustHint": "Nur Inhaber oder Administrator. Eine Korrektur ist ein neuer Eintrag mit Grund; nichts wird bearbeitet.",
@@ -3139,7 +3145,8 @@
       "FORTNOX_DAY_HISTORY_REVIEW": "Frühere Belege dieses Tages müssen vor einer weiteren Übertragung abgestimmt werden.",
       "FORTNOX_DAY_CONTEXT_CHANGED": "Kontenzuordnung oder verbundenes Unternehmen wurden geändert. Stimmen Sie frühere Belege ab.",
       "FORTNOX_BASELINE_CHANGED": "Die Vergleichsbasis hat sich geändert. Prüfen Sie die Übertragung erneut.",
-      "FORTNOX_NO_CHANGES": "Es gibt keine neuen Beträge zu übertragen."
+      "FORTNOX_NO_CHANGES": "Es gibt keine neuen Beträge zu übertragen.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Die Buchhaltung für Garantieartikel ist noch offen. Das Guthaben ist gespeichert, Buchungsbelege können jedoch noch nicht erstellt werden."
     },
     "companyName": "Firmenname in Fortnox",
     "voucherUnknown": "Das Ergebnis der Sendung ist ungewiss:",
@@ -5092,7 +5099,8 @@
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, Steuer- oder Journaleinstellungen weichen vom vorherigen Export ab. Klären Sie die Änderung, bevor Sie fortfahren.",
       "ECONOMIC_BASELINE_CHANGED": "Ein anderer Export für dieses Datum wurde bestätigt. Öffnen Sie den Tagesabschluss erneut und erstellen Sie einen neuen Export für die verbleibende Änderung.",
       "ECONOMIC_NO_CHANGES": "Für diesen Tagesabschluss sind keine neuen Beträge zu übertragen.",
-      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Ältere Auszahlungsbelege müssen abgestimmt werden. Senden Sie dieselbe Zahlung nicht erneut."
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Ältere Auszahlungsbelege müssen abgestimmt werden. Senden Sie dieselbe Zahlung nicht erneut.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Die Buchhaltung für Garantieartikel ist noch offen. Das Guthaben ist gespeichert, Buchungsbelege können jedoch noch nicht erstellt werden."
     },
     "deltaHint": "Enthalten ist nur die Änderung seit dem letzten bestätigten Export.",
     "baselineLink": "Vorherigen Export anzeigen"

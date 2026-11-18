@@ -50,6 +50,12 @@ export function useIntakeAction(d: Dictionary['intake']) {
           setError(d.payoutHistoryReview)
           return null
         }
+        if (result.error === 'GUARANTEE_ACCOUNTING_PENDING') {
+          pending.current = null
+          setLocked(false)
+          setError(d.guaranteeAccountingPending)
+          return null
+        }
         // Only an answered refusal confirms that no sale was recorded. A lost
         // or 5xx response keeps the exact pending command for safe replay.
         if (

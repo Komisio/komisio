@@ -81,12 +81,15 @@ export default async function Stock({
         ? all.items.markdownWaiting
         : all.lifecycle.stages[stage]
   const format = economyFormat(ctx.locale)
-  const money = (ore: number) => format.money(ore, report!.currency)
+  const money = (ore: number | null) => format.money(ore, report!.currency)
   const pct = (value: number | null) =>
     value === null ? '—' : format.percent(value)
   const days = (value: number | null) => (value === null ? '—' : String(value))
   return (
     <div className="stock-overview">
+      {report?.total.marginOre === null && (
+        <p role="status">{all.sales.guaranteeAccountingPending}</p>
+      )}
       <div className="page-heading workspace-heading">
         <FormHelpHeading
           title={d.title}

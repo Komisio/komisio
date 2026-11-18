@@ -389,7 +389,8 @@
     "overviewHelpLabel": "Om inlämning",
     "payoutBankReviewRequired": "En ägare eller administratör behöver granska säljarens kontouppgifter under Utbetalningar först.",
     "saleVatRequired": "Försäljningen registrerades inte eftersom butikens momshantering inte har valts. En ägare eller administratör behöver välja momshantering i Butiksinställningar och publicera policyn innan du försöker igen.",
-    "payoutHistoryReview": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen."
+    "payoutHistoryReview": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen.",
+    "guaranteeAccountingPending": "Bokföringen för garantivaror är inte klar. Saldot är sparat, men bokföringsunderlag kan ännu inte skapas."
   },
   "brand": "Komisio",
   "tagline": "Mer utrymme för det som får nytt liv.",
@@ -752,7 +753,9 @@
     "external_offer.responded": "Säljaren svarade på erbjudandet",
     "external_item.guarantee_frozen": "Garantibelopp och slutdatum sparade",
     "external_item.registered": "Registrerad",
-    "external_request.withdrawn": "Varuförfrågan återkallad"
+    "external_request.withdrawn": "Varuförfrågan återkallad",
+    "external_item.guarantee_credited": "Garanterat belopp krediterat",
+    "external_item.guarantee_acquired": "Osåld garantivara övertagen"
   },
   "errors": {
     "FORBIDDEN": "Du har inte behörighet att göra detta.",
@@ -1587,7 +1590,9 @@
       "swish": "Swish",
       "other": "Annat"
     },
-    "paymentHint": "Registrera hur betalningen redan togs emot. Komisio utför ingen betalning."
+    "paymentHint": "Registrera hur betalningen redan togs emot. Komisio utför ingen betalning.",
+    "guaranteeAccountingPending": "Säljarbeloppet är fast. Bokföring och moms väntar på avstämning.",
+    "guaranteeCreditThisSale": "Tillagt på saldot vid denna försäljning"
   },
   "ledger": {
     "title": "Saldo",
@@ -1606,7 +1611,8 @@
       "booking_charge": "Bokningsavgift",
       "adjustment": "Justering",
       "consignment_fee": "Månadsavgifter",
-      "consignment_fee_reversal": "Återför avgift"
+      "consignment_fee_reversal": "Återför avgift",
+      "credit_guarantee": "Garanterat belopp"
     },
     "adjustHeading": "Justera saldo",
     "adjustHint": "Endast ägare eller administratör. En rättelse är en ny post med en anledning; inget redigeras.",
@@ -3139,7 +3145,8 @@
       "FORTNOX_DAY_HISTORY_REVIEW": "Dagens tidigare verifikat behöver stämmas av innan du skickar igen.",
       "FORTNOX_DAY_CONTEXT_CHANGED": "Kontoplanen eller det anslutna företaget har ändrats. Stäm av tidigare verifikat.",
       "FORTNOX_BASELINE_CHANGED": "Underlaget har ändrats. Granska skickningen igen.",
-      "FORTNOX_NO_CHANGES": "Det finns inga nya belopp att skicka."
+      "FORTNOX_NO_CHANGES": "Det finns inga nya belopp att skicka.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Bokföringen för garantivaror är inte klar. Saldot är sparat, men bokföringsunderlag kan ännu inte skapas."
     },
     "companyName": "Företagsnamn i Fortnox",
     "voucherUnknown": "Sändningens resultat är osäkert:",
@@ -5086,7 +5093,8 @@
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Konto-, moms- eller kassaboksinställningarna skiljer sig från föregående export. Stäm av ändringen innan du fortsätter.",
       "ECONOMIC_BASELINE_CHANGED": "En annan export för samma datum har bekräftats. Öppna dagsavslutet igen och förbered ett nytt underlag med återstående förändring.",
       "ECONOMIC_NO_CHANGES": "Inga nya belopp återstår att skicka för detta dagsavslut.",
-      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen."
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Bokföringen för garantivaror är inte klar. Saldot är sparat, men bokföringsunderlag kan ännu inte skapas."
     },
     "deltaHint": "Endast förändringen sedan föregående bekräftade export ingår.",
     "baselineLink": "Visa föregående export"

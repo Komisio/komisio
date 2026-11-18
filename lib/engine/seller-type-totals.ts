@@ -4,7 +4,7 @@ export const sellerTypeTotals = z.partialRecord(
   z.enum(['private', 'business']),
   z.object({
     grossOre: ore,
-    vatOre: ore,
+    vatOre: ore.nullable(),
     sellerCreditOre: ore,
     refundsOre: ore,
     creditReversedOre: ore,

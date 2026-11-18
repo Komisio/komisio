@@ -6,6 +6,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 const ore = z.union([z.number().int(), z.string()]).transform(Number)
 export const ledgerKind = z.enum([
   'credit_sale',
+  'credit_guarantee',
   'credit_reversal',
   'payout_reserved',
   'payout_paid',

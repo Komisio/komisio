@@ -162,7 +162,6 @@ export default async function Item({
         }
         markSoldHref={
           active.role !== 'readonly' &&
-          !t.externalGuarantee &&
           (await searchSaleItems(ctx.client, active.id, item.id)).some(
             (row) => row.id === item.id,
           )

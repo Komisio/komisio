@@ -99,25 +99,47 @@ export default async function Sale({
               <summary>{d.financialDetails}</summary>
               <p className="muted">{d.linesHint}</p>
               <p>{all.items.ownershipKinds[l.ownership]}</p>
-              {l.ownership === 'consignment' && (
-                <p>
-                  {d.commission}: {formatOre(l.commission_ore)} {currency} (
-                  {l.commission_rate_percent} %,{' '}
-                  {l.commission_basis
-                    ? all.sellerTerms[l.commission_basis]
-                    : ''}
-                  )
-                  {l.commission_vat_ore > 0
-                    ? ` + ${d.commissionVat} ${formatOre(l.commission_vat_ore)} ${currency}`
-                    : ''}{' '}
-                  · {d.sellerCredit}: {formatOre(l.seller_credit_ore)}{' '}
+              {l.accounting_pending ? (
+                <p role="status">
+                  {d.guaranteeAccountingPending}
+                  {l.guaranteed_amount_ore != null && (
+                    <>
+                      {' '}
+                      · {all.ledger.kinds.credit_guarantee}:{' '}
+                      {formatOre(l.guaranteed_amount_ore)} {currency}
+                    </>
+                  )}
+                  {' · '}
+                  {d.guaranteeCreditThisSale}: {formatOre(l.seller_credit_ore)}{' '}
                   {currency}
                 </p>
+              ) : (
+                l.ownership === 'consignment' &&
+                l.commission_ore !== null && (
+                  <p>
+                    {d.commission}: {formatOre(l.commission_ore)} {currency} (
+                    {l.commission_rate_percent} %,{' '}
+                    {l.commission_basis
+                      ? all.sellerTerms[l.commission_basis]
+                      : ''}
+                    )
+                    {l.commission_vat_ore !== null && l.commission_vat_ore > 0
+                      ? ` + ${d.commissionVat} ${formatOre(l.commission_vat_ore)} ${currency}`
+                      : ''}{' '}
+                    · {d.sellerCredit}: {formatOre(l.seller_credit_ore)}{' '}
+                    {currency}
+                  </p>
+                )
               )}
-              <p>
-                {d.vat}: {formatOre(l.vat_ore)} {currency} ·{' '}
-                {d.vatModes[l.vat_mode]} · {l.vat_rate_bp / 100} %
-              </p>
+              {!l.accounting_pending &&
+                l.vat_ore !== null &&
+                l.vat_mode !== null &&
+                l.vat_rate_bp !== null && (
+                  <p>
+                    {d.vat}: {formatOre(l.vat_ore)} {currency} ·{' '}
+                    {d.vatModes[l.vat_mode]} · {l.vat_rate_bp / 100} %
+                  </p>
+                )}
             </details>
             {returns.has(l.id) ? (
               <p role="status">

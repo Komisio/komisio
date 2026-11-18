@@ -389,7 +389,8 @@
     "overviewHelpLabel": "About receiving",
     "payoutBankReviewRequired": "An owner or administrator must review the seller’s bank details under Payouts first.",
     "saleVatRequired": "The sale was not recorded because the store’s VAT treatment has not been selected. An owner or administrator must choose it in Store settings and publish the policy before you try again.",
-    "payoutHistoryReview": "Historical payout evidence needs reconciliation. Do not send the same payment again."
+    "payoutHistoryReview": "Historical payout evidence needs reconciliation. Do not send the same payment again.",
+    "guaranteeAccountingPending": "Accounting for guaranteed items is pending. The balance is saved, but accounting documents cannot be created yet."
   },
   "brand": "Komisio",
   "tagline": "More room for things to live again.",
@@ -752,7 +753,9 @@
     "external_offer.responded": "Seller responded to offer",
     "external_item.guarantee_frozen": "Guaranteed amount and deadline saved",
     "external_item.registered": "Registered",
-    "external_request.withdrawn": "Item request withdrawn"
+    "external_request.withdrawn": "Item request withdrawn",
+    "external_item.guarantee_credited": "Guaranteed amount credited",
+    "external_item.guarantee_acquired": "Unsold guarantee item acquired"
   },
   "errors": {
     "FORBIDDEN": "You do not have permission to do this.",
@@ -1587,7 +1590,9 @@
       "swish": "Swish",
       "other": "Other"
     },
-    "paymentHint": "Record how payment was already received. Komisio does not collect payment."
+    "paymentHint": "Record how payment was already received. Komisio does not collect payment.",
+    "guaranteeAccountingPending": "The seller amount is fixed. Accounting and VAT await review.",
+    "guaranteeCreditThisSale": "Added to the balance on this sale"
   },
   "ledger": {
     "title": "Balance and ledger",
@@ -1606,7 +1611,8 @@
       "booking_charge": "Booking charge",
       "adjustment": "Adjustment",
       "consignment_fee": "Monthly fees",
-      "consignment_fee_reversal": "Reverse fee"
+      "consignment_fee_reversal": "Reverse fee",
+      "credit_guarantee": "Guaranteed amount"
     },
     "adjustHeading": "Adjust the ledger",
     "adjustHint": "Owner or admin only. A correction is a new entry with a reason; nothing is edited.",
@@ -3139,7 +3145,8 @@
       "FORTNOX_DAY_HISTORY_REVIEW": "Earlier vouchers for this day need reconciliation before another delivery.",
       "FORTNOX_DAY_CONTEXT_CHANGED": "The account mapping or connected company has changed. Reconcile earlier vouchers.",
       "FORTNOX_BASELINE_CHANGED": "The baseline has changed. Review the delivery again.",
-      "FORTNOX_NO_CHANGES": "There are no new amounts to send."
+      "FORTNOX_NO_CHANGES": "There are no new amounts to send.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Accounting for guaranteed items is pending. The balance is saved, but accounting documents cannot be created yet."
     },
     "companyName": "Company name in Fortnox",
     "voucherUnknown": "The send outcome is uncertain:",
@@ -5086,7 +5093,8 @@
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Account, VAT or journal settings differ from the previous export. Reconcile the change before continuing.",
       "ECONOMIC_BASELINE_CHANGED": "Another export for this date has been confirmed. Reopen the day close and prepare a new export for the remaining change.",
       "ECONOMIC_NO_CHANGES": "There are no new amounts to send for this day close.",
-      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Historical payout evidence needs reconciliation. Do not send the same payment again."
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "Historical payout evidence needs reconciliation. Do not send the same payment again.",
+      "GUARANTEE_ACCOUNTING_PENDING": "Accounting for guaranteed items is pending. The balance is saved, but accounting documents cannot be created yet."
     },
     "deltaHint": "Only the change since the previous confirmed export is included.",
     "baselineLink": "View previous export"

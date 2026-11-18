@@ -1,5 +1,10 @@
 # Decision Log
 
+- 2026-11-18: Existing mobile account and balance reads recognize the central seller by immutable external_owner_id and verified Auth identity. Contact email remains non-authoritative; no tenant membership or account merging is created. Ordinary store identity remains unchanged.
+
+- 2026-11-18: Central guarantees credit the fixed amount once on sale or receipt+45 days; unsold goods become store-owned, returns retain credit. Reuse immutable events. VAT, commission accounting and purchase tax documents remain pending, excluded from final exports.
+- 2026-11-18: Guarantee expiry uses a named automation grant for the central tenant. Record due-time fulfillment separately from posting time; late sales retain evidence without duplicate credit or rewriting acquisition. No bank transfer or accounting reconciliation is implied.
+
 - 2026-11-18: Owner sets central Home Small to 2500 g estimated item capacity plus 100 g packaging per parcel. Preserve booked weights and the 2000 g unknown-item fallback. Protocol 2 reads expose the new capacity; released clients retain their compatible 2000 g selection limit.
 
 - 2026-11-18: Copied central photos may reuse a prior AI weight only for the same owner, recipient and ordered verified image hashes. Attest stored bytes through the server capability; client reservation hashes alone are insufficient. Keep request links and booked weights immutable.

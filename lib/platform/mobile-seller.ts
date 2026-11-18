@@ -102,6 +102,18 @@ export function mobileExternalIdentityClient(request: Request) {
   return mobileVerifiedClient(request, 'email')
 }
 
+/** Optional upload attestation uses our capability, never incoming headers. */
+export async function mobileExternalPhotoUploadClient(request: Request) {
+  const key = process.env.KOMISIO_SELLER_AI_SERVER_KEY
+  const verifyContent = !!key && /^[a-f0-9]{64}$/i.test(key)
+  const client = await mobileVerifiedClient(
+    request,
+    'email',
+    verifyContent ? { 'x-komisio-seller-ai': key } : {},
+  )
+  return { client, verifyContent }
+}
+
 /** Server capability is never copied from a caller-controlled header. */
 export function mobileShippingClient(request: Request, serverKey: string) {
   return mobileVerifiedClient(request, 'email', {

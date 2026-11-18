@@ -44,6 +44,8 @@ export default defineConfig({
         SELLER_EMAIL_ALLOWLIST: '*',
         KOMISIO_ZETTLE_FIXTURES: 'true',
         KOMISIO_SELLER_SUBMISSIONS_ENABLED: 'true',
+        KOMISIO_MOBILE_API_ENABLED: 'true',
+        KOMISIO_SELLER_AI_SERVER_KEY: 'a'.repeat(64),
         KOMISIO_CONNECTORS_ENABLED: 'true',
         KOMISIO_WEBLINK_SETUP_ENABLED: 'true',
         KOMISIO_MARKETING_CONSENT_ENABLED: 'true',

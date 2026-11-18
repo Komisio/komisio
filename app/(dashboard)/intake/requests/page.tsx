@@ -9,6 +9,8 @@ import {
 } from '@/lib/platform/external-request-filters'
 import { ExternalRequestFilters } from '@/components/intake/external-request-filters'
 import { ExternalRequestQueue } from '@/components/intake/external-request-queue'
+import { AutomationSwitch } from '@/components/intake/automation-switch'
+import { automationIdentity, readAutomation } from '@/lib/engine/automation'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import styles from '@/components/intake/external-request-queue.module.css'
 import '@/app/seller/submissions/submissions.css'
@@ -58,12 +60,47 @@ export default async function ExternalRequests({
     : { data: [], error: null }
   if (agreements.error) throw new Error('REQUEST_FAILED')
   const filtered = filters.status !== 'all' || Boolean(filters.query)
+  const recipient =
+    tenant.role === 'owner'
+      ? await ctx.client.rpc('public_central_app_recipient')
+      : null
+  const centralOwner = !recipient?.error && recipient?.data?.id === tenant.id
+  const grants = centralOwner
+    ? await readAutomation(ctx.client, tenant.id)
+    : null
+  const configured =
+    process.env.KOMISIO_CENTRAL_GUARANTEES_ENABLED === 'true' &&
+    automationIdentity() !== null &&
+    (process.env.CRON_SECRET?.length ?? 0) >= 16
   return (
     <div className={styles.workspace}>
       <header className={styles.heading}>
         <h1>{d.title}</h1>
         <p>{d.intro}</p>
       </header>
+      {centralOwner && (
+        <details>
+          <summary>{d.guaranteeAutomation.heading}</summary>
+          <AutomationSwitch
+            key={`guarantees-${tenant.id}`}
+            tenantId={tenant.id}
+            scope="central_guarantees"
+            grants={grants}
+            configured={configured}
+            canEdit
+            t={{
+              ...all.accounting.dayCloseAutomation,
+              ...d.guaranteeAutomation,
+              ...(!configured
+                ? {
+                    enabled: d.guaranteeAutomation.notConfigured,
+                    waiting: d.guaranteeAutomation.notConfigured,
+                  }
+                : {}),
+            }}
+          />
+        </details>
+      )}
       <ExternalRequestFilters
         key={externalRequestHref(filters)}
         filters={filters}

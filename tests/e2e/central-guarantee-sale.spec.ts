@@ -207,6 +207,20 @@ test('central guarantee sale, lost response, return and resale retain the fixed 
       )
     ).rows[0]
     expect(credits).toEqual({ n: 1, amount: 40000 })
+    await page.goto('/intake/requests')
+    const automation = page.locator('details').filter({
+      has: page.locator('summary', {
+        hasText: d.externalOffers.guaranteeAutomation.heading,
+      }),
+    })
+    await automation.locator('summary').click()
+    await expect(automation).toContainText(
+      d.externalOffers.guaranteeAutomation.hint,
+    )
+    // A historical recipient may retain its queue, but not this activation control.
+    await f.db.query('update platform_settings set central_app_tenant_id=null')
+    await page.reload()
+    await expect(automation).toHaveCount(0)
   } finally {
     await f.db.query('update platform_settings set central_app_tenant_id=$1', [
       previous,

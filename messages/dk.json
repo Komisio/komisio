@@ -5524,6 +5524,11 @@
         "ended": "Afsluttet"
       }
     },
-    "minimumGuidance": "Komisios retningslinje: mindst 500 SEK til sælgeren. Du kan gøre undtagelser efter vurdering."
+    "minimumGuidance": "Komisios retningslinje: mindst 500 SEK til sælgeren. Du kan gøre undtagelser efter vurdering.",
+    "guaranteeAutomation": {
+      "heading": "Garantibeløb på dag 45",
+      "hint": "Tilføj automatisk det faste beløb til sælgerens saldo 45 dage efter modtagelsen, hvis det ikke allerede er krediteret ved salg. Udbetaling til bankkonto sker separat.",
+      "notConfigured": "Automatisk kreditering af garantibeløb er sat på pause i dette miljø."
+    }
   }
 }

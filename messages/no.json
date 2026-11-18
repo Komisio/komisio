@@ -5524,6 +5524,11 @@
         "ended": "Avsluttet"
       }
     },
-    "minimumGuidance": "Retningslinje for Komisio: minst 500 SEK til selgeren. Du kan gjøre unntak etter vurdering."
+    "minimumGuidance": "Retningslinje for Komisio: minst 500 SEK til selgeren. Du kan gjøre unntak etter vurdering.",
+    "guaranteeAutomation": {
+      "heading": "Garantibeløp på dag 45",
+      "hint": "Legg automatisk det faste beløpet til selgerens saldo 45 dager etter mottak hvis det ikke allerede er kreditert ved salg. Utbetaling til bankkonto gjøres separat.",
+      "notConfigured": "Automatisk kreditering av garantibeløp er satt på pause i dette miljøet."
+    }
   }
 }

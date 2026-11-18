@@ -63,7 +63,7 @@ export default async function Economy({
     } catch {
       chainRefused = true
     }
-  const money = (ore: number) => format.money(ore, summary.currency)
+  const money = (ore: number | null) => format.money(ore, summary.currency)
   const t = summary.totals
   const vatModes = d.vatModes as Record<string, string>
   const rows: [string, string][] = [
@@ -83,6 +83,9 @@ export default async function Economy({
   ]
   return (
     <div className="economy-page">
+      {summary.totals.vatOre === null && (
+        <p role="status">{all.sales.guaranteeAccountingPending}</p>
+      )}
       <div className="page-heading">
         <FormHelpHeading
           title={d.title}

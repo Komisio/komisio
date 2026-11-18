@@ -10,8 +10,8 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
 const modeTotals = z.object({
   lines: z.number().int(),
   grossOre: ore,
-  vatOre: ore,
-  netOre: ore,
+  vatOre: ore.nullable(),
+  netOre: ore.nullable(),
 })
 export const economySummary = z.object({
   sellerTypes: sellerTypeTotals.nullable().optional(),
@@ -23,10 +23,10 @@ export const economySummary = z.object({
     salesCount: z.number().int(),
     linesCount: z.number().int(),
     grossOre: ore,
-    vatOre: ore,
-    netOre: ore,
-    commissionOre: ore,
-    commissionVatOre: ore,
+    vatOre: ore.nullable(),
+    netOre: ore.nullable(),
+    commissionOre: ore.nullable(),
+    commissionVatOre: ore.nullable(),
     sellerCreditOre: ore,
     returnsCount: z.number().int(),
     refundsOre: ore,

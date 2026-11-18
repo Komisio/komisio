@@ -389,7 +389,8 @@
     "overviewHelpLabel": "Sulla ricezione",
     "payoutBankReviewRequired": "Un proprietario o amministratore deve prima verificare i dati bancari del venditore in Pagamenti.",
     "saleVatRequired": "La vendita non è stata registrata perché non è stato scelto il trattamento IVA del negozio. Un proprietario o amministratore deve sceglierlo nelle impostazioni del negozio e pubblicare la politica prima di riprovare.",
-    "payoutHistoryReview": "I documenti dei pagamenti precedenti richiedono una riconciliazione. Non inviare di nuovo lo stesso pagamento."
+    "payoutHistoryReview": "I documenti dei pagamenti precedenti richiedono una riconciliazione. Non inviare di nuovo lo stesso pagamento.",
+    "guaranteeAccountingPending": "La contabilità degli articoli garantiti è in sospeso. Il saldo è salvato, ma non è ancora possibile creare documenti contabili."
   },
   "brand": "Komisio",
   "tagline": "Più spazio perché le cose vivano di nuovo.",
@@ -752,7 +753,9 @@
     "external_offer.responded": "Il venditore ha risposto all’offerta",
     "external_item.guarantee_frozen": "Importo garantito e scadenza salvati",
     "external_item.registered": "Registrato",
-    "external_request.withdrawn": "Richiesta articolo ritirata"
+    "external_request.withdrawn": "Richiesta articolo ritirata",
+    "external_item.guarantee_credited": "Importo garantito accreditato",
+    "external_item.guarantee_acquired": "Articolo garantito invenduto acquisito"
   },
   "errors": {
     "FORBIDDEN": "Non hai i permessi per farlo.",
@@ -1587,7 +1590,9 @@
       "swish": "Swish",
       "other": "Altro"
     },
-    "paymentHint": "Registra come è stato ricevuto il pagamento. Komisio non riscuote pagamenti."
+    "paymentHint": "Registra come è stato ricevuto il pagamento. Komisio non riscuote pagamenti.",
+    "guaranteeAccountingPending": "L’importo del venditore è fisso. Contabilità e IVA sono in attesa di verifica.",
+    "guaranteeCreditThisSale": "Accreditato al saldo con questa vendita"
   },
   "ledger": {
     "title": "Saldo e registro",
@@ -1606,7 +1611,8 @@
       "booking_charge": "Addebito di prenotazione",
       "adjustment": "Rettifica",
       "consignment_fee": "Quote mensili",
-      "consignment_fee_reversal": "Storna quota"
+      "consignment_fee_reversal": "Storna quota",
+      "credit_guarantee": "Importo garantito"
     },
     "adjustHeading": "Rettifica il registro",
     "adjustHint": "Solo proprietario o amministratore. Una correzione è una nuova voce con un motivo; nulla viene modificato.",
@@ -3139,7 +3145,8 @@
       "FORTNOX_DAY_HISTORY_REVIEW": "I documenti precedenti di questo giorno devono essere riconciliati prima di un nuovo invio.",
       "FORTNOX_DAY_CONTEXT_CHANGED": "La mappatura dei conti o l’azienda collegata è cambiata. Riconcilia i documenti precedenti.",
       "FORTNOX_BASELINE_CHANGED": "La base di confronto è cambiata. Verifica di nuovo l’invio.",
-      "FORTNOX_NO_CHANGES": "Non ci sono nuovi importi da inviare."
+      "FORTNOX_NO_CHANGES": "Non ci sono nuovi importi da inviare.",
+      "GUARANTEE_ACCOUNTING_PENDING": "La contabilità degli articoli garantiti è in sospeso. Il saldo è salvato, ma non è ancora possibile creare documenti contabili."
     },
     "companyName": "Nome azienda in Fortnox",
     "voucherUnknown": "L’esito dell’invio è incerto:",
@@ -5086,7 +5093,8 @@
       "ECONOMIC_DAY_CONTEXT_CHANGED": "Le impostazioni di conti, IVA o giornale differiscono dalla precedente esportazione. Verifica la modifica prima di continuare.",
       "ECONOMIC_BASELINE_CHANGED": "È stata confermata un’altra esportazione per questa data. Riapri la chiusura giornaliera e prepara una nuova esportazione con la variazione restante.",
       "ECONOMIC_NO_CHANGES": "Non ci sono nuovi importi da inviare per questa chiusura giornaliera.",
-      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "I documenti dei pagamenti precedenti richiedono una riconciliazione. Non inviare di nuovo lo stesso pagamento."
+      "ACCOUNTING_PAYOUT_HISTORY_REVIEW": "I documenti dei pagamenti precedenti richiedono una riconciliazione. Non inviare di nuovo lo stesso pagamento.",
+      "GUARANTEE_ACCOUNTING_PENDING": "La contabilità degli articoli garantiti è in sospeso. Il saldo è salvato, ma non è ancora possibile creare documenti contabili."
     },
     "deltaHint": "È inclusa solo la variazione rispetto alla precedente esportazione confermata.",
     "baselineLink": "Visualizza esportazione precedente"

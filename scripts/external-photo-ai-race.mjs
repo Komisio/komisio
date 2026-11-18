@@ -64,6 +64,54 @@ export async function raceExternalPhotoAI({ setup, connectionString }) {
       )
     }
     await setup.query('begin')
+    await setup.query('select komisio_private.lock_external_owner($1)', [user])
+    const verifications = clients.map((c) =>
+      c.query(
+        "select verify_external_item_photo($1,repeat('b',64),100) as id",
+        [photo],
+      ),
+    )
+    let verificationWaiting = 0
+    for (let i = 0; i < 100; i++) {
+      verificationWaiting = (
+        await setup.query(
+          "select count(*)::int n from pg_stat_activity where application_name like 'external_photo_race_%' and wait_event_type='Lock'",
+        )
+      ).rows[0].n
+      if (verificationWaiting === 2) break
+      await pause(20)
+    }
+    await setup.query('commit')
+    assert.equal(
+      verificationWaiting,
+      2,
+      'both upload confirmations contend on the owner lock',
+    )
+    assert.deepEqual(
+      (await Promise.all(verifications)).map((r) => r.rows[0].id),
+      [photo, photo],
+    )
+    const verifiedAt = (
+      await setup.query(
+        'select content_verified_at::text at from external_item_photos where id=$1',
+        [photo],
+      )
+    ).rows[0].at
+    assert.ok(verifiedAt)
+    await clients[0].query(
+      "select verify_external_item_photo($1,repeat('b',64),100)",
+      [photo],
+    )
+    assert.equal(
+      (
+        await setup.query(
+          'select content_verified_at::text at from external_item_photos where id=$1',
+          [photo],
+        )
+      ).rows[0].at,
+      verifiedAt,
+    )
+    await setup.query('begin')
     await setup.query('select 1 from tenants where id=$1 for update', [tenant])
     const calls = clients.map((c) =>
       c.query(

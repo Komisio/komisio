@@ -292,7 +292,7 @@ async function dispatchPostNord(
   const body = postNordReturnBody(config, parcel, reference, messageId)
   body.shipment[0].service.basicServiceCode = service
   if (service === '11') {
-    // The owner's approved estimate includes a 1 kg allowance. It is retained
+    // The owner's approved estimate includes packaging. It is retained
     // separately from any legacy measured weight and never supplied by the app.
     const grams = parcel.weightG ?? parcel.estimatedWeightG
     if (!grams || !Number.isInteger(grams) || grams < 1 || grams > 3000)

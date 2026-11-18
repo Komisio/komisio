@@ -30,7 +30,8 @@ export function economyFormat(locale: Locale) {
         new Date(`${from}T00:00:00Z`),
         new Date(`${to}T00:00:00Z`),
       ),
-    money: (ore: number, currency: string) => {
+    money: (ore: number | null, currency: string) => {
+      if (ore === null) return '—'
       const formatter = new Intl.NumberFormat(tag, {
         style: 'currency',
         currency,

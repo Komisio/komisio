@@ -191,13 +191,15 @@ export async function uploadExternalItemPhoto(
   client: SupabaseClient,
   id: string,
   bytes: Uint8Array,
+  verifyContent = false,
 ) {
   const photoId = uuid.parse(id)
   photoType(bytes)
   const photo = await receptionDerivative(bytes)
+  const digest = createHash('sha256').update(photo).digest('hex')
   const reservation = await client.rpc('reserve_external_item_photo', {
     p_id: photoId,
-    p_sha256: createHash('sha256').update(photo).digest('hex'),
+    p_sha256: digest,
     p_bytes: photo.byteLength,
   })
   checkError(reservation.error)
@@ -218,6 +220,17 @@ export async function uploadExternalItemPhoto(
       !Buffer.from(await prior.data.arrayBuffer()).equals(photo)
     )
       throw new Error('PHOTO_UPLOAD_FAILED')
+  }
+  // Mark only after Storage accepted these bytes, or a retry downloaded an
+  // identical immutable object. Reservation hashes alone are not trusted.
+  if (verifyContent) {
+    const verified = await client.rpc('verify_external_item_photo', {
+      p_id: photoId,
+      p_sha256: digest,
+      p_bytes: photo.byteLength,
+    })
+    checkError(verified.error)
+    if (verified.data !== photoId) throw new Error('UNCONFIRMED_RESULT')
   }
   return { id: photoId }
 }

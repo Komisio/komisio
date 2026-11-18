@@ -40,6 +40,8 @@ select is(claim_central_parcel('f7800000-0000-4000-8000-000000000601','f7800000-
 select is(claim_central_parcel_group('f7800000-0000-4000-8000-000000000602','f7800000-0000-4000-8000-000000000402',array['f7800000-0000-4000-8000-000000000402']::uuid[],'{"firstName":"Synthetic","lastName":"sender","phone":"+46700007802","street":"Testgatan 2","postalCode":"12345","city":"Teststad"}','sandbox')#>>'{parcel,serviceCode}','11','new group freezes Home Small from server configuration');
 reset role;
 select throws_like($$update central_parcels set service_code='24' where id='f7800000-0000-4000-8000-000000000602'$$,'%IMMUTABLE%','claimed service cannot be edited');
+select is((select estimated_weight_g from central_parcels where id='f7800000-0000-4000-8000-000000000602'),2100,'unknown item uses 2000 g plus 100 g packaging');
+select throws_like($$update central_parcels set estimated_weight_g=3000 where id='f7800000-0000-4000-8000-000000000602'$$,'%IMMUTABLE%','booked estimate cannot be recalculated in place');
 update komisio_private.central_shipping_runtime set service_code='24';
 set local role authenticated;
 select is(read_central_parcel('f7800000-0000-4000-8000-000000000402')#>>'{parcel,serviceCode}','11','configuration rollback does not rewrite a Home Small attempt');

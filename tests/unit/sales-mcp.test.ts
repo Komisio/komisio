@@ -37,6 +37,7 @@ const line = {
   ownership: 'consignment' as const,
   commission_basis: 'inclusive' as const,
   commission_rate_percent: '60',
+  accounting_pending: false,
   commission_ore: 12000,
   commission_vat_ore: 0,
   seller_credit_ore: 8000,

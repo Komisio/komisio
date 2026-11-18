@@ -45,7 +45,7 @@ export const centralParcel = z
     environment: z.enum(['sandbox', 'production']),
     // Missing only when talking to a pre-service-selection database.
     serviceCode: z.enum(['24', '11']).optional(),
-    estimatedWeightG: z.number().int().min(1001).max(3000).nullish(),
+    estimatedWeightG: z.number().int().min(101).max(3000).nullish(),
     sender: parcelContact,
     recipient: parcelContact,
     weightG: z.number().int().min(1).max(20000).nullable(),
@@ -98,7 +98,11 @@ function validParcelMeasurements(p: {
   )
 }
 export const centralParcelCommand = z.union([
-  z.strictObject({ action: z.literal('read'), offerId: z.uuid() }),
+  z.strictObject({
+    action: z.literal('read'),
+    offerId: z.uuid(),
+    protocol: z.literal(2).optional(),
+  }),
   bookCentralParcel,
 ])
 export type CentralParcel = z.infer<typeof centralParcel>

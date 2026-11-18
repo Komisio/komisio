@@ -16,6 +16,13 @@ and agreement evidence remains unchanged. This supersedes the SMS decisions belo
 
 ## Central parcel shipping (2026-11-12)
 
+Owner correction 2026-11-18: Home Small uses at most 2500 g estimated item
+weight plus 100 g estimated packaging per parcel. Spare capacity is not added
+to the booking weight. This supersedes the 2000 g/1000 g rule below; existing
+bookings stay immutable. Public iOS build 83 accepts only a 2000 g selection
+limit, so the 2500 g app selection requires an explicit protocol-2 read and a
+companion mobile update. Unknown item estimates retain the 2000 g fallback.
+
 Owner confirmation 2026-11-16: after contacting PostNord, the owner confirms
 Home Small is acceptable for the intended contents values and estimated weight.
 Home Small (11/C2) is the selected service; the intervening Home instruction was
@@ -113,7 +120,18 @@ and accounting reconciliation without negative commission or duplicate credit.
 Existing percentage-based sales and returns remain unchanged. Guarantee records
 alone do not create inventory, ledger credit, purchases or accounting exports.
 
-Owner follow-up 2026-11-10: accounting for sales below the guarantee and day-45
+Owner approval 2026-11-18 supersedes the operational hold below: implement fixed
+credit on sale or 45 days from physical receipt, unsold acquisition, retained
+credit after return and no second credit on resale, only for the central tenant.
+Use existing guarantee/event evidence and seller balances; no new mobile protocol.
+The existing account/balance reads recognize the immutable Auth owner link for
+central sellers. Contact email still cannot establish or merge that identity.
+Accounting, VAT, purchase tax documents and automatic reconciliation remain open.
+Pending facts must not enter final accounting exports. Late sales retain their
+original timestamps and any earlier fulfillment instead of rewriting evidence.
+Worker activation and production release are separate verification steps.
+
+Earlier hold 2026-11-10: accounting for sales below the guarantee and day-45
 acquisitions must be discussed before implementation. Late-import reconciliation
 also remains undecided. Neither the proposed separate cost accounts nor automatic
 day-45 credit with manual reconciliation is approved. Continue nonfinancial

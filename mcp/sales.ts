@@ -70,18 +70,19 @@ export async function readReceiptTool(
       lineNo: l.line_no,
       itemId: l.item_id,
       priceOre: exactOre.parse(l.price_ore),
+      accountingPending: l.accounting_pending,
       ownership: l.ownership,
       commissionBasis: l.commission_basis,
       commissionRatePercent:
         l.commission_rate_percent === null
           ? null
           : Number(l.commission_rate_percent),
-      commissionOre: exactOre.parse(l.commission_ore),
-      commissionVatOre: exactOre.parse(l.commission_vat_ore),
+      commissionOre: exactOre.nullable().parse(l.commission_ore),
+      commissionVatOre: exactOre.nullable().parse(l.commission_vat_ore),
       sellerCreditOre: exactOre.parse(l.seller_credit_ore),
       vatMode: l.vat_mode,
       vatRateBp: l.vat_rate_bp,
-      vatOre: exactOre.parse(l.vat_ore),
+      vatOre: exactOre.nullable().parse(l.vat_ore),
     })),
   }
 }

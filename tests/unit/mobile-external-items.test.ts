@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import sharp from 'sharp'
+import { createHash } from 'node:crypto'
 const mocks = vi.hoisted(() => ({
   createClient: vi.fn(),
   getUser: vi.fn(),
@@ -154,6 +155,7 @@ beforeEach(() => {
   vi.stubEnv('KOMISIO_MOBILE_ALLOWED_ORIGINS', 'https://mobile.example.test')
   vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'https://supabase.example.test')
   vi.stubEnv('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'synthetic-public-key')
+  vi.stubEnv('KOMISIO_SELLER_AI_SERVER_KEY', '')
   mocks.createClient.mockReturnValue({
     auth: {
       getUser: mocks.getUser,
@@ -613,6 +615,107 @@ describe('external request identity boundary', () => {
 })
 
 describe('private external photos', () => {
+  it('attests only stored sanitized bytes using a server-owned capability', async () => {
+    vi.stubEnv('KOMISIO_SELLER_AI_SERVER_KEY', 'a'.repeat(64))
+    mocks.rpc.mockImplementation(async (name: string) => ({
+      data:
+        name === 'reserve_external_item_photo'
+          ? `${owner}/${photoId}.jpg`
+          : photoId,
+      error: null,
+    }))
+    const bytes = await sharp({
+      create: { width: 8, height: 8, channels: 3, background: 'red' },
+    })
+      .png()
+      .toBuffer()
+    const response = await photoPost(
+      photoRequest(bytes, { 'x-komisio-seller-ai': 'forged' }),
+    )
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual({ id: photoId })
+    expect(mocks.createClient.mock.calls[0][2].global.headers).toEqual({
+      Authorization: 'Bearer synthetic.access.token',
+      'x-komisio-seller-ai': 'a'.repeat(64),
+    })
+    const uploaded = mocks.upload.mock.calls[0][1] as Uint8Array
+    expect(mocks.rpc).toHaveBeenLastCalledWith('verify_external_item_photo', {
+      p_id: photoId,
+      p_sha256: createHash('sha256').update(uploaded).digest('hex'),
+      p_bytes: uploaded.byteLength,
+    })
+    expect(mocks.rpc.mock.invocationCallOrder.at(-1)).toBeGreaterThan(
+      mocks.upload.mock.invocationCallOrder[0],
+    )
+  })
+  it('never attests a conflicting object after an interrupted upload', async () => {
+    vi.stubEnv('KOMISIO_SELLER_AI_SERVER_KEY', 'a'.repeat(64))
+    mocks.upload.mockResolvedValue({ error: new Error('already exists') })
+    mocks.download.mockResolvedValue({
+      data: new Blob(['different bytes']),
+      error: null,
+    })
+    const bytes = await sharp({
+      create: { width: 8, height: 8, channels: 3, background: 'red' },
+    })
+      .png()
+      .toBuffer()
+    expect((await photoPost(photoRequest(bytes))).status).toBe(503)
+    expect(mocks.rpc.mock.calls.map(([name]) => name)).toEqual([
+      'reserve_external_item_photo',
+    ])
+  })
+  it('recovers an unconfirmed attestation by verifying the identical stored upload', async () => {
+    vi.stubEnv('KOMISIO_SELLER_AI_SERVER_KEY', 'a'.repeat(64))
+    let retry = false
+    mocks.rpc.mockImplementation(async (name: string) => ({
+      data:
+        name === 'reserve_external_item_photo'
+          ? `${owner}/${photoId}.jpg`
+          : retry
+            ? photoId
+            : null,
+      error:
+        name === 'verify_external_item_photo' && !retry
+          ? { message: 'response lost' }
+          : null,
+    }))
+    const bytes = await sharp({
+      create: { width: 8, height: 8, channels: 3, background: 'red' },
+    })
+      .png()
+      .toBuffer()
+    expect((await photoPost(photoRequest(bytes))).status).toBe(503)
+    const uploaded = mocks.upload.mock.calls[0][1] as Uint8Array
+    retry = true
+    mocks.upload.mockResolvedValue({ error: new Error('already exists') })
+    mocks.download.mockResolvedValue({
+      data: new Blob([new Uint8Array(uploaded)]),
+      error: null,
+    })
+    expect((await photoPost(photoRequest(bytes))).status).toBe(200)
+    expect(mocks.download).toHaveBeenCalledWith(`${owner}/${photoId}.jpg`)
+  })
+  it('keeps ordinary uploads available without an AI capability and ignores forged headers', async () => {
+    const bytes = await sharp({
+      create: { width: 8, height: 8, channels: 3, background: 'red' },
+    })
+      .png()
+      .toBuffer()
+    expect(
+      (
+        await photoPost(
+          photoRequest(bytes, { 'x-komisio-seller-ai': 'a'.repeat(64) }),
+        )
+      ).status,
+    ).toBe(200)
+    expect(mocks.createClient.mock.calls[0][2].global.headers).toEqual({
+      Authorization: 'Bearer synthetic.access.token',
+    })
+    expect(mocks.rpc.mock.calls.map(([name]) => name)).toEqual([
+      'reserve_external_item_photo',
+    ])
+  })
   it('confirms an already completed discard without another Storage deletion', async () => {
     mocks.rpc.mockResolvedValue({ data: null, error: null })
     expect(

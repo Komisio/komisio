@@ -1,5 +1,7 @@
 # Decision Log
 
+- 2026-11-18: Owner sets central Home Small to 2500 g estimated item capacity plus 100 g packaging per parcel. Preserve booked weights and the 2000 g unknown-item fallback. Protocol 2 reads expose the new capacity; released clients retain their compatible 2000 g selection limit.
+
 - 2026-11-18: Copied central photos may reuse a prior AI weight only for the same owner, recipient and ordered verified image hashes. Attest stored bytes through the server capability; client reservation hashes alone are insufficient. Keep request links and booked weights immutable.
 
 - 2026-11-17: Central registration publishes staff-confirmed description and price. Preserve the submitted brand in immutable request evidence; do not promote it to an observed item attribute without staff verification. Unverified brand suggestions must not block registration.

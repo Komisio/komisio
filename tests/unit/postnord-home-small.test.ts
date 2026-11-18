@@ -14,6 +14,7 @@ import {
 } from '../../lib/platform/postnord'
 import {
   bookCentralParcel,
+  centralParcel,
   type CentralParcel,
 } from '../../lib/engine/central-parcel-schema'
 import { executeCentralParcel } from '../../lib/engine/central-parcels'
@@ -88,6 +89,23 @@ const command = {
 }
 
 describe('PostNord Home Small Print Label', () => {
+  it.each([101, 450, 2600, 3000])(
+    'sends the frozen %s g estimate, including light and historical parcels',
+    async (grams) => {
+      const saved = centralParcel.parse({ ...parcel, estimatedWeightG: grams })
+      const transport = vi.fn().mockResolvedValue(Response.json(reply()))
+      await bookPostNordParcel(config, saved, 'H-1', 'K1', transport)
+      const body = JSON.parse(transport.mock.calls[0][1].body)
+      expect(body.shipment[0].totalGrossWeight).toEqual({
+        value: grams / 1000,
+        unit: 'KGM',
+      })
+      expect(body.shipment[0].goodsItem[0].items[0].grossWeight).toEqual({
+        value: grams / 1000,
+        unit: 'KGM',
+      })
+    },
+  )
   it('produces a scannable QR containing the carrier ALQ code with the existing wire shape', async () => {
     const booking = await parsePostNordHomeSmallBooking(
       reply(),

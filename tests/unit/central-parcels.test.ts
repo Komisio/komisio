@@ -105,6 +105,32 @@ async function reply() {
   }
 }
 describe('central parcel boundary', () => {
+  it.each([undefined, 2])(
+    'negotiates the selection limit without breaking public clients (protocol %s)',
+    async (protocol) => {
+      const rpc = vi.fn().mockResolvedValue({
+        data: {
+          offerId: offer,
+          configured: true,
+          selectionWeightLimitG: 2500,
+          parcel: null,
+          eligibleItems: [],
+        },
+        error: null,
+      })
+      const result = await executeCentralParcel(
+        { rpc } as unknown as SupabaseClient,
+        { action: 'read', offerId: offer, ...(protocol ? { protocol } : {}) },
+        config,
+      )
+      expect(result).toMatchObject({
+        selectionWeightLimitG: protocol === 2 ? 2500 : 2000,
+      })
+      expect(rpc).toHaveBeenCalledExactlyOnceWith('read_central_parcel', {
+        p_offer: offer,
+      })
+    },
+  )
   it('omits unknown measurements entirely while preserving legacy payloads', () => {
     const { weightG, lengthMm, widthMm, heightMm, ...simple } = command
     expect(bookCentralParcel.parse(simple)).toEqual(simple)

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { centralParcel, shippingContact } from './central-parcel-schema'
 import type { SupabaseClient } from '@supabase/supabase-js'
 export const externalRequestStatuses = [
   'all',
@@ -21,6 +22,7 @@ export type ExternalRequestStatus = (typeof externalRequestStatuses)[number]
 export type ExternalRequestFilters = {
   status: ExternalRequestStatus
   query: string
+  owner?: string
 }
 
 const uuid = z.uuid().transform((value) => value.toLowerCase())
@@ -224,6 +226,12 @@ export async function issueExternalOffer(
 }
 
 const queueRow = z.object({
+  approval_mode: z.enum(['offer', 'fixed']).default('offer'),
+  seller_name: z.string().nullish(),
+  sender_revision: z.number().int().nonnegative().nullish(),
+  sender_contact: shippingContact.nullish(),
+  parcel: centralParcel.nullish(),
+  selection_weight_g: z.number().int().min(1).max(100000).optional(),
   estimated_weight_g: z.number().int().min(1).max(100000).nullish(),
   queue_status: z.enum(externalRequestStatuses).exclude(['all']),
   id: uuid,
@@ -248,16 +256,17 @@ export async function readExternalOfferQueue(
   page: number,
   filters: ExternalRequestFilters = { status: 'all', query: '' },
 ) {
-  const r = await client.rpc('external_item_offer_queue_filtered', {
+  const r = await client.rpc('central_request_queue', {
     p_tenant: uuid.parse(tenantId),
-    p_offset: (z.number().int().min(1).max(4001).parse(page) - 1) * 25,
+    p_offset: (z.number().int().min(1).max(2001).parse(page) - 1) * 50,
     p_status: z.enum(externalRequestStatuses).parse(filters.status),
     p_query: z.string().trim().max(120).parse(filters.query),
+    p_owner: filters.owner ? uuid.parse(filters.owner) : null,
   })
   check(r.error)
   return z
     .object({
-      rows: z.array(queueRow).max(25),
+      rows: z.array(queueRow).max(50),
       total: z.number().int().nonnegative(),
     })
     .parse(r.data)

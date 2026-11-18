@@ -13,6 +13,7 @@ import {
 const allowedErrors = new Set([
   'AUTH_REQUIRED',
   'FORBIDDEN',
+  'STAFF_BOOKING_REQUIRED',
   'SUPPORT_READ_ONLY',
   'INVALID_INPUT',
   'REQUEST_CONFLICT',
@@ -43,6 +44,7 @@ export async function executeCentralParcel(
       .object({
         offerId: z.literal(c.offerId),
         configured: z.boolean(),
+        staffManaged: z.boolean().default(false),
         selectionWeightLimitG: z
           .union([z.literal(2000), z.literal(2500)])
           .nullish(),
@@ -53,6 +55,7 @@ export async function executeCentralParcel(
     return {
       offerId: data.offerId,
       parcel: data.parcel,
+      staffManaged: data.staffManaged,
       available: config !== null && data.configured,
       measurementsOptional: true,
       bundlingAvailable: true,

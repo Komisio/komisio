@@ -755,7 +755,11 @@
     "external_item.registered": "Rekisteröity",
     "external_request.withdrawn": "Tuotepyyntö peruutettu",
     "external_item.guarantee_credited": "Taattu summa hyvitetty",
-    "external_item.guarantee_acquired": "Myymätön takuutuote lunastettu"
+    "external_item.guarantee_acquired": "Myymätön takuutuote lunastettu",
+    "central_intake.profile_saved": "Lähettäjätiedot ja myyjäsopimus tallennettu",
+    "central_intake.group_reviewed": "Tuotepyynnöt hyväksytty",
+    "external_request.approved": "Myyjän summa hyväksytty",
+    "central_parcel.staff_dispatched": "Paketin lähetys aloitettu"
   },
   "errors": {
     "FORBIDDEN": "Sinulla ei ole oikeutta tehdä tätä.",
@@ -5535,6 +5539,20 @@
       "heading": "Takuusumma päivänä 45",
       "hint": "Lisää kiinteä summa automaattisesti myyjän saldoon 45 päivää vastaanotosta, ellei sitä ole jo hyvitetty myynnin yhteydessä. Maksu pankkitilille tehdään erikseen.",
       "notConfigured": "Takuusumman automaattinen hyvitys on keskeytetty tässä ympäristössä."
+    },
+    "fixed": {
+      "intro": "Hyväksy myyjän summa ja valitse samaan pakettiin lähetettävät tuotteet.",
+      "allItems": "Näytä kaikki myyjän tuotteet",
+      "select": "Valitse {item}",
+      "selected": "{count} tuotetta valittu",
+      "weight": "Noin {grams} g",
+      "weightLimit": "Valitse vähemmän tuotteita. Tuotteiden arvioitu paino saa olla enintään 2 500 g paketissa.",
+      "approveBook": "Hyväksy ja varaa kuljetus",
+      "approve": "Hyväksy – varaa kuljetus myöhemmin",
+      "approved": "Hyväksytty. Tuotteet voi valita yhdessä kuljetusta varattaessa.",
+      "booked": "Kuljetus varattu. Myyjä näkee yhden lähetyskoodin ja kaikki paketin tuotteet.",
+      "pending": "Varaus pitää vahvistaa. Älä tee näille tuotteille uutta varausta.",
+      "sellerAmount": "Myyjän summa"
     }
   }
 }

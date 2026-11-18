@@ -61,6 +61,7 @@ it('shipping reads require bearer email identity and never trust caller capabili
   expect(await response.json()).toEqual({
     offerId: requestId,
     parcel: null,
+    staffManaged: false,
     available: false,
     measurementsOptional: true,
     bundlingAvailable: true,

@@ -62,11 +62,17 @@ export function renderSellerPush(
   locale: Locale,
   item: string,
   store: string,
+  approved = false,
 ) {
   if (kind === 'external_item_offered' || kind === 'external_item_declined') {
     const [offered, declined, body] = requestCopy[locale]
     return {
-      title: kind === 'external_item_offered' ? offered : declined,
+      title:
+        kind === 'external_item_offered'
+          ? approved
+            ? approvedCopy[locale]
+            : offered
+          : declined,
       body,
     }
   }
@@ -81,6 +87,16 @@ export function renderSellerPush(
   }
 }
 
+const approvedCopy: Record<Locale, string> = {
+  sv: 'Komisio har godkänt din vara',
+  en: 'Komisio has approved your item',
+  no: 'Komisio har godkjent varen din',
+  dk: 'Komisio har godkendt din vare',
+  fi: 'Komisio on hyväksynyt tuotteesi',
+  de: 'Komisio hat deinen Artikel angenommen',
+  es: 'Komisio ha aceptado tu artículo',
+  it: 'Komisio ha approvato il tuo articolo',
+}
 const requestCopy: Record<Locale, [string, string, string]> = {
   sv: [
     'Du har fått ett erbjudande',

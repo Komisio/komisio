@@ -9,6 +9,7 @@ import {
 } from '@/lib/platform/external-request-filters'
 import { ExternalRequestFilters } from '@/components/intake/external-request-filters'
 import { ExternalRequestQueue } from '@/components/intake/external-request-queue'
+import { CentralRequestGroup } from '@/components/intake/central-request-group'
 import { AutomationSwitch } from '@/components/intake/automation-switch'
 import { automationIdentity, readAutomation } from '@/lib/engine/automation'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
@@ -22,6 +23,7 @@ export default async function ExternalRequests({
     page?: string | string[]
     status?: string | string[]
     q?: string | string[]
+    owner?: string | string[]
   }>
 }) {
   const ctx = await requirePlatform(),
@@ -34,7 +36,7 @@ export default async function ExternalRequests({
     filters = externalRequestFilters(params)
   const page =
     typeof params.page === 'string' && /^[1-9]\d{0,3}$/.test(params.page)
-      ? Math.min(4001, Number(params.page))
+      ? Math.min(2001, Number(params.page))
       : 1
   const { rows, total } = await readExternalOfferQueue(
     ctx.client,
@@ -42,7 +44,7 @@ export default async function ExternalRequests({
     page,
     filters,
   )
-  const pages = Math.max(1, Math.ceil(total / 25))
+  const pages = Math.max(1, Math.ceil(total / 50))
   if (page > pages) redirect(externalRequestHref(filters, pages))
   const ids = [
     ...new Set(
@@ -59,7 +61,14 @@ export default async function ExternalRequests({
         .in('id', ids)
     : { data: [], error: null }
   if (agreements.error) throw new Error('REQUEST_FAILED')
-  const filtered = filters.status !== 'all' || Boolean(filters.query)
+  const filtered =
+    filters.status !== 'all' || Boolean(filters.query) || Boolean(filters.owner)
+  const groups = [
+    ...new Set(
+      rows.filter((r) => r.approval_mode === 'fixed').map((r) => r.owner_id),
+    ),
+  ]
+  const legacy = rows.filter((r) => r.approval_mode !== 'fixed')
   const recipient =
     tenant.role === 'owner'
       ? await ctx.client.rpc('public_central_app_recipient')
@@ -111,15 +120,43 @@ export default async function ExternalRequests({
         <span>{t.newest}</span>
       </div>
       {rows.length ? (
-        <ExternalRequestQueue
-          rows={rows}
-          agreements={agreements.data ?? []}
-          tenantId={tenant.id}
-          write={tenant.role !== 'readonly'}
-          locale={ctx.locale}
-          d={d}
-          leaveWarning={all.leaveUnsaved}
-        />
+        <div className={styles.list}>
+          {groups.map((owner) => {
+            const group = rows.filter(
+              (r) => r.approval_mode === 'fixed' && r.owner_id === owner,
+            )
+            return (
+              <CentralRequestGroup
+                key={JSON.stringify(
+                  group.map((r) => [
+                    r.id,
+                    r.queue_status,
+                    r.sender_revision,
+                    r.agreement_version_id,
+                    r.parcel?.id,
+                    r.parcel?.status,
+                  ]),
+                )}
+                rows={group}
+                agreements={agreements.data ?? []}
+                tenantId={tenant.id}
+                write={tenant.role !== 'readonly'}
+                locale={ctx.locale}
+                d={d}
+                leaveWarning={all.leaveUnsaved}
+              />
+            )
+          })}
+          <ExternalRequestQueue
+            rows={legacy}
+            agreements={agreements.data ?? []}
+            tenantId={tenant.id}
+            write={tenant.role !== 'readonly'}
+            locale={ctx.locale}
+            d={d}
+            leaveWarning={all.leaveUnsaved}
+          />
+        </div>
       ) : (
         <div className={styles.empty}>
           <h2>{filtered ? t.noResults : d.empty}</h2>

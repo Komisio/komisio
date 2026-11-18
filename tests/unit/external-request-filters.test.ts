@@ -34,13 +34,11 @@ it('sends status and text to the scoped read before pagination, never filters on
       query: 'jacka',
     }),
   ).toEqual({ rows: [], total: 31 })
-  expect(rpc).toHaveBeenCalledExactlyOnceWith(
-    'external_item_offer_queue_filtered',
-    {
-      p_tenant: tenant,
-      p_offset: 25,
-      p_status: 'waiting',
-      p_query: 'jacka',
-    },
-  )
+  expect(rpc).toHaveBeenCalledExactlyOnceWith('central_request_queue', {
+    p_tenant: tenant,
+    p_offset: 50,
+    p_owner: null,
+    p_status: 'waiting',
+    p_query: 'jacka',
+  })
 })

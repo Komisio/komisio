@@ -4,6 +4,8 @@ Receipt retrieval and product export remain separate owner-enabled scopes.
 
 # Open questions
 
+Central fixed-price intake (resolved 2026-11-18): the owner requires the seller's amount and removes the counteroffer/second-acceptance step. Agreement consent and reusable sender details move before first submission; bank details remain a payout concern. Staff may book same-seller groups within existing parcel limits. Historical offers keep their original evidence and flow.
+
 ## Central identity and sender contact (resolved 2026-11-17)
 
 The owner retires SMS sign-in and all mandatory phone verification. Verified

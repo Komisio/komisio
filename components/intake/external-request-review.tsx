@@ -16,6 +16,7 @@ export function ExternalRequestReview({
   agreementId,
   d,
   leaveWarning,
+  declineOnly = false,
 }: {
   tenantId: string
   requestId: string
@@ -23,6 +24,7 @@ export function ExternalRequestReview({
   agreementId: string | null
   d: Dictionary['externalOffers']
   leaveWarning: string
+  declineOnly?: boolean
 }) {
   const router = useRouter(),
     prefix = useId()
@@ -30,7 +32,9 @@ export function ExternalRequestReview({
     null,
   )
   const running = useRef(false)
-  const [action, setAction] = useState<'offer' | 'decline'>('offer')
+  const [action, setAction] = useState<'offer' | 'decline'>(
+    declineOnly ? 'decline' : 'offer',
+  )
   const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false),
     [saved, setSaved] = useState(false)
@@ -109,7 +113,10 @@ export function ExternalRequestReview({
     >
       <fieldset disabled={locked} className="submission-fields">
         <div className={styles.mode}>
-          {(['offer', 'decline'] as const).map((value) => (
+          {(declineOnly
+            ? (['decline'] as const)
+            : (['offer', 'decline'] as const)
+          ).map((value) => (
             <label key={value}>
               <input
                 type="radio"

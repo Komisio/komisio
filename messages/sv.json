@@ -5524,6 +5524,11 @@
         "ended": "Avslutad"
       }
     },
-    "minimumGuidance": "Riktlinje för Komisio: minst 500 kr till säljaren. Du kan göra undantag efter bedömning."
+    "minimumGuidance": "Riktlinje för Komisio: minst 500 kr till säljaren. Du kan göra undantag efter bedömning.",
+    "guaranteeAutomation": {
+      "heading": "Garantibelopp dag 45",
+      "hint": "Lägg automatiskt det fasta beloppet på säljarens saldo 45 dagar efter mottagning om det inte redan har krediterats vid försäljning. Utbetalning till bankkonto görs separat.",
+      "notConfigured": "Automatisk garantikreditering är pausad i driftmiljön."
+    }
   }
 }

@@ -5524,6 +5524,11 @@
         "ended": "Concluso"
       }
     },
-    "minimumGuidance": "Linea guida Komisio: almeno 500 SEK al venditore. Puoi fare eccezioni dopo la valutazione."
+    "minimumGuidance": "Linea guida Komisio: almeno 500 SEK al venditore. Puoi fare eccezioni dopo la valutazione.",
+    "guaranteeAutomation": {
+      "heading": "Importo garantito al giorno 45",
+      "hint": "Accredita automaticamente l’importo fisso sul saldo del venditore 45 giorni dopo la ricezione, se non è già stato accreditato alla vendita. Il pagamento sul conto bancario avviene separatamente.",
+      "notConfigured": "L’accredito automatico degli importi garantiti è sospeso in questo ambiente."
+    }
   }
 }

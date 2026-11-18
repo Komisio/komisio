@@ -5530,6 +5530,11 @@
         "ended": "Finalizado"
       }
     },
-    "minimumGuidance": "Criterio de Komisio: al menos 500 SEK para el vendedor. Puedes hacer excepciones tras la evaluación."
+    "minimumGuidance": "Criterio de Komisio: al menos 500 SEK para el vendedor. Puedes hacer excepciones tras la evaluación.",
+    "guaranteeAutomation": {
+      "heading": "Importe garantizado el día 45",
+      "hint": "Añade automáticamente el importe fijo al saldo del vendedor 45 días después de la recepción, salvo que ya se haya abonado al venderse. El pago a la cuenta bancaria se realiza por separado.",
+      "notConfigured": "El abono automático de importes garantizados está pausado en este entorno."
+    }
   }
 }

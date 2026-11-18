@@ -5530,6 +5530,11 @@
         "ended": "Abgeschlossen"
       }
     },
-    "minimumGuidance": "Komisio-Richtlinie: mindestens 500 SEK für den Verkäufer. Nach Prüfung sind Ausnahmen möglich."
+    "minimumGuidance": "Komisio-Richtlinie: mindestens 500 SEK für den Verkäufer. Nach Prüfung sind Ausnahmen möglich.",
+    "guaranteeAutomation": {
+      "heading": "Garantierter Betrag am Tag 45",
+      "hint": "Den festen Betrag 45 Tage nach Eingang automatisch dem Verkäuferguthaben gutschreiben, sofern dies nicht bereits beim Verkauf erfolgt ist. Die Bankauszahlung erfolgt separat.",
+      "notConfigured": "Die automatische Garantiegutschrift ist in dieser Umgebung pausiert."
+    }
   }
 }

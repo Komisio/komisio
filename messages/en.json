@@ -5524,6 +5524,11 @@
         "ended": "Completed"
       }
     },
-    "minimumGuidance": "Komisio guideline: at least SEK 500 to the seller. You may make exceptions after review."
+    "minimumGuidance": "Komisio guideline: at least SEK 500 to the seller. You may make exceptions after review.",
+    "guaranteeAutomation": {
+      "heading": "Guaranteed amount on day 45",
+      "hint": "Automatically add the fixed amount to the seller balance 45 days after receipt unless already credited on sale. Bank payout is handled separately.",
+      "notConfigured": "Automatic guarantee crediting is paused in this environment."
+    }
   }
 }

@@ -5530,6 +5530,11 @@
         "ended": "Päättynyt"
       }
     },
-    "minimumGuidance": "Komision ohje: vähintään 500 SEK myyjälle. Voit tehdä poikkeuksia arvioinnin perusteella."
+    "minimumGuidance": "Komision ohje: vähintään 500 SEK myyjälle. Voit tehdä poikkeuksia arvioinnin perusteella.",
+    "guaranteeAutomation": {
+      "heading": "Takuusumma päivänä 45",
+      "hint": "Lisää kiinteä summa automaattisesti myyjän saldoon 45 päivää vastaanotosta, ellei sitä ole jo hyvitetty myynnin yhteydessä. Maksu pankkitilille tehdään erikseen.",
+      "notConfigured": "Takuusumman automaattinen hyvitys on keskeytetty tässä ympäristössä."
+    }
   }
 }

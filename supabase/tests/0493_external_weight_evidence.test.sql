@@ -53,7 +53,7 @@ select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'
 select issue_external_item_offer(:'tenant',pg_temp.uid(401),pg_temp.uid(301),null,50000,100000,pg_temp.uid(10));
 select is(external_item_offer_queue_filtered(:'tenant',0,'all','Dress')#>>'{rows,0,estimated_weight_g}','350','staff read the linked estimate');
 reset role;
-select is(komisio_private.central_parcel_estimated_weight(array[pg_temp.uid(401)],'11'),1350,'350 g item adds the existing 1000 g packaging allowance');
+select is(komisio_private.central_parcel_estimated_weight(array[pg_temp.uid(401)],'11'),450,'350 g item adds the approved 100 g packaging allowance');
 select throws_like($$update external_item_photos set content_verified_at=null where id=pg_temp.uid(102)$$,'%PHOTO_IN_USE%','used photo evidence cannot be changed');
 
 -- Synthetic immutable histories isolate matching dimensions, including cases
@@ -112,10 +112,10 @@ select pg_temp.submit(321,:'tenant',array[pg_temp.uid(121)]); select pg_temp.sub
 select pg_temp.submit(323,:'tenant',array[pg_temp.uid(123)]); select pg_temp.submit(324,:'tenant',array[pg_temp.uid(124)]);
 select pg_temp.submit(325,:'tenant',array[pg_temp.uid(125)]); select pg_temp.submit(326,:'tenant',array[pg_temp.uid(126)]);
 select is((select count(*) from external_item_requests where id in (pg_temp.uid(321),pg_temp.uid(322),pg_temp.uid(323),pg_temp.uid(324),pg_temp.uid(325),pg_temp.uid(326)) and weight_analysis_id is null),6::bigint,'owner, tenant, prompt, pending, failed and future-result boundaries all hold');
-select pg_temp.seed_analysis(218,:'tenant',pg_temp.uid(2),array[repeat('7',64)],2500);
+select pg_temp.seed_analysis(218,:'tenant',pg_temp.uid(2),array[repeat('7',64)],2501);
 select pg_temp.copy_photo(127,repeat('7',64));
 select pg_temp.submit(327,:'tenant',array[pg_temp.uid(127)]);
-select is(komisio_private.external_item_selection_weight(pg_temp.uid(327)),2500,'known overweight copied item cannot fall back to the eligible unknown weight');
+select is(komisio_private.external_item_selection_weight(pg_temp.uid(327)),2501,'known overweight copied item cannot fall back to the eligible unknown weight');
 set local role authenticated;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
 select issue_external_item_offer(:'tenant',pg_temp.uid(427),pg_temp.uid(327),null,50000,100000,pg_temp.uid(10));

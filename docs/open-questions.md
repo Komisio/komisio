@@ -16,6 +16,13 @@ and agreement evidence remains unchanged. This supersedes the SMS decisions belo
 
 ## Central parcel shipping (2026-11-12)
 
+Owner correction 2026-11-18: Home Small uses at most 2500 g estimated item
+weight plus 100 g estimated packaging per parcel. Spare capacity is not added
+to the booking weight. This supersedes the 2000 g/1000 g rule below; existing
+bookings stay immutable. Public iOS build 83 accepts only a 2000 g selection
+limit, so the 2500 g app selection requires an explicit protocol-2 read and a
+companion mobile update. Unknown item estimates retain the 2000 g fallback.
+
 Owner confirmation 2026-11-16: after contacting PostNord, the owner confirms
 Home Small is acceptable for the intended contents values and estimated weight.
 Home Small (11/C2) is the selected service; the intervening Home instruction was

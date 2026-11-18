@@ -43,7 +43,9 @@ export async function executeCentralParcel(
       .object({
         offerId: z.literal(c.offerId),
         configured: z.boolean(),
-        selectionWeightLimitG: z.literal(2000).nullish(),
+        selectionWeightLimitG: z
+          .union([z.literal(2000), z.literal(2500)])
+          .nullish(),
         parcel: centralParcel.nullable(),
         eligibleItems: z.array(parcelItem).max(10).default([]),
       })
@@ -55,8 +57,13 @@ export async function executeCentralParcel(
       measurementsOptional: true,
       bundlingAvailable: true,
       eligibleItems: data.eligibleItems,
-      ...(data.selectionWeightLimitG === 2000
-        ? { selectionWeightLimitG: data.selectionWeightLimitG }
+      // Public build 83 rejects any explicit limit other than 2000. Keep its
+      // conservative selector working until the client opts into protocol 2.
+      ...(data.selectionWeightLimitG != null
+        ? {
+            selectionWeightLimitG:
+              c.protocol === 2 ? data.selectionWeightLimitG : 2000,
+          }
         : {}),
     }
   }

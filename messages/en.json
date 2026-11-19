@@ -2587,6 +2587,7 @@
     "noMatches": "No purchases match your search."
   },
   "sellerPortal": {
+    "automatic": "Komisio automatically",
     "itemDetails": "Price and sale period",
     "handovers": "Announce a drop-off",
     "handoverIntro": "Announce a drop-off before you arrive. Show the reference at the counter; the store records receipt and you see the drop-off number here.",

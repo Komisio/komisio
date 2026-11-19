@@ -2587,6 +2587,7 @@
     "noMatches": "Inga inköp matchar sökningen."
   },
   "sellerPortal": {
+    "automatic": "Komisio automatiskt",
     "itemDetails": "Pris och säljperiod",
     "items": "Mina varor",
     "noItems": "Inga varor ännu.",

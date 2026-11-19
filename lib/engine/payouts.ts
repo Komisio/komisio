@@ -80,7 +80,7 @@ const payoutRow = z.object({
   amount_ore: ore,
   status: payoutStatus,
   rail: z.literal('manual'),
-  request_source: z.enum(['staff', 'seller']),
+  request_source: z.enum(['staff', 'seller', 'automatic']),
   requested_at: z.iso.datetime({ offset: true }),
   approved_at: z.iso.datetime({ offset: true }).nullable(),
   paid_at: z.iso.datetime({ offset: true }).nullable(),

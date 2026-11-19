@@ -2587,6 +2587,7 @@
     "noMatches": "Nessun acquisto corrisponde alla ricerca."
   },
   "sellerPortal": {
+    "automatic": "Komisio in automatico",
     "itemDetails": "Prezzo e periodo di vendita",
     "handovers": "Annuncia una consegna",
     "handoverIntro": "Annuncia una consegna prima di arrivare. Mostra il riferimento al banco; il negozio registra la ricezione e qui vedi il numero della consegna.",

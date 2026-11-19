@@ -425,6 +425,7 @@ describe('mobile engine dispatch and replay contract', () => {
   })
   it.each([
     'PAYOUT_BELOW_THRESHOLD',
+    'PAYOUT_BANK_REQUIRED',
     'PAYOUT_EXCEEDS_BALANCE',
     'REQUEST_CONFLICT',
     'SELLER_CLOSED',

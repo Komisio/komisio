@@ -387,6 +387,7 @@
     "stocktakePending": "Prüfen Sie die übrigen Artikel vor dem Abschluss.",
     "collectionNotDue": "Die Abholfrist ist noch nicht abgelaufen.",
     "overviewHelpLabel": "Über die Annahme",
+    "payoutBankRequired": "Der Verkäufer muss zuerst ein Auszahlungskonto bei Komisio hinterlegen.",
     "payoutBankReviewRequired": "Ein Inhaber oder Administrator muss zuerst die Bankdaten des Verkäufers unter Auszahlungen prüfen.",
     "saleVatRequired": "Der Verkauf wurde nicht erfasst, da die Umsatzsteuerbehandlung des Geschäfts noch nicht ausgewählt wurde. Ein Inhaber oder Administrator muss sie in den Geschäftseinstellungen auswählen und die Richtlinie veröffentlichen, bevor du es erneut versuchst.",
     "payoutHistoryReview": "Ältere Auszahlungsbelege müssen abgestimmt werden. Senden Sie dieselbe Zahlung nicht erneut.",
@@ -2680,6 +2681,7 @@
     "payoutErrors": {
       "INVALID_INPUT": "Gib einen Betrag größer als null mit höchstens zwei Nachkommastellen ein.",
       "PAYOUT_BELOW_THRESHOLD": "Der Betrag liegt unter dem Mindestbetrag des Ladens.",
+      "PAYOUT_BANK_REQUIRED": "Hinterlege dein Auszahlungskonto bei Komisio, bevor du eine Auszahlung anforderst.",
       "PAYOUT_EXCEEDS_BALANCE": "Der Betrag übersteigt dein verfügbares Guthaben. Prüfe den oben angezeigten Betrag."
     },
     "collectionDeadline": "Abholen bis",

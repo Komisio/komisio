@@ -387,6 +387,7 @@
     "stocktakePending": "Kontrollér de resterende varer, før du afslutter.",
     "collectionNotDue": "Afhentningsfristen er ikke udløbet.",
     "overviewHelpLabel": "Om indlevering",
+    "payoutBankRequired": "Sælgeren skal først gemme en udbetalingskonto hos Komisio.",
     "payoutBankReviewRequired": "En ejer eller administrator skal først kontrollere sælgerens kontooplysninger under Udbetalinger.",
     "saleVatRequired": "Salget blev ikke registreret, fordi butikkens momsbehandling ikke er valgt. En ejer eller administrator skal vælge den i Butiksindstillinger og offentliggøre politikken, før du prøver igen.",
     "payoutHistoryReview": "Ældre udbetalingsbilag skal afstemmes. Send ikke samme betaling igen.",
@@ -2680,6 +2681,7 @@
     "payoutErrors": {
       "INVALID_INPUT": "Angiv et beløb større end nul med højst to decimaler.",
       "PAYOUT_BELOW_THRESHOLD": "Beløbet er under butikkens minimumsbeløb.",
+      "PAYOUT_BANK_REQUIRED": "Gem din udbetalingskonto hos Komisio, før du anmoder om udbetaling.",
       "PAYOUT_EXCEEDS_BALANCE": "Beløbet overstiger din tilgængelige saldo. Kontrollér saldoen ovenfor."
     },
     "collectionDeadline": "Afhentes senest",

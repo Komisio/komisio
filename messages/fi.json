@@ -387,6 +387,7 @@
     "stocktakePending": "Tarkista jäljellä olevat tuotteet ennen päättämistä.",
     "collectionNotDue": "Noutoaika ei ole vielä päättynyt.",
     "overviewHelpLabel": "Tietoa vastaanotosta",
+    "payoutBankRequired": "Myyjän on ensin tallennettava maksutilinsä Komisioon.",
     "payoutBankReviewRequired": "Omistajan tai ylläpitäjän on ensin tarkistettava myyjän tilitiedot Maksut-osiossa.",
     "saleVatRequired": "Myyntiä ei kirjattu, koska myymälän ALV-käsittelyä ei ole valittu. Omistajan tai ylläpitäjän on valittava se myymälän asetuksissa ja julkaistava käytäntö ennen uutta yritystä.",
     "payoutHistoryReview": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen.",
@@ -2680,6 +2681,7 @@
     "payoutErrors": {
       "INVALID_INPUT": "Anna nollaa suurempi summa enintään kahdella desimaalilla.",
       "PAYOUT_BELOW_THRESHOLD": "Summa alittaa kaupan vähimmäissumman.",
+      "PAYOUT_BANK_REQUIRED": "Tallenna maksutilisi Komisioon ennen maksupyyntöä.",
       "PAYOUT_EXCEEDS_BALANCE": "Summa ylittää käytettävissä olevan saldosi. Tarkista yllä oleva saldo."
     },
     "collectionDeadline": "Noudettava viimeistään",

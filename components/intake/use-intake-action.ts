@@ -103,6 +103,12 @@ export function useIntakeAction(d: Dictionary['intake']) {
           setError(d.recordChanged)
           return null
         }
+        if (result.error === 'PAYOUT_BANK_REQUIRED') {
+          pending.current = null
+          setLocked(false)
+          setError(d.payoutBankRequired)
+          return null
+        }
         const definitive = [
           'STOCKTAKE_AMBIGUOUS',
           'COLLECTION_NOT_DUE',

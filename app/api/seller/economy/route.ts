@@ -29,6 +29,7 @@ export async function POST(request: Request) {
           'FORBIDDEN',
           'AUTH_REQUIRED',
           'PAYOUT_BELOW_THRESHOLD',
+          'PAYOUT_BANK_REQUIRED',
           'PAYOUT_EXCEEDS_BALANCE',
           'REQUEST_CONFLICT',
           'INVALID_INPUT',

@@ -106,6 +106,26 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
       },
     )
     expect(profile.status(), await profile.text()).toBe(200)
+    const own = await page.request.post(
+      '/api/mobile/v1/external-items/profile',
+      { headers, data: { action: 'read' } },
+    )
+    const account = (await own.json()).account
+    const preference = await page.request.post(
+      '/api/mobile/v1/external-items/profile',
+      {
+        headers,
+        data: {
+          action: 'savePayoutPreference',
+          tenantId: f.tenant,
+          sellerId: account.sellerId,
+          requestId: randomUUID(),
+          expected: null,
+          destination: { method: 'swish', phone: '+46700000007' },
+        },
+      },
+    )
+    expect(preference.status(), await preference.text()).toBe(200)
     for (const [n, requestId] of requests.entries()) {
       const sent = await page.request.post('/api/mobile/v1/external-items', {
         headers,
@@ -307,6 +327,13 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
           ).rows[0].n,
       )
       .toBe(1)
+    const automatic = (
+      await f.db.query(
+        "select id from public.payouts where tenant_id=$1 and seller_id=$2 and request_source='automatic' and status='requested' and amount_ore=60000",
+        [f.tenant, account.sellerId],
+      )
+    ).rows
+    expect(automatic).toHaveLength(1)
     await page.goto('/intake/requests?status=acquired')
     await page
       .locator('summary')

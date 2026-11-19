@@ -39,6 +39,8 @@ export function externalItemFailure(error: unknown, origin: string | null) {
     REQUEST_CONFLICT: 409,
     REQUEST_CHANGED: 409,
     PROFILE_CHANGED: 409,
+    BANK_DETAILS_CHANGED: 409,
+    PAYOUT_PREFERENCE_REQUIRED: 409,
     REQUEST_NOT_FOUND: 404,
     OFFER_NOT_FOUND: 404,
     GUARANTEE_NOT_FOUND: 404,

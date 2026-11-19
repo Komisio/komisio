@@ -5,6 +5,20 @@ import { parcelAddress, shippingContact } from './central-parcel-schema'
 export const centralIntakeProfileCommand = z.discriminatedUnion('action', [
   z.strictObject({ action: z.literal('read') }),
   z.strictObject({
+    action: z.literal('savePayoutPreference'),
+    requestId: z.uuid(),
+    tenantId: z.uuid(),
+    sellerId: z.uuid(),
+    expected: z.uuid().nullable(),
+    destination: z.discriminatedUnion('method', [
+      z.strictObject({
+        method: z.literal('swish'),
+        phone: z.string().regex(/^\+467[023689]\d{7}$/),
+      }),
+      z.strictObject({ method: z.literal('bank'), bankVersionId: z.uuid() }),
+    ]),
+  }),
+  z.strictObject({
     action: z.literal('save'),
     requestId: z.uuid(),
     tenantId: z.uuid(),
@@ -26,6 +40,20 @@ export const centralIntakeProfile = z
       language: z.string(),
     }),
     agreementAccepted: z.boolean(),
+    payoutPreference: z
+      .object({
+        id: z.uuid(),
+        method: z.enum(['swish', 'bank']),
+        phone: z.string().nullable(),
+        bankVersionId: z.uuid().nullable(),
+        bankLastFour: z.string().nullable(),
+      })
+      .nullable()
+      .optional(),
+    payoutBank: z
+      .object({ id: z.uuid(), lastFour: z.string().min(1).max(4) })
+      .nullable()
+      .optional(),
     account: z
       .object({
         tenantId: z.uuid(),
@@ -44,6 +72,7 @@ const errors = new Set([
   'INVALID_INPUT',
   'REQUEST_CONFLICT',
   'PROFILE_CHANGED',
+  'BANK_DETAILS_CHANGED',
   'SELLER_CLOSED',
   'PLAN_READ_ONLY',
   'STORE_UNAVAILABLE',
@@ -56,6 +85,21 @@ export async function executeCentralIntakeProfile(
   input: unknown,
 ) {
   const c = centralIntakeProfileCommand.parse(input)
+  if (c.action === 'savePayoutPreference') {
+    const r = await client.rpc('save_central_payout_preference', {
+      p_tenant: c.tenantId,
+      p_seller: c.sellerId,
+      p_id: c.requestId,
+      p_expected: c.expected,
+      p_destination: c.destination,
+    })
+    if (r.error)
+      throw new Error(
+        errors.has(r.error.message) ? r.error.message : 'REQUEST_FAILED',
+      )
+    if (r.data !== c.requestId) throw new Error('UNCONFIRMED_RESULT')
+    return { id: c.requestId }
+  }
   const r =
     c.action === 'read'
       ? await client.rpc('read_central_intake_profile')

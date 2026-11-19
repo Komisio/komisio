@@ -666,6 +666,7 @@
     "print.printed": "Impresión · Impresión notificada",
     "print.queued": "Impresión · En cola",
     "printer.registered": "Impresora · Registro",
+    "central_item.purchased": "Se compró un artículo directamente al vendedor",
     "purchase.registered": "Se registró una compra",
     "reception.access_issued": "Enlace de revisión emitido",
     "reception.access_revoked": "Enlace de revisión revocado",
@@ -1616,6 +1617,7 @@
       "adjustment": "Ajuste",
       "consignment_fee": "Cuotas mensuales",
       "consignment_fee_reversal": "Anular cuota",
+      "credit_purchase": "Compra directa",
       "credit_guarantee": "Importe garantizado"
     },
     "adjustHeading": "Ajustar el libro",
@@ -5541,6 +5543,15 @@
       "notConfigured": "El abono automático de importes garantizados está pausado en este entorno."
     },
     "fixed": {
+      "directPurchase": "Compra directa",
+      "consignment": "Consignación",
+      "ownedPurchase": "Ver compra",
+      "inspectBuy": "Confirmar compra por {amount}",
+      "conditionChecked": "He revisado el artículo y coincide con la solicitud.",
+      "marginEvidence": "Compra documentada a un particular sin IVA",
+      "confirmed": "Confirmada",
+      "notConfirmed": "Sin confirmar",
+      "purchaseComplete": "Compra registrada e importe abonado al saldo del vendedor.",
       "intro": "Acepta el importe del vendedor y selecciona los artículos para un mismo paquete.",
       "allItems": "Ver todos los artículos del vendedor",
       "select": "Seleccionar {item}",

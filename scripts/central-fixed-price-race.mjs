@@ -86,7 +86,7 @@ export async function raceCentralFixedPrice({ setup, connectionString }) {
       [`${seller}/${photo}.jpg`],
     )
     await setup.query(
-      "select submit_central_item_request($1,$2,'Dress','','good','',60000,'SEK',$3,'SE','seller_amount',$4)",
+      "select submit_central_item_request($1,$2,'Dress','','good','',60000,'SEK',$3,'SE','seller_amount',$4,'direct_purchase')",
       [request, tenant, [photo], agreement],
     )
     await setup.query('reset role')
@@ -145,8 +145,30 @@ export async function raceCentralFixedPrice({ setup, connectionString }) {
       ),
       /PARCEL_EXISTS/,
     )
+    await clients[0].query(
+      "select receive_handover($1,$2,l.handover_id,'staff_receipt','') from external_item_handover_links l join external_item_offers o on o.id=l.offer_id where o.request_id=$3",
+      [tenant, randomUUID(), request],
+    )
+    const inspect = (client, id) =>
+      client.query(
+        'select inspect_central_direct_purchase($1,$2,$3,false) id',
+        [tenant, request, id],
+      )
+    const attempts = await Promise.allSettled(
+      clients.map((c) => inspect(c, randomUUID())),
+    )
+    assert.equal(attempts.filter((a) => a.status === 'fulfilled').length, 1)
+    const loser = attempts.find((a) => a.status === 'rejected')
+    assert.match(loser.reason.message, /REQUEST_CONFLICT/)
+    const posted = await setup.query(
+      'select l.amount_ore::text amount,p.command_id from komisio_private.central_direct_purchases p join seller_ledger_entries l on l.id=p.ledger_id where p.request_id=$1',
+      [request],
+    )
+    assert.equal(posted.rowCount, 1)
+    assert.equal(posted.rows[0].amount, '60000')
+    await Promise.all(clients.map((c) => inspect(c, posted.rows[0].command_id)))
     console.log(
-      'central fixed-price race: one acceptance, one parcel, one dispatch',
+      'central fixed-price race: one acceptance, parcel, dispatch, purchase and credit',
     )
   } finally {
     await setup.query('reset role')

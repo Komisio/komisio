@@ -122,6 +122,7 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
           senderCountry: 'SE',
           priceBasis: 'seller_amount',
           approvalMode: 'fixed',
+          ...(n === 0 ? { saleMethod: 'direct_purchase' } : {}),
           agreementVersionId: agreement,
           photos: [photo],
         },
@@ -138,6 +139,12 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
       }),
     )
     await page.goto('/intake/requests')
+    await expect(
+      page.getByText(d.externalOffers.fixed.directPurchase, { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText(d.externalOffers.fixed.consignment, { exact: true }),
+    ).toBeVisible()
     await expect(
       page.getByRole('heading', { name: 'Alex Example' }),
     ).toBeVisible()
@@ -229,6 +236,52 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true)
+    await f.asActor(f.actor, async () => {
+      await f.db.query(
+        "select receive_handover($1,$2,l.handover_id,'staff_receipt','') from external_item_handover_links l join external_item_offers o on l.offer_id=o.id where o.request_id=$3",
+        [f.tenant, randomUUID(), requests[0]],
+      )
+    })
+    await page.goto('/intake/requests?status=received')
+    const card = page
+      .locator('details')
+      .filter({
+        has: page
+          .locator('summary')
+          .getByText('Synthetic dress 1', { exact: true }),
+      })
+      .first()
+    await card.locator('summary').first().click()
+    await card.getByLabel(d.externalOffers.fixed.conditionChecked).check()
+    await card
+      .getByLabel(d.externalOffers.fixed.marginEvidence)
+      .selectOption('no')
+    await card
+      .getByRole('button', {
+        name: d.externalOffers.fixed.inspectBuy.split('{amount}')[0],
+        exact: false,
+      })
+      .click()
+    await expect
+      .poll(
+        async () =>
+          (
+            await f.db.query(
+              'select count(*)::int n from komisio_private.central_direct_purchases where request_id=$1',
+              [requests[0]],
+            )
+          ).rows[0].n,
+      )
+      .toBe(1)
+    await page.goto('/intake/requests?status=acquired')
+    await page
+      .locator('summary')
+      .filter({ hasText: 'Synthetic dress 1' })
+      .first()
+      .click()
+    await expect(
+      page.getByRole('link', { name: d.externalOffers.fixed.ownedPurchase }),
+    ).toBeVisible()
   } finally {
     await f.db.query('update platform_settings set central_app_tenant_id=$1', [
       prior,

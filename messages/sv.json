@@ -666,6 +666,7 @@
     "print.printed": "Utskrift · Utskrift rapporterad",
     "print.queued": "Utskrift · Köat",
     "printer.registered": "Skrivare · Registrering",
+    "central_item.purchased": "En vara köptes direkt från säljaren",
     "purchase.registered": "Ett inköp registrerades",
     "reception.access_issued": "Granskningslänk skapad",
     "reception.access_revoked": "Granskningslänk återkallad",
@@ -1616,6 +1617,7 @@
       "adjustment": "Justering",
       "consignment_fee": "Månadsavgifter",
       "consignment_fee_reversal": "Återför avgift",
+      "credit_purchase": "Direktköp",
       "credit_guarantee": "Garanterat belopp"
     },
     "adjustHeading": "Justera saldo",
@@ -5535,6 +5537,15 @@
       "notConfigured": "Automatisk garantikreditering är pausad i driftmiljön."
     },
     "fixed": {
+      "directPurchase": "Direktköp",
+      "consignment": "Kommission",
+      "ownedPurchase": "Öppna inköpet",
+      "inspectBuy": "Bekräfta köp för {amount}",
+      "conditionChecked": "Jag har kontrollerat varan. Den stämmer med förfrågan.",
+      "marginEvidence": "Underlag för inköp från privatperson utan moms",
+      "confirmed": "Bekräftat",
+      "notConfirmed": "Ej bekräftat",
+      "purchaseComplete": "Köpet är registrerat. Beloppet har lagts till på säljarens saldo.",
       "intro": "Godkänn säljarens belopp och välj vilka varor som ska skickas i samma paket.",
       "allItems": "Visa alla säljarens varor",
       "select": "Välj {item}",

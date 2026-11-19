@@ -37,7 +37,7 @@ from their scheduler.
 
 ## Receipt retrieval
 
-Owner-selected model, 2026-09-14: [AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md),
+Authorization model: [AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md),
 not the superseded pg_cron/owner-actor proposal. Vercel Cron calls the GET route
 `/api/automation/zettle-pull` every ten minutes. It authenticates the
 `Authorization: Bearer <CRON_SECRET>` header before any sign-in, uses the ordinary
@@ -82,7 +82,7 @@ bad page remains held; an owner may use the separate logged window-abandon comma
    `20260916060000` in order to staging. The latter qualifies a cursor column found
    ambiguous by local pgTAP; the already locally applied first migration is retained.
 2. The owner creates a dedicated, confirmed Supabase Auth user, not a staff/owner
-   account, without enrolled MFA as specified by the architecture reviewer. Configure server-only
+   account, without enrolled MFA. Configure server-only
    `KOMISIO_AUTOMATION_EMAIL`, `KOMISIO_AUTOMATION_PASSWORD` (at least 16 characters)
    and random `CRON_SECRET` (at least 16 characters) in the target Vercel environment.
    Do not put them in GitHub source, screenshots, client variables or this log.

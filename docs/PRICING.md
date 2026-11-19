@@ -1,62 +1,9 @@
-# Pricing: open software, priced hosting, AI credits metered
+# Software licensing and optional billing
 
-Owner decisions 2026-09-16 (open core, migration `20260916440000`) and
-2026-09-17 (the hosting price). There is no plan, no cap and no paid feature
-tier: the software is open source under AGPL-3.0 and carries no licence fee
-whoever runs it. What is priced is the hosting Inority performs, and the AI
-assistant's model usage when it runs on the host's own key.
-
-A store has three ways to run Komisio and nothing in the product favours one
-of them. Run it yourself, hire any hosting partner, or let Inority host it.
-The last of those costs three months nothing, then SEK 299 a month per store
-excluding VAT, with no lock-in period. Leaving is a real option rather than a
-slogan: the data and the images export, and the same software runs anywhere.
-
-## The offer, as the store sees it
-
-- Everything is included: reception, items, sales, returns, markdowns, day
-  close, settlements, payouts, statements, exports, Zettle, Shopify, Fortnox,
-  chains, label printers, the seller portal, staff, the hosted MCP connector
-  to the store's own assistant. No limits on items, printers or integrations.
-  Swish payouts run through the store's own bank agreement without a service
-  fee from Komisio.
-- Hosting by Inority: three months at no cost from registration, then SEK 299
-  a month per store excluding VAT, no lock-in period. It covers updates,
-  backups, monitoring, the integrations kept working and a defined level of
-  support. Self-hosting and any other hosting partner cost Komisio nothing.
-- AI credits: one credit is one krona. A store on Inority's hosting gets 100
-  credits a month included. The assistant's calls are paid from them at the
-  model's actual token cost (a few öre per garment). When they are used up,
-  the store buys 100 more for SEK 100, or connects its own OpenAI key and is
-  never metered again. Self-hosted installations meter nothing.
-- The hosted MCP connector costs nothing: the store's own assistant (Claude,
-  ChatGPT) pays its own tokens to its own provider.
-
-## The text for the product page
-
-Proposed wording (Swedish first, the owner edits before publishing):
-
-> Komisio är öppen källkod och kostar aldrig någon licensavgift. Kör det
-> själv, anlita vilken driftpartner du vill, eller låt Inority sköta driften:
-> tre månader kostnadsfritt, därefter 299 kr i månaden per butik exklusive
-> moms. Ingen bindningstid, och du kan flytta när du vill.
->
-> Det ingår AI-funktionalitet för cirka {items} varor per månad. Slår du i
-> taket köper du 100 nya AI-krediter för 100 kr, eller kopplar enkelt Komisio
-> till ditt eget abonnemang hos Claude eller ChatGPT.
->
-Every number in that text comes from `GET /api/public/pricing` (no session,
-cached ten minutes):
-
-| Field                    | Source                                                                                                                       |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| `includedOre`, `packOre` | The host's platform settings                                                                                                 |
-| `estimatedItemsPerMonth` | Included credits divided by the measured average cost per assistant call over the last ninety days (once twenty calls exist) |
-| `measured`               | Whether that average is measured or still the configured estimate                                                            |
-| `stores[]`               | Always empty; store marketing examples were retired on 2026-10-06      |
-
-Store labels, activity and credit purchases are not published. The general
-pricing estimate remains available.
+Komisio is open source under the [AGPL](../LICENSE), with the extension exception
+in [NOTICE](../NOTICE). Running the software yourself does not require a hosted
+subscription. Hosting and external model usage are separate services. Operators
+configure their own provider accounts and publish the applicable service terms.
 
 ## Where the rules live
 
@@ -101,17 +48,7 @@ pricing estimate remains available.
 - Unit tests in `tests/unit/ai-credits.test.ts`; `npm run test:mcp` covers
   the connector without a plan gate.
 
-Not verified: a live assistant call settling against staging (needs the
-host switch and `STRIPE_CREDITS_PRICE_ID`, owner action A16).
-
-## Later
-
-- A second provider (Anthropic) for the store's own key.
-- Swish payouts through the store's own bank agreement, with no service fee
-  from Komisio.
-- A hosted copilot on the same credits.
-
-## Fixed credit purchase currencies (2026-09-16)
+## Credit purchase currencies
 
 Each one-time purchase adds exactly 100 credits (10,000 internal ore):
 
@@ -123,9 +60,8 @@ Each one-time purchase adds exactly 100 credits (10,000 internal ore):
 | United States                           | 10 USD  | `STRIPE_CREDITS_PRICE_ID_USD` |
 | Other ISO countries      | 9 EUR   | `STRIPE_CREDITS_PRICE_ID_EUR` |
 
-These are fixed owner-approved package prices, not exchange rates. USD 10 was
-selected under owner delegation on 2026-09-24 as a rounded equivalent of EUR 9. Owners or
-admins select country under Store profile and publish a new version. Existing
+These are fixed package amounts in the checkout implementation, not exchange
+rates. Store owners or admins select country under Store profile and publish a new version. Existing
 profile versions stay unchanged. The server reads the current profile itself;
 the browser cannot supply a currency, price ID or credit amount to checkout.
 Missing price configuration blocks that currency instead of falling back to SEK.
@@ -136,10 +72,9 @@ currency and amount. When automatic tax is enabled it must also explicitly use
 until matching pack pricing is implemented. Internal usage and purchased credit
 balances remain SEK-denominated. Store sales currency is unaffected.
 
-Create these prices in the same Stripe test account and product as the existing
-SEK price, save the environment variables on the staging project's Production
-target, and redeploy. The marketing site's SEK-only notice should only be removed
-for deployments where these prices and country selection have been verified.
+Create matching prices in the configured Stripe account, set the corresponding
+environment variables and rebuild. Verify each supported currency using a
+separate test deployment before enabling live purchases.
 
 Recovery: if checkout charges an incorrect price or fails after deployment,
 disable purchases for that currency by removing its price setting and redeploying.
@@ -148,11 +83,10 @@ published profiles. Any code rollback must retain that compatibility and use the
 normal checked PR flow. Keep the additive validator and immutable profile versions;
 do not edit granted credit events.
 
-## Stripe Tax rollout (2026-10-20)
+## Stripe Tax
 
-All published subscription and credit-pack amounts exclude VAT. The subscription
-amounts remain 299 SEK / 299 NOK / 198 DKK / 26 EUR / 31 USD; this integration
-still uses one configured subscription Price, not per-market subscription prices.
+The integration uses one configured subscription Price, not per-market
+subscription prices. Credit-pack amounts in the table exclude VAT.
 Credit packs retain the amounts in the table above and add exactly 100 credits
 regardless of the tax Stripe collects.
 

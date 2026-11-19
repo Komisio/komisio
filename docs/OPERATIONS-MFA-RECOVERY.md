@@ -1,6 +1,6 @@
 # Lost MFA device: operator recovery
 
-Owner decision B2, 2026-09-14: no self-service recovery. The store owner verifies
+There is no self-service recovery. The store owner verifies
 the person, an authorized operator removes the lost factor in Supabase, logs the
 action, and the person re-enrols. This is a procedure, not a new application
 permission or an authorization to reset any real account during development.
@@ -75,7 +75,7 @@ recovery window a special restricted session. Do not resume normal store work
 before re-enrolment. If it fails, keep the case open and escalate; never restore
 the lost secret or weaken enforcement. See [Supabase TOTP enrolment](https://supabase.com/docs/guides/auth/auth-mfa/totp).
 
-## Pilot evidence and stop conditions
+## Verification and stop conditions
 
 Before external users, the owner/operator must exercise this procedure on a
 dedicated synthetic staging user: verified old factor, approved removal, new
@@ -84,7 +84,5 @@ Auth logs. Also dry-run the refusal of an unverified requester and a wrong-proje
 selection without removing any factor. Record date, environment, case reference,
 participants and results; keep personal or security details out of this repository.
 
-Status on 2026-09-14: application enrolment path and provider documentation reviewed;
-no dashboard removal or end-to-end recovery exercise performed for this procedure.
-The pilot gate remains open until the exercise is recorded. There is no rollback
-to a deleted factor: failures require verified re-enrolment or escalation.
+Removing a factor cannot restore a lost authenticator secret. Re-enrolment
+and a fresh MFA login are required.

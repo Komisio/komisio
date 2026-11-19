@@ -90,8 +90,7 @@ enumerate accepted tenant grants; connecting does not enable automation.
 Provider app approval/distribution is not proven by synthetic tests.
 
 
-Shopify is the second sales channel after Zettle (owner decision B9, after
-Zettle is stable). The adapter follows the same contract: accepted items go
+Shopify is an additional sales channel. The adapter follows the same contract: accepted items go
 out as products with stock and photos, completed orders come back as sales
 with the seller's credit computed by the engine, and every provider
 interaction is recorded as an intent and an outcome. Nothing is repriced or
@@ -292,20 +291,6 @@ changed order flagged once, immutability, staff read only) and
 `tests/unit/shopify-orders.test.ts` (öre parsing, evidence shape, mixed
 currency, watermark, pull query and page recording, empty page, replay).
 
-The app is registered (A11, 2026-09-15) and the pilot store is bound on
-staging.
-
-Real rows against the development shop (owner, staging, 2026-09-15):
-
-| When (Europe/Stockholm) | What                                                            | Result                                  |
-| ----------------------- | --------------------------------------------------------------- | --------------------------------------- |
-| 2026-09-15              | Connect `komisio-test.myshopify.com` from the integrations page | Connected                               |
-| 2026-09-15              | Export one accepted item as a product                           | Synced                                  |
-| 2026-09-15 16:14:10     | Test order `#1001`, one line, SEK 59.00, paid in the dev shop   | Order placed                            |
-| 2026-09-15 16:14:47     | Pull paid orders (`SHOPIFY_ACCEPT_TEST_ORDERS=true` on staging) | 1 received, `#1001` sale recorded       |
-| 2026-09-15 18:17:49     | Refund `#1001` in full in Shopify admin, pull again             | Return recorded on the sale line        |
-| 2026-09-15 18:22:38     | Export an item received with a reception photo                  | Synced, photo in Shopify (`I-B687C6C7`) |
-
-Every step (connection, product with photo, order to sale, refund to
-return) is verified end to end on staging against the development shop.
-Production keeps `SHOPIFY_ACCEPT_TEST_ORDERS` unset.
+Verify connection, product export, paid-order import, refunds and product
+photos against a development shop before live use. Local fixtures do not prove
+that the operator's provider registration or inventory locations are configured.

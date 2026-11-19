@@ -32,7 +32,7 @@ operations. Seller approval here does not execute any of them.
 | Staff and mobile interaction | `app/` and `components/reception/` | Thin callers of shared operations |
 | Local external AI tools | `mcp/` | Explicit read/image/preview scopes using the same engine |
 | Domain guidance | `skills/` | Reviewed instructions and unresolved questions |
-| Accepted rules and rationale | `DECISIONS.md` and database tests | A prompt alone cannot enforce a rule |
+| Technical rules and regression coverage | `DECISIONS.md` and database tests | A prompt alone cannot enforce a rule |
 
 Some fixed data is necessary: which store owns a session, which source version
 was reviewed, who responded and which terms they saw. These cannot disappear into
@@ -71,5 +71,5 @@ decisions. Camera pairing, hosted delegation and agent write approval still need
 their own authorization and tests before activation.
 
 This follows the shared-engine and staged-operation direction fixed in
-`ARCHITECTURE.md`. The [reception ADR](RECEPTION-ARCHITECTURE.md) records the
-actual scope and trade-offs.
+`ARCHITECTURE.md`. The [reception assistance guide](RECEPTION-ASSISTANCE.md) describes the
+provider boundary and configuration.

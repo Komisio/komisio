@@ -2,15 +2,10 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 /**
- * The decision log holds one line per decision; the reasoning goes in the pull
- * request body. Writing the reasoning here instead is how the repository grew
- * 97 documents in a week, so the rule is checked rather than hoped for.
- *
- * Only entries after the marker are checked. Everything above it was written
- * before the rule and is left as it stands: a record is not rewritten to match
- * a later convention.
+ * Public technical decisions stay concise; detailed reasoning belongs in the PR.
+ * The marker separates the contributor introduction from dated decision entries.
  */
-const MARKER = '<!-- one-line rule from 2026-09-17'
+const MARKER = '<!-- technical-decisions -->'
 const LIMIT = 300
 
 const log = readFileSync(
@@ -47,9 +42,9 @@ describe('decision log', () => {
     expect(malformed, malformed.join('\n')).toEqual([])
   })
 
-  it('reads a log that has entries above the marker and a marker at the end', () => {
+  it('keeps the contributor introduction separate from decision entries', () => {
     const start = log.findIndex((line) => line.startsWith(MARKER))
     expect(start).toBeGreaterThan(10)
-    expect(log.slice(0, start).join('\n')).toContain('2026-09-16')
+    expect(log.slice(0, start).join('\n')).toContain('# Technical decisions')
   })
 })

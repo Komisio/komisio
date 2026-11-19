@@ -1,9 +1,7 @@
-# Pilot gates: isolation, seller data export, backup and restore
+# Operational verification
 
-The roadmap names four gates before an external pilot: tenant isolation,
-backup and restore, privacy and retention, and export and support
-procedures. This document records what is in place for each, what is proven
-by a test, and what remains an owner or operator action.
+An installation must verify tenant isolation, export, recovery and backups
+before handling real store data. These checks complement the automated suite.
 
 ## Tenant isolation
 
@@ -12,10 +10,8 @@ grows with the schema instead of naming tables:
 
 - every table in `public` has row level security; the only table without a
   policy is the engine-only statement counter;
-- anonymous callers can execute exactly three functions: the public store
-  profile read and the two storage access hooks; every other function is
-  revoked from `anon` and `PUBLIC` (migration `20260915130000` closed the two
-  that the default grant had left open; both already required a member);
+- anonymously executable functions must match the explicit tested allowlist;
+  authorization inside each allowed function still applies;
 - neither `anon` nor `PUBLIC` holds any table privilege; `authenticated` holds
   `select` only, never a write;
 - every view runs as the invoker;
@@ -62,7 +58,7 @@ scope, the log entry and the refusals.
 
 ## Lost MFA device
 
-Owner decision B2 is documented in
+MFA recovery is documented in
 [OPERATIONS-MFA-RECOVERY.md](OPERATIONS-MFA-RECOVERY.md): independent identity
 verification by the store owner, a scoped dashboard action by an operator,
 restricted support evidence, and re-enrolment followed by a fresh MFA login.
@@ -71,8 +67,8 @@ staging recovery exercise remains an operator action before external users.
 
 ## Backup and restore
 
-Hosted: the Supabase project keeps daily backups on the current plan;
-point-in-time recovery is a plan option the owner selects before the pilot.
+Hosted operators must configure backups and choose appropriate recovery
+objectives; available backup and point-in-time options depend on the provider.
 Restoring is a project-level action in the Supabase dashboard; storage
 objects (reception photos) are backed up separately (see HOSTED-STAGING.md).
 
@@ -99,60 +95,5 @@ hosted point-in-time recovery, and a source that is written during the dump
 can produce a false mismatch; rerun in a quiet moment before treating that
 as a failure.
 
-Restore exercise record: run on 2026-09-13 against the local stack with
-migrations through `20260915130000`, and again on 2026-09-14 with migrations
-through `20260916070000` (plans, billing, automation and notices tables
-included); every table matched both times.
-
-## Still open
-
-Day-to-day operation of what is delivered (jobs, secrets, health checks,
-failures) is in [OPERATIONS-RUNBOOK.md](OPERATIONS-RUNBOOK.md).
-
-The consolidated list of owner actions and pending product decisions with
-proposed defaults is [OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md).
-
-The ordered production steps (project, environment, secrets, drills, smoke
-journey) are in [PRODUCTION-CHECKLIST.md](PRODUCTION-CHECKLIST.md).
-
-- Retention policy and erasure procedure for seller contact data.
-- Storage object backup on the hosted project.
-- Point-in-time recovery selection on the hosted plan.
-- pg_cron enabled on the hosted project, then
-  `select cron.schedule('komisio-automatic-markdowns','15 3 * * *','select komisio_private.run_automatic_markdowns()')`
-  (the markdown agent's daily run; the migration schedules it only where the
-  extension already exists).
-- A complete authenticated hosted journey exercised by the owner.
-- A recorded synthetic MFA recovery exercise using OPERATIONS-MFA-RECOVERY.md.
-- Fortnox pilot: `FORTNOX_PILOT_TENANT_ID`, `FORTNOX_EXPECTED_COMPANY_NAME` and
-  `KOMISIO_CREDENTIAL_KEY` set, the callback URL registered in the Fortnox
-  developer portal, one connection made and checked against the test company,
-  then `FORTNOX_EXPECTED_DATABASE_NUMBER` pinned (see FORTNOX-CONNECTION.md).
-  Done 2026-09-14 except the optional database pin (owner decision: not needed).
-- Deploy ordering: turn off Vercel's automatic deployment for main and let the
-  workflow fire a Vercel deploy hook after the `staging-migrations` job, so
-  the database always migrates before the application deploys. Until then new
-  page reads tolerate a missing RPC for the minutes in between.
-- The `staging-database` GitHub environment restricts deployment branches to
-  main and holds the staging account's management token only.
-- Billing (hosted only): once the plan slice is on staging, the owner runs
-  `select komisio_private.enable_billing('<owner auth user id>')` as the
-  database owner, which turns billing on, makes the owner a platform host and
-  keeps existing stores active; then, where pg_cron exists,
-  `select cron.schedule('komisio-expire-plans','45 3 * * *','select komisio_private.expire_plans()')`
-  if the migration did not schedule it. New stores start a 30-day trial from
-  then on.
-- Stripe (sandbox for staging): `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID` (the
-  299 SEK monthly price, excluding VAT) and `STRIPE_WEBHOOK_SECRET` for the
-  endpoint `<NEXT_PUBLIC_APP_URL>/api/billing/webhook` with the events
-  checkout.session.completed, customer.subscription.updated,
-  customer.subscription.deleted, invoice.paid, invoice.payment_failed; the
-  automation identity registered as billing actor with
-  `select komisio_private.register_billing_actor('<automation user id>')`.
-- `CRON_SECRET` in Vercel (at least 16 characters); Vercel Cron then calls the
-  automation routes (plan notices daily, Zettle retrieval when delivered).
-
-Stripe Tax release gate: complete [STRIPE-TAX.md](STRIPE-TAX.md), verify exclusive
-prices and invoices using test-mode staging checkouts, then explicitly enable
-`KOMISIO_STRIPE_AUTOMATIC_TAX=true` in production. Code deployment alone leaves
-automatic tax off.
+See [OPERATIONS-RUNBOOK.md](OPERATIONS-RUNBOOK.md) for worker recovery and
+[STRIPE-TAX.md](STRIPE-TAX.md) before enabling automatic tax.

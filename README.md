@@ -15,13 +15,13 @@
 <p align="center">
   <a href="https://github.com/Komisio/komisio/actions/workflows/test-db.yml"><img src="https://github.com/Komisio/komisio/actions/workflows/test-db.yml/badge.svg" alt="Platform checks"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--or--later-163F35" alt="AGPL-3.0-or-later"></a>
-  <a href="ROADMAP.md"><img src="https://img.shields.io/badge/status-platform_preview-D7EBA5?labelColor=163F35" alt="Platform preview"></a>
+  <a href="https://github.com/Komisio/komisio/issues"><img src="https://img.shields.io/badge/status-platform_preview-D7EBA5?labelColor=163F35" alt="Platform preview"></a>
 </p>
 
 <p align="center">
   <a href="https://komisio-staging.vercel.app">Explore the preview</a> ·
   <a href="#run-it-locally">Run it locally</a> ·
-  <a href="ROADMAP.md">Roadmap</a> ·
+  <a href="https://github.com/Komisio/komisio/issues">Issues</a> ·
   <a href="CONTRIBUTING.md">Build with us</a>
 </p>
 
@@ -89,9 +89,8 @@ Sellers can hand in on their own with a QR handover and follow their money in
 a seller portal. Every financial fact is append-only, every correction is a
 new row, and every agent action is staged for a person to approve. See
 [versioned seller agreements](docs/SELLER-AGREEMENTS.md),
-[self drop-off](docs/SELF-DROPOFF.md), the
-[functional roadmap](docs/FUNCTIONAL-ROADMAP.md) and the
-[open domain questions](docs/open-questions.md).
+[self drop-off](docs/SELF-DROPOFF.md) and
+[architecture](ARCHITECTURE.md).
 
 ### Start with a jacket. Keep the decision human.
 
@@ -137,10 +136,9 @@ use test data rather than real consignor or financial records.
 | Item search by title, category and stage; agent reads and price proposals     | Agent seller lookup                                                                    |
 | Chains with numbers in total and item moves; stock report per category        | Shopify products out and orders in, item import, partner API                           |
 
-The hosted preview is a staging environment for the pilot store and the
-people building Komisio. See [pilot gates](docs/PILOT-GATES.md) for what
-stands between the preview and an external pilot, and the
-[functional roadmap](docs/FUNCTIONAL-ROADMAP.md) for the phases.
+For deployment prerequisites and recovery checks, see
+[operational verification](docs/PILOT-GATES.md). Open issues track proposed
+work; source availability alone does not establish a verified hosted integration.
 
 ### Free to run. Simple to rent.
 
@@ -160,7 +158,7 @@ You don't need to write code to make Komisio better.
 
 - **Run a second-hand store?** [Share a workflow](https://github.com/Komisio/komisio/issues/new): how you receive items, agree commissions or prepare payouts. Use fictional examples and leave out personal data.
 - **Care about great software?** Try the platform and tell us where it feels confusing. Clear bug reports, accessibility feedback and translations all help.
-- **Want to build?** Start with the [contribution guide](CONTRIBUTING.md) and [roadmap](ROADMAP.md). For larger changes, open an issue first so we can agree on the scope.
+- **Want to build?** Start with the [contribution guide](CONTRIBUTING.md) and [open issues](https://github.com/Komisio/komisio/issues). For larger changes, open an issue first so we can agree on the scope.
 
 If this is the kind of software you want to see in the world, **give the repo a
 star and follow along.** We're early enough for your input to matter.
@@ -201,20 +199,18 @@ minor units, facts are append-only, and every non-human write is staged.
 | Start here                                       | What you'll find                                             |
 | ------------------------------------------------ | ------------------------------------------------------------ |
 | [Architecture](ARCHITECTURE.md)                  | Target boundaries for the core, UI, AI and extensions        |
-| [Functional roadmap](docs/FUNCTIONAL-ROADMAP.md) | Phases P1 to P6, what is delivered and what is next          |
 | [Staged operations](docs/STAGED-OPERATIONS.md)   | How agent and extension writes wait for a person             |
 | [How AI fits](docs/HOW-AI-FITS.md)               | A jacket's journey, file responsibilities and current limits |
-| [Decisions](DECISIONS.md)                        | What we've chosen and why                                    |
-| [Roadmap](ROADMAP.md)                            | Milestones and acceptance scenarios                          |
+| [Decisions](DECISIONS.md)                        | Public engineering constraints                                    |
 | [Extensions](docs/EXTENSIONS.md)                 | The proposed integration contract                            |
 | [Agent instructions](CLAUDE.md)                  | How AI-assisted contributions are governed                   |
-| [Domain knowledge](skills/)                      | Working notes for humans and agents                          |
+| [Domain knowledge](skills/)                      | Product AI evidence and safety guidance                          |
 | [Security](SECURITY.md)                          | Reporting vulnerabilities and access principles              |
 
 Application routes live in `app/`, shared UI in `components/`, identity and
 permissions in `lib/platform/`, database migrations and tests in `supabase/`,
-and translations in `messages/`. Earlier schema explorations live in
-`experiments/`; they are not the active product model.
+and translations in `messages/`. The committed `supabase/migrations/` and `supabase/tests/` define the active
+database model and its regression coverage.
 
 Checks: `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`,
 `npm run test:db`, `npm run test:concurrency` and `npm run test:e2e`.

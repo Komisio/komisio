@@ -1,7 +1,7 @@
 # Provider-independent reception evidence
 
-Functional roadmap P1 calls for one assistance boundary. Keep the existing
-suggestReception port and narrow its input rather than adding a competing engine.
+The shared `suggestReception` port provides one assistance boundary for
+provider adapters.
 A provider receives only sources: citation ID, kind, observation and the supplied
 reference for non-photo evidence. Photo references (Storage paths), tenant,
 session, seller and revision stay with the authenticated orchestrator. Reduced

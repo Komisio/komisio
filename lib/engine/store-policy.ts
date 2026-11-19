@@ -95,7 +95,7 @@ export const storePolicyBody = z
 export type StorePolicyBody = z.infer<typeof storePolicyBody>
 
 /** Owner-confirmed pilot policy, not law or automatic execution authority.
- * Mirrors the skill's Default store policy section at Fable snapshot 17e73c8.
+ * Mirrors the skill's Default store policy section at snapshot 17e73c8.
  * A fresh parsed object prevents callers from changing another tenant's defaults.
  * Assistance is on by default (owner decision 2026-09-16): a new store should
  * meet a working reception screen and has included credits to try it with. The

@@ -2,7 +2,7 @@
 
 # Roadmap status at the production launch, 2026-09-16
 
-Written by Fable on the day production opened (`app.komisio.com`), at the
+Written by the architecture reviewer on the day production opened (`app.komisio.com`), at the
 owner's request, as the reading of [FUNCTIONAL-ROADMAP.md](FUNCTIONAL-ROADMAP.md)
 against what is on main. Phase names follow section 7 of the roadmap.
 "Delivered" means merged with tests and on staging; production runs every
@@ -37,7 +37,7 @@ Cross-cutting, delivered today or this week: eight product languages
 | Complete authenticated hosted journey           | The owner registered and is host; a full smoke journey (P13: bag, accept, print, sale, payout, day close) is not yet recorded on production. |
 | Synthetic MFA recovery exercise                 | Open (P12).                                                                                                                                  |
 | Deploy ordering                                 | Done for production (CLI deploy after migrations). Staging still deploys on push.                                                            |
-| Stripe                                          | Open: live keys and the credit price ids per currency (Astra).                                                                               |
+| Stripe                                          | Open: live keys and the credit price ids per currency (the coding agent).                                                                               |
 | `CRON_SECRET`                                   | Done for production.                                                                                                                         |
 
 Also open on the checklist: P7 (Fortnox, Shopify, Zettle registered with
@@ -49,7 +49,7 @@ unproven and needs a printer.
 
 ## What the roadmap still holds after the launch
 
-In the order Fable would take them, with the reason:
+In the order the architecture reviewer would take them, with the reason:
 
 1. **Open registration in practice.** Delivered 2026-09-16: the allowlist
    accepts `*` and the engine caps messages and invitations per store and

@@ -18,7 +18,7 @@ import {
 } from '../../lib/engine/store-profile'
 
 const env = {
-  STRIPE_SECRET_KEY: 'sk_test_abcdefgh12345678',
+  STRIPE_SECRET_KEY: 'sk_test_synthetic00000000',
   STRIPE_PRICE_ID: 'price_plan12345678',
   STRIPE_CREDITS_PRICE_ID: 'price_sek12345678',
   STRIPE_CREDITS_PRICE_ID_NOK: 'price_nok12345678',

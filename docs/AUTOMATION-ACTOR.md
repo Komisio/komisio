@@ -1,6 +1,6 @@
 # Automation actor: scheduled work that talks to providers
 
-Design note by Fable, 2026-09-14: scheduled Zettle retrieval needs an actor that can both
+Design note by the architecture reviewer, 2026-09-14: scheduled Zettle retrieval needs an actor that can both
 call the provider over HTTP and write through the engine, and no such actor
 exists. This note proposes one. It changes membership (a fifth role), so it
 waits for the owner's decision (D1 in
@@ -111,12 +111,12 @@ or that a real scheduled POS action has been observed.
 
 ## Scopes in use (2026-09-14)
 
-| Scope          | Opens                                                                                                   | Built by |
-| -------------- | ------------------------------------------------------------------------------------------------------- | -------- |
-| `zettle_pull`  | open and record Zettle pull windows for the store (Astra, PR143)                                        | Astra    |
-| `fortnox_send` | send recorded exports as vouchers, refresh tokens of the pinned connection                              | Astra    |
-| `weekly_brief` | read the economy summary and brief; mail it to the owners on Mondays                                    | Fable    |
-| `shopify_pull` | read the sealed Shopify connection and renew its token, record one page of paid orders per quarter hour | Fable    |
+| Scope          | Opens                                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------- |
+| `zettle_pull`  | open and record Zettle pull windows for the store (PR143)                                                 |
+| `fortnox_send` | send recorded exports as vouchers, refresh tokens of the pinned connection                               |
+| `weekly_brief` | read the economy summary and brief; mail it to the owners on Mondays                                      |
+| `shopify_pull` | read the sealed Shopify connection and renew its token, record one page of paid orders per quarter hour  |
 
 Owner switches: `POST /api/automation-grants` (enable, disable) for any
 scope, or the integration's own route. The switch is a grant; the identity

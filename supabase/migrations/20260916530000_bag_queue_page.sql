@@ -1,4 +1,4 @@
--- The bag queue as an engine function (2026-09-16, Opus). Listing the bags a
+-- The bag queue as an engine function (2026-09-16, the reviewing agent). Listing the bags a
 -- store has received read the table directly, so the one tool built on it was
 -- unavailable to a store's own assistant: the connector reaches SQL functions
 -- and nothing else. Same rows, same order, same store-role check the

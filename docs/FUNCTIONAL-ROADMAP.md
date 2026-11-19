@@ -3,7 +3,7 @@
 # Functional roadmap: capabilities and proposed delivery order
 
 Status: owner-selected evolving development baseline, 2026-09-12.
-Astra (Codex) is the owner-appointed lead architect and developer as of
+The coding agent is the owner-appointed lead architect and developer as of
 2026-09-17. Consult the latest version
 before selecting work. All 100-hours functionality is excluded from version 1,
 including hourly price decay, dedicated lifecycle stages and associated digital
@@ -209,7 +209,7 @@ Older dated inventories below describe their own checkpoint, not the current
 implementation backlog. A listed capability is not proof of live integration
 acceptance or authorization to implement an unresolved business rule.
 
-Inventory provenance: Fable's inventory at `4593bd0` describes
+Inventory provenance: The architecture reviewer's inventory at `4593bd0` describes
 functionality found in the earlier back office, mobile app and print service.
 Those systems had no store users and included prototypes; finding an implementation
 is not evidence of a working production flow or a requirement to retain it.
@@ -514,7 +514,7 @@ discovery. These are bounded parts of the phases below, not completed P1/P2 phas
 Acceptance design still requires resolution of convergence and terms
 questions.
 
-Status 2026-09-13 (Fable, lead architect): P1 is on main and staging: store
+Status 2026-09-13 (the architecture reviewer, lead architect): P1 is on main and staging: store
 policy with VAT modes and assistance flag, seller terms, garment custody,
 purchases, acceptance from three origins with frozen terms and provenance,
 policy-aware reception queue, staged agent acceptance with a second-person
@@ -526,7 +526,7 @@ templates with the local print agent, usage metering with a policy quota,
 staged agent kinds for returns, ledger adjustments, markdown batches, bulk
 item updates, payout transitions and template-bound messages with MCP
 proposers, automatic seller notifications behind a policy switch, and the
-SIE 4 export of day closes under a tenant-published account map. Astra then
+SIE 4 export of day closes under a tenant-published account map. The coding agent then
 delivered the seller economy portal with seller payout requests, browser
 journeys for the P2 surfaces, batch reception and the Zettle pull behind
 fixtures with the staged kind `recordZettlePurchase`. Still open in P2: the
@@ -573,7 +573,7 @@ voucher reached the owner's Fortnox test company. The weekly and monthly
 brief is a deterministic read (`20260915230000`). The owner's decisions on
 the consolidated list ([OWNER-ACTIONS-2026-09-14.md](OWNER-ACTIONS-2026-09-14.md))
 pulled parts of P4 and P6 forward: the automation actor (`20260916020000`,
-[AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md); Astra's scheduled Zettle
+[AUTOMATION-ACTOR.md](AUTOMATION-ACTOR.md); the coding agent's scheduled Zettle
 retrieval runs on it), plans and trial with a read-only gate
 (`20260916030000`), Stripe Checkout, portal and webhooks
 (`20260916040000`), trial notices from a daily cron (`20260916070000`) and
@@ -591,7 +591,7 @@ read one item's summary, and find and read receipts, under the read scopes
 [AGENT-ITEM-READS.md](AGENT-ITEM-READS.md)); the same read gives the items
 page its search. A price proposal per item is `komisio_propose_price_change`: it cites the price evidence it read, is refused when the citation is stale, and stages the existing bulk update at medium risk. Chains (step 1 of [CHAIN-GROUPING.md](CHAIN-GROUPING.md)): an owner groups the stores it owns under one company name, and owners or admins of every store read the per-store numbers and their total on the economy page (`20260916260000`); an owner or admin of both stores moves a consignment item to another store in the chain: ended here with reason transfer, received there as a bag with one draft, accepted under the target's own terms (`20260916270000`). The stock report gives margin, sell-through and stock age per category (`20260916280000`, [STOCK-REPORT.md](STOCK-REPORT.md)). The Shopify adapter has the per-store connection (`20260916290000`, [SHOPIFY-ADAPTER.md](SHOPIFY-ADAPTER.md)) products out with revision-bound token renewal (`20260916320000`) paid orders in as sales or held orders (`20260916330000`, verified against the dev shop on 2026-09-15) a scheduled pull every quarter hour on the automation identity (`20260916340000`), refunds as returns and the reception photo as product image (`20260916350000`). The Shopify adapter is complete for the pilot. Quick reception (one screen per garment, policy profile `intakeProfile`, `20260916360000`, [QUICK-INTAKE.md](QUICK-INTAKE.md)) is the default intake; the navigation rework into five work areas follows. The production path is code-complete: the environment guard accepts `production` with a production shape and the owner-dispatched, owner-approved `Production database` workflow applies migrations ([PRODUCTION-CHECKLIST.md](PRODUCTION-CHECKLIST.md) lists the owner steps P1 to P14). The import wizard starts with sellers from a CSV as one staged operation (`20260916300000`, [IMPORT.md](IMPORT.md)). The partner API is a proposal with owner questions ([PARTNER-API.md](PARTNER-API.md)). The seller portal shows the seller's own items with price, state and period end (`20260916310000`). What remains before production is the checklist in
 that document and the pilot gates; what remains of P3 needs the owner
-(payout rails, printer) or Astra's list (automatic Fortnox sending,
+(payout rails, printer) or the coding agent's list (automatic Fortnox sending,
 retention and erasure).
 
 | Phase                                       | Theme                    | Slices                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Needs from owner                                                                                                                        |

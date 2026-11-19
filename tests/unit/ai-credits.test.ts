@@ -19,7 +19,7 @@ import { emptyStoreProfile } from '../../lib/engine/store-profile'
 import { openAIReception } from '../../lib/assistance/openai-reception'
 
 const env = {
-  STRIPE_SECRET_KEY: 'sk_test_abcdefgh12345678',
+  STRIPE_SECRET_KEY: 'sk_test_synthetic00000000',
   STRIPE_PRICE_ID: 'price_plan12345678',
   STRIPE_CREDITS_PRICE_ID: 'price_credits12345678',
   KOMISIO_CREDENTIAL_KEY: 'a'.repeat(64),

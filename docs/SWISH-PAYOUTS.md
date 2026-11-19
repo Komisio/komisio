@@ -1,6 +1,6 @@
 # Swish payouts: what it takes, and the two routes
 
-Design note by Opus, 2026-09-16, at the point where payouts are the most
+Design note by the reviewing agent, 2026-09-16, at the point where payouts are the most
 visible manual step left in a store's day. It proposes; two questions need the
 owner before any of it is built, because both touch money and personal data.
 Nothing here is implemented.

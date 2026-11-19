@@ -99,7 +99,7 @@ establish compatibility with another model or firmware.
 
 ## Weblink queue backend
 
-The owner approved the one-attempt model on 2026-10-22. Migration
+The one-attempt model is enforced by migration
 `20261022150000` extends the existing printer/job records; it creates no new core
 tables or roles and converts no existing printers. Legacy registration accepts
 only TCP/USB. Separate Weblink preparation creates inactive printers; it does
@@ -282,14 +282,6 @@ spooler and probes the real Windows API without printing. CI runs it on Windows;
 transport routing, validation and printer registration also have unit/browser
 coverage. USB physical output remains pending a hardware pilot.
 
-## Verification record
-
-| When       | What                                                                                                                                                                                                                              | Result                                    |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| 2026-09-15 | Local: anonymous sign-up, pairing code, heartbeat, one job against an unreachable address (`node print-agent/agent.cjs`)                                                                                                          | Paired, heartbeat, job failed as expected |
-| 2026-09-15 | Local Windows build of `KomisioPrint.exe` (Node single executable)                                                                                                                                                                | Runs                                      |
-| 2026-09-16 | Owner: anonymous sign-ins on staging, GitHub environment `staging-print`, tag `print-v1.0.0`, install.cmd on a computer next to a Zebra ZD420 (203 dpi, 192.168.1.49:9100), pairing code from Settings, label queued from the app | Printed                                   |
-
 ## Templates
 
 The manual print route delegates fact loading, rendering and queueing to
@@ -303,8 +295,8 @@ one tenant-bound printer and 1–20 copies per kind, configured by owner/admin a
 readable by members, never devices. Identical repeated settings do not add audit
 events; actual changes do. The reader tolerates a missing RPC during deployment.
 This is a storage prerequisite only: no settings switch or event queueing is
-enabled yet. The automatic-label identity and producer questions are open
-(see open-questions.md); physical automatic printing is not verified.
+enabled yet. Enabling storage alone does not establish automatic label production or
+physical printing compatibility.
 
 `zpl-v2` draws the fixed layout scaled to the store's label size at the
 printer's resolution (Settings, Printing; defaults 76 x 51 mm for bag and

@@ -1,6 +1,6 @@
 # Retired inspection draft workflow
 
-Retired by owner decision in #458 on 2026-10-15. The inspection draft UI,
+Retired in #458. The inspection draft UI,
 storage, APIs and MCP tools described by this former document are removed.
 Bag inspection now registers items through reception. See
 [the current architecture](../ARCHITECTURE.md#direct-drop-off-registration).

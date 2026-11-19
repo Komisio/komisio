@@ -86,8 +86,8 @@ revoke the app in PayPal; merchants can also remove that authorization there.
    Configure both staging and production hosts and redeploy after changes.
    The secret is required for both code exchange and token renewal.
 3. Register each exact callback URL in the app's OAuth Redirect URIs:
-   - Staging: `https://komisio-staging.vercel.app/api/integrations/paypal/callback`
-   - Production: `https://app.komisio.com/api/integrations/paypal/callback`
+   - Staging: `https://staging.example.test/api/integrations/paypal/callback`
+   - Production: `https://app.example.test/api/integrations/paypal/callback`
    - Self-hosted: `<NEXT_PUBLIC_APP_URL>/api/integrations/paypal/callback`.
 4. Apply the migration before deploying. The canonical NEXT_PUBLIC_APP_URL
    must match the app registration. Use HTTPS outside loopback development.

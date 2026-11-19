@@ -1,196 +1,53 @@
-# Hosted staging deployment
+# Configuring an isolated hosted deployment
 
-Status (2026-09-11): deployed to https://komisio-staging.vercel.app with hosted
-Supabase and Resend. Registration and invitation-email receipt have been
-confirmed by the owner. Full invitation acceptance and operational recovery
-remain under validation.
+Use separate staging and production resources. Only trusted reviewed code should
+receive deployment credentials. PR previews and fixture suites must not use
+production data or provider accounts.
 
-## Bag-receiving activation, 11 September 2026
+## Application and database
 
-The owner permits completed, tested functions to be activated directly in staging
-while there are no external end users. The bag-receiving migration was reviewed
-with a remote dry run, applied additively to the linked staging project, and its
-version was verified against the local migration history. No reset or seed ran.
+1. Create a Supabase project for the target environment. Review its identity and
+   apply the committed additive migrations with the CLI. Never reset a hosted
+   database or repair its migration history to force a deployment through.
+2. Configure email confirmation, password recovery and TOTP. Set Supabase Auth's
+   site URL to the application's fixed HTTPS origin and allow its exact
+   `/auth/callback`. Configure a verified sender with your email provider.
+3. Deploy the Next.js application using Node.js 24. Set
+   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
+   `NEXT_PUBLIC_APP_URL` and `KOMISIO_ENVIRONMENT=staging` or `production` for the
+   intended target. Never use a service-role/secret key as a public client key.
+4. Keep server credentials in the hosting secret store. Do not set test database
+   URLs on a hosted application. Rebuild after changing public variables;
+   they are embedded at build time and must not be promoted across environments.
+5. Enable optional services only after their configuration and authorization
+   checks pass. See [SELF-HOSTING.md](SELF-HOSTING.md) and
+   [OPERATIONS-RUNBOOK.md](OPERATIONS-RUNBOOK.md).
 
-`KOMISIO_INTAKE_ENABLED=true` is set on the Vercel Production target of the
-**staging project**. That Vercel target name does not make this a production store
-service. The application was redeployed from merge commit
-`cb39c5d3c0ee19b6d54be30fffca34692a79e381` after PR #13 passed its checks.
+## Repository workflows
 
-The authenticated staging walkthrough registered a clearly marked synthetic
-seller and received one synthetic bag through the normal GUI. It sent no email
-and made no payment. Persistence was checked after navigation/reload and the
-individual label was verified without seller contact information. Physical
-printing was not exercised. The test record remains visibly marked as test data.
-Login/register reachability and anonymous mutation denial were also checked.
-This does not resolve the older invitation-acceptance or recovery pilot items.
+The supplied GitHub workflows name `staging-database` and `production-database`
+environments. The migration jobs use `SUPABASE_PROJECT_ID` and the server-only
+`SUPABASE_ACCESS_TOKEN`; an application service-role key is not required.
+Fork operators must review repository/branch guards and configure their own
+protected environments before enabling those workflows. Never reuse another
+operator's project identifiers, management tokens or deployment hooks.
 
-For future slices: verify the staging target and green revision, apply reviewed
-additive migrations, activate/redeploy and exercise the changed hosted journey.
-Keep financial provider transactions and production activation separately scoped.
+Apply and verify migrations before promoting the compatible application build.
+Require the configured test and migration checks for that exact commit. A failed
+or skipped check must retain the prior application. Do not force-promote a build
+to bypass the checks. Keep production approval separate from staging verification.
 
-## Automatic database deployment
+## Verification and recovery
 
-After a merge to main, Platform checks runs its isolated test suite and then the
-`staging-migrations` job. The job checks out that exact revision, checks remote
-history, dry-runs pending migrations, applies them and verifies the resulting
-history. Its GitHub step summary records the revision and applied versions.
-Failures stop deployment; retry failed jobs in GitHub after resolving the cause.
-Never repair migration history or reset staging to make a run pass.
+`node scripts/check-hosted-site.mjs https://your-staging-origin` checks public
+reachability and anonymous mutation denial. It does not verify authenticated
+access, database behavior, MFA, email delivery or a live provider transaction.
+Complete a synthetic walkthrough of those configured features separately.
+Keep fixture tests on loopback; they create identities and are not production
+smoke tests. Record installation-specific evidence outside the public repository.
 
-The `staging-database` GitHub environment must restrict deployment branches to
-main. It holds the `SUPABASE_PROJECT_ID` variable and `SUPABASE_ACCESS_TOKEN`
-secret for the verified staging account. The pinned Supabase CLI obtains a
-temporary database login through the management token; no database password or
-service-role key is placed in the application. Rotate the token through that
-environment when needed. PR workflows never use this environment.
-
-Vercel deployment is independent by default and can finish before database
-checks; keep application releases compatible with both schemas (a page read
-that calls a new RPC tolerates PostgREST `PGRST202` until the migration lands).
-To make the order database first, the owner creates a Vercel deploy hook for
-main, stores its URL as the `VERCEL_DEPLOY_HOOK_URL` secret in the
-`staging-database` environment and turns off automatic Git deployments for
-main; the job's last step then fires the hook after the migrations are verified
-and does nothing when the secret is absent. This automates database delivery,
-not atomic application/database releases or a real POS verification.
-
-Protocol: [Supabase GitHub Actions deployment](https://supabase.com/docs/guides/deployment/managing-environments).
-
-## Selected services
-
-- Vercel Pro, Stockholm (`arn1`); Next.js preset, Node.js 24, repository root.
-- Supabase Pro, specific Stockholm region (`eu-north-1`), dedicated staging project.
-- Resend for Supabase Auth SMTP and optional invitation email.
-
-Create resources under Komisio-controlled accounts. The operating company,
-billing contact and future production setup remain owner decisions. The pilot
-uses the verified `komisio.com` sender domain and the staging origin above.
-Do not attach unrelated employer/customer accounts. This document does not
-authorize purchases beyond the owner's agreed setup.
-
-## Configure the test deployment
-
-1. Create an empty Supabase staging project in Stockholm. Apply the committed
-   additive migrations using the CLI against this explicitly selected project.
-   Review the target before applying. Never use database reset or the local
-   concurrency tests against a hosted project.
-2. Configure email confirmation, password recovery, minimum password length 10,
-   TOTP enrollment and verification. Configure a verified sender through Resend
-   SMTP in Supabase Auth; use conservative production-like email rate limits.
-3. Import `Komisio/komisio` into the Komisio Vercel team. Use a fixed staging
-   domain, initially the assigned project `.vercel.app` origin if necessary.
-   `vercel.json` pins Stockholm and runs a configuration check before building.
-4. Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
-   `NEXT_PUBLIC_APP_URL` and `KOMISIO_ENVIRONMENT=staging` in this Vercel project.
-   A publishable/legacy anon key is intentional; secret/service-role keys are
-   rejected by the preflight. Never set `TEST_DATABASE_URL` in Vercel.
-5. Set Supabase Auth site URL to the fixed HTTPS origin and allow exactly its
-   `/auth/callback`. Set the same origin as `NEXT_PUBLIC_APP_URL`; the API checks
-   the browser Origin header. Public variables are embedded at build time, so
-   redeploy after changing them. Do not auto-promote a build across environments.
-6. Keep all preview deployments on synthetic staging data. Only trusted code
-   receives staging credentials. Untrusted pull requests do not receive Resend,
-   Supabase management, database or future payment credentials. Do not share
-   production settings with this project. Keep a production project separate
-   when that release gate is ready.
-
-The initial deployment check intentionally rejects `KOMISIO_ENVIRONMENT=production`.
-Staging readiness is not a production release. Removing that gate requires the
-pilot evidence and recovery/abuse controls below, not merely changing a label.
-
-## Invitation email
-
-The default `INVITATION_EMAIL_DELIVERY=manual` retains shareable invitation links.
-To test actual email set:
-
-```text
-INVITATION_EMAIL_DELIVERY=resend
-RESEND_API_KEY=<sending-only key restricted to the verified sender domain>
-INVITATION_EMAIL_FROM=Komisio <chosen-verified-sender>
-INVITATION_EMAIL_ALLOWLIST=<exact comma-separated pilot mailbox addresses>
-```
-
-Keep these settings server-side. They are independent of Supabase Auth SMTP.
-The pilot allowlist is mandatory; unknown recipients fall back to manual sharing.
-An email is submitted only after the existing authenticated database function
-has created the invitation. Its ID is the provider idempotency key. No token is
-persisted in plaintext in the application database or written to application logs.
-Email necessarily contains the token and recipient, which the email provider processes.
-
-The UI distinguishes provider acceptance, manual/restricted delivery and an
-unconfirmed submission. A timeout can occur after the provider accepts a message;
-it does not prove that delivery failed. Manual sharing remains available without
-creating another invitation. A deliberately reissued invitation revokes the old
-link as before. This implementation does not persist delivery receipts or process
-bounce webhooks. Do not describe API acceptance as successful inbox delivery.
-
-Before unrestricted invitation email, add durable account/tenant send limits,
-bounce/complaint handling and delivery monitoring. The current allowlist is a
-pilot restriction, not a scalable rate limiter. Do not remove it for public signup
-without those controls. Auth email is controlled separately in Supabase.
-
-## Verification and release record
-
-The full platform workflow runs on pushes to main only. PRs retain local testing
-and review, but do not run the same CI suite before merge. The staging Vercel
-project keeps its Git connection and builds the exact main commit in parallel.
-Configure its **Deployment Checks** to require both GitHub checks `platform`
-and `staging-migrations` for its Production target (which serves staging, not
-the separate production project). Keep automatic aliasing enabled. Neither
-check alone is sufficient: database preparation depends on platform success,
-and a skipped database job must not permit publication after failed tests.
-
-Do not rename these jobs without updating the Vercel requirements. No deploy
-hook or additional deploy token is needed. A failed or unfinished check leaves
-the previous application on the staging domain. Do not use Force Promote to
-bypass it. Additive migrations that have already run remain applied if a later
-configuration or application step fails. Production retains its separate
-owner-approved workflow and staging-verification gate, with no fixed waiting
-period (owner decision, 2026-10-27). Preview builds are not
-proof of passing the full suite or permission to promote.
-
-After the exact revision passes GitHub's Platform checks, verify basic reachability:
-
-```sh
-node scripts/check-hosted-site.mjs https://your-staging-origin
-```
-
-This checks login/register pages and anonymous mutation denial. It does not
-claim database, authenticated access, MFA or email delivery verification. If
-deployment protection intercepts requests, run the walkthrough in an authorized
-browser; do not weaken protection to make the script green.
-
-Complete a synthetic owner/staff walkthrough on the actual HTTPS origin:
-
-- Register, confirm email, create two stores and switch between them.
-- Invite an allowlisted mailbox; verify inbox receipt and acceptance by the
-  matching verified account. Test a non-allowlisted recipient and manual sharing.
-- Verify staff cannot manage members, a stale store form is rejected and one
-  store cannot read another's data. Repeat MFA enrollment/login and password reset.
-- Verify provider failure retains the invitation and does not falsely report
-  inbox delivery; unit tests cover rejected/ambiguous submissions without email.
-- Record deployment URL, Git SHA, project identifiers, service regions and test
-  outcome privately. Never store credentials or real mailbox identities publicly.
-
-Existing Playwright tests use localhost and a local inbox. Keep running them in
-CI; do not redirect them to the hosted project. They create synthetic identities
-and are not a safe general-purpose production test suite.
-
-## Recovery and progression
-
-Revert a failed application release to the last verified Vercel deployment.
-Database migrations are additive and remain applied; application rollback does
-not restore the database. Verify backward compatibility before each migration.
-Stop the pilot if signup/confirmation, membership isolation or MFA fails.
-
-Before admitting external pilot users, define lost-device MFA recovery and test
-restoration into an isolated project. Cover both database/Auth data and operator
-configuration; future Storage objects need a separate backup. Select and verify
-RPO/RTO before real sales or payouts. Configure email/uptime alerts and spending
-alerts; avoid hard cost stops that silently interrupt financial workflows.
-
-The next delivery is hosted identity/team verification, followed by one complete
-store workflow and its first operated integration. Free core access and a
-the earlier monthly-price proposal (superseded; see PRICING.md) tier are the accepted product direction. Billing, quotas, payment
-webhooks and domain tables are not part of this staging preparation.
+Roll back an application to a previously verified compatible build if necessary.
+Applied migrations remain applied; an application rollback does not restore a
+database. Verify backups, Storage coverage and restoration in an isolated target.
+See [operational checks](PILOT-GATES.md) and
+[MFA recovery](OPERATIONS-MFA-RECOVERY.md).

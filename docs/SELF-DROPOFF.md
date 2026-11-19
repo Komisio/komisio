@@ -4,8 +4,7 @@ A seller announces a handover (a bag or a box) from the seller portal and
 gets a reference `H-n`. The store records custody by receiving it: staff at
 the counter today, a locker integration later. Receiving creates the
 ordinary bag receipt under the same agreement rules, so inspection, items,
-sales and everything downstream are unchanged. The owner approved the new
-core table on 2026-09-13.
+sales and everything downstream are unchanged.
 
 ## Shape
 

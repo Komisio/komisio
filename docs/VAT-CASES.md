@@ -1,13 +1,12 @@
 # VAT cases: engine-facing table
 
-Status: accepted design, 2026-09-13 (owner decision: VAT treatment is a
-tenant setting). Komisio does not decide which treatment is legally right for
+VAT treatment is a tenant setting. Komisio does not decide which treatment is legally right for
 a store. Each tenant selects its VAT modes in the store policy, together with
 its accountant; Komisio guarantees that every mode is computed
 deterministically as documented here, records the mode and basis on every
 sale line, and never changes a line afterwards. Commission and seller credit
-never depend on the mode. Amounts are öre in the database. The reasoning and
-the legal sources to check per mode are in `skills/consignment-sweden/SKILL.md`.
+never depend on the mode. Amounts are öre in the database. These are implementation contracts, not legal advice; verify the applicable
+treatment with qualified advice before configuring a store.
 
 ## Modes
 
@@ -33,7 +32,7 @@ totals are sums of lines, never re-rounded.
 
 ## Rules the engine enforces
 
-- Owner decision #626 (2026-10-25): new sale lines use the explicit seller
+- Business-seller contract (#626): new sale lines use the explicit seller
   type and current versioned VAT registration, independently of commission
   basis. They freeze `sellerType`, `sellerTaxable`, `sellerVatNumber` and
   `sellerProfileRevision` in `vat_basis`. Non-registered businesses use the
@@ -63,4 +62,4 @@ Komisio's responsibility ends at deterministic, documented computation. The
 choice of mode, and its correctness for the store, is the tenant's, made with
 its accountant; the settings page says so in plain words and links the skill.
 
-Self-billing (#626, owner approved 2026-10-25): supplier gross is seller credit. For a registered business under full VAT, supplier VAT is round(gross × rateBp / (10000 + rateBp)); net is gross minus VAT. Freeze per sale in minor units. Returns negate the original supplier facts, regardless of later profile/rate changes. Margin and non-registered suppliers have no separately charged supplier VAT. Retail VAT and commission VAT remain distinct. Self-billing documents freeze supplier identity, store identity, currency and line amounts; corrections reference and negate the original invoice facts. Existing private statements and old sale lines remain unchanged.
+Self-billing (#626): supplier gross is seller credit. For a registered business under full VAT, supplier VAT is round(gross × rateBp / (10000 + rateBp)); net is gross minus VAT. Freeze per sale in minor units. Returns negate the original supplier facts, regardless of later profile/rate changes. Margin and non-registered suppliers have no separately charged supplier VAT. Retail VAT and commission VAT remain distinct. Self-billing documents freeze supplier identity, store identity, currency and line amounts; corrections reference and negate the original invoice facts. Existing private statements and old sale lines remain unchanged.

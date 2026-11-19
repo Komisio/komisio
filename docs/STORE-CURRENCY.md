@@ -1,6 +1,6 @@
 # Store currency
 
-Owner decision 2026-09-13: one currency per store. The earlier product let a
+Each store uses one currency. The earlier product let a
 store pick a currency; the new Komisio had SEK fixed everywhere until this
 slice.
 

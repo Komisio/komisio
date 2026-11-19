@@ -5448,6 +5448,9 @@
     "reload": "Seite neu laden"
   },
   "externalOffers": {
+    "alternativeAmount": "Alternativbetrag für den Verkäufer (optional), SEK",
+    "alternativeInvalid": "Gib einen positiven Betrag unter dem Wunschpreis und einen geplanten Verkaufspreis an.",
+    "sendAlternative": "Preis ablehnen und Angebot senden",
     "title": "Anfragen",
     "intro": "Über die App an Komisio gesendete Artikel.",
     "empty": "Noch keine Anfragen.",

@@ -62,6 +62,7 @@ export const externalOfferSummary = z.object({
   expectedSalePriceOre: ore,
   currency: z.literal('SEK'),
   agreementVersionId: uuid,
+  alternativeNote: z.string().max(1000).nullish(),
   staffSelectsMethod: z.boolean().optional(),
   saleMethod: z
     .enum(['direct_purchase', 'consignment'])
@@ -129,6 +130,15 @@ export const issueExternalOfferCommand = z.strictObject({
 export const reviewExternalRequestCommand = z.discriminatedUnion('action', [
   issueExternalOfferCommand,
   z.strictObject({
+    action: z.literal('alternative'),
+    tenantId: uuid,
+    commandId: uuid,
+    requestId: uuid,
+    sellerAmountOre: ore,
+    expectedSalePriceOre: ore,
+    note: z.string().trim().max(1000),
+  }),
+  z.strictObject({
     action: z.literal('decline'),
     tenantId: uuid,
     commandId: uuid,
@@ -142,6 +152,19 @@ export async function reviewExternalRequest(
 ) {
   const c = reviewExternalRequestCommand.parse(input)
   if (c.action === 'offer') return issueExternalOffer(client, c)
+  if (c.action === 'alternative') {
+    const result = await client.rpc('offer_central_price_alternative', {
+      p_tenant: c.tenantId,
+      p_id: c.commandId,
+      p_request: c.requestId,
+      p_amount: c.sellerAmountOre,
+      p_sale_price: c.expectedSalePriceOre,
+      p_note: c.note,
+    })
+    check(result.error)
+    if (result.data !== c.commandId) throw new Error('REQUEST_FAILED')
+    return { id: c.commandId }
+  }
   const r = await client.rpc('decline_external_item_request', {
     p_id: c.commandId,
     p_tenant: c.tenantId,

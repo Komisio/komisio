@@ -103,6 +103,13 @@ export const centralParcelCommand = z.union([
     offerId: z.uuid(),
     protocol: z.literal(2).optional(),
   }),
+  z.strictObject({
+    action: z.literal('acceptAlternative'),
+    requestId: z.uuid(),
+    offerId: z.uuid(),
+    accepted: z.literal(true),
+    agreementVersionId: z.uuid(),
+  }),
   bookCentralParcel,
 ])
 export type CentralParcel = z.infer<typeof centralParcel>

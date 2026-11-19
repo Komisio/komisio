@@ -5442,6 +5442,9 @@
     "reload": "Last inn siden på nytt"
   },
   "externalOffers": {
+    "alternativeAmount": "Annet beløp til selgeren (valgfritt), SEK",
+    "alternativeInvalid": "Oppgi et positivt beløp under selgerens pris og en planlagt salgspris.",
+    "sendAlternative": "Avslå prisen og send tilbud",
     "title": "Forespørsler",
     "intro": "Varer sendt til Komisio via appen.",
     "empty": "Ingen forespørsler ennå.",

@@ -285,6 +285,101 @@ describe('central parcel boundary', () => {
     ).toString('base64')
     await expect(parsePostNordBooking(response, 'H-1')).rejects.toThrow()
   })
+  it('accepts an alternative, books the saved sender and recovers the same parcel without a second carrier call', async () => {
+    const accepted = {
+      action: 'acceptAlternative',
+      requestId: id,
+      accepted: true,
+      offerId: offer,
+      agreementVersionId: 'f7800000-0000-4000-8000-000000000901',
+    }
+    const rpc = vi
+      .fn()
+      .mockResolvedValueOnce({ data: id })
+      .mockResolvedValueOnce({ data: { offerId: offer, parcel: null } })
+      .mockResolvedValueOnce({
+        data: {
+          account: {
+            address: {
+              street: contact.street,
+              postalCode: contact.postalCode,
+              city: contact.city,
+            },
+            contact: {
+              firstName: 'Synthetic',
+              lastName: 'sender',
+              phone: contact.phone,
+            },
+          },
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          dispatch: true,
+          parcel,
+          messageId: 'K1',
+          handoverReference: 'H-1',
+        },
+      })
+      .mockResolvedValueOnce({ data: id })
+      .mockResolvedValueOnce({ data: id })
+      .mockResolvedValueOnce({ data: { offerId: offer, parcel } })
+    const transport = vi.fn().mockResolvedValue(Response.json(await reply()))
+    for (let i = 0; i < 2; i++)
+      expect(
+        await executeCentralParcel(
+          { rpc } as unknown as SupabaseClient,
+          accepted,
+          config,
+          transport,
+        ),
+      ).toEqual({ id })
+    expect(transport).toHaveBeenCalledTimes(1)
+    expect(rpc).toHaveBeenCalledWith('claim_central_parcel_group', {
+      p_id: id,
+      p_offer: offer,
+      p_offers: [offer],
+      p_address: command.address,
+      p_environment: 'sandbox',
+    })
+    expect(rpc).toHaveBeenCalledWith('finish_central_parcel', {
+      p_id: id,
+      p_result: expect.objectContaining({ returnId: 'synthetic-return' }),
+    })
+  })
+  it('keeps consent when shipping details need completing and never dispatches a denied or expired offer', async () => {
+    const c = {
+      action: 'acceptAlternative',
+      requestId: id,
+      accepted: true,
+      offerId: offer,
+      agreementVersionId: 'f7800000-0000-4000-8000-000000000901',
+    }
+    const rpc = vi
+      .fn()
+      .mockResolvedValueOnce({ data: id })
+      .mockResolvedValueOnce({ data: { offerId: offer, parcel: null } })
+      .mockResolvedValueOnce({ data: { account: null } })
+      .mockResolvedValueOnce({ error: { message: 'OFFER_EXPIRED' } })
+    const transport = vi.fn()
+    expect(
+      await executeCentralParcel(
+        { rpc } as unknown as SupabaseClient,
+        c,
+        config,
+        transport,
+      ),
+    ).toEqual({ id })
+    await expect(
+      executeCentralParcel(
+        { rpc } as unknown as SupabaseClient,
+        c,
+        config,
+        transport,
+      ),
+    ).rejects.toThrow('OFFER_EXPIRED')
+    expect(transport).not.toHaveBeenCalled()
+  })
   it('posts once to a fixed sandbox host without carrier email/SMS or redirects', async () => {
     const transport = vi.fn().mockResolvedValue(Response.json(await reply()))
     await bookPostNordReturn(config, parcel, 'H-1', 'K1', transport)

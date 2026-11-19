@@ -89,6 +89,13 @@ export async function raceCentralFixedPrice({ setup, connectionString }) {
       "select submit_central_item_request($1,$2,'Dress','','good','',60000,'SEK',$3,'SE','seller_amount',$4,'direct_purchase')",
       [request, tenant, [photo], agreement],
     )
+    const alternativeRequest = randomUUID(),
+      alternativeOffer = randomUUID(),
+      response = randomUUID()
+    await setup.query(
+      "select submit_central_item_request($1,$2,'Coat','','good','',60000,'SEK',$3,'SE','seller_amount',$4,'direct_purchase')",
+      [alternativeRequest, tenant, [photo], agreement],
+    )
     await setup.query('reset role')
     await Promise.all(
       clients.map(async (c) => {
@@ -167,8 +174,57 @@ export async function raceCentralFixedPrice({ setup, connectionString }) {
     assert.equal(posted.rowCount, 1)
     assert.equal(posted.rows[0].amount, '60000')
     await Promise.all(clients.map((c) => inspect(c, posted.rows[0].command_id)))
+    await Promise.all(
+      clients.map((c) =>
+        c.query(
+          "select offer_central_price_alternative($1,$2,$3,35000,80000,'Wear')",
+          [tenant, alternativeOffer, alternativeRequest],
+        ),
+      ),
+    )
+    await Promise.all(
+      clients.map(async (c) => {
+        await c.query("select set_config('request.jwt.claims',$1,false)", [
+          JSON.stringify({ sub: seller, role: 'authenticated' }),
+        ])
+        await c.query('select accept_central_price_alternative($1,$2,$3)', [
+          response,
+          alternativeOffer,
+          agreement,
+        ])
+      }),
+    )
+    const sender = {
+      street: 'Test 2',
+      postalCode: '12345',
+      city: 'Teststad',
+      firstName: 'Synthetic',
+      lastName: 'Seller',
+      phone: '+46700000001',
+    }
+    const claims = await Promise.all(
+      clients.map((c) =>
+        c.query(
+          "select claim_central_parcel_group($1,$2,array[$2]::uuid[],$3,'sandbox') result",
+          [response, alternativeOffer, sender],
+        ),
+      ),
+    )
+    assert.deepEqual(claims.map((r) => r.rows[0].result.dispatch).sort(), [
+      false,
+      true,
+    ])
+    assert.equal(
+      (
+        await setup.query(
+          'select count(*)::integer n from external_item_handover_links where offer_id=$1',
+          [alternativeOffer],
+        )
+      ).rows[0].n,
+      1,
+    )
     console.log(
-      'central fixed-price race: one acceptance, parcel, dispatch, purchase and credit',
+      'central fixed-price and alternative races: one acceptance and parcel dispatch per item',
     )
   } finally {
     await setup.query('reset role')

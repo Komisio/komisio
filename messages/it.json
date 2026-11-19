@@ -5442,6 +5442,9 @@
     "reload": "Ricarica pagina"
   },
   "externalOffers": {
+    "alternativeAmount": "Importo alternativo per il venditore (facoltativo), SEK",
+    "alternativeInvalid": "Inserisci un importo positivo inferiore a quello richiesto e un prezzo di vendita previsto.",
+    "sendAlternative": "Rifiuta il prezzo e invia l’offerta",
     "title": "Richieste",
     "intro": "Articoli inviati a Komisio tramite l’app.",
     "empty": "Nessuna richiesta.",

@@ -16,7 +16,7 @@ export function ExternalRequestReview({
   agreementId,
   d,
   leaveWarning,
-  declineOnly = false,
+  fixedAsk = null,
 }: {
   tenantId: string
   requestId: string
@@ -24,7 +24,7 @@ export function ExternalRequestReview({
   agreementId: string | null
   d: Dictionary['externalOffers']
   leaveWarning: string
-  declineOnly?: boolean
+  fixedAsk?: string | null
 }) {
   const router = useRouter(),
     prefix = useId()
@@ -33,11 +33,15 @@ export function ExternalRequestReview({
   )
   const running = useRef(false)
   const [action, setAction] = useState<'offer' | 'decline'>(
-    declineOnly ? 'decline' : 'offer',
+    fixedAsk ? 'decline' : 'offer',
   )
   const [busy, setBusy] = useBusyState(false)
   const [locked, setLocked] = useState(false),
     [saved, setSaved] = useState(false)
+  const [alternative, setAlternative] = useState('')
+  const withAlternative = Boolean(
+    fixedAsk && action === 'decline' && alternative.trim(),
+  )
   const [dirty, setDirty] = useState(false),
     [error, setError] = useState(''),
     [changed, setChanged] = useState(false)
@@ -65,6 +69,20 @@ export function ExternalRequestReview({
               agreementVersionId: agreementId,
               sellerAmountOre: amount,
               expectedSalePriceOre: price,
+            }
+          } else if (withAlternative) {
+            const amount = externalOfferOre(alternative),
+              price = externalOfferOre(String(fields.get('price') ?? ''))
+            if (!amount || !price || BigInt(amount) >= BigInt(fixedAsk!)) {
+              setError(d.alternativeInvalid)
+              return
+            }
+            pending.current = {
+              ...base,
+              action: 'alternative',
+              sellerAmountOre: amount,
+              expectedSalePriceOre: price,
+              note: String(fields.get('note') ?? '').trim(),
             }
           } else
             pending.current = {
@@ -113,7 +131,7 @@ export function ExternalRequestReview({
     >
       <fieldset disabled={locked} className="submission-fields">
         <div className={styles.mode}>
-          {(declineOnly
+          {(fixedAsk
             ? (['decline'] as const)
             : (['offer', 'decline'] as const)
           ).map((value) => (
@@ -157,10 +175,35 @@ export function ExternalRequestReview({
             <p className="muted">{d.minimumGuidance}</p>
           </>
         ) : (
-          <label>
-            {d.note}
-            <textarea name="note" maxLength={1000} rows={2} />
-          </label>
+          <>
+            {fixedAsk ? (
+              <label>
+                {d.alternativeAmount}
+                <input
+                  name="alternative"
+                  inputMode="decimal"
+                  maxLength={12}
+                  value={alternative}
+                  onChange={(e) => setAlternative(e.target.value)}
+                />
+              </label>
+            ) : null}
+            {withAlternative ? (
+              <label>
+                {d.salePrice}
+                <input
+                  name="price"
+                  inputMode="decimal"
+                  required
+                  maxLength={12}
+                />
+              </label>
+            ) : null}
+            <label>
+              {d.note}
+              <textarea name="note" maxLength={1000} rows={2} />
+            </label>
+          </>
         )}
       </fieldset>
       {!saved && !changed ? (
@@ -175,7 +218,9 @@ export function ExternalRequestReview({
               ? d.retry
               : action === 'offer'
                 ? d.send
-                : d.decline}
+                : withAlternative
+                  ? d.sendAlternative
+                  : d.decline}
         </button>
       ) : null}
       {saved ? <p role="status">{d.saved}</p> : null}

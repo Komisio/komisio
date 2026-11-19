@@ -1,0 +1,56 @@
+begin;
+select no_plan();
+create function pg_temp.uid(n int) returns uuid language sql immutable as $$ select ('f5030000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid $$;
+insert into auth.users(id,email,email_confirmed_at) values(pg_temp.uid(1),'staff503@example.test',now()),(pg_temp.uid(2),'seller502@example.test',now());
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select create_tenant('Central 502','central-502',gen_random_uuid()) as tenant \gset
+select publish_seller_agreement(:'tenant',pg_temp.uid(3),null,'Terms','Synthetic terms','sv',true);
+select publish_store_policy(:'tenant',gen_random_uuid(),(current_store_policy(:'tenant')->>'id')::uuid,(current_store_policy(:'tenant')->'policy')||'{"vatModeStoreOwned":"store_full"}'::jsonb);
+reset role;
+update platform_settings set central_app_tenant_id=:'tenant';
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
+select save_central_intake_profile(pg_temp.uid(4),:'tenant',pg_temp.uid(3),-1,'{"street":"Test 1","postalCode":"12345","city":"Test"}','{"firstName":"Test","lastName":"Seller","phone":"+46700000002"}',true);
+select read_central_intake_profile()#>>'{account,sellerId}' as seller \gset
+select reserve_external_item_photo(pg_temp.uid(5),repeat('b',64),100);
+insert into storage.objects(bucket_id,name) values('external-item-photos',pg_temp.uid(2)||'/'||pg_temp.uid(5)||'.jpg');
+select is(save_central_payout_preference(:'tenant',:'seller',pg_temp.uid(6),null,'{"method":"swish","phone":"+46700000001"}'),pg_temp.uid(6),'confirm Swish once');
+select submit_central_item_request(pg_temp.uid(n),:'tenant','Coat','','good','',60000,'SEK',array[pg_temp.uid(5)],'SE','seller_amount',pg_temp.uid(3),'staff_decides') from generate_series(10,13) n;
+select throws_like(format('select offer_central_price_alternative(%L,%L,%L,35000,80000,%L)',:'tenant',pg_temp.uid(30),pg_temp.uid(10),'Reason'),'%FORBIDDEN%','seller cannot issue a price');
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select throws_like(format('select offer_central_price_alternative(%L,%L,%L,60000,80000,%L)',:'tenant',pg_temp.uid(30),pg_temp.uid(10),''),'%INVALID_INPUT%','alternative is strictly below the asking price');
+select is(offer_central_price_alternative(:'tenant',pg_temp.uid(30),pg_temp.uid(10),35000,80000,'Wear'),pg_temp.uid(30),'alternative is issued');
+select is(offer_central_price_alternative(:'tenant',pg_temp.uid(30),pg_temp.uid(10),35000,80000,'Wear'),pg_temp.uid(30),'staff retry is safe');
+select throws_like(format('select offer_central_price_alternative(%L,%L,%L,33000,80000,%L)',:'tenant',pg_temp.uid(30),pg_temp.uid(10),'Wear'),'%REQUEST_CONFLICT%','retry cannot change the amount');
+select offer_central_price_alternative(:'tenant',pg_temp.uid(n+20),pg_temp.uid(n),36000,80000,'') from generate_series(11,12)n;
+select decline_external_item_request(pg_temp.uid(90),:'tenant',pg_temp.uid(13),'End');
+select throws_like(format('select offer_central_price_alternative(%L,%L,%L,35000,80000,%L)',:'tenant',pg_temp.uid(33),pg_temp.uid(13),''),'%REQUEST_CHANGED%','final refusal remains closed');
+select throws_like(format('select accept_central_price_alternative(%L,%L,%L)',pg_temp.uid(40),pg_temp.uid(30),pg_temp.uid(3)),'%OFFER_NOT_FOUND%','only the owner can accept');
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
+select is(read_external_item_offer(pg_temp.uid(30))->>'alternativeNote','Wear','owner sees the reason');
+select is(read_external_item_offer(pg_temp.uid(30))->>'sellerAmountOre','35000','owner sees the exact alternative');
+select is(read_external_item_offer(pg_temp.uid(30))->>'handover',null::text,'no handover before consent');
+select throws_like(format('select accept_central_price_alternative(%L,%L,%L)',pg_temp.uid(40),pg_temp.uid(30),pg_temp.uid(99)),'%AGREEMENT_CHANGED%','accepted terms are bound to the offer');
+select is(accept_central_price_alternative(pg_temp.uid(40),pg_temp.uid(30),pg_temp.uid(3)),pg_temp.uid(40),'owner accepts');
+select is(accept_central_price_alternative(pg_temp.uid(40),pg_temp.uid(30),pg_temp.uid(3)),pg_temp.uid(40),'same acceptance can be replayed');
+select is(complete_external_item_offer(pg_temp.uid(41),pg_temp.uid(31),pg_temp.uid(3),null,null),pg_temp.uid(41),'older client reuses the Swish seller');
+select respond_external_item_offer(pg_temp.uid(42),pg_temp.uid(32),false,null);
+select is(read_external_item_offer(pg_temp.uid(32))->>'status','declined','refusing the alternative ends it');
+select is(read_central_parcel(pg_temp.uid(30))->>'staffManaged','false','seller sees shipping');
+reset role;
+insert into komisio_private.central_shipping_runtime(singleton,key_hash,tenant_id,environment,recipient,service_code)
+ values(true,encode(sha256(convert_to(repeat('7',64),'UTF8')),'hex'),:'tenant','sandbox','{"name":"Synthetic company","street":"Test 2","postalCode":"12345","city":"Test","country":"SE","phone":"+46700000000","email":"parcel@example.test"}','11');
+set local role authenticated;
+select set_config('request.headers',jsonb_build_object('x-komisio-shipping',repeat('7',64))::text,true);
+select '{"firstName":"Test","lastName":"Seller","phone":"+46700000002","street":"Test 1","postalCode":"12345","city":"Test"}' as sender \gset
+select is(claim_central_parcel_group(pg_temp.uid(40),pg_temp.uid(30),array[pg_temp.uid(30)],:'sender','sandbox')->>'dispatch','true','book one shipment');
+select is(claim_central_parcel_group(pg_temp.uid(40),pg_temp.uid(30),array[pg_temp.uid(30)],:'sender','sandbox')->>'dispatch','false','never dispatch the parcel twice');
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select receive_handover(:'tenant',pg_temp.uid(50),(read_external_item_offer(pg_temp.uid(30))#>>'{handover,id}')::uuid,'staff_receipt','');
+select inspect_central_direct_purchase(:'tenant',pg_temp.uid(10),pg_temp.uid(60),false);
+select is((select amount_ore::bigint from public.payouts where tenant_id=:'tenant' and request_source='automatic'),35000::bigint,'queue only the accepted lower price');
+select receive_handover(:'tenant',pg_temp.uid(51),(read_external_item_offer(pg_temp.uid(31))#>>'{handover,id}')::uuid,'staff_receipt','');
+select confirm_central_receipt_consignment(:'tenant',pg_temp.uid(11));
+select is(read_external_item_offer(pg_temp.uid(31))#>>'{guarantee,amountOre}','36000','consignment uses the alternative amount');
+select * from finish(); rollback;

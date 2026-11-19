@@ -132,6 +132,7 @@ export function CentralRequestGroup(
           !row.parcel &&
           (row.queue_status === 'waiting' ||
             (row.offer?.status === 'accepted' &&
+              row.offer.sellerAmountOre === row.desired_price_ore &&
               row.offer.handover &&
               row.offer.handover.status === 'open'))
         const checked = selected.includes(row.id)

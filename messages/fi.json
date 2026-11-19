@@ -5448,6 +5448,9 @@
     "reload": "Lataa sivu uudelleen"
   },
   "externalOffers": {
+    "alternativeAmount": "Vaihtoehtoinen summa myyjälle (valinnainen), SEK",
+    "alternativeInvalid": "Anna myyjän hintaa pienempi positiivinen summa ja suunniteltu myyntihinta.",
+    "sendAlternative": "Hylkää hinta ja lähetä tarjous",
     "title": "Pyynnöt",
     "intro": "Komisiolle sovelluksessa lähetetyt tuotteet.",
     "empty": "Ei vielä pyyntöjä.",

@@ -1,4 +1,6 @@
 begin;
+-- Report dates follow the Swedish store calendar, including the hour after local midnight.
+set local time zone 'Europe/Stockholm';
 select no_plan();
 insert into auth.users(id,email,email_confirmed_at,phone,phone_confirmed_at) values
  ('f7400000-0000-4000-8000-000000000001','registration-staff@example.test',now(),null,null),

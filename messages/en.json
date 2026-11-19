@@ -387,6 +387,7 @@
     "stocktakePending": "Check the remaining items before finishing.",
     "collectionNotDue": "The collection deadline has not passed.",
     "overviewHelpLabel": "About receiving",
+    "payoutBankRequired": "The seller must save a payout account with Komisio first.",
     "payoutBankReviewRequired": "An owner or administrator must review the seller’s bank details under Payouts first.",
     "saleVatRequired": "The sale was not recorded because the store’s VAT treatment has not been selected. An owner or administrator must choose it in Store settings and publish the policy before you try again.",
     "payoutHistoryReview": "Historical payout evidence needs reconciliation. Do not send the same payment again.",
@@ -2680,6 +2681,7 @@
     "payoutErrors": {
       "INVALID_INPUT": "Enter an amount greater than zero with no more than two decimal places.",
       "PAYOUT_BELOW_THRESHOLD": "The amount is below the store’s minimum.",
+      "PAYOUT_BANK_REQUIRED": "Save your payout account with Komisio before requesting a payout.",
       "PAYOUT_EXCEEDS_BALANCE": "The amount exceeds your available balance. Check the balance above."
     },
     "collectionDeadline": "Collect by",

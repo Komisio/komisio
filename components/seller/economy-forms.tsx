@@ -112,6 +112,7 @@ export function SellerEconomyForms({
         if (
           [
             'INVALID_INPUT',
+            'PAYOUT_BANK_REQUIRED',
             'PAYOUT_EXCEEDS_BALANCE',
             'PAYOUT_BELOW_THRESHOLD',
           ].includes(code)

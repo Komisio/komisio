@@ -387,6 +387,7 @@
     "stocktakePending": "Controlla gli articoli rimanenti prima di concludere.",
     "collectionNotDue": "Il termine per il ritiro non è ancora scaduto.",
     "overviewHelpLabel": "Sulla ricezione",
+    "payoutBankRequired": "Il venditore deve prima salvare un conto per i pagamenti su Komisio.",
     "payoutBankReviewRequired": "Un proprietario o amministratore deve prima verificare i dati bancari del venditore in Pagamenti.",
     "saleVatRequired": "La vendita non è stata registrata perché non è stato scelto il trattamento IVA del negozio. Un proprietario o amministratore deve sceglierlo nelle impostazioni del negozio e pubblicare la politica prima di riprovare.",
     "payoutHistoryReview": "I documenti dei pagamenti precedenti richiedono una riconciliazione. Non inviare di nuovo lo stesso pagamento.",
@@ -2680,6 +2681,7 @@
     "payoutErrors": {
       "INVALID_INPUT": "Inserisci un importo maggiore di zero con al massimo due decimali.",
       "PAYOUT_BELOW_THRESHOLD": "L’importo è inferiore al minimo del negozio.",
+      "PAYOUT_BANK_REQUIRED": "Salva il tuo conto su Komisio prima di richiedere un pagamento.",
       "PAYOUT_EXCEEDS_BALANCE": "L’importo supera il saldo disponibile. Controlla il saldo indicato sopra."
     },
     "collectionDeadline": "Ritirare entro",

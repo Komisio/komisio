@@ -13,6 +13,8 @@ business planning and installation-specific procedures do not belong here.
 
 <!-- technical-decisions -->
 
+- 2026-11-19: A new payout request for the designated central recipient requires bank details saved for that seller and tenant. Existing requests retain exact replay. Sellers can view their balances before adding an account; the funds transfer is manual.
+
 - 2026-11-19: Financial writes pass through the engine and database commands; UI, MCP and integrations share the same tenant and permission boundaries.
 - 2026-11-19: Financial and legal facts remain immutable. Corrections append evidence; additive migrations preserve already-applied database history.
 - 2026-11-19: Runtime authorization is enforced by RLS, grants, identity and tenant checks. Documentation and model prompts confer no access.

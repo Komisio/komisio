@@ -7,6 +7,7 @@ const ore = z.union([z.number().int(), z.string()]).transform(Number)
 export const ledgerKind = z.enum([
   'credit_sale',
   'credit_guarantee',
+  'credit_purchase',
   'credit_reversal',
   'payout_reserved',
   'payout_paid',

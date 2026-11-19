@@ -666,6 +666,7 @@
     "print.printed": "Utskrift · Utskrift rapportert",
     "print.queued": "Utskrift · I kø",
     "printer.registered": "Skriver · Registrering",
+    "central_item.purchased": "En vare ble kjøpt direkte fra selgeren",
     "purchase.registered": "Et innkjøp ble registrert",
     "reception.access_issued": "Gjennomgangslenke utstedt",
     "reception.access_revoked": "Gjennomgangslenke trukket tilbake",
@@ -1616,6 +1617,7 @@
       "adjustment": "Justering",
       "consignment_fee": "Månedsavgifter",
       "consignment_fee_reversal": "Tilbakefør avgift",
+      "credit_purchase": "Direktekjøp",
       "credit_guarantee": "Garantert beløp"
     },
     "adjustHeading": "Juster reskontroen",
@@ -5535,6 +5537,15 @@
       "notConfigured": "Automatisk kreditering av garantibeløp er satt på pause i dette miljøet."
     },
     "fixed": {
+      "directPurchase": "Direktekjøp",
+      "consignment": "Kommisjon",
+      "ownedPurchase": "Åpne kjøpet",
+      "inspectBuy": "Bekreft kjøp for {amount}",
+      "conditionChecked": "Jeg har kontrollert varen. Den stemmer med forespørselen.",
+      "marginEvidence": "Dokumentert kjøp fra privatperson uten moms",
+      "confirmed": "Bekreftet",
+      "notConfirmed": "Ikke bekreftet",
+      "purchaseComplete": "Kjøpet er registrert og selgerens saldo er oppdatert.",
       "intro": "Godkjenn selgerens beløp og velg varene som skal sendes i samme pakke.",
       "allItems": "Vis alle selgerens varer",
       "select": "Velg {item}",

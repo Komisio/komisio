@@ -666,6 +666,7 @@
     "print.printed": "Tulostus · Tulostus raportoitu",
     "print.queued": "Tulostus · Jonossa",
     "printer.registered": "Tulostin · Kirjaus",
+    "central_item.purchased": "Tuote ostettiin suoraan myyjältä",
     "purchase.registered": "Osto kirjattiin",
     "reception.access_issued": "Tarkistuslinkki luotu",
     "reception.access_revoked": "Tarkistuslinkki peruutettu",
@@ -1616,6 +1617,7 @@
       "adjustment": "Oikaisu",
       "consignment_fee": "Kuukausimaksut",
       "consignment_fee_reversal": "Hyvitä maksu",
+      "credit_purchase": "Suora osto",
       "credit_guarantee": "Taattu summa"
     },
     "adjustHeading": "Oikaise tilikirjaa",
@@ -5541,6 +5543,15 @@
       "notConfigured": "Takuusumman automaattinen hyvitys on keskeytetty tässä ympäristössä."
     },
     "fixed": {
+      "directPurchase": "Suora osto",
+      "consignment": "Välitysmyynti",
+      "ownedPurchase": "Avaa osto",
+      "inspectBuy": "Vahvista osto hintaan {amount}",
+      "conditionChecked": "Tarkistin tuotteen. Se vastaa kuvausta.",
+      "marginEvidence": "Tositteellinen osto yksityishenkilöltä ilman arvonlisäveroa",
+      "confirmed": "Vahvistettu",
+      "notConfirmed": "Ei vahvistettu",
+      "purchaseComplete": "Osto kirjattiin ja summa lisättiin myyjän saldoon.",
       "intro": "Hyväksy myyjän summa ja valitse samaan pakettiin lähetettävät tuotteet.",
       "allItems": "Näytä kaikki myyjän tuotteet",
       "select": "Valitse {item}",

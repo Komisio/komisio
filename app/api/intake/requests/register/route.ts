@@ -2,6 +2,8 @@ import { platformContext } from '@/lib/platform/context'
 import { boundedJson } from '@/lib/http/bounded-json'
 import {
   registerExternalItem,
+  directPurchaseCommand,
+  inspectDirectPurchase,
   externalRegistrationCommand,
 } from '@/lib/engine/external-item-registration'
 import {
@@ -27,6 +29,12 @@ export async function POST(request: Request) {
       input = await boundedJson(request, 8192)
     } catch {
       return reply({ error: 'INVALID_INPUT' }, 400)
+    }
+    const purchase = directPurchaseCommand.safeParse(input)
+    if (purchase.success) {
+      if (ctx.active?.id !== purchase.data.tenantId)
+        return reply({ error: 'TENANT_CHANGED' }, 409)
+      return reply(await inspectDirectPurchase(ctx.client, purchase.data))
     }
     const c = externalRegistrationCommand.safeParse(input)
     if (!c.success) return reply({ error: 'INVALID_INPUT' }, 400)

@@ -666,6 +666,7 @@
     "print.printed": "Printing · Print reported",
     "print.queued": "Printing · Queued",
     "printer.registered": "Printer · Recording",
+    "central_item.purchased": "An item was purchased directly from the seller",
     "purchase.registered": "A purchase was recorded",
     "reception.access_issued": "Review link issued",
     "reception.access_revoked": "Review link revoked",
@@ -1616,6 +1617,7 @@
       "adjustment": "Adjustment",
       "consignment_fee": "Monthly fees",
       "consignment_fee_reversal": "Reverse fee",
+      "credit_purchase": "Direct purchase",
       "credit_guarantee": "Guaranteed amount"
     },
     "adjustHeading": "Adjust the ledger",
@@ -5535,6 +5537,15 @@
       "notConfigured": "Automatic guarantee crediting is paused in this environment."
     },
     "fixed": {
+      "directPurchase": "Direct purchase",
+      "consignment": "Consignment",
+      "ownedPurchase": "Open purchase",
+      "inspectBuy": "Confirm purchase for {amount}",
+      "conditionChecked": "I have inspected the item. It matches the request.",
+      "marginEvidence": "Evidence of purchase from a private individual without VAT",
+      "confirmed": "Confirmed",
+      "notConfirmed": "Not confirmed",
+      "purchaseComplete": "Purchase recorded and seller balance credited.",
       "intro": "Accept the seller’s amount and select the items to send in one parcel.",
       "allItems": "View all items from this seller",
       "select": "Select {item}",

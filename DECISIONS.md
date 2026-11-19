@@ -13,7 +13,7 @@ business planning and installation-specific procedures do not belong here.
 
 <!-- technical-decisions -->
 
-- 2026-11-19: A new payout request for the designated central recipient requires bank details saved for that seller and tenant. Existing requests retain exact replay. Sellers can view their balances before adding an account; the funds transfer is manual.
+- 2026-11-19: Swedish central payout requests default to Swish or allow a saved bank account. Each request freezes the confirmed mobile number or bank version. Legacy bank requests keep their replay and review rules. Recording a request does not execute a transfer.
 
 - 2026-11-19: Financial writes pass through the engine and database commands; UI, MCP and integrations share the same tenant and permission boundaries.
 - 2026-11-19: Financial and legal facts remain immutable. Corrections append evidence; additive migrations preserve already-applied database history.

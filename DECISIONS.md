@@ -23,3 +23,4 @@ business planning and installation-specific procedures do not belong here.
 - 2026-11-19: Money uses decimal database arithmetic rounded to currency minor units; client floats are not authoritative financial calculations.
 - 2026-11-19: Product code, tests and public documentation build independently of private working material. Optional local contributor guidance is ignored by Git.
 - 2026-11-19: Central sellers select consignment or direct purchase before submission. A direct purchase needs item-level inspection after physical receipt. The purchase, ownership and full balance credit are atomic and replay-safe, separate from bank payment. Legacy submissions retain consignment.
+- 2026-11-20: Central staff may offer a lower price once for 48 hours. Seller acceptance fixes the amount for purchase, guarantee and payout and starts shipping with the saved sender details. A rejection without a price remains final.

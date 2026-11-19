@@ -8,7 +8,7 @@ import { p2Fixture } from '../helpers/p2-fixture'
 import { localTestUrl } from '../helpers/local-services'
 import d from '../../messages/sv.json' with { type: 'json' }
 
-test('fixed seller amount is submitted once and staff approves a seller group without counteroffers', async ({
+test('central staff approves the asking price or sends an alternative that the seller can accept', async ({
   page,
   baseURL,
 }) => {
@@ -343,6 +343,79 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
     await expect(
       page.getByRole('link', { name: d.externalOffers.fixed.ownedPurchase }),
     ).toBeVisible()
+    const counterRequest = randomUUID()
+    const submitted = await page.request.post('/api/mobile/v1/external-items', {
+      headers,
+      data: {
+        action: 'submit',
+        requestId: counterRequest,
+        tenantId: f.tenant,
+        description: 'Synthetic counteroffer coat',
+        brand: '',
+        condition: 'good',
+        notes: '',
+        desiredPriceOre: '70000',
+        currency: 'SEK',
+        senderCountry: 'SE',
+        priceBasis: 'seller_amount',
+        approvalMode: 'fixed',
+        staffSelectsMethod: true,
+        agreementVersionId: agreement,
+        photos: [photo],
+      },
+    })
+    expect(submitted.status()).toBe(200)
+    await page.goto('/intake/requests?status=waiting')
+    const counterRow = page
+      .locator('details')
+      .filter({
+        has: page
+          .locator('summary')
+          .getByText('Synthetic counteroffer coat', { exact: true }),
+      })
+      .first()
+    await counterRow.locator('summary').first().click()
+    await counterRow.getByLabel(d.externalOffers.alternativeAmount).fill('450')
+    await counterRow
+      .getByLabel(d.externalOffers.salePrice, { exact: true })
+      .fill('900')
+    await counterRow.getByLabel(d.externalOffers.note).fill('Visible wear')
+    await counterRow
+      .getByRole('button', { name: d.externalOffers.sendAlternative })
+      .click()
+    const readOffers = async () => {
+      const response = await page.request.post(
+        '/api/mobile/v1/external-items/offers',
+        { headers, data: { action: 'list', requestIds: [counterRequest] } },
+      )
+      expect(response.status()).toBe(200)
+      return (await response.json()).offers
+    }
+    await expect.poll(readOffers).toMatchObject([
+      {
+        status: 'offered',
+        sellerAmountOre: '45000',
+        alternativeNote: 'Visible wear',
+      },
+    ])
+    const [alternative] = await readOffers()
+    const acceptance = {
+      action: 'acceptAlternative',
+      accepted: true,
+      offerId: alternative.id,
+      requestId: randomUUID(),
+      agreementVersionId: agreement,
+    }
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const answer = await page.request.post(
+        '/api/mobile/v1/external-items/shipping',
+        { headers, data: acceptance },
+      )
+      expect(answer.status(), await answer.text()).toBe(200)
+    }
+    expect(await readOffers()).toMatchObject([
+      { status: 'accepted', handover: { status: 'open' } },
+    ])
   } finally {
     await f.db.query('update platform_settings set central_app_tenant_id=$1', [
       prior,

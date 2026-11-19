@@ -5442,6 +5442,9 @@
     "reload": "Reload page"
   },
   "externalOffers": {
+    "alternativeAmount": "Alternative seller amount (optional), SEK",
+    "alternativeInvalid": "Enter a positive amount below the seller’s asking price and a planned sale price.",
+    "sendAlternative": "Decline price and send offer",
     "title": "Requests",
     "intro": "Items sent to Komisio through the app.",
     "empty": "No requests yet.",

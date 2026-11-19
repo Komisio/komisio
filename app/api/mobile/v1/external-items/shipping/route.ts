@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     if (!c.success) throw new MobileRequestError('INVALID_INPUT', 400)
     const config = postNordConfiguration()
     const client =
-      c.data.action === 'book' && config
+      c.data.action !== 'read' && config
         ? await mobileShippingClient(request, config.serverKey)
         : await mobileExternalIdentityClient(request)
     return Response.json(await executeCentralParcel(client, c.data, config), {

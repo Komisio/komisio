@@ -102,7 +102,9 @@ export function ExternalRequestQueue({
                 <span className={styles.badge} data-status={row.queue_status}>
                   {t.statuses[row.queue_status]}
                 </span>
-                {row.offer && row.approval_mode !== 'fixed' ? (
+                {row.offer &&
+                (row.approval_mode !== 'fixed' ||
+                  row.offer.sellerAmountOre !== row.desired_price_ore) ? (
                   <span className={styles.offerAmount}>
                     {t.offeredAmount}:{' '}
                     <strong>
@@ -182,7 +184,11 @@ export function ExternalRequestQueue({
                       agreementId={row.agreement_version_id}
                       d={d}
                       leaveWarning={leaveWarning}
-                      declineOnly={row.approval_mode === 'fixed'}
+                      fixedAsk={
+                        row.approval_mode === 'fixed'
+                          ? row.desired_price_ore
+                          : null
+                      }
                     />
                   </>
                 ) : null}
@@ -226,6 +232,7 @@ export function ExternalRequestQueue({
                 (row.sale_method === 'direct_purchase' ||
                   (row.staff_selects_method && !row.sale_method)) &&
                 row.queue_status === 'received' &&
+                row.offer &&
                 !row.direct_purchase_id ? (
                   <DirectPurchaseInspection
                     allowConsignment={
@@ -233,7 +240,7 @@ export function ExternalRequestQueue({
                     }
                     tenantId={tenantId}
                     requestId={row.id}
-                    amount={externalOfferAmount(row.desired_price_ore!)}
+                    amount={externalOfferAmount(row.offer.sellerAmountOre)}
                     d={d}
                   />
                 ) : null}

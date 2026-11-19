@@ -5442,6 +5442,9 @@
     "reload": "Läs in sidan igen"
   },
   "externalOffers": {
+    "alternativeAmount": "Annat belopp till säljaren (valfritt), SEK",
+    "alternativeInvalid": "Ange ett positivt belopp under säljarens pris och ett planerat försäljningspris.",
+    "sendAlternative": "Avvisa priset och skicka erbjudande",
     "title": "Förfrågningar",
     "intro": "Varor som har skickats till Komisio via appen.",
     "empty": "Inga förfrågningar ännu.",

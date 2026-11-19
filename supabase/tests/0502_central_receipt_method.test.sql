@@ -1,0 +1,36 @@
+begin;
+select no_plan();
+create function pg_temp.uid(n int) returns uuid language sql immutable as $$ select ('f5020000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid $$;
+insert into auth.users(id,email,email_confirmed_at) values(pg_temp.uid(1),'staff502@example.test',now()),(pg_temp.uid(2),'seller502@example.test',now());
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select create_tenant('Central 502','central-502',gen_random_uuid()) as tenant \gset
+select publish_seller_agreement(:'tenant',pg_temp.uid(3),null,'Terms','Synthetic terms','sv',true);
+select publish_store_policy(:'tenant',gen_random_uuid(),(current_store_policy(:'tenant')->>'id')::uuid,(current_store_policy(:'tenant')->'policy')||'{"vatModeStoreOwned":"store_full"}'::jsonb);
+reset role;
+update platform_settings set central_app_tenant_id=:'tenant';
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
+select save_central_intake_profile(pg_temp.uid(4),:'tenant',pg_temp.uid(3),-1,'{"street":"Test 1","postalCode":"12345","city":"Test"}','{"firstName":"Test","lastName":"Seller","phone":"+46700000002"}',true);
+select reserve_external_item_photo(pg_temp.uid(5),repeat('b',64),100);
+insert into storage.objects(bucket_id,name) values('external-item-photos',pg_temp.uid(2)||'/'||pg_temp.uid(5)||'.jpg');
+select submit_central_item_request(pg_temp.uid(n),:'tenant','Coat','','good','',60000,'SEK',array[pg_temp.uid(5)],'SE','seller_amount',pg_temp.uid(3),'staff_decides') from generate_series(10,11) n;
+select ok(my_external_item_requests_page(0,pg_temp.uid(10),'all')#>>'{requests,0,sale_method}' is null,'no promise made on submission');
+select is(my_external_item_requests_page(0,pg_temp.uid(10),'all')#>>'{requests,0,staff_selects_method}','true','recoverable immutable staff-selected instruction');
+select throws_like(format('select confirm_central_receipt_consignment(%L,%L)',:'tenant',pg_temp.uid(10)),'%FORBIDDEN%','seller cannot choose terms for submitted item');
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select approve_central_item_request(:'tenant',pg_temp.uid(20+n),pg_temp.uid(n),100000) from generate_series(10,11) n;
+select throws_like(format('select confirm_central_receipt_consignment(%L,%L)',:'tenant',pg_temp.uid(10)),'%REQUEST_CHANGED%','cannot start guarantee before receipt');
+select receive_handover(:'tenant',pg_temp.uid(40+n),(read_external_item_offer(pg_temp.uid(20+n))#>>'{handover,id}')::uuid,'staff_receipt','') from generate_series(10,11) n;
+select ok(read_external_item_offer(pg_temp.uid(30))#>>'{guarantee,dueAt}' is null,'receipt awaits item inspection');
+select confirm_central_receipt_consignment(:'tenant',pg_temp.uid(10)) as guarantee \gset
+select is(confirm_central_receipt_consignment(:'tenant',pg_temp.uid(10)),:'guarantee'::uuid,'repeat uses same guarantee');
+select is(read_external_item_offer(pg_temp.uid(30))->>'saleMethod','consignment','seller sees actual consignment');
+select is((read_external_item_offer(pg_temp.uid(30))#>>'{guarantee,dueAt}')::timestamptz-(read_external_item_offer(pg_temp.uid(30))#>>'{handover,receivedAt}')::timestamptz,interval '1080 hours','guarantee starts on physical receipt');
+select throws_like(format('select inspect_central_direct_purchase(%L,%L,%L,false)',:'tenant',pg_temp.uid(10),pg_temp.uid(60)),'%REQUEST_CHANGED%','cannot buy an item already consigned');
+select inspect_central_direct_purchase(:'tenant',pg_temp.uid(11),pg_temp.uid(61),false);
+select is(read_external_item_offer(pg_temp.uid(31))->>'saleMethod','direct_purchase','seller sees actual purchase');
+select ok(read_external_item_offer(pg_temp.uid(31))->>'purchaseCreditedAt' is not null,'purchase credits once');
+select throws_like(format('select confirm_central_receipt_consignment(%L,%L)',:'tenant',pg_temp.uid(11)),'%REQUEST_CHANGED%','purchased item cannot enter guarantee processing');
+select * from finish();
+rollback;

@@ -122,7 +122,7 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
           senderCountry: 'SE',
           priceBasis: 'seller_amount',
           approvalMode: 'fixed',
-          ...(n === 0 ? { saleMethod: 'direct_purchase' } : {}),
+          staffSelectsMethod: true,
           agreementVersionId: agreement,
           photos: [photo],
         },
@@ -140,11 +140,8 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
     )
     await page.goto('/intake/requests')
     await expect(
-      page.getByText(d.externalOffers.fixed.directPurchase, { exact: true }),
-    ).toBeVisible()
-    await expect(
-      page.getByText(d.externalOffers.fixed.consignment, { exact: true }),
-    ).toBeVisible()
+      page.getByText(d.externalOffers.fixed.undecided, { exact: true }),
+    ).toHaveCount(2)
     await expect(
       page.getByRole('heading', { name: 'Alex Example' }),
     ).toBeVisible()
@@ -252,6 +249,9 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
       })
       .first()
     await card.locator('summary').first().click()
+    await expect(
+      card.getByLabel(d.externalOffers.fixed.receiptMethod),
+    ).toHaveValue('direct_purchase')
     await card.getByLabel(d.externalOffers.fixed.conditionChecked).check()
     await card
       .getByLabel(d.externalOffers.fixed.marginEvidence)
@@ -269,6 +269,40 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
             await f.db.query(
               'select count(*)::int n from komisio_private.central_direct_purchases where request_id=$1',
               [requests[0]],
+            )
+          ).rows[0].n,
+      )
+      .toBe(1)
+    await f.asActor(f.actor, async () => {
+      await f.db.query(
+        "select receive_handover($1,$2,l.handover_id,'staff_receipt','') from external_item_handover_links l join external_item_offers o on l.offer_id=o.id where o.request_id=$3",
+        [f.tenant, randomUUID(), requests[1]],
+      )
+    })
+    await page.goto('/intake/requests?status=received')
+    const second = page
+      .locator('details')
+      .filter({
+        has: page
+          .locator('summary')
+          .getByText('Synthetic dress 2', { exact: true }),
+      })
+      .first()
+    await second.locator('summary').first().click()
+    await second
+      .getByLabel(d.externalOffers.fixed.receiptMethod)
+      .selectOption('consignment')
+    await second.getByLabel(d.externalOffers.fixed.conditionChecked).check()
+    await second
+      .getByRole('button', { name: d.externalOffers.fixed.confirmConsignment })
+      .click()
+    await expect
+      .poll(
+        async () =>
+          (
+            await f.db.query(
+              'select count(*)::int n from external_item_guarantees g join external_item_offers o on o.id=g.offer_id where o.request_id=$1',
+              [requests[1]],
             )
           ).rows[0].n,
       )

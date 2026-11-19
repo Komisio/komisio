@@ -75,9 +75,11 @@ export function ExternalRequestQueue({
                 </span>
                 {row.approval_mode === 'fixed' ? (
                   <span className={styles.meta}>
-                    {row.sale_method === 'direct_purchase'
-                      ? d.fixed.directPurchase
-                      : d.fixed.consignment}
+                    {row.staff_selects_method && !row.sale_method
+                      ? d.fixed.undecided
+                      : row.sale_method === 'direct_purchase'
+                        ? d.fixed.directPurchase
+                        : d.fixed.consignment}
                   </span>
                 ) : null}
                 <span className={styles.date}>
@@ -221,10 +223,14 @@ export function ExternalRequestQueue({
                   </Link>
                 ) : null}
                 {write &&
-                row.sale_method === 'direct_purchase' &&
+                (row.sale_method === 'direct_purchase' ||
+                  (row.staff_selects_method && !row.sale_method)) &&
                 row.queue_status === 'received' &&
                 !row.direct_purchase_id ? (
                   <DirectPurchaseInspection
+                    allowConsignment={
+                      row.staff_selects_method && !row.sale_method
+                    }
                     tenantId={tenantId}
                     requestId={row.id}
                     amount={externalOfferAmount(row.desired_price_ore!)}

@@ -13,6 +13,7 @@ business planning and installation-specific procedures do not belong here.
 
 <!-- technical-decisions -->
 
+- 2026-11-19: New central app submissions delegate the method to Komisio. After physical receipt, staff inspect each item and confirm purchase (default) or guaranteed consignment at the submitted amount. Existing purchase and guarantee evidence remains authoritative. Historic terms stand.
 - 2026-11-19: Swedish central payout requests default to Swish or allow a saved bank account. Each request freezes the confirmed mobile number or bank version. Legacy bank requests keep their replay and review rules. Recording a request does not execute a transfer.
 
 - 2026-11-19: Financial writes pass through the engine and database commands; UI, MCP and integrations share the same tenant and permission boundaries.

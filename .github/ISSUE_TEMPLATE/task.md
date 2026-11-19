@@ -1,6 +1,6 @@
 ---
 name: Task
-about: A task for Astra (written and labelled by Kurre/Christer)
+about: A task approved and labelled by the owner or their assistant
 title: ""
 labels: []
 assignees: []

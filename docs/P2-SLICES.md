@@ -140,7 +140,7 @@ Purpose: the append-only ledger every seller-facing number derives from.
   `komisio_propose_ledger_adjustment` under `ledger:propose`. Agent read
   tools: see the follow-up below.
 
-S14 follow-up (Astra): opt-in `economy:read` tools read one seller balance
+S14 follow-up (the coding agent): opt-in `economy:read` tools read one seller balance
 and at most 50 recent ledger entries through the existing engine. Amounts
 are ore; private reasons/contact data are omitted and partial history is
 labelled. No adjustment/payout write or aggregate balance listing is added
@@ -344,7 +344,7 @@ export it to Fortnox idempotently, print all four labels through the local
 agent, and have sellers receive the five e-mails, with VAT computed per line
 in the modes the store selected.
 
-S20 follow-up (Astra): CI exposed timestamp ties between price facts written
+S20 follow-up (the coding agent): CI exposed timestamp ties between price facts written
 in one transaction. Migration `20260914110000` orders new price rows strictly
 per item under the tenant lock; it does not change prices or historical rows.
 Regression tests cover all four prices in one transaction. The pre-release

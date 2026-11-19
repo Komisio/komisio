@@ -1,6 +1,6 @@
 # Hosted MCP connector
 
-Design and delivery note by Fable, 2026-09-16, on the owner's direction that a
+Design and delivery note by the architecture reviewer, 2026-09-16, on the owner's direction that a
 store should be able to connect its own AI assistant to Komisio the way it
 connects one to an accounting system: add a connector, sign in, approve, done.
 Nothing is installed at the store, and Komisio pays no model tokens: the

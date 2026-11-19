@@ -1,4 +1,4 @@
--- Two more tools for a connected assistant (2026-09-16, Opus). Both already
+-- Two more tools for a connected assistant (2026-09-16, the reviewing agent). Both already
 -- read through SQL functions only; they were excluded with the rest of the
 -- reception and pricing tools and were never re-examined after the functions
 -- arrived. Nothing new is exposed: each row names a function that already

@@ -22,14 +22,14 @@ Then: `ARCHITECTURE.md` for the layer boundaries, `DECISIONS.md` before
 touching anything that was decided, `docs/open-questions.md` before touching
 anything that was not.
 
-## Issue workflow (Astra)
+## Issue workflow
 
-Work is specified in GitHub Issues, written and labelled by Kurre (the owner's
-assistant) or the owner. `CLAUDE.md` still governs *how* to implement; this
+Work is specified in GitHub Issues, written and labelled by the owner or their
+assistant. `CLAUDE.md` still governs *how* to implement; this
 section governs *which* work to take and how to deliver it.
 
 **GitHub communication**
-All text Astra writes on GitHub must be in English, including issues, issue
+All text agents write on GitHub must be in English, including issues, issue
 comments, PR titles and descriptions, commit messages, review replies and labels,
 regardless of the language used in conversation. Code comments and documentation
 continue to follow `CLAUDE.md`; UI translations are unaffected.
@@ -61,7 +61,7 @@ continue to follow `CLAUDE.md`; UI translations are unaffected.
 
 **Never**
 - Touch issues or PRs labelled `external` or opened by anyone other than the
-  owner or Kurre (no comments, labels, commits, merges, reviews). The owner
+  owner or the owner's assistant (no comments, labels, commits, merges, reviews). The owner
   reviews external contributions; see Repository merge policy in `CLAUDE.md`.
 - Change `CODEOWNERS`, branch protection/rulesets, or this file without an
   issue explicitly asking for it.

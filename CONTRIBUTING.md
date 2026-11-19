@@ -32,7 +32,7 @@
 ## Review and merge access
 
 Anyone may fork the public repository and submit a pull request. Contributing
-does not grant write access or permission to merge. ChrilleInority currently
+does not grant write access or permission to merge. The owner currently
 maintains merge access; additional maintainers require an explicit owner decision.
 
 External contributions require the owner's explicit approval of the reviewed

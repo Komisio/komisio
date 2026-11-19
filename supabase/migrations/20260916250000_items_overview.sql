@@ -1,4 +1,4 @@
--- Items overview (P2 agent reads, Fable): every accepted item with the title and
+-- Items overview (P2 agent reads, the architecture reviewer): every accepted item with the title and
 -- category its origin holds, the derived lifecycle stage, the current price and
 -- when it sold. One read for the items page and the agent's "find items"; the
 -- same facts as the lifecycle queue and price evidence, never a new table.

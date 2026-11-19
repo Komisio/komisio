@@ -1,6 +1,6 @@
 # Onboarding, environments and plans
 
-Design note by Fable, 2026-09-14, at the owner's request. It answers three
+Design note by the architecture reviewer, 2026-09-14, at the owner's request. It answers three
 questions a store owner asks before Komisio can be sold as a hosted service:
 where do I start, how does my account become active, and what do I pay. It
 proposes; the decisions are listed at the end and in

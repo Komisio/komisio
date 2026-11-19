@@ -1,6 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 select no_plan();
+-- Synthetic PKCE challenge, padded to the protocol minimum; never a real secret.
 insert into auth.users(id,email,email_confirmed_at) values
  ('f0000000-0000-4000-8000-000000000951','connector-owner@example.test',now()),
  ('f0000000-0000-4000-8000-000000000952','connector-staff@example.test',now()),
@@ -23,23 +24,23 @@ set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000952","r
 select accept_invitation(repeat('c',64));
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000951","role":"authenticated"}';
 -- Consent: the owner approves Claude for the store with two scopes.
-select throws_like($$select authorize_connector('a0000000-0000-4000-8000-000000000001',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://elsewhere.example/cb','{items:read}','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('code-1'),'aal1')$$,'%INVALID_INPUT%','an unregistered redirect is refused');
-select throws_like($$select authorize_connector('a0000000-0000-4000-8000-000000000001',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{reception:photos}','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('code-1'),'aal1')$$,'%INVALID_INPUT%','photos are not a hosted scope');
-select is(authorize_connector('a0000000-0000-4000-8000-000000000001',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{items:read,economy:read}','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('code-1'),'aal1')->>'clientName','Claude','the owner approves the client');
+select throws_like($$select authorize_connector('a0000000-0000-4000-8000-000000000001',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://elsewhere.example/cb','{items:read}','test_pkce_challenge_not_real_00000000000000',pg_temp.h('code-1'),'aal1')$$,'%INVALID_INPUT%','an unregistered redirect is refused');
+select throws_like($$select authorize_connector('a0000000-0000-4000-8000-000000000001',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{reception:photos}','test_pkce_challenge_not_real_00000000000000',pg_temp.h('code-1'),'aal1')$$,'%INVALID_INPUT%','photos are not a hosted scope');
+select is(authorize_connector('a0000000-0000-4000-8000-000000000001',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{items:read,economy:read}','test_pkce_challenge_not_real_00000000000000',pg_temp.h('code-1'),'aal1')->>'clientName','Claude','the owner approves the client');
 select is((select count(*) from access_events where tenant_id=current_setting('test.tenant')::uuid and action='connector.authorized'),1::bigint,'the approval is audited');
 -- The token endpoint runs without a session.
 set local role anon;
 select throws_like($$select exchange_connector_code(pg_temp.h('code-1'),'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','wrong-challenge-wrong-challenge-wrong-challenge',pg_temp.h('access-1'),pg_temp.h('refresh-1'))$$,'%CONNECTOR_CODE_INVALID%','a wrong PKCE challenge is refused');
-select is(exchange_connector_code(pg_temp.h('code-1'),'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('access-1'),pg_temp.h('refresh-1'))->>'tenantId',current_setting('test.tenant'),'the code becomes tokens for the store');
-select throws_like($$select exchange_connector_code(pg_temp.h('code-1'),'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('access-x'),pg_temp.h('refresh-x'))$$,'%CONNECTOR_CODE_REUSED%','a code is one-time');
+select is(exchange_connector_code(pg_temp.h('code-1'),'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','test_pkce_challenge_not_real_00000000000000',pg_temp.h('access-1'),pg_temp.h('refresh-1'))->>'tenantId',current_setting('test.tenant'),'the code becomes tokens for the store');
+select throws_like($$select exchange_connector_code(pg_temp.h('code-1'),'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','test_pkce_challenge_not_real_00000000000000',pg_temp.h('access-x'),pg_temp.h('refresh-x'))$$,'%CONNECTOR_CODE_REUSED%','a code is one-time');
 select void_connector_secret(pg_temp.h('code-1'));
 select throws_like($$select connector_token_info(pg_temp.h('access-1'))$$,'%CONNECTOR_REVOKED%','and the replay voided the grant');
 -- A fresh grant for the calls.
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000951","role":"authenticated"}';
-select authorize_connector('a0000000-0000-4000-8000-000000000002',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{items:read,economy:read,items:propose}','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('code-2'),'aal1');
+select authorize_connector('a0000000-0000-4000-8000-000000000002',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{items:read,economy:read,items:propose}','test_pkce_challenge_not_real_00000000000000',pg_temp.h('code-2'),'aal1');
 set local role anon;
-select exchange_connector_code(pg_temp.h('code-2'),'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('access-2'),pg_temp.h('refresh-2'));
+select exchange_connector_code(pg_temp.h('code-2'),'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','test_pkce_challenge_not_real_00000000000000',pg_temp.h('access-2'),pg_temp.h('refresh-2'));
 select is(connector_token_info(pg_temp.h('access-2'))->>'userId','f0000000-0000-4000-8000-000000000951','the token names the person who approved');
 select is(connector_call(pg_temp.h('access-2'),'tenant_role',jsonb_build_object('p_tenant',current_setting('test.tenant'))),'"owner"'::jsonb,'a call runs as that person');
 select is(jsonb_typeof(connector_call(pg_temp.h('access-2'),'items_overview',jsonb_build_object('p_tenant',current_setting('test.tenant'),'p_query','','p_stage',null,'p_limit',10))),'object','an items read under items:read works');
@@ -76,7 +77,7 @@ select throws_like($$select connector_call(pg_temp.h('access-3'),'tenant_role',j
 set local role authenticated;
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000952","role":"authenticated"}';
 select is(connectors(current_setting('test.tenant')::uuid),'[]'::jsonb,'staff see no connector of the owner');
-select authorize_connector('a0000000-0000-4000-8000-000000000003',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{economy:read}','E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',pg_temp.h('code-3'),'aal1');
+select authorize_connector('a0000000-0000-4000-8000-000000000003',current_setting('test.tenant')::uuid,'c0000000-0000-4000-8000-000000000001','https://claude.ai/api/mcp/auth_callback','{economy:read}','test_pkce_challenge_not_real_00000000000000',pg_temp.h('code-3'),'aal1');
 select is(jsonb_array_length(connectors(current_setting('test.tenant')::uuid)),1,'staff see their own');
 set local "request.jwt.claims"='{"sub":"f0000000-0000-4000-8000-000000000951","role":"authenticated"}';
 select is(jsonb_array_length(connectors(current_setting('test.tenant')::uuid)),1,'the owner sees every active connector');

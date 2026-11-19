@@ -1,4 +1,4 @@
--- Detail reads as engine functions (2026-09-16, Opus). The hosted connector
+-- Detail reads as engine functions (2026-09-16, the reviewing agent). The hosted connector
 -- routes every tool call through connector_call, which reaches SQL functions
 -- and nothing else, so the reads that went straight to tables were unavailable
 -- to a store's own assistant: one item, one receipt, a receipt list, a seller's

@@ -474,13 +474,13 @@ Answers describe intended workflows, not executable financial policy. Booking,
 pickup, new-goods and marketplace choices do not resolve their open rules.
 
 Automatic labels (2026-09-15, PR199): kind sizes and target-store transfer
-acceptance are owner-approved. Fable clarification is still needed for repeated
+acceptance are owner-approved. The architecture reviewer clarification is still needed for repeated
 markdown event identity and the application-side handling of SQL-only producers
 or a crash between fact commit and label queueing. The existing manual
 render-and-queue path is now shared in the engine; automatic rules are not yet
 activated by that extraction.
 
-Fortnox reconciliation (2026-09-15): Fable approved the confirmed-sent-only first
+Fortnox reconciliation (2026-09-15): The architecture reviewer approved the confirmed-sent-only first
 slice. Its owner-only engine command now records evidence without unlocking a
 POST. The owner browser form is implemented; the provider evidence read remains
 to implement, so the person compares directly in Fortnox. Absence remains held;
@@ -491,7 +491,7 @@ Fortnox automation prerequisite (2026-09-14): a pending replay or an ambiguous
 POST acknowledgement can otherwise create duplicate vouchers. The transport now
 holds these outcomes under the existing at-most-one rule; a reconciliation/unlock
 workflow still needs an explicit design before held exports can be retried.
-Daily sending also needs scoped token renewal. Fable approved a dedicated
+Daily sending also needs scoped token renewal. The architecture reviewer approved a dedicated
 revision-bound refresh capability; migration `20260916100000` now supplies
 the database command and scoped connection read. The TypeScript refresh path
 now uses it with one conflict reread, failed-save refusal and reconnect guidance.
@@ -508,7 +508,7 @@ full-price tax bases differ even when the percentages match. No automatic correc
 
 Zettle follow-up (2026-09-14): explicit owner window abandonment now records the
 reason and skips to the closed window's end; it does not certify missing receipts.
-The owner selected Fable's dedicated automation identity and Vercel Cron instead
+The owner selected the architecture reviewer's dedicated automation identity and Vercel Cron instead
 of the proposed pg_cron bridge. See ZETTLE-AUTOMATION.md. Configuring the confirmed
 Auth identity, its server secrets and an explicit per-store grant remains necessary
 before live retrieval. No owner session, SQL provider key or service-role client.
@@ -748,7 +748,7 @@ wording is decided per template when the notification policy is built.
 
 ## P1 S1 implementation clarification
 
-**Answered by the owner 2026-09-13:** Fable's skill section "Default store
+**Answered by the owner 2026-09-13:** the architecture reviewer's skill section "Default store
 policy" at snapshot `17e73c8` supplies the defaults, confirmed directly by the
 owner. Store commission 60 percent inclusive; sale duration 42 days; markdowns
 10/25/50 percent at day 14/28/42; charity at period end; unsold notification
@@ -756,7 +756,7 @@ day 60; minimum payout SEK 100; delegated pricing; agreement required at
 publication and acceptance, optional at bag receipt. These are pilot defaults,
 not law. The S1 validator includes `unsoldNotifyAfterDays`; assistance enablement
 remains S9. No missing-default blocker remains. P2 execution and VAT questions
-remain separate. Fable's newer commits are held until PR58 is complete.
+remain separate. The architecture reviewer's newer commits are held until PR58 is complete.
 
 ## Zettle live pilot prerequisites (2026-09-13)
 
@@ -910,7 +910,7 @@ page now passes dimensions and DPI explicitly, preserving strict validation;
 the browser regression opens the actual `tab=printing` URL and checks the
 download link with both custom and default label sizes.
 
-## Swish payouts (2026-09-16, Opus)
+## Swish payouts (2026-09-16, the reviewing agent)
 
 Both questions block the automatic payout rail; the manual rail is unaffected
 and stays correct until they are answered. Background and the consequences of
@@ -928,7 +928,7 @@ payment and does not automatically reconcile bank transactions.
   store's Swish number, or each store creates its own certificate in its bank's
   portal and uploads the private key to Komisio. The first is far less friction
   per store and concentrates the key at Inority; the second spreads the key but
-  asks a second-hand shop to handle one. Fable's pricing decision (no service
+  asks a second-hand shop to handle one. The architecture reviewer's pricing decision (no service
   fee, the store pays its own bank) holds either way. Recommendation: technical
   supplier, with the key in a managed secret, an audit row per payout and a
   documented rotation.

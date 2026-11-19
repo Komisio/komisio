@@ -1,4 +1,4 @@
--- A lower ceiling while a store is new (2026-09-16, Opus). Registration is
+-- A lower ceiling while a store is new (2026-09-16, the reviewing agent). Registration is
 -- open: a confirmed e-mail address is the only thing between a stranger and a
 -- store, and a store may write to any address its staff type in. The rolling
 -- day caps were set high enough never to inconvenience a real shop, which left

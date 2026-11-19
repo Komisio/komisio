@@ -1,4 +1,4 @@
-# Operations runbook (hosted)
+# Operating a Komisio installation
 
 ## Seller push notifications
 
@@ -87,10 +87,9 @@ Other actions require the signed hook; no new hosted templates are installed.
 
 ## Operations overview
 
-What runs on its own, which secrets it needs, how to tell it is working and
-what to do when it is not. Staging today; production follows the same
-shape with its own project, secrets and domain
-([ONBOARDING-AND-PLANS.md](ONBOARDING-AND-PLANS.md), production checklist).
+This guide describes optional workers, their configuration and recovery. Use
+separate resources and secrets for each installation. See
+[hosted setup](HOSTED-STAGING.md) for deployment prerequisites.
 
 ## Scheduled jobs
 
@@ -101,9 +100,7 @@ shape with its own project, secrets and domain
 | Zettle receipt retrieval | Vercel Cron `/api/automation/zettle-pull`  | every 10 min                           | automation identity, scope `zettle_pull`  | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Zettle pilot settings                                        |
 | Trial and grace notices  | Vercel Cron `/api/automation/plan-notices` | 06:15 daily                            | billing actor                             | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, billing actor registered, Resend settings                                     |
 | Weekly brief             | Vercel Cron `/api/automation/weekly-brief` | 05:30 Mondays                          | automation identity, scope `weekly_brief` | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Resend settings                                              |
-| Staging migrations       | GitHub Actions `staging-migrations`        | after each merge to main               | management token                          | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, optional `VERCEL_DEPLOY_HOOK_URL`                                    |
 | Shopify order retrieval  | Vercel Cron `/api/automation/shopify-pull` | every 15 min                           | automation identity, scope `shopify_pull` | `CRON_SECRET`, `KOMISIO_AUTOMATION_*`, per-store grant, Shopify pilot settings                                       |
-| Production migrations    | GitHub Actions `Production database`       | when the owner dispatches and approves | management token (production)             | `production-database` environment: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, optional `VERCEL_DEPLOY_HOOK_URL` |
 
 Daily day-close preparation runs at 06:45 UTC on
 `/api/automation/day-closes`, using the ordinary automation identity and an
@@ -148,7 +145,7 @@ failure before rerunning. Older corrections outside the seven-day revisit window
 visible in Accounting reconciliation and need explicit handling. A grant enabled
 today normally has no completed date to report until tomorrow.
 
-## Secrets and settings (Vercel, Production target of the staging project)
+## Server-only configuration
 
 | Name                                                            | Purpose                                                         | Rotate by                                          |
 | --------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------- |
@@ -156,7 +153,7 @@ today normally has no completed date to report until tomorrow.
 | `KOMISIO_AUTOMATION_EMAIL/_PASSWORD`                            | the automation identity                                         | change the Auth user's password, update the secret |
 | `CRON_SECRET`                                                   | Vercel Cron authorisation                                       | new value, redeploy; Vercel sends the current one  |
 | `FORTNOX_CLIENT_ID/_SECRET`                                     | the Fortnox integration                                         | developer portal, then redeploy                    |
-| `FORTNOX_PILOT_TENANT_ID`, `FORTNOX_EXPECTED_COMPANY_NAME`      | pilot binding and company pin                                   | change only with the owner                         |
+| `FORTNOX_PILOT_TENANT_ID`, `FORTNOX_EXPECTED_COMPANY_NAME`      | pilot binding and company pin                                   | review the target before changing                         |
 | `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET` | billing (test keys on staging; live refused outside production) | Stripe dashboard, redeploy                         |
 | `RESEND_API_KEY`, `SELLER_EMAIL_*`, `INVITATION_EMAIL_*`        | e-mail transport and pilot allowlist                            | Resend dashboard, redeploy                         |
 | `ZETTLE_*`                                                      | Zettle pilot                                                    | see ZETTLE-CONNECTION.md                           |
@@ -200,15 +197,3 @@ order by received_at desc limit 20;` for Stripe.
   did not answer in time (it may still have sent).
 - **Migration job failed**: read the step log; never run `migration
 repair`; fix forward with a new migration.
-- **Production release**: merge to main, wait for CI and staging release checks
-  to pass, and verify the exact revision on staging. There is no fixed waiting
-  period (owner decision, 2026-10-27, superseding C6). Then GitHub, Actions,
-  Production database, Run workflow on `main`, and approve the environment. The step
-  summary lists the applied versions; the deploy hook releases the
-  application afterwards. Complete the authenticated route and runtime-error
-  checks in PRODUCTION-CHECKLIST.md before reporting the release as verified;
-  a green deploy and reachable login page are insufficient.
-- **Staging test data**: reversible state changes for a test go through
-  the engine functions or, when none exists, through
-  `komisio.plan_transition='engine'` in one transaction; restore afterwards
-  and note it in the private log.

@@ -1,4 +1,4 @@
--- Import sellers (P5 import wizard, first slice, Fable): a person uploads a
+-- Import sellers (P5 import wizard, first slice, the architecture reviewer): a person uploads a
 -- list of sellers from the store's previous system, maps the columns in the
 -- browser, sees the preview and stages one operation with the rows. Approval
 -- registers every row through register_seller as the approver; rows whose

@@ -1,4 +1,4 @@
--- Stock report (P3 reports, Fable): margin, sell-through and stock age per
+-- Stock report (P3 reports, the architecture reviewer): margin, sell-through and stock age per
 -- category for one period, from the store's own facts. Read only, any member.
 -- Definitions, fixed here so the page, the agent and the chain view agree:
 --   in stock: accepted items with no completed, unreturned sale line and no

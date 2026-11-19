@@ -1,8 +1,7 @@
 # Hosted MCP connector
 
-Design and delivery note by Fable, 2026-09-16, on the owner's direction that a
-store should be able to connect its own AI assistant to Komisio the way it
-connects one to an accounting system: add a connector, sign in, approve, done.
+Stores connect their own MCP-compatible assistant: add a connector, sign in
+and approve its scopes.
 Nothing is installed at the store, and Komisio pays no model tokens: the
 assistant is the store's own (Claude, ChatGPT or another MCP client), and it
 calls Komisio's tools over HTTPS.
@@ -75,7 +74,6 @@ This is an impersonation mechanism, bounded by: the token the person created
 on the consent page, the scope allowlist in SQL, the store binding, the live
 membership check and the audit rows (`connector.authorized` and
 `connector.revoked` in the access log, every call in `connector_calls`).
-Recorded as a decision in DECISIONS.md.
 
 ## Replay and leaks
 
@@ -158,14 +156,5 @@ row-level policies applied.
   revocation that stops the assistant at once.
 - Unit tests in `tests/unit/connectors.test.ts`.
 
-Not yet verified: a real assistant (Claude, ChatGPT) against staging. That
-needs `KOMISIO_CONNECTORS_ENABLED=true` on the staging deployment (owner
-action A15); the owner runs the first connection.
-
-## Later
-
-- Move the excluded reads to SQL functions and register the remaining tools.
-- A hosted copilot with a token quota inside the application, on the same
-  connector grants (roadmap P4).
-- `connector` as a visible "via" on proposals in the operations queue (the
-  audit rows exist; the queue does not show them yet).
+Run a separate integration check with the intended MCP client after configuring
+`KOMISIO_CONNECTORS_ENABLED=true`. Local tests do not verify a hosted session.

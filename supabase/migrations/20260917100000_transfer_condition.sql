@@ -1,4 +1,4 @@
--- Carry the condition through a chain transfer (2026-09-17, Opus). The target
+-- Carry the condition through a chain transfer (2026-09-17, the reviewing agent). The target
 -- store received the item's description and category and an empty condition,
 -- so "Good, small tear at the left cuff" was lost the moment an item moved
 -- between two stores of the same company. The receiving staff then re-inspected

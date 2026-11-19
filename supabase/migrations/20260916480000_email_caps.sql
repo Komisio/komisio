@@ -1,4 +1,4 @@
--- Open e-mail delivery with a host cap per store (2026-09-16, Opus).
+-- Open e-mail delivery with a host cap per store (2026-09-16, the reviewing agent).
 -- Production accepts any store, so the deployment's allowlist becomes `*` in
 -- the application and the pilot's operator gate disappears. The abuse boundary
 -- moves here, where no caller can bypass it: a store may queue at most the

@@ -1,6 +1,6 @@
 # Zettle product and purchase synchronization
 
-Owner correction, 2026-09-13: Komisio supplies saleable items to the POS; the
+Komisio supplies saleable items to the POS; the
 completed checkout returns as a fact, not an AI proposal requiring a second
 employee. PR91's staged import requirement is superseded. Historical operations
 remain readable; new normal imports use the automatic engine path.

@@ -7,8 +7,8 @@ description: Prepare one garment from reception evidence for seller review, pres
 
 This skill is workflow guidance. It does not authenticate sellers, configure a
 model provider, establish market prices or grant permission to save anything.
-The contract is lib/engine/reception.ts. Delivery status and boundaries are in
-docs/RECEPTION-ARCHITECTURE.md.
+The contract is lib/engine/reception.ts. Configuration and boundaries are in
+docs/RECEPTION-ASSISTANCE.md.
 
 1. Work on one garment and the exact session/source revision supplied by the
    trusted adapter. Do not infer a person's identity from photographs.

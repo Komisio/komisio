@@ -1,71 +1,11 @@
-# AGENTS.md: Komisio
+# Contributor guidance
 
-Open-source consignment engine for second-hand stores. Multi-tenant: users
-belong to tenants through `tenant_members`.
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [CLAUDE.md](CLAUDE.md) and
+[ARCHITECTURE.md](ARCHITECTURE.md) before making changes.
 
-This file is the entry point for agents that do not read `CLAUDE.md` on their
-own. It deliberately does not duplicate the project rules: `CLAUDE.md` at the
-repository root is the source of truth and wins whenever the two disagree.
-(A duplicated `AGENTS.md` drifts from its `CLAUDE.md` within weeks; we do not
-maintain two copies.)
-
-Read `CLAUDE.md` first, in particular:
-
-- **Hard rules** — engine-only writes, rule-before-code, no weakening of
-  access control, corrections as new rows, staged writes for agents, öre
-  arithmetic, domain questions through `skills/`.
-- **When uncertain** — what always requires asking.
-- **Definition of done** — decision logged, migration + test, CI green,
-  open questions updated, final message states what is verified.
-
-Then: `ARCHITECTURE.md` for the layer boundaries, `DECISIONS.md` before
-touching anything that was decided, `docs/open-questions.md` before touching
-anything that was not.
-
-## Issue workflow (Astra)
-
-Work is specified in GitHub Issues, written and labelled by Kurre (the owner's
-assistant) or the owner. `CLAUDE.md` still governs *how* to implement; this
-section governs *which* work to take and how to deliver it.
-
-**GitHub communication**
-All text Astra writes on GitHub must be in English, including issues, issue
-comments, PR titles and descriptions, commit messages, review replies and labels,
-regardless of the language used in conversation. Code comments and documentation
-continue to follow `CLAUDE.md`; UI translations are unaffected.
-
-**Picking work**
-- Only pick open issues that are labelled `status:ready`, are **not** labelled
-  `external`, and have no assignee.
-- Order: lowest `prio:N` first (`prio:1` before `prio:2` before `prio:3`;
-  no prio label sorts last), then oldest issue first.
-- On pickup: assign yourself, add `status:in-progress`, remove `status:ready`.
-  Take one issue at a time.
-
-**Delivering**
-- One branch and one PR per issue (`<type>/<issue-number>-<short-slug>`).
-- PR body contains `Closes #N` and a checklist mirroring the issue's
-  acceptance criteria, each item ticked only when verified.
-- Before merging, run the repository checks locally and make sure all pass:
-  `npm run lint`, `npm run typecheck`, `npm run format:check`, `npm test`,
-  `npm run build`; plus `npm run test:db` for database changes and
-  `npm run test:e2e` for changed user flows (see Definition of done in
-  `CLAUDE.md`). PR status checks must also be green.
-- Self-merge only when every check is green and every acceptance criterion is
-  met. Otherwise leave the PR open and explain what is missing.
-
-**When unclear or blocked**
-- Comment on the issue with the exact question (one concrete question, options
-  if possible), set `status:blocked`, remove `status:in-progress`, and move on
-  to the next ready issue. Do not guess.
-
-**Never**
-- Touch issues or PRs labelled `external` or opened by anyone other than the
-  owner or Kurre (no comments, labels, commits, merges, reviews). The owner
-  reviews external contributions; see Repository merge policy in `CLAUDE.md`.
-- Change `CODEOWNERS`, branch protection/rulesets, or this file without an
-  issue explicitly asking for it.
-- **Issues are anonymous:** an issue must never name which agent or person should take it. Write every issue so anyone can pick it up. Describe the work, context and acceptance criteria, not the assignee.
+If a maintainer has supplied an ignored `AGENTS.local.md` in this checkout,
+read it for local working procedures. It is optional: building, testing and
+contributing must work without it. Never commit local instructions or secrets.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

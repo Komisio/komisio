@@ -125,7 +125,7 @@ Two pins apply, read from the deployed configuration:
 A token whose company information does not match both pins (the second when
 set) is dropped; only the company name, database number and the reason are
 recorded as a `refused` event. The database number pin in configuration is
-optional (owner decision 2026-09-14: the Fortnox consent screen makes the
+optional (the Fortnox consent screen makes the
 company choice explicit); the stored connection is itself bound to the
 database number it was made with, and every check, refresh and send is
 refused when another database answers.

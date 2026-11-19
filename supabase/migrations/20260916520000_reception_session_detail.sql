@@ -1,4 +1,4 @@
--- One reception as an engine function (2026-09-16, Opus). Reading a reception
+-- One reception as an engine function (2026-09-16, the reviewing agent). Reading a reception
 -- meant two table reads, so the three tools built on it were unavailable to a
 -- store's own assistant: the connector reaches SQL functions and nothing else.
 -- This returns the same two rows in one call, with the store-role check the

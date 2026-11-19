@@ -1,7 +1,7 @@
 # Markdown agent
 
 Open question 4 asked how price reduction over time is decided and applied.
-The owner's answer on 2026-09-13: the store policy's markdown steps are the
+The store policy's markdown steps are the
 only schedule, frozen per item at acceptance; a store may let Komisio apply
 due steps automatically, off by default; no notice per step.
 

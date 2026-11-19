@@ -1,4 +1,4 @@
--- A call cap per connected assistant (2026-09-16, Opus). The MCP endpoint is
+-- A call cap per connected assistant (2026-09-16, the reviewing agent). The MCP endpoint is
 -- open to the internet and a grant's token buys unlimited calls, so one store's
 -- runaway assistant could saturate the shared database and slow every other
 -- store. A grant may make at most the host's number of calls per rolling day.

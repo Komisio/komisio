@@ -1,6 +1,6 @@
 # Quick reception
 
-Owner decision 2026-09-15: the default way to take in a garment is one
+The default way to take in a garment is one
 screen, not a sequence of pages. The store's policy carries an intake
 profile; the quick profile is the default for new stores and for stores
 that have not chosen.

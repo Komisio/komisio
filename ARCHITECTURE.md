@@ -4,8 +4,9 @@ Komisio is a multi-tenant consignment engine for second-hand stores. This
 document explains how the system is put together and why some parts are
 deliberately rigid. Receiving, saleable inventory, sales and returns, seller balances, manual payout
 confirmation, accounting exports and reviewed agent proposals are implemented.
-See `docs/FUNCTIONAL-ROADMAP.md` for current scope and unresolved work; code
-availability does not establish hosted activation or real-store verification.
+See [README.md](README.md) for capabilities and the integration guides for
+configuration. Code availability does not establish hosted activation or
+real-store verification.
 
 ## Overview
 
@@ -78,7 +79,7 @@ The hook is the sole Auth email transport when enabled, including confirmation,
 recovery and secure email change. No administrator client or metadata mutation
 is needed. Install the hook before enabling new v3 messages; SMTP/v2 remains
 available for staged rollout. Historic communication bodies remain immutable
-except for the owner-approved, transaction-bound contact-erasure operation.
+except for the transaction-bound contact-erasure operation.
 
 Seller privacy review is tenant-scoped and owner/admin-only. Its engine command
 blocks unsettled money, custody and pending delivery, rechecks the reviewed
@@ -137,7 +138,8 @@ The first gated domain slice now adds `sellers` and `bag_receipts` behind
 `lib/engine/intake.ts` and authenticated `/api/intake`. Bag receipt means physical
 custody only. SQL functions validate role/MFA and serialize with membership
 changes; direct table mutations are denied. See
-`docs/SELLER-FLOW-IMPLEMENTATION.md` for activation and remaining workflow scope.
+`docs/SELF-HOSTING.md` for activation and `docs/SELLER-AGREEMENTS.md` for
+agreement evidence.
 Commercial acceptance is a separate engine operation: receiving a bag or
 inviting a photo proposal does not create saleable inventory. Drop-off completion
 and stocktaking record observations without inventing sales or balance changes.
@@ -214,7 +216,7 @@ Sources, staff reviews, access events and seller responses preserve exact versio
 Private images live in Storage; the database pins references and enforces scope.
 Optional inference is bounded, tentative and separate from publication. Local MCP
 reads and previews use the same contracts. See [how AI fits](docs/HOW-AI-FITS.md)
-for the current file map and [reception architecture](docs/RECEPTION-ARCHITECTURE.md)
+for the current file map and [reception assistance](docs/RECEPTION-ASSISTANCE.md)
 for constraints. Preparation creates neither inventory nor a payout;
 subsequent commercial acceptance registers the item separately.
 
@@ -246,7 +248,7 @@ access, and a user may be a member of many tenants. Exact seller reviews use a
 separate verified-email/MFA/capability boundary without granting membership.
 A chain is an optional grouping above stores. It does not merge tenant data
 or grant blanket membership. Cross-store reads and transfers apply explicit
-authorization checks; unresolved sharing rules remain in `docs/open-questions.md`.
+authorization checks. Grouping never grants implicit cross-store access.
 
 ## Repository map (target)
 
@@ -262,5 +264,4 @@ mcp/            local scoped reads, previews and durable proposals
 supabase/       migrations, tests (pgTAP), seed
 skills/         domain knowledge
 docs/           architecture notes, contracts
-experiments/    explorations that are not decisions
 ```

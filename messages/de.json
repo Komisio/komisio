@@ -666,6 +666,7 @@
     "print.printed": "Druck · Druck gemeldet",
     "print.queued": "Druck · Eingereiht",
     "printer.registered": "Drucker · Erfassung",
+    "central_item.purchased": "Ein Artikel wurde direkt von der verkaufenden Person gekauft",
     "purchase.registered": "Ein Einkauf wurde erfasst",
     "reception.access_issued": "Prüfungslink erstellt",
     "reception.access_revoked": "Prüfungslink widerrufen",
@@ -1616,6 +1617,7 @@
       "adjustment": "Anpassung",
       "consignment_fee": "Monatsgebühren",
       "consignment_fee_reversal": "Gebühr stornieren",
+      "credit_purchase": "Direktankauf",
       "credit_guarantee": "Garantierter Betrag"
     },
     "adjustHeading": "Konto anpassen",
@@ -5541,6 +5543,15 @@
       "notConfigured": "Die automatische Garantiegutschrift ist in dieser Umgebung pausiert."
     },
     "fixed": {
+      "directPurchase": "Direktankauf",
+      "consignment": "Kommission",
+      "ownedPurchase": "Ankauf öffnen",
+      "inspectBuy": "Ankauf für {amount} bestätigen",
+      "conditionChecked": "Ich habe den Artikel geprüft. Er entspricht der Anfrage.",
+      "marginEvidence": "Belegter Ankauf von einer Privatperson ohne Umsatzsteuer",
+      "confirmed": "Bestätigt",
+      "notConfirmed": "Nicht bestätigt",
+      "purchaseComplete": "Der Ankauf wurde erfasst und der Betrag gutgeschrieben.",
       "intro": "Bestätige den Betrag des Verkäufers und wähle die Artikel für ein gemeinsames Paket.",
       "allItems": "Alle Artikel dieses Verkäufers anzeigen",
       "select": "{item} auswählen",

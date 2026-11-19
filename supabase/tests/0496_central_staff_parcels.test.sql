@@ -32,7 +32,7 @@ select begin_external_photo_analysis(pg_temp.uid(80),:'tenant',array[pg_temp.uid
 select complete_external_photo_analysis(pg_temp.uid(80),'{"description":"Dress","brand":null,"condition":"good","notes":"","estimatedWeightG":350}',100,10);
 set local request.headers='{}';
 select submit_central_item_request(pg_temp.uid(101),:'tenant','Dress','','good','',60000,'SEK',array[pg_temp.uid(100)],'SE','seller_amount',pg_temp.uid(10));
-select submit_central_item_request(pg_temp.uid(102),:'tenant','Jacket','','good','',70000,'SEK',array[pg_temp.uid(100)],'SE','seller_amount',pg_temp.uid(10));
+select submit_central_item_request(pg_temp.uid(102),:'tenant','Jacket','','good','',70000,'SEK',array[pg_temp.uid(100)],'SE','seller_amount',pg_temp.uid(10),'direct_purchase');
 select reserve_external_item_photo(pg_temp.uid(105),repeat('b',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos',pg_temp.uid(2)||'/'||pg_temp.uid(105)||'.jpg');
 select submit_central_item_request(pg_temp.uid(103),:'tenant','Unknown weight 1','','good','',60000,'SEK',array[pg_temp.uid(105)],'SE','seller_amount',pg_temp.uid(10));
@@ -74,4 +74,10 @@ select is(read_central_parcel(:'offer2')#>>'{parcel,id}',read_central_parcel(:'o
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(3),'role','authenticated')::text,true);
 select throws_like(format($$select read_central_parcel(%L)$$,:'offer'),'%OFFER_NOT_FOUND%','another seller cannot read code');
 select throws_like(format($$select claim_staff_central_parcel(%L,%L,%L,array[%L]::uuid[],1,'sandbox')$$,pg_temp.uid(400),:'tenant',pg_temp.uid(2),:'offer'),'%FORBIDDEN%','seller cannot book as staff');
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
+select receive_handover(:'tenant',pg_temp.uid(450),(read_external_item_offer(:'offer2')#>>'{handover,id}')::uuid,'staff_receipt','');
+select inspect_central_direct_purchase(:'tenant',pg_temp.uid(102),pg_temp.uid(451),false);
+select is(seller_balance(:'tenant',:'seller')->>'availableOre','70000','only the inspected direct item in a mixed parcel is credited');
+select is(my_external_item_requests_page(0,pg_temp.uid(101),'all')#>>'{requests,0,sale_method}',null::text,'staff has no seller-side access to the companion item');
+select is(read_external_item_offer(:'offer')->>'purchaseCreditedAt',null::text,'consignment companion remains independent');
 select * from finish(); rollback;

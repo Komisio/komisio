@@ -666,6 +666,7 @@
     "print.printed": "Stampa · Stampa segnalata",
     "print.queued": "Stampa · In coda",
     "printer.registered": "Stampante · Registrazione",
+    "central_item.purchased": "Un articolo è stato acquistato direttamente dal venditore",
     "purchase.registered": "È stato registrato un acquisto",
     "reception.access_issued": "Link di revisione emesso",
     "reception.access_revoked": "Link di revisione revocato",
@@ -1616,6 +1617,7 @@
       "adjustment": "Rettifica",
       "consignment_fee": "Quote mensili",
       "consignment_fee_reversal": "Storna quota",
+      "credit_purchase": "Acquisto diretto",
       "credit_guarantee": "Importo garantito"
     },
     "adjustHeading": "Rettifica il registro",
@@ -5535,6 +5537,15 @@
       "notConfigured": "L’accredito automatico degli importi garantiti è sospeso in questo ambiente."
     },
     "fixed": {
+      "directPurchase": "Acquisto diretto",
+      "consignment": "Conto vendita",
+      "ownedPurchase": "Apri acquisto",
+      "inspectBuy": "Conferma acquisto per {amount}",
+      "conditionChecked": "Ho controllato l’articolo. Corrisponde alla richiesta.",
+      "marginEvidence": "Acquisto documentato da un privato senza IVA",
+      "confirmed": "Confermato",
+      "notConfirmed": "Non confermato",
+      "purchaseComplete": "Acquisto registrato e importo accreditato al venditore.",
       "intro": "Accetta l’importo del venditore e seleziona gli articoli da spedire nello stesso pacco.",
       "allItems": "Mostra tutti gli articoli del venditore",
       "select": "Seleziona {item}",

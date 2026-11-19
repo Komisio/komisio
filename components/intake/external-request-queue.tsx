@@ -6,6 +6,7 @@ import { externalOfferAmount } from '@/lib/platform/external-offer-amount'
 import { EventTime } from '@/components/ui/event-time'
 import { ExternalRequestReview } from './external-request-review'
 import { ExternalItemRegistration } from './external-item-registration'
+import { DirectPurchaseInspection } from './direct-purchase-inspection'
 import { NavigationLink as Link } from '@/components/platform/navigation-warning'
 import styles from './external-request-queue.module.css'
 
@@ -72,6 +73,13 @@ export function ExternalRequestQueue({
                     .filter(Boolean)
                     .join(' · ')}
                 </span>
+                {row.approval_mode === 'fixed' ? (
+                  <span className={styles.meta}>
+                    {row.sale_method === 'direct_purchase'
+                      ? d.fixed.directPurchase
+                      : d.fixed.consignment}
+                  </span>
+                ) : null}
                 <span className={styles.date}>
                   <EventTime value={row.created_at} locale={locale} />
                 </span>
@@ -203,6 +211,25 @@ export function ExternalRequestQueue({
                       </p>
                     ) : null}
                   </div>
+                ) : null}
+                {row.direct_purchase_id ? (
+                  <Link
+                    className="btn btn-secondary"
+                    href={`/intake/purchases/${row.direct_purchase_id}`}
+                  >
+                    {d.fixed.ownedPurchase}
+                  </Link>
+                ) : null}
+                {write &&
+                row.sale_method === 'direct_purchase' &&
+                row.queue_status === 'received' &&
+                !row.direct_purchase_id ? (
+                  <DirectPurchaseInspection
+                    tenantId={tenantId}
+                    requestId={row.id}
+                    amount={externalOfferAmount(row.desired_price_ore!)}
+                    d={d}
+                  />
                 ) : null}
                 {row.offer?.guarantee?.itemId ? (
                   <Link

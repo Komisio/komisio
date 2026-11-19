@@ -9,6 +9,25 @@ export const externalRegistrationCommand = z.strictObject({
   description: z.string().trim().min(1).max(1000),
   priceOre: z.string().regex(/^[1-9]\d{0,7}$/),
 })
+export const directPurchaseCommand = z.strictObject({
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+  commandId: z.uuid(),
+  marginEligible: z.boolean(),
+})
+export async function inspectDirectPurchase(
+  client: SupabaseClient,
+  command: z.infer<typeof directPurchaseCommand>,
+) {
+  const { data, error } = await client.rpc('inspect_central_direct_purchase', {
+    p_tenant: command.tenantId,
+    p_request: command.requestId,
+    p_command: command.commandId,
+    p_margin_eligible: command.marginEligible,
+  })
+  if (error) throw new Error(error.message)
+  return { id: command.commandId, purchaseId: z.guid().parse(data) }
+}
 const preparation = z.object({
   sessionId: z.guid(),
   ownerId: z.uuid(),

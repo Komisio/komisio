@@ -40,6 +40,10 @@ export const bankVersion = z.object({
   createdAt: z.string(),
 })
 export const payoutBank = z.object({
+  swishPhone: z
+    .string()
+    .regex(/^\+467[023689]\d{7}$/)
+    .optional(),
   current: bankVersion.nullable(),
   reviewed: bankVersion.nullable(),
   needsReview: z.boolean(),

@@ -387,6 +387,7 @@
     "stocktakePending": "Kontrollera återstående varor innan du avslutar.",
     "collectionNotDue": "Hämtningsfristen har inte gått ut.",
     "overviewHelpLabel": "Om inlämning",
+    "payoutBankRequired": "Säljaren behöver spara sitt utbetalningskonto hos Komisio först.",
     "payoutBankReviewRequired": "En ägare eller administratör behöver granska säljarens kontouppgifter under Utbetalningar först.",
     "saleVatRequired": "Försäljningen registrerades inte eftersom butikens momshantering inte har valts. En ägare eller administratör behöver välja momshantering i Butiksinställningar och publicera policyn innan du försöker igen.",
     "payoutHistoryReview": "Äldre utbetalningsunderlag behöver stämmas av. Skicka inte samma betalning igen.",
@@ -666,6 +667,7 @@
     "print.printed": "Utskrift · Utskrift rapporterad",
     "print.queued": "Utskrift · Köat",
     "printer.registered": "Skrivare · Registrering",
+    "central_item.consignment_selected": "Kommission valdes för en mottagen vara",
     "central_item.purchased": "En vara köptes direkt från säljaren",
     "purchase.registered": "Ett inköp registrerades",
     "reception.access_issued": "Granskningslänk skapad",
@@ -2585,6 +2587,7 @@
     "noMatches": "Inga inköp matchar sökningen."
   },
   "sellerPortal": {
+    "automatic": "Komisio automatiskt",
     "itemDetails": "Pris och säljperiod",
     "items": "Mina varor",
     "noItems": "Inga varor ännu.",
@@ -2680,6 +2683,7 @@
     "payoutErrors": {
       "INVALID_INPUT": "Ange ett belopp större än noll med högst två decimaler.",
       "PAYOUT_BELOW_THRESHOLD": "Beloppet är lägre än butikens minimibelopp.",
+      "PAYOUT_BANK_REQUIRED": "Spara ditt utbetalningskonto hos Komisio innan du begär utbetalning.",
       "PAYOUT_EXCEEDS_BALANCE": "Beloppet överstiger ditt tillgängliga saldo. Kontrollera saldot ovan."
     },
     "collectionDeadline": "Hämtas senast",
@@ -5540,6 +5544,10 @@
       "directPurchase": "Direktköp",
       "consignment": "Kommission",
       "ownedPurchase": "Öppna inköpet",
+      "receiptMethod": "Hantering vid mottagning",
+      "confirmConsignment": "Bekräfta kommission",
+      "consignmentComplete": "Kommissionen är registrerad. Garantin räknas från mottagningsdagen.",
+      "undecided": "Väljs vid mottagning",
       "inspectBuy": "Bekräfta köp för {amount}",
       "conditionChecked": "Jag har kontrollerat varan. Den stämmer med förfrågan.",
       "marginEvidence": "Underlag för inköp från privatperson utan moms",

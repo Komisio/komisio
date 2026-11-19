@@ -387,6 +387,7 @@
     "stocktakePending": "Tarkista jäljellä olevat tuotteet ennen päättämistä.",
     "collectionNotDue": "Noutoaika ei ole vielä päättynyt.",
     "overviewHelpLabel": "Tietoa vastaanotosta",
+    "payoutBankRequired": "Myyjän on ensin tallennettava maksutilinsä Komisioon.",
     "payoutBankReviewRequired": "Omistajan tai ylläpitäjän on ensin tarkistettava myyjän tilitiedot Maksut-osiossa.",
     "saleVatRequired": "Myyntiä ei kirjattu, koska myymälän ALV-käsittelyä ei ole valittu. Omistajan tai ylläpitäjän on valittava se myymälän asetuksissa ja julkaistava käytäntö ennen uutta yritystä.",
     "payoutHistoryReview": "Aiemmat tilitystiedot on täsmäytettävä. Älä lähetä samaa maksua uudelleen.",
@@ -666,6 +667,7 @@
     "print.printed": "Tulostus · Tulostus raportoitu",
     "print.queued": "Tulostus · Jonossa",
     "printer.registered": "Tulostin · Kirjaus",
+    "central_item.consignment_selected": "Vastaanotetulle tuotteelle valittiin välitysmyynti",
     "central_item.purchased": "Tuote ostettiin suoraan myyjältä",
     "purchase.registered": "Osto kirjattiin",
     "reception.access_issued": "Tarkistuslinkki luotu",
@@ -2585,6 +2587,7 @@
     "noMatches": "Hakua vastaavia ostoja ei löytynyt."
   },
   "sellerPortal": {
+    "automatic": "Komisio automaattisesti",
     "itemDetails": "Hinta ja myyntiaika",
     "handovers": "Ilmoita tavaroiden tuonnista",
     "handoverIntro": "Ilmoita tuontierä ennen saapumista. Näytä viite tiskillä; myymälä kirjaa vastaanoton ja näet tuontierän numeron täällä.",
@@ -2680,6 +2683,7 @@
     "payoutErrors": {
       "INVALID_INPUT": "Anna nollaa suurempi summa enintään kahdella desimaalilla.",
       "PAYOUT_BELOW_THRESHOLD": "Summa alittaa kaupan vähimmäissumman.",
+      "PAYOUT_BANK_REQUIRED": "Tallenna maksutilisi Komisioon ennen maksupyyntöä.",
       "PAYOUT_EXCEEDS_BALANCE": "Summa ylittää käytettävissä olevan saldosi. Tarkista yllä oleva saldo."
     },
     "collectionDeadline": "Noudettava viimeistään",
@@ -5546,6 +5550,10 @@
       "directPurchase": "Suora osto",
       "consignment": "Välitysmyynti",
       "ownedPurchase": "Avaa osto",
+      "receiptMethod": "Käsittely vastaanotettaessa",
+      "confirmConsignment": "Vahvista välitysmyynti",
+      "consignmentComplete": "Välitysmyynti kirjattu. Takuu alkaa vastaanottopäivästä.",
+      "undecided": "Päätetään vastaanotettaessa",
       "inspectBuy": "Vahvista osto hintaan {amount}",
       "conditionChecked": "Tarkistin tuotteen. Se vastaa kuvausta.",
       "marginEvidence": "Tositteellinen osto yksityishenkilöltä ilman arvonlisäveroa",

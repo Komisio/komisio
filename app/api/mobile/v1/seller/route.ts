@@ -42,6 +42,8 @@ function failure(error: unknown, origin: string | null) {
     AGREEMENT_CHANGED: 409,
     PAYOUT_BELOW_THRESHOLD: 409,
     PAYOUT_EXCEEDS_BALANCE: 409,
+    PAYOUT_BANK_REQUIRED: 409,
+    PAYOUT_AUTOMATIC: 409,
     SELLER_CLOSED: 409,
   }
   const known = typeof message === 'string' && Object.hasOwn(codes, message)

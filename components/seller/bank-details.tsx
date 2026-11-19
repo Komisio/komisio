@@ -235,6 +235,15 @@ export function PayoutBankReview({
   const state = useBankSave(d),
     t = d.sellerBank,
     open = ['requested', 'approved'].includes(status)
+  if (bank.swishPhone)
+    return (
+      <details className="payout-bank">
+        <summary>Swish</summary>
+        <p>
+          <code>{bank.swishPhone}</code>
+        </p>
+      </details>
+    )
   const display = open ? bank.current : bank.reviewed
   return (
     <details className="payout-bank">

@@ -33,7 +33,7 @@ export const sellerEconomy = z.object({
       id: z.uuid(),
       amount_ore: money,
       status: z.string(),
-      request_source: z.enum(['staff', 'seller']),
+      request_source: z.enum(['staff', 'seller', 'automatic']),
       requested_at: z.string(),
     }),
   ),

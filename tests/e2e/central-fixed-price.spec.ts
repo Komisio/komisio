@@ -106,6 +106,26 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
       },
     )
     expect(profile.status(), await profile.text()).toBe(200)
+    const own = await page.request.post(
+      '/api/mobile/v1/external-items/profile',
+      { headers, data: { action: 'read' } },
+    )
+    const account = (await own.json()).account
+    const preference = await page.request.post(
+      '/api/mobile/v1/external-items/profile',
+      {
+        headers,
+        data: {
+          action: 'savePayoutPreference',
+          tenantId: f.tenant,
+          sellerId: account.sellerId,
+          requestId: randomUUID(),
+          expected: null,
+          destination: { method: 'swish', phone: '+46700000007' },
+        },
+      },
+    )
+    expect(preference.status(), await preference.text()).toBe(200)
     for (const [n, requestId] of requests.entries()) {
       const sent = await page.request.post('/api/mobile/v1/external-items', {
         headers,
@@ -122,7 +142,7 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
           senderCountry: 'SE',
           priceBasis: 'seller_amount',
           approvalMode: 'fixed',
-          ...(n === 0 ? { saleMethod: 'direct_purchase' } : {}),
+          staffSelectsMethod: true,
           agreementVersionId: agreement,
           photos: [photo],
         },
@@ -140,11 +160,8 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
     )
     await page.goto('/intake/requests')
     await expect(
-      page.getByText(d.externalOffers.fixed.directPurchase, { exact: true }),
-    ).toBeVisible()
-    await expect(
-      page.getByText(d.externalOffers.fixed.consignment, { exact: true }),
-    ).toBeVisible()
+      page.getByText(d.externalOffers.fixed.undecided, { exact: true }),
+    ).toHaveCount(2)
     await expect(
       page.getByRole('heading', { name: 'Alex Example' }),
     ).toBeVisible()
@@ -252,6 +269,9 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
       })
       .first()
     await card.locator('summary').first().click()
+    await expect(
+      card.getByLabel(d.externalOffers.fixed.receiptMethod),
+    ).toHaveValue('direct_purchase')
     await card.getByLabel(d.externalOffers.fixed.conditionChecked).check()
     await card
       .getByLabel(d.externalOffers.fixed.marginEvidence)
@@ -273,6 +293,47 @@ test('fixed seller amount is submitted once and staff approves a seller group wi
           ).rows[0].n,
       )
       .toBe(1)
+    await f.asActor(f.actor, async () => {
+      await f.db.query(
+        "select receive_handover($1,$2,l.handover_id,'staff_receipt','') from external_item_handover_links l join external_item_offers o on l.offer_id=o.id where o.request_id=$3",
+        [f.tenant, randomUUID(), requests[1]],
+      )
+    })
+    await page.goto('/intake/requests?status=received')
+    const second = page
+      .locator('details')
+      .filter({
+        has: page
+          .locator('summary')
+          .getByText('Synthetic dress 2', { exact: true }),
+      })
+      .first()
+    await second.locator('summary').first().click()
+    await second
+      .getByLabel(d.externalOffers.fixed.receiptMethod)
+      .selectOption('consignment')
+    await second.getByLabel(d.externalOffers.fixed.conditionChecked).check()
+    await second
+      .getByRole('button', { name: d.externalOffers.fixed.confirmConsignment })
+      .click()
+    await expect
+      .poll(
+        async () =>
+          (
+            await f.db.query(
+              'select count(*)::int n from external_item_guarantees g join external_item_offers o on o.id=g.offer_id where o.request_id=$1',
+              [requests[1]],
+            )
+          ).rows[0].n,
+      )
+      .toBe(1)
+    const automatic = (
+      await f.db.query(
+        "select id from public.payouts where tenant_id=$1 and seller_id=$2 and request_source='automatic' and status='requested' and amount_ore=60000",
+        [f.tenant, account.sellerId],
+      )
+    ).rows
+    expect(automatic).toHaveLength(1)
     await page.goto('/intake/requests?status=acquired')
     await page
       .locator('summary')

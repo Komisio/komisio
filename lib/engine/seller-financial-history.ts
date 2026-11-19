@@ -35,7 +35,7 @@ export const sellerPayoutsPage = z
           id: z.uuid(),
           amount_ore: ore.positive(),
           status: z.enum(['requested', 'approved', 'paid', 'rejected']),
-          request_source: z.enum(['staff', 'seller']),
+          request_source: z.enum(['staff', 'seller', 'automatic']),
           requested_at: time,
         }),
       )

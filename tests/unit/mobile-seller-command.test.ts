@@ -380,6 +380,25 @@ describe('mobile engine dispatch and replay contract', () => {
     }
     expectNoWrite()
   })
+  it.each([
+    { method: 'swish', phone: '+46700000001' },
+    { method: 'bank', bankVersionId: agreement },
+  ])('pins the chosen central payout destination', async (destination) => {
+    expect(
+      (
+        await POST(
+          request({ ...payout, action: 'requestCentralPayout', destination }),
+        )
+      ).status,
+    ).toBe(200)
+    expect(mocks.rpc).toHaveBeenLastCalledWith('request_central_payout', {
+      p_tenant: tenant,
+      p_id: requestId,
+      p_seller: seller,
+      p_amount_ore: 10000,
+      p_destination: destination,
+    })
+  })
   it('saves bank details with the exact expected version and request ID', async () => {
     const command = { ...bank, expected: agreement }
     expect((await POST(request(command))).status).toBe(200)
@@ -425,6 +444,7 @@ describe('mobile engine dispatch and replay contract', () => {
   })
   it.each([
     'PAYOUT_BELOW_THRESHOLD',
+    'PAYOUT_BANK_REQUIRED',
     'PAYOUT_EXCEEDS_BALANCE',
     'REQUEST_CONFLICT',
     'SELLER_CLOSED',

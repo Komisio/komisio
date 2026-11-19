@@ -387,6 +387,7 @@
     "stocktakePending": "Kontroller de resterende varene før du avslutter.",
     "collectionNotDue": "Hentefristen har ikke gått ut.",
     "overviewHelpLabel": "Om innlevering",
+    "payoutBankRequired": "Selgeren må først lagre en utbetalingskonto hos Komisio.",
     "payoutBankReviewRequired": "En eier eller administrator må først kontrollere selgerens kontoopplysninger under Utbetalinger.",
     "saleVatRequired": "Salget ble ikke registrert fordi butikkens momsbehandling ikke er valgt. En eier eller administrator må velge den i Butikkinnstillinger og publisere policyen før du prøver igjen.",
     "payoutHistoryReview": "Eldre utbetalingsbilag må avstemmes. Ikke send samme betaling på nytt.",
@@ -666,6 +667,7 @@
     "print.printed": "Utskrift · Utskrift rapportert",
     "print.queued": "Utskrift · I kø",
     "printer.registered": "Skriver · Registrering",
+    "central_item.consignment_selected": "Kommisjon valgt for en mottatt vare",
     "central_item.purchased": "En vare ble kjøpt direkte fra selgeren",
     "purchase.registered": "Et innkjøp ble registrert",
     "reception.access_issued": "Gjennomgangslenke utstedt",
@@ -2585,6 +2587,7 @@
     "noMatches": "Ingen innkjøp passer søket."
   },
   "sellerPortal": {
+    "automatic": "Automatisk av Komisio",
     "itemDetails": "Pris og salgsperiode",
     "handovers": "Meld inn en innlevering",
     "handoverIntro": "Meld inn en innlevering før du kommer. Vis referansen i kassen; butikken registrerer mottaket, og du ser innleveringsnummeret her.",
@@ -2680,6 +2683,7 @@
     "payoutErrors": {
       "INVALID_INPUT": "Angi et beløp større enn null med høyst to desimaler.",
       "PAYOUT_BELOW_THRESHOLD": "Beløpet er lavere enn butikkens minstebeløp.",
+      "PAYOUT_BANK_REQUIRED": "Lagre utbetalingskontoen din hos Komisio før du ber om utbetaling.",
       "PAYOUT_EXCEEDS_BALANCE": "Beløpet overstiger tilgjengelig saldo. Kontroller saldoen ovenfor."
     },
     "collectionDeadline": "Hentes senest",
@@ -5540,6 +5544,10 @@
       "directPurchase": "Direktekjøp",
       "consignment": "Kommisjon",
       "ownedPurchase": "Åpne kjøpet",
+      "receiptMethod": "Håndtering ved mottak",
+      "confirmConsignment": "Bekreft kommisjon",
+      "consignmentComplete": "Kommisjonen er registrert. Garantien regnes fra mottaksdagen.",
+      "undecided": "Velges ved mottak",
       "inspectBuy": "Bekreft kjøp for {amount}",
       "conditionChecked": "Jeg har kontrollert varen. Den stemmer med forespørselen.",
       "marginEvidence": "Dokumentert kjøp fra privatperson uten moms",

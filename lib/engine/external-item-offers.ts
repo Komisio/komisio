@@ -62,7 +62,11 @@ export const externalOfferSummary = z.object({
   expectedSalePriceOre: ore,
   currency: z.literal('SEK'),
   agreementVersionId: uuid,
-  saleMethod: z.enum(['direct_purchase', 'consignment']).optional(),
+  staffSelectsMethod: z.boolean().optional(),
+  saleMethod: z
+    .enum(['direct_purchase', 'consignment'])
+    .nullish()
+    .transform((value) => value ?? undefined),
   purchaseCreditedAt: time.nullish(),
   createdAt: time,
   expiresAt: time,
@@ -228,7 +232,11 @@ export async function issueExternalOffer(
 }
 
 const queueRow = z.object({
-  sale_method: z.enum(['direct_purchase', 'consignment']).optional(),
+  staff_selects_method: z.boolean().optional(),
+  sale_method: z
+    .enum(['direct_purchase', 'consignment'])
+    .nullish()
+    .transform((value) => value ?? undefined),
   direct_purchase_id: z.guid().nullish(),
   approval_mode: z.enum(['offer', 'fixed']).default('offer'),
   seller_name: z.string().nullish(),

@@ -7,15 +7,20 @@ import { useBusyState } from '@/components/platform/work-activity'
 export function DirectPurchaseInspection({
   tenantId,
   requestId,
+  allowConsignment = false,
   amount,
   d,
 }: {
   tenantId: string
   requestId: string
+  allowConsignment?: boolean
   amount: string
   d: Dictionary['externalOffers']
 }) {
   const router = useRouter()
+  const [method, setMethod] = useState<'direct_purchase' | 'consignment'>(
+    'direct_purchase',
+  )
   const [busy, setBusy] = useBusyState(false)
   const [outcome, setOutcome] = useState<
     'initial' | 'unknown' | 'changed' | 'saved'
@@ -25,7 +30,12 @@ export function DirectPurchaseInspection({
     null,
   )
   const t = d.fixed
-  if (outcome === 'saved') return <p role="status">{t.purchaseComplete}</p>
+  if (outcome === 'saved')
+    return (
+      <p role="status">
+        {method === 'consignment' ? t.consignmentComplete : t.purchaseComplete}
+      </p>
+    )
   if (outcome === 'changed')
     return (
       <div>
@@ -44,7 +54,8 @@ export function DirectPurchaseInspection({
           const form = new FormData(e.currentTarget)
           if (
             !form.has('inspected') ||
-            !['yes', 'no'].includes(String(form.get('evidence')))
+            (method === 'direct_purchase' &&
+              !['yes', 'no'].includes(String(form.get('evidence'))))
           )
             return
           command.current = {
@@ -58,7 +69,11 @@ export function DirectPurchaseInspection({
           const response = await fetch('/api/intake/requests/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tenantId, requestId, ...command.current }),
+            body: JSON.stringify(
+              method === 'consignment'
+                ? { tenantId, requestId, action: 'confirmConsignment' }
+                : { tenantId, requestId, ...command.current },
+            ),
           })
           if (response.status === 409) {
             setOutcome('changed')
@@ -67,8 +82,9 @@ export function DirectPurchaseInspection({
           const result = await response.json()
           if (
             !response.ok ||
-            result.id !== command.current.commandId ||
-            !result.purchaseId
+            (method === 'consignment'
+              ? result.id !== requestId || !result.guaranteeId
+              : result.id !== command.current.commandId || !result.purchaseId)
           )
             throw new Error('UNCONFIRMED')
           setOutcome('saved')
@@ -85,26 +101,48 @@ export function DirectPurchaseInspection({
         disabled={busy || outcome === 'unknown'}
         className="submission-fields"
       >
+        {allowConsignment ? (
+          <label>
+            {t.receiptMethod}
+            <select
+              value={method}
+              onChange={(e) =>
+                setMethod(
+                  e.target.value === 'consignment'
+                    ? 'consignment'
+                    : 'direct_purchase',
+                )
+              }
+            >
+              <option value="direct_purchase">{t.directPurchase}</option>
+              <option value="consignment">{t.consignment}</option>
+            </select>
+          </label>
+        ) : null}
         <label>
           <input type="checkbox" name="inspected" required />{' '}
           {t.conditionChecked}
         </label>
-        <label>
-          {t.marginEvidence}
-          <select name="evidence" required defaultValue="">
-            <option disabled value="">
-              —
-            </option>
-            <option value="yes">{t.confirmed}</option>
-            <option value="no">{t.notConfirmed}</option>
-          </select>
-        </label>
+        {method === 'direct_purchase' ? (
+          <label>
+            {t.marginEvidence}
+            <select name="evidence" required defaultValue="">
+              <option disabled value="">
+                —
+              </option>
+              <option value="yes">{t.confirmed}</option>
+              <option value="no">{t.notConfirmed}</option>
+            </select>
+          </label>
+        ) : null}
       </fieldset>
       {outcome === 'unknown' ? <p role="alert">{d.failure}</p> : null}
       <button className="btn btn-primary" disabled={busy} aria-busy={busy}>
         {outcome === 'unknown'
           ? d.retry
-          : t.inspectBuy.replace('{amount}', amount)}
+          : method === 'consignment'
+            ? t.confirmConsignment
+            : t.inspectBuy.replace('{amount}', amount)}
       </button>
     </form>
   )

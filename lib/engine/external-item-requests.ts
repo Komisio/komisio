@@ -31,6 +31,7 @@ export const externalItemSubmission = z.strictObject({
   senderCountry: z.literal('SE').optional(),
   priceBasis: z.literal('seller_amount').optional(),
   approvalMode: z.literal('fixed').optional(),
+  staffSelectsMethod: z.literal(true).optional(),
   saleMethod: z.enum(['direct_purchase', 'consignment']).optional(),
   agreementVersionId: uuid.optional(),
   guestAnalysis: guestAnalysisProof.optional(),
@@ -97,7 +98,11 @@ const externalRequest = z.object({
   desired_price_ore: externalItemSubmission.shape.desiredPriceOre,
   price_basis: z.enum(['resale', 'seller_amount']).optional(),
   approval_mode: z.enum(['offer', 'fixed']).optional(),
-  sale_method: z.enum(['direct_purchase', 'consignment']).optional(),
+  staff_selects_method: z.boolean().optional(),
+  sale_method: z
+    .enum(['direct_purchase', 'consignment'])
+    .nullish()
+    .transform((value) => value ?? undefined),
   agreement_version_id: uuid.nullable().optional(),
   currency: externalItemSubmission.shape.currency,
   photos: externalItemSubmission.shape.photos,
@@ -140,6 +145,8 @@ export async function executeExternalItemCommand(
 ) {
   const c = externalItemCommand.parse(input)
   if (c.action === 'submit') {
+    if (c.staffSelectsMethod && (c.saleMethod || c.approvalMode !== 'fixed'))
+      throw new Error('INVALID_INPUT')
     if (c.saleMethod && c.approvalMode !== 'fixed')
       throw new Error('INVALID_INPUT')
     if ((c.approvalMode === 'fixed') !== Boolean(c.agreementVersionId))
@@ -160,7 +167,11 @@ export async function executeExternalItemCommand(
       {
         p_id: c.requestId,
         p_tenant: c.tenantId,
-        ...(c.saleMethod ? { p_sale_method: c.saleMethod } : {}),
+        ...(c.staffSelectsMethod
+          ? { p_sale_method: 'staff_decides' }
+          : c.saleMethod
+            ? { p_sale_method: c.saleMethod }
+            : {}),
         p_description: c.description,
         p_brand: c.brand,
         p_condition: c.condition,

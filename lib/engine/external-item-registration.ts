@@ -15,6 +15,22 @@ export const directPurchaseCommand = z.strictObject({
   commandId: z.uuid(),
   marginEligible: z.boolean(),
 })
+export const receiptConsignmentCommand = z.strictObject({
+  action: z.literal('confirmConsignment'),
+  tenantId: z.uuid(),
+  requestId: z.uuid(),
+})
+export async function confirmReceiptConsignment(
+  client: SupabaseClient,
+  command: z.infer<typeof receiptConsignmentCommand>,
+) {
+  const { data, error } = await client.rpc(
+    'confirm_central_receipt_consignment',
+    { p_tenant: command.tenantId, p_request: command.requestId },
+  )
+  if (error) throw new Error(error.message)
+  return { id: command.requestId, guaranteeId: z.guid().parse(data) }
+}
 export async function inspectDirectPurchase(
   client: SupabaseClient,
   command: z.infer<typeof directPurchaseCommand>,

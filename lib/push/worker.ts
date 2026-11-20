@@ -21,6 +21,7 @@ const candidates = z
         'item_sold',
         'external_item_offered',
         'external_item_declined',
+        'external_item_purchased',
       ]),
       createdAt: z.iso.datetime({ offset: true }),
       locale: z.enum(locales),
@@ -83,7 +84,7 @@ export async function runSellerPush(
     }
   }
   for (let page = 0; page < 10 && now() < deadline; page++) {
-    const read = await client.rpc('seller_push_candidates', { p_protocol: 3 })
+    const read = await client.rpc('seller_push_candidates', { p_protocol: 4 })
     if (read.error) throw new Error('PUSH_QUEUE_FAILED')
     const rows = candidates.parse(read.data)
     if (!rows.length) break

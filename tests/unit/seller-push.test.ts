@@ -54,6 +54,38 @@ it('request decisions use ordinary sound and versioned phone-owner navigation wi
     expect(text.body).not.toContain('PRIVATE')
   }
 })
+it('sends a central purchase with the sale sound and an owner-scoped request link', () => {
+  const purchase: PushClaim = {
+    ...claim,
+    kind: 'external_item_purchased',
+    sellerId: null,
+    itemId: null,
+    requestId: id,
+    ownerId: id,
+    offerId: null,
+  }
+  expect(expoPayload(purchase)).toMatchObject({
+    sound: 'sale.wav',
+    channelId: 'komisio-sold-v1',
+    data: {
+      v: 2,
+      kind: 'external_item_purchased',
+      requestId: id,
+      ownerId: id,
+      offerId: null,
+    },
+  })
+  for (const locale of locales) {
+    const copy = renderSellerPush(
+      purchase.kind,
+      locale,
+      'PRIVATE ITEM',
+      'PRIVATE STORE',
+    )
+    expect(copy.title).toContain('Komisio')
+    expect(copy.body).not.toContain('PRIVATE')
+  }
+})
 it('uses original event sounds, bounded TTL and an identity-only navigation payload', () => {
   expect(expoPayload(claim)).toMatchObject({
     sound: 'registeredstore.wav',
@@ -187,7 +219,7 @@ it.each(['external_item_offered', 'external_item_declined'] as const)(
     })
     expect(send).toHaveBeenCalledOnce()
     expect(f.rpc).toHaveBeenCalledWith('seller_push_candidates', {
-      p_protocol: 3,
+      p_protocol: 4,
     })
     expect(send.mock.calls[0][0]).toMatchObject({
       kind,

@@ -136,9 +136,14 @@ select throws_ok(format($$select run_central_guarantees(%L)$$,:'other_tenant'),'
 set constraints all immediate;
 select pass('all immutable financial evidence and deferred links validate');
 select is((select count(*) from komisio_private.seller_push_deliveries where tenant_id=:'tenant' and kind='item_sold' and item_id=:'item'),1::bigint,'returned first sale is suppressed; resale queues one factual sale notice');
+select is((select count(*) from komisio_private.seller_push_deliveries where tenant_id=:'tenant' and kind='external_item_purchased'),1::bigint,'one day-45 purchase notice even with a later sale import');
+select is((select count(*) from komisio_private.seller_push_deliveries where tenant_id=:'tenant' and kind='item_sold' and item_id=:'due_item'),0::bigint,'selling an acquired item does not notify its former owner again');
+select id as purchase_notification from komisio_private.seller_push_deliveries where tenant_id=:'tenant' and kind='external_item_purchased' \gset
 select id as push from komisio_private.seller_push_deliveries where tenant_id=:'tenant' and kind='item_sold' and item_id=:'item' \gset
 set local role authenticated;
 set local request.jwt.claims='{"sub":"f7400000-0000-4000-8000-000000000005","role":"authenticated"}';
+select is(claim_seller_push(:'purchase_notification','sv','Komisio har köpt din vara','Se din vara i appen.')->>'kind','external_item_purchased','worker can claim the deadline purchase for delivery');
+select is(claim_seller_push(:'purchase_notification','sv','Komisio har köpt din vara','Se din vara i appen.'),null::jsonb,'purchase sound cannot be sent a second time on retry');
 select is(claim_seller_push(:'push','sv','Vara såld','Din vara har sålts.')->>'itemId',:'item','existing push worker can claim central seller sale without email matching');
 select is(claim_seller_push(:'push','sv','Vara såld','Din vara har sålts.'),null::jsonb,'push claim retry never authorizes another send');
 select is(central_guarantee_automation_tenants(),'[]'::jsonb,'push-worker identity alone grants no guarantee scope');

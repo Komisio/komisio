@@ -12,6 +12,7 @@ select publish_seller_agreement(:'tenant',pg_temp.uid(10),null,'Terms 1','Synthe
 select publish_store_policy(:'tenant',gen_random_uuid(),(current_store_policy(:'tenant')->>'id')::uuid,(current_store_policy(:'tenant')->'policy') || '{"vatModeStoreOwned":"store_full"}'::jsonb);
 reset role;
 update platform_settings set central_app_tenant_id=:'tenant';
+insert into auth.sessions(id,user_id,aal) values(pg_temp.uid(12),pg_temp.uid(2),'aal1');
 insert into tenant_members(tenant_id,user_id,role) values(:'tenant',pg_temp.uid(4),'readonly');
 set local role authenticated;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
@@ -32,6 +33,8 @@ select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'
 select reserve_external_item_photo(pg_temp.uid(110),repeat('b',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos',pg_temp.uid(2)||'/'||pg_temp.uid(110)||'.jpg');
 select is(submit_central_item_request(pg_temp.uid(111),:'tenant','Jacket','','good','',70000,'SEK',array[pg_temp.uid(110)],'SE','seller_amount',pg_temp.uid(10),'direct_purchase'),pg_temp.uid(111),'explicit direct purchase');
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'session_id',pg_temp.uid(12),'role','authenticated')::text,true);
+select set_my_push_device(pg_temp.uid(22),repeat('a',64),gen_random_uuid(),0,'ExpoPushToken[synthetic_purchase]','ios','sv',true);
 select is(my_external_item_requests_page(0,pg_temp.uid(111),'all')#>>'{requests,0,sale_method}','direct_purchase','seller sees binding selection');
 select throws_like(format($$select submit_central_item_request(%L,%L,'Jacket','','good','',70000,'SEK',array[%L]::uuid[],'SE','seller_amount',%L)$$,pg_temp.uid(111),:'tenant',pg_temp.uid(110),pg_temp.uid(10)),'%REQUEST_CONFLICT%','legacy retry cannot change direct purchase to consignment');
 select throws_like(format($$select inspect_central_direct_purchase(%L,%L,%L,false)$$,:'tenant',pg_temp.uid(111),pg_temp.uid(301)),'%FORBIDDEN%','seller cannot confirm inspection');
@@ -47,6 +50,10 @@ select ok(read_external_item_offer(pg_temp.uid(201))#>>'{guarantee,dueAt}' is no
 select is(seller_balance(:'tenant',:'seller')->>'availableOre','0','arrival alone credits neither item');
 select throws_like(format($$select inspect_central_direct_purchase(%L,%L,%L,true)$$,:'tenant',pg_temp.uid(101),pg_temp.uid(301)),'%REQUEST_CHANGED%','ordinary commission choice cannot be converted');
 select throws_like(format($$select inspect_central_direct_purchase(%L,%L,%L,true)$$,:'other',pg_temp.uid(111),pg_temp.uid(301)),'%FORBIDDEN%','other tenant cannot confirm');
+set constraints all immediate;
+reset role;
+select is((select count(*) from komisio_private.seller_push_deliveries where kind='external_item_purchased'),0::bigint,'no purchase sound for approval or arrival');
+set local role authenticated;
 select inspect_central_direct_purchase(:'tenant',pg_temp.uid(111),pg_temp.uid(301),true) as purchase \gset
 select is(inspect_central_direct_purchase(:'tenant',pg_temp.uid(111),pg_temp.uid(301),true),:'purchase'::uuid,'retry returns same purchase');
 select throws_like(format($$select inspect_central_direct_purchase(%L,%L,%L,false)$$,:'tenant',pg_temp.uid(111),pg_temp.uid(301)),'%REQUEST_CONFLICT%','cannot change purchase evidence on retry');
@@ -64,4 +71,16 @@ select record_return(:'tenant',pg_temp.uid(512),(select id from sale_lines where
 select is(seller_balance(:'tenant',:'seller')->>'availableOre','70000','customer return leaves original purchase credit intact');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
 select is(my_external_item_requests_page(0,pg_temp.uid(111),'history')#>>'{requests,0,lifecycleStatus}','acquired','seller sees acquisition and a freed place');
+reset role;
+select is((select count(*) from komisio_private.seller_push_deliveries where kind='external_item_purchased' and request_id=pg_temp.uid(111) and owner_id=pg_temp.uid(2)),1::bigint,'one purchase notification after retries, resale and return');
+select id as purchase_push from komisio_private.seller_push_deliveries where kind='external_item_purchased' and request_id=pg_temp.uid(111) \gset
+select ok(komisio_private.external_push_eligible(:'purchase_push'),'consenting owner is eligible');
+insert into auth.users(id,email,email_confirmed_at,raw_app_meta_data) values(pg_temp.uid(15),'purchase-worker@example.test',now(),'{"komisio_push_worker":true}');
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(15),'role','authenticated')::text,true);
+select ok(not seller_push_candidates(3) @> '[{"kind":"external_item_purchased"}]'::jsonb,'older workers never receive the new kind');
+select ok(seller_push_candidates(4) @> '[{"kind":"external_item_purchased","offerId":null}]'::jsonb,'current worker reads purchase with request navigation');
+reset role;
+update komisio_private.seller_push_devices set enabled=false where id=pg_temp.uid(22);
+select ok(not komisio_private.external_push_eligible(:'purchase_push'),'opting out before the claim suppresses the notification');
 select * from finish(); rollback;

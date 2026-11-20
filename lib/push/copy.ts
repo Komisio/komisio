@@ -58,12 +58,17 @@ export function renderSellerPush(
     | 'item_registered'
     | 'item_sold'
     | 'external_item_offered'
-    | 'external_item_declined',
+    | 'external_item_declined'
+    | 'external_item_purchased',
   locale: Locale,
   item: string,
   store: string,
   approved = false,
 ) {
+  if (kind === 'external_item_purchased') {
+    const [title, body] = purchaseCopy[locale]
+    return { title, body }
+  }
   if (kind === 'external_item_offered' || kind === 'external_item_declined') {
     const [offered, declined, body] = requestCopy[locale]
     return {
@@ -85,6 +90,41 @@ export function renderSellerPush(
         (key === 'item' ? item : store).replace(/\s+/g, ' ').trim(),
     ),
   }
+}
+
+const purchaseCopy: Record<Locale, [string, string]> = {
+  sv: [
+    'Ka-ching! Komisio har köpt din vara',
+    'Det avtalade beloppet har lagts till på ditt saldo.',
+  ],
+  en: [
+    'Ka-ching! Komisio bought your item',
+    'The agreed amount has been credited to your balance.',
+  ],
+  no: [
+    'Ka-ching! Komisio har kjøpt varen din',
+    'Det avtalte beløpet er lagt til saldoen din.',
+  ],
+  dk: [
+    'Ka-ching! Komisio har købt din vare',
+    'Det aftalte beløb er sat ind på din saldo.',
+  ],
+  fi: [
+    'Ka-ching! Komisio osti tuotteesi',
+    'Sovittu summa on lisätty saldoosi.',
+  ],
+  de: [
+    'Ka-ching! Komisio hat deinen Artikel gekauft',
+    'Der vereinbarte Betrag wurde deinem Guthaben gutgeschrieben.',
+  ],
+  es: [
+    '¡Ka-ching! Komisio ha comprado tu artículo',
+    'El importe acordado se ha añadido a tu saldo.',
+  ],
+  it: [
+    'Ka-ching! Komisio ha acquistato il tuo articolo',
+    'L’importo concordato è stato accreditato sul tuo saldo.',
+  ],
 }
 
 const approvedCopy: Record<Locale, string> = {

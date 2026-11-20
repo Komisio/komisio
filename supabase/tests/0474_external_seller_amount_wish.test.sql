@@ -16,7 +16,15 @@ set local role authenticated;
 set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000002","role":"authenticated"}';
 select reserve_external_item_photo('f7100000-0000-4000-8000-000000000201',repeat('a',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos','f7100000-0000-4000-8000-000000000002/f7100000-0000-4000-8000-000000000201.jpg');
-select submit_external_item_request('f7100000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',100000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE');
+-- Historical resale wishes remain readable and can be replayed.
+reset role;
+insert into external_item_requests(id,owner_id,tenant_id,description,brand,condition,notes,desired_price_ore,currency,photos,sender_country,price_basis)
+values('f7100000-0000-4000-8000-000000000301','f7100000-0000-4000-8000-000000000002',:'tenant','Jacket','','good','',20000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE','resale');
+set local role authenticated;
+select submit_external_item_request('f7100000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',20000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE');
+select throws_like(format($$select submit_external_item_request(gen_random_uuid(),%L,'New','','good','',100000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE')$$,:'tenant'),'%PRICE_REQUIRED%','a resale wish cannot stand in for seller compensation');
+select throws_like(format($$select submit_external_item_request(gen_random_uuid(),%L,'New','','good','',29999,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount')$$,:'tenant'),'%PRICE_REQUIRED%','the legacy offer endpoint also enforces the seller minimum');
+select throws_like(format($$select submit_external_item_request(gen_random_uuid(),%L,'New','','good','',null,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount')$$,:'tenant'),'%PRICE_REQUIRED%','the legacy offer endpoint cannot omit the seller amount');
 
 select is(my_external_item_requests()#>>'{requests,0,price_basis}','resale','legacy price keeps its original meaning');
 select submit_external_item_request('f7100000-0000-4000-8000-000000000302',:'tenant','New wish','','good','',40000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');

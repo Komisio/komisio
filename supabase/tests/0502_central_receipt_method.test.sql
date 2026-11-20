@@ -9,6 +9,8 @@ select publish_seller_agreement(:'tenant',pg_temp.uid(3),null,'Terms','Synthetic
 select publish_store_policy(:'tenant',gen_random_uuid(),(current_store_policy(:'tenant')->>'id')::uuid,(current_store_policy(:'tenant')->'policy')||'{"vatModeStoreOwned":"store_full"}'::jsonb);
 reset role;
 update platform_settings set central_app_tenant_id=:'tenant';
+insert into auth.sessions(id,user_id,aal) values(pg_temp.uid(90),pg_temp.uid(2),'aal1');
+insert into auth.users(id,email,email_confirmed_at,raw_app_meta_data) values(pg_temp.uid(91),'push502@example.test',now(),'{"komisio_push_worker":true}');
 set local role authenticated;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
 select save_central_intake_profile(pg_temp.uid(4),:'tenant',pg_temp.uid(3),-1,'{"street":"Test 1","postalCode":"12345","city":"Test"}','{"firstName":"Test","lastName":"Seller","phone":"+46700000002"}',true);
@@ -25,6 +27,8 @@ select is(save_central_payout_preference(:'tenant',:'seller',pg_temp.uid(6),null
 select is(save_central_payout_preference(:'tenant',:'seller',pg_temp.uid(6),null,'{"method":"swish","phone":"+46700000001"}'),pg_temp.uid(6),'retry preference safely');
 select throws_like(format('select save_central_payout_preference(%L,%L,%L,null,%L)',:'tenant',:'seller',pg_temp.uid(18),'{"method":"swish","phone":"+46700000002"}'),'%PROFILE_CHANGED%','stale preference cannot overwrite a saved destination');
 select submit_central_item_request(pg_temp.uid(n),:'tenant','Coat','','good','',60000,'SEK',array[pg_temp.uid(5)],'SE','seller_amount',pg_temp.uid(3),'staff_decides') from generate_series(10,11) n;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'session_id',pg_temp.uid(90),'role','authenticated')::text,true);
+select set_my_push_device(pg_temp.uid(92),repeat('a',64),gen_random_uuid(),0,'ExpoPushToken[synthetic_payout_copy]','ios','sv',true);
 select ok(my_external_item_requests_page(0,pg_temp.uid(10),'all')#>>'{requests,0,sale_method}' is null,'no promise made on submission');
 select is(my_external_item_requests_page(0,pg_temp.uid(10),'all')#>>'{requests,0,staff_selects_method}','true','recoverable immutable staff-selected instruction');
 select throws_like(format('select confirm_central_receipt_consignment(%L,%L)',:'tenant',pg_temp.uid(10)),'%FORBIDDEN%','seller cannot choose terms for submitted item');
@@ -87,5 +91,10 @@ end $$;
 select is(pg_temp.future_guarantees(:'tenant')->>'processed','1','unresolved physically received item enters the existing day-45 acquisition');
 select is(pg_temp.future_guarantees(:'tenant')->>'processed','0','worker retry cannot repeat payout');
 select is((select count(*) from payouts where tenant_id=:'tenant' and amount_ore=45000 and request_source='automatic' and status='requested'),1::bigint,'single open payout at deadline with no operator decision');
+set local role authenticated;
+select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(91),'role','authenticated')::text,true);
+select ok(seller_push_candidates(5) @> jsonb_build_array(jsonb_build_object('kind','external_item_purchased','requestId',pg_temp.uid(11),'payoutRegistered',true)),'direct purchase may announce its registered Swish payout');
+select ok(seller_push_candidates(5) @> jsonb_build_array(jsonb_build_object('kind','external_item_purchased','requestId',pg_temp.uid(10),'payoutRegistered',true)),'day-45 purchase may announce its registered bank payout');
+select ok(not exists(select 1 from jsonb_array_elements(seller_push_candidates(4)) c where c ? 'payoutRegistered'),'older workers retain their strict response schema');
 select * from finish();
 rollback;

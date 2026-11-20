@@ -63,18 +63,18 @@ export function renderSellerPush(
   locale: Locale,
   item: string,
   store: string,
-  approved = false,
+  facts: { approved?: boolean; payoutRegistered?: boolean } = {},
 ) {
   if (kind === 'external_item_purchased') {
-    const [title, body] = purchaseCopy[locale]
-    return { title, body }
+    const [title, payoutBody, purchaseBody] = purchaseCopy[locale]
+    return { title, body: facts.payoutRegistered ? payoutBody : purchaseBody }
   }
   if (kind === 'external_item_offered' || kind === 'external_item_declined') {
     const [offered, declined, body] = requestCopy[locale]
     return {
       title:
         kind === 'external_item_offered'
-          ? approved
+          ? facts.approved
             ? approvedCopy[locale]
             : offered
           : declined,
@@ -92,38 +92,49 @@ export function renderSellerPush(
   }
 }
 
-const purchaseCopy: Record<Locale, [string, string]> = {
+const purchaseCopy: Record<
+  Locale,
+  [title: string, payoutBody: string, purchaseBody: string]
+> = {
   sv: [
-    'Ka-ching! Komisio har köpt din vara',
-    'Det avtalade beloppet har lagts till på ditt saldo.',
+    'Komisio har köpt din vara!',
+    'Din utbetalning är registrerad. Du behöver inte göra något.',
+    'Öppna appen för att se köpet.',
   ],
   en: [
-    'Ka-ching! Komisio bought your item',
-    'The agreed amount has been credited to your balance.',
+    'Komisio bought your item!',
+    'Your payout has been registered. No action is needed.',
+    'Open the app to see the purchase.',
   ],
   no: [
-    'Ka-ching! Komisio har kjøpt varen din',
-    'Det avtalte beløpet er lagt til saldoen din.',
+    'Komisio har kjøpt varen din!',
+    'Utbetalingen din er registrert. Du trenger ikke å gjøre noe.',
+    'Åpne appen for å se kjøpet.',
   ],
   dk: [
-    'Ka-ching! Komisio har købt din vare',
-    'Det aftalte beløb er sat ind på din saldo.',
+    'Komisio har købt din vare!',
+    'Din udbetaling er registreret. Du behøver ikke gøre noget.',
+    'Åbn appen for at se købet.',
   ],
   fi: [
-    'Ka-ching! Komisio osti tuotteesi',
-    'Sovittu summa on lisätty saldoosi.',
+    'Komisio osti tuotteesi!',
+    'Maksusi on kirjattu. Sinun ei tarvitse tehdä mitään.',
+    'Näet kaupan tiedot sovelluksessa.',
   ],
   de: [
-    'Ka-ching! Komisio hat deinen Artikel gekauft',
-    'Der vereinbarte Betrag wurde deinem Guthaben gutgeschrieben.',
+    'Komisio hat deinen Artikel gekauft!',
+    'Deine Auszahlung ist erfasst. Du musst nichts tun.',
+    'Öffne die App, um den Kauf anzusehen.',
   ],
   es: [
-    '¡Ka-ching! Komisio ha comprado tu artículo',
-    'El importe acordado se ha añadido a tu saldo.',
+    '¡Komisio ha comprado tu artículo!',
+    'Hemos registrado tu pago. No tienes que hacer nada.',
+    'Abre la aplicación para ver la compra.',
   ],
   it: [
-    'Ka-ching! Komisio ha acquistato il tuo articolo',
-    'L’importo concordato è stato accreditato sul tuo saldo.',
+    'Komisio ha acquistato il tuo articolo!',
+    'Il tuo pagamento è stato registrato. Non devi fare nulla.',
+    'Apri l’app per vedere l’acquisto.',
   ],
 }
 

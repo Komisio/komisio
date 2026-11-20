@@ -168,7 +168,8 @@ it('profile saves bind the tenant, revision and exact agreement without bank det
 })
 it('approval push is a decision, while legacy offers retain their copy', () => {
   expect(
-    renderSellerPush('external_item_offered', 'sv', '', '', true).title,
+    renderSellerPush('external_item_offered', 'sv', '', '', { approved: true })
+      .title,
   ).toBe('Komisio har godkänt din vara')
   expect(renderSellerPush('external_item_offered', 'sv', '', '').title).toBe(
     'Du har fått ett erbjudande',

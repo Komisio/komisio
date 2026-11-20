@@ -80,6 +80,7 @@ set local role authenticated;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(15),'role','authenticated')::text,true);
 select ok(not seller_push_candidates(3) @> '[{"kind":"external_item_purchased"}]'::jsonb,'older workers never receive the new kind');
 select ok(seller_push_candidates(4) @> '[{"kind":"external_item_purchased","offerId":null}]'::jsonb,'current worker reads purchase with request navigation');
+select ok(seller_push_candidates(5) @> '[{"kind":"external_item_purchased","payoutRegistered":false}]'::jsonb,'a credit alone cannot announce a registered payout');
 reset role;
 update komisio_private.seller_push_devices set enabled=false where id=pg_temp.uid(22);
 select ok(not komisio_private.external_push_eligible(:'purchase_push'),'opting out before the claim suppresses the notification');

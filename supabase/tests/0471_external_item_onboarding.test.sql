@@ -16,7 +16,7 @@ set local role authenticated;
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000002","role":"authenticated"}';
 select reserve_external_item_photo('f7200000-0000-4000-8000-000000000201',repeat('a',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos','f7200000-0000-4000-8000-000000000002/f7200000-0000-4000-8000-000000000201.jpg');
-select submit_external_item_request('f7200000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',100000,'SEK',array['f7200000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7200000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',100000,'SEK',array['f7200000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000001","role":"authenticated"}';
 select issue_external_item_offer(:'tenant','f7200000-0000-4000-8000-000000000401','f7200000-0000-4000-8000-000000000301',null,40000,100000,'f7200000-0000-4000-8000-000000000101');
@@ -46,7 +46,7 @@ select is(read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')#
 select read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')#>>'{account,id}' as seller \gset
 select read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')#>>'{handover,id}' as handover \gset
 select is(read_external_item_offer('f7200000-0000-4000-8000-000000000401')->>'status','accepted','final consent also records the immutable yes');
-select submit_external_item_request('f7200000-0000-4000-8000-000000000302',:'tenant','Lamp','','good','',null,'SEK',array['f7200000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7200000-0000-4000-8000-000000000302',:'tenant','Lamp','','good','',30000,'SEK',array['f7200000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000001","role":"authenticated"}';
 select issue_external_item_offer(:'tenant','f7200000-0000-4000-8000-000000000402','f7200000-0000-4000-8000-000000000302',null,20000,50000,'f7200000-0000-4000-8000-000000000101');
 select publish_seller_agreement(:'tenant','f7200000-0000-4000-8000-000000000102','f7200000-0000-4000-8000-000000000101','Later terms','Later body','sv',true);
@@ -56,7 +56,7 @@ select isnt(read_external_item_onboarding('f7200000-0000-4000-8000-000000000402'
 select is(read_external_item_onboarding('f7200000-0000-4000-8000-000000000401')#>>'{handover,itemCount}','1','separate parcels do not enlarge an earlier handover');
 select is(read_external_item_offer('f7200000-0000-4000-8000-000000000401')#>>'{handover,id}',:'handover','offer progress opens the exact grouped H-handover');
 select is(my_external_item_offers(array['f7200000-0000-4000-8000-000000000301']::uuid[])#>>'{offers,0,handover,itemCount}','1','batched mobile reads include actual linked count');
-select submit_external_item_request('f7200000-0000-4000-8000-000000000303',:'tenant','Later upload','','good','',null,'SEK',array['f7200000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7200000-0000-4000-8000-000000000303',:'tenant','Later upload','','good','',30000,'SEK',array['f7200000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000001","role":"authenticated"}';
 select issue_external_item_offer(:'tenant','f7200000-0000-4000-8000-000000000403','f7200000-0000-4000-8000-000000000303',null,30000,80000,'f7200000-0000-4000-8000-000000000102');
 set local request.jwt.claims='{"sub":"f7200000-0000-4000-8000-000000000002","role":"authenticated"}';

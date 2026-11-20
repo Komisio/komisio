@@ -119,12 +119,15 @@ test('mobile photo copies retain server-verified AI weight after draft cleanup',
       brand: '',
       condition: 'good',
       notes: '',
-      desiredPriceOre: null,
+      desiredPriceOre: '30000',
       currency: 'SEK',
       photos: [copy],
       senderCountry: 'SE',
       priceBasis: 'seller_amount',
     }
+    const belowMinimum = await call({ ...command, desiredPriceOre: '29999' })
+    expect(belowMinimum.status()).toBe(400)
+    expect(await belowMinimum.json()).toEqual({ error: 'PRICE_REQUIRED' })
     const submitted = await call(command)
     expect(submitted.status()).toBe(200)
     expect(await submitted.json()).toEqual({ id: requestId })

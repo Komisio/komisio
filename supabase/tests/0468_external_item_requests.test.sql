@@ -20,8 +20,8 @@ update public.platform_settings set central_app_tenant_id=:'tenant';
 insert into tenant_members(tenant_id,user_id,role) values
  (:'tenant','f6100000-0000-4000-8000-000000000005','readonly'),
  (:'other','f6100000-0000-4000-8000-000000000006','staff');
-create function pg_temp.submit_request(i uuid,t uuid,p uuid[],price numeric default 10000,c text default 'SEK') returns uuid language sql as $$
- select public.submit_external_item_request(i,t,'Jacket','Synthetic','good','',price,c,p,'SE');
+create function pg_temp.submit_request(i uuid,t uuid,p uuid[],price numeric default 30000,c text default 'SEK') returns uuid language sql as $$
+ select public.submit_external_item_request(i,t,'Jacket','Synthetic','good','',price,c,p,'SE','seller_amount');
 $$;
 set local role authenticated;
 select lives_ok($$select reserve_external_item_photo(gen_random_uuid(),repeat('a',64),100)$$,'verified email also authorizes central photos');
@@ -93,7 +93,7 @@ set local request.jwt.claims='{"sub":"f6100000-0000-4000-8000-000000000002","rol
 select is(my_external_item_requests()->>'activeCount','29','decline frees exactly one slot');
 select throws_like(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'%STORE_UNAVAILABLE%','only the current central recipient accepts new requests');
 select lives_ok(format($$select pg_temp.submit_request('f6100000-0000-4000-8000-000000000201',%L,array['f6100000-0000-4000-8000-000000000101']::uuid[])$$,:'tenant'),'replay survives opt-out and decline');
-select lives_ok(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[],null)$$,:'other'),'freed slot accepts a new request without a price wish');
+select lives_ok(format($$select pg_temp.submit_request(gen_random_uuid(),%L,array['f6100000-0000-4000-8000-000000000101']::uuid[],30000)$$,:'other'),'freed slot accepts a new request at the minimum seller amount');
 select reserve_external_item_photo('f6100000-0000-4000-8000-000000000102',repeat('b',64),100);
 insert into storage.objects(bucket_id,name) values ('external-item-photos','f6100000-0000-4000-8000-000000000002/f6100000-0000-4000-8000-000000000102.jpg');
 select discard_external_item_photo('f6100000-0000-4000-8000-000000000102');

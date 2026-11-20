@@ -13,6 +13,8 @@ business planning and installation-specific procedures do not belong here.
 
 <!-- technical-decisions -->
 
+- 2026-11-20: New central app requests require a seller amount of at least SEK 300 per item. The floor applies on submission, including legacy endpoints. Exact retries, existing items, staff counteroffers and ordinary store intake keep their existing terms.
+
 - 2026-11-19: For new staff-assessed central items, confirm a private payout preference once and queue one payout at each item's purchase or guaranteed credit. The request pins the destination. Bank execution and paid status remain separate. No historical backfill.
 - 2026-11-19: New central app submissions delegate the method to Komisio. After physical receipt, staff inspect each item and confirm purchase (default) or guaranteed consignment at the submitted amount. Existing purchase and guarantee evidence remains authoritative. Historic terms stand.
 - 2026-11-19: Swedish central payout requests default to Swish or allow a saved bank account. Each request freezes the confirmed mobile number or bank version. Legacy bank requests keep their replay and review rules. Recording a request does not execute a transfer.
@@ -24,3 +26,6 @@ business planning and installation-specific procedures do not belong here.
 - 2026-11-19: Product code, tests and public documentation build independently of private working material. Optional local contributor guidance is ignored by Git.
 - 2026-11-19: Central sellers select consignment or direct purchase before submission. A direct purchase needs item-level inspection after physical receipt. The purchase, ownership and full balance credit are atomic and replay-safe, separate from bank payment. Legacy submissions retain consignment.
 - 2026-11-20: Central staff may offer a lower price once for 48 hours. Seller acceptance fixes the amount for purchase, guarantee and payout and starts shipping with the saved sender details. A rejection without a price remains final.
+- 2026-11-20: Notify consenting central sellers once per device when a direct purchase or day-45 acquisition credits their item. Use the sale sound. Approval, shipping, payout and subsequent resale do not repeat the purchase notice.
+- 2026-11-20: A verified central identity may read its explicitly owned central seller balance and save a Swish destination without confirming another email. A phone number never grants account access. Ordinary store identity checks and bank administration keep their existing requirements.
+- 2026-11-20: Central purchase notifications confirm payout registration only when the item's credit is linked to an automatic payout that was requested, approved or paid. Other purchase notifications confirm the purchase alone.

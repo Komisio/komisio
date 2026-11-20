@@ -36,9 +36,9 @@ select complete_external_photo_analysis('f4860000-0000-4000-8000-000000000201','
 select lives_ok($$select complete_external_photo_analysis('f4860000-0000-4000-8000-000000000201','{"description":"Dress","brand":null,"condition":"good","notes":"","estimatedWeightG":400}',100,10)$$,'completion remains idempotent');
 select ok(not((my_external_photo_analysis('f4860000-0000-4000-8000-000000000201')->'output')?'estimatedWeightG'),'mobile analysis response keeps its existing descriptive contract');
 select is(my_external_photo_analysis('f4860000-0000-4000-8000-000000000201')#>>'{output,description}','Dress','seller still receives descriptive suggestions');
-select submit_external_item_request('f4860000-0000-4000-8000-000000000301',:'tenant','Dress','','good','',null,'SEK',array['f4860000-0000-4000-8000-000000000101']::uuid[],'SE','seller_amount');
-select submit_external_item_request('f4860000-0000-4000-8000-000000000302',:'tenant','Other item','','good','',null,'SEK',array['f4860000-0000-4000-8000-000000000102']::uuid[],'SE','seller_amount');
-select submit_external_item_request('f4860000-0000-4000-8000-000000000303',:'tenant','Both photos','','good','',null,'SEK',array['f4860000-0000-4000-8000-000000000101','f4860000-0000-4000-8000-000000000102']::uuid[],'SE','seller_amount');
+select submit_external_item_request('f4860000-0000-4000-8000-000000000301',:'tenant','Dress','','good','',30000,'SEK',array['f4860000-0000-4000-8000-000000000101']::uuid[],'SE','seller_amount');
+select submit_external_item_request('f4860000-0000-4000-8000-000000000302',:'tenant','Other item','','good','',30000,'SEK',array['f4860000-0000-4000-8000-000000000102']::uuid[],'SE','seller_amount');
+select submit_external_item_request('f4860000-0000-4000-8000-000000000303',:'tenant','Both photos','','good','',30000,'SEK',array['f4860000-0000-4000-8000-000000000101','f4860000-0000-4000-8000-000000000102']::uuid[],'SE','seller_amount');
 select throws_like(format($$select external_item_offer_queue_filtered(%L)$$,:'tenant'),'%FORBIDDEN%','central seller without membership cannot read staff estimates');
 set local request.jwt.claims='{"sub":"f4860000-0000-4000-8000-000000000003","role":"authenticated"}';
 select is(my_external_photo_analysis('f4860000-0000-4000-8000-000000000201'),null::jsonb,'other user cannot read analysis');

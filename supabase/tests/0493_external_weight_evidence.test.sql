@@ -45,9 +45,9 @@ select discard_external_item_photo(pg_temp.uid(101));
 set local storage.allow_delete_query='true';
 delete from storage.objects where bucket_id='external-item-photos' and name=pg_temp.uid(2)||'/'||pg_temp.uid(101)||'.jpg';
 select finish_external_item_photo_discard(pg_temp.uid(101));
-select submit_external_item_request(pg_temp.uid(301),:'tenant','Dress','','good','',null,'SEK',array[pg_temp.uid(102)],'SE','seller_amount');
+select submit_external_item_request(pg_temp.uid(301),:'tenant','Dress','','good','',30000,'SEK',array[pg_temp.uid(102)],'SE','seller_amount');
 select is((select weight_analysis_id from external_item_requests where id=pg_temp.uid(301)),pg_temp.uid(201),'copied photos retain weight even after AI draft-photo cleanup');
-select is(submit_external_item_request(pg_temp.uid(301),:'tenant','Dress','','good','',null,'SEK',array[pg_temp.uid(102)],'SE','seller_amount'),pg_temp.uid(301),'lost submission response replays the same request');
+select is(submit_external_item_request(pg_temp.uid(301),:'tenant','Dress','','good','',30000,'SEK',array[pg_temp.uid(102)],'SE','seller_amount'),pg_temp.uid(301),'lost submission response replays the same request');
 select throws_like($$select discard_external_item_photo(pg_temp.uid(102))$$,'%PHOTO_IN_USE%','submitted copy is retained independently of AI cleanup');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
 select issue_external_item_offer(:'tenant',pg_temp.uid(401),pg_temp.uid(301),null,50000,100000,pg_temp.uid(10));
@@ -82,7 +82,7 @@ begin
  return pg_temp.uid(n);
 end $$;
 create function pg_temp.submit(n integer,t uuid,photos uuid[]) returns uuid language sql as $$
- select public.submit_external_item_request(pg_temp.uid(n),t,'Synthetic item','','good','',null,'SEK',photos,'SE','seller_amount');
+ select public.submit_external_item_request(pg_temp.uid(n),t,'Synthetic item','','good','',30000,'SEK',photos,'SE','seller_amount');
 $$;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);
 select pg_temp.copy_photo(110,repeat('b',64),false);

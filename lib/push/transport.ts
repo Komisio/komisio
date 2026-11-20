@@ -10,6 +10,7 @@ export const pushClaim = z
       'item_sold',
       'external_item_offered',
       'external_item_declined',
+      'external_item_purchased',
     ]),
     tenantId: z.uuid(),
     sellerId: z.uuid().nullable(),
@@ -63,16 +64,17 @@ function headers(env: Record<string, string | undefined>) {
 }
 export function expoPayload(c: PushClaim) {
   const external = c.kind.startsWith('external_')
+  const requestDecision = external && c.kind !== 'external_item_purchased'
   return {
     to: c.token,
     title: c.title,
     body: c.body,
-    sound: external
+    sound: requestDecision
       ? 'default'
       : c.kind === 'item_registered'
         ? 'registeredstore.wav'
         : 'sale.wav',
-    channelId: external
+    channelId: requestDecision
       ? 'komisio-requests-v1'
       : c.kind === 'item_registered'
         ? 'komisio-registered-v1'

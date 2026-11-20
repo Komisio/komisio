@@ -25,6 +25,8 @@ select reserve_external_item_photo(pg_temp.uid(100),repeat('a',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos',pg_temp.uid(2)||'/'||pg_temp.uid(100)||'.jpg');
 select throws_like(format($$select submit_central_item_request(%L,%L,'Dress','','good','',null,'SEK',array[%L]::uuid[],'SE','seller_amount',%L)$$,pg_temp.uid(101),:'tenant',pg_temp.uid(100),pg_temp.uid(10)),'%PRICE_REQUIRED%','seller amount mandatory');
 select is(submit_central_item_request(pg_temp.uid(101),:'tenant','Dress','','good','',60000,'SEK',array[pg_temp.uid(100)],'SE','seller_amount',pg_temp.uid(10)),pg_temp.uid(101),'fixed amount submitted');
+select throws_like(format($$select submit_central_item_request(%L,%L,'Minimum','','good','',29999,'SEK',array[%L]::uuid[],'SE','seller_amount',%L,'staff_decides')$$,pg_temp.uid(601),:'tenant',pg_temp.uid(100),pg_temp.uid(10)),'%PRICE_REQUIRED%','one ore below the central minimum is refused');
+select is(submit_central_item_request(pg_temp.uid(601),:'tenant','Minimum','','good','',30000,'SEK',array[pg_temp.uid(100)],'SE','seller_amount',pg_temp.uid(10)),pg_temp.uid(601),'exactly SEK 300 qualifies');
 reset role;
 insert into auth.sessions(id,user_id,aal) values(pg_temp.uid(30),pg_temp.uid(2),'aal1');
 insert into auth.users(id,email,email_confirmed_at,raw_app_meta_data) values(pg_temp.uid(5),'fixed-worker@example.test',now(),'{"komisio_push_worker":true}');
@@ -65,7 +67,7 @@ select is(claim_seller_push(:'push','sv','Synthetic approval','Open app'),null::
 set local role authenticated;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(1),'role','authenticated')::text,true);
 select is(central_request_queue(:'tenant',0,'all','',pg_temp.uid(2))#>>'{rows,0,approval_mode}','fixed','staff queue identifies direct requests');
-select is(central_request_queue(:'tenant',0,'all','Test Seller',null)->>'total','1','search matches saved sender name');
+select is(central_request_queue(:'tenant',0,'all','Test Seller',null)->>'total','2','search matches both requests from the saved sender');
 select is(central_request_queue(:'tenant',0,'all','',pg_temp.uid(3))->>'total','0','seller filter is exact');
 select publish_seller_agreement(:'tenant',pg_temp.uid(11),pg_temp.uid(10),'Terms 2','New synthetic terms','sv',true);
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.uid(2),'role','authenticated')::text,true);

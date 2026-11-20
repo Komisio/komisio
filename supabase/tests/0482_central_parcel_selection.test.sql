@@ -17,8 +17,8 @@ set local role authenticated;
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000002","role":"authenticated"}';
 select reserve_external_item_photo('f7800000-0000-4000-8000-000000000201',repeat('a',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos','f7800000-0000-4000-8000-000000000002/f7800000-0000-4000-8000-000000000201.jpg');
-select submit_external_item_request('f7800000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',null,'SEK',array['f7800000-0000-4000-8000-000000000201']::uuid[],'SE');
-select submit_external_item_request('f7800000-0000-4000-8000-000000000302',:'tenant','Dress','','good','',null,'SEK',array['f7800000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7800000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',30000,'SEK',array['f7800000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
+select submit_external_item_request('f7800000-0000-4000-8000-000000000302',:'tenant','Dress','','good','',30000,'SEK',array['f7800000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000001","role":"authenticated"}';
 select issue_external_item_offer(:'tenant','f7800000-0000-4000-8000-000000000401','f7800000-0000-4000-8000-000000000301',null,40000,100000,'f7800000-0000-4000-8000-000000000101');
 select issue_external_item_offer(:'tenant','f7800000-0000-4000-8000-000000000402','f7800000-0000-4000-8000-000000000302',null,30000,80000,'f7800000-0000-4000-8000-000000000101');
@@ -26,7 +26,7 @@ set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000002","rol
 select complete_external_item_offer('f7800000-0000-4000-8000-000000000501','f7800000-0000-4000-8000-000000000401','f7800000-0000-4000-8000-000000000101','{"name":"Synthetic seller","email":"seller@example.test"}','{"holder":"Synthetic seller","country":"SE","kind":"local","account":"123456789","routing":"8327"}');
 select complete_external_item_offer('f7800000-0000-4000-8000-000000000502','f7800000-0000-4000-8000-000000000402','f7800000-0000-4000-8000-000000000101',null,null);
 -- A received item and another seller's accepted item are never selectable.
-select submit_external_item_request('f7800000-0000-4000-8000-000000000303',:'tenant','Already received','','good','',null,'SEK',array['f7800000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7800000-0000-4000-8000-000000000303',:'tenant','Already received','','good','',30000,'SEK',array['f7800000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000001","role":"authenticated"}';
 select issue_external_item_offer(:'tenant','f7800000-0000-4000-8000-000000000403','f7800000-0000-4000-8000-000000000303',null,30000,80000,'f7800000-0000-4000-8000-000000000101');
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000002","role":"authenticated"}';
@@ -37,7 +37,7 @@ select receive_handover(:'tenant',gen_random_uuid(),:'received_handover','staff_
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000003","role":"authenticated"}';
 select reserve_external_item_photo('f7800000-0000-4000-8000-000000000204',repeat('a',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos','f7800000-0000-4000-8000-000000000003/f7800000-0000-4000-8000-000000000204.jpg');
-select submit_external_item_request('f7800000-0000-4000-8000-000000000304',:'tenant','Foreign item','','good','',null,'SEK',array['f7800000-0000-4000-8000-000000000204']::uuid[],'SE');
+select submit_external_item_request('f7800000-0000-4000-8000-000000000304',:'tenant','Foreign item','','good','',30000,'SEK',array['f7800000-0000-4000-8000-000000000204']::uuid[],'SE','seller_amount');
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000001","role":"authenticated"}';
 select issue_external_item_offer(:'tenant','f7800000-0000-4000-8000-000000000404','f7800000-0000-4000-8000-000000000304',null,30000,80000,'f7800000-0000-4000-8000-000000000101');
 set local request.jwt.claims='{"sub":"f7800000-0000-4000-8000-000000000003","role":"authenticated"}';

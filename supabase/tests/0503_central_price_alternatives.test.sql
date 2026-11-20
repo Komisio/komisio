@@ -23,7 +23,7 @@ select throws_like(format('select offer_central_price_alternative(%L,%L,%L,60000
 select is(offer_central_price_alternative(:'tenant',pg_temp.uid(30),pg_temp.uid(10),35000,80000,'Wear'),pg_temp.uid(30),'alternative is issued');
 select is(offer_central_price_alternative(:'tenant',pg_temp.uid(30),pg_temp.uid(10),35000,80000,'Wear'),pg_temp.uid(30),'staff retry is safe');
 select throws_like(format('select offer_central_price_alternative(%L,%L,%L,33000,80000,%L)',:'tenant',pg_temp.uid(30),pg_temp.uid(10),'Wear'),'%REQUEST_CONFLICT%','retry cannot change the amount');
-select offer_central_price_alternative(:'tenant',pg_temp.uid(n+20),pg_temp.uid(n),36000,80000,'') from generate_series(11,12)n;
+select offer_central_price_alternative(:'tenant',pg_temp.uid(n+20),pg_temp.uid(n),25000,80000,'') from generate_series(11,12)n;
 select decline_external_item_request(pg_temp.uid(90),:'tenant',pg_temp.uid(13),'End');
 select throws_like(format('select offer_central_price_alternative(%L,%L,%L,35000,80000,%L)',:'tenant',pg_temp.uid(33),pg_temp.uid(13),''),'%REQUEST_CHANGED%','final refusal remains closed');
 select throws_like(format('select accept_central_price_alternative(%L,%L,%L)',pg_temp.uid(40),pg_temp.uid(30),pg_temp.uid(3)),'%OFFER_NOT_FOUND%','only the owner can accept');
@@ -52,5 +52,5 @@ select inspect_central_direct_purchase(:'tenant',pg_temp.uid(10),pg_temp.uid(60)
 select is((select amount_ore::bigint from public.payouts where tenant_id=:'tenant' and request_source='automatic'),35000::bigint,'queue only the accepted lower price');
 select receive_handover(:'tenant',pg_temp.uid(51),(read_external_item_offer(pg_temp.uid(31))#>>'{handover,id}')::uuid,'staff_receipt','');
 select confirm_central_receipt_consignment(:'tenant',pg_temp.uid(11));
-select is(read_external_item_offer(pg_temp.uid(31))#>>'{guarantee,amountOre}','36000','consignment uses the alternative amount');
+select is(read_external_item_offer(pg_temp.uid(31))#>>'{guarantee,amountOre}','25000','an accepted staff alternative below the submission minimum remains valid');
 select * from finish(); rollback;

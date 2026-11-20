@@ -58,18 +58,23 @@ export function renderSellerPush(
     | 'item_registered'
     | 'item_sold'
     | 'external_item_offered'
-    | 'external_item_declined',
+    | 'external_item_declined'
+    | 'external_item_purchased',
   locale: Locale,
   item: string,
   store: string,
-  approved = false,
+  facts: { approved?: boolean; payoutRegistered?: boolean } = {},
 ) {
+  if (kind === 'external_item_purchased') {
+    const [title, payoutBody, purchaseBody] = purchaseCopy[locale]
+    return { title, body: facts.payoutRegistered ? payoutBody : purchaseBody }
+  }
   if (kind === 'external_item_offered' || kind === 'external_item_declined') {
     const [offered, declined, body] = requestCopy[locale]
     return {
       title:
         kind === 'external_item_offered'
-          ? approved
+          ? facts.approved
             ? approvedCopy[locale]
             : offered
           : declined,
@@ -85,6 +90,52 @@ export function renderSellerPush(
         (key === 'item' ? item : store).replace(/\s+/g, ' ').trim(),
     ),
   }
+}
+
+const purchaseCopy: Record<
+  Locale,
+  [title: string, payoutBody: string, purchaseBody: string]
+> = {
+  sv: [
+    'Komisio har köpt din vara!',
+    'Din utbetalning är registrerad. Du behöver inte göra något.',
+    'Öppna appen för att se köpet.',
+  ],
+  en: [
+    'Komisio bought your item!',
+    'Your payout has been registered. No action is needed.',
+    'Open the app to see the purchase.',
+  ],
+  no: [
+    'Komisio har kjøpt varen din!',
+    'Utbetalingen din er registrert. Du trenger ikke å gjøre noe.',
+    'Åpne appen for å se kjøpet.',
+  ],
+  dk: [
+    'Komisio har købt din vare!',
+    'Din udbetaling er registreret. Du behøver ikke gøre noget.',
+    'Åbn appen for at se købet.',
+  ],
+  fi: [
+    'Komisio osti tuotteesi!',
+    'Maksusi on kirjattu. Sinun ei tarvitse tehdä mitään.',
+    'Näet kaupan tiedot sovelluksessa.',
+  ],
+  de: [
+    'Komisio hat deinen Artikel gekauft!',
+    'Deine Auszahlung ist erfasst. Du musst nichts tun.',
+    'Öffne die App, um den Kauf anzusehen.',
+  ],
+  es: [
+    '¡Komisio ha comprado tu artículo!',
+    'Hemos registrado tu pago. No tienes que hacer nada.',
+    'Abre la aplicación para ver la compra.',
+  ],
+  it: [
+    'Komisio ha acquistato il tuo articolo!',
+    'Il tuo pagamento è stato registrato. Non devi fare nulla.',
+    'Apri l’app per vedere l’acquisto.',
+  ],
 }
 
 const approvedCopy: Record<Locale, string> = {

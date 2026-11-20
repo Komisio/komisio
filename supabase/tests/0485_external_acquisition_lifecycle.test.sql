@@ -16,7 +16,7 @@ set local role authenticated;
 set local request.jwt.claims='{"sub":"f7300000-0000-4000-8000-000000000002","role":"authenticated"}';
 select reserve_external_item_photo('f7300000-0000-4000-8000-000000000201',repeat('a',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos','f7300000-0000-4000-8000-000000000002/f7300000-0000-4000-8000-000000000201.jpg');
-select submit_external_item_request('f7300000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',100000,'SEK',array['f7300000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7300000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',100000,'SEK',array['f7300000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 
 set local request.jwt.claims='{"sub":"f7300000-0000-4000-8000-000000000001","role":"authenticated"}';
 select issue_external_item_offer(:'tenant','f7300000-0000-4000-8000-000000000401','f7300000-0000-4000-8000-000000000301',null,40000,100000,'f7300000-0000-4000-8000-000000000101');

@@ -66,7 +66,7 @@ test('central guarantee sale, lost response, return and resale retain the fixed 
         [`${f.actor}/${photo}.jpg`],
       )
       await f.db.query(
-        "select submit_external_item_request($1,$2,'Synthetic guaranteed dress','','good','',null,'SEK',$3,'SE')",
+        "select submit_external_item_request($1,$2,'Synthetic guaranteed dress','','good','',30000,'SEK',$3,'SE','seller_amount')",
         [request, f.tenant, [photo]],
       )
       await f.db.query(

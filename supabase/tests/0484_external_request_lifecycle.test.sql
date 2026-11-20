@@ -15,7 +15,7 @@ set local request.jwt.claims='{"sub":"f8400000-0000-4000-8000-000000000002","rol
 select reserve_external_item_photo('f8400000-0000-4000-8000-000000000201',repeat('a',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos','f8400000-0000-4000-8000-000000000002/f8400000-0000-4000-8000-000000000201.jpg');
 create function pg_temp.submit_request(p_tenant uuid,p_id uuid) returns uuid language sql as $$
- select submit_external_item_request(p_id,p_tenant,'Jacket','','good','',null,'SEK',array['f8400000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
+ select submit_external_item_request(p_id,p_tenant,'Jacket','','good','',30000,'SEK',array['f8400000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 $$;
 select pg_temp.submit_request(:'tenant',('f8400000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid) from generate_series(301,330) n;
 select is(my_external_item_requests()->>'activeCount','30','thirty requests are accepted');

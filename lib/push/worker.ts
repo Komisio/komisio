@@ -16,11 +16,13 @@ const candidates = z
       ownerId: z.uuid().nullable().optional(),
       offerId: z.uuid().nullable().optional(),
       approved: z.boolean().optional(),
+      payoutRegistered: z.boolean().optional(),
       kind: z.enum([
         'item_registered',
         'item_sold',
         'external_item_offered',
         'external_item_declined',
+        'external_item_purchased',
       ]),
       createdAt: z.iso.datetime({ offset: true }),
       locale: z.enum(locales),
@@ -83,7 +85,7 @@ export async function runSellerPush(
     }
   }
   for (let page = 0; page < 10 && now() < deadline; page++) {
-    const read = await client.rpc('seller_push_candidates', { p_protocol: 3 })
+    const read = await client.rpc('seller_push_candidates', { p_protocol: 5 })
     if (read.error) throw new Error('PUSH_QUEUE_FAILED')
     const rows = candidates.parse(read.data)
     if (!rows.length) break
@@ -95,7 +97,7 @@ export async function runSellerPush(
         c.locale,
         c.itemLabel,
         c.storeName,
-        c.approved,
+        { approved: c.approved, payoutRegistered: c.payoutRegistered },
       )
       const claimed = await client.rpc('claim_seller_push', {
         p_id: c.id,

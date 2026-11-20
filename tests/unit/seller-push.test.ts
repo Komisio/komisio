@@ -54,6 +54,38 @@ it('request decisions use ordinary sound and versioned phone-owner navigation wi
     expect(text.body).not.toContain('PRIVATE')
   }
 })
+it('sends a central purchase with the sale sound and an owner-scoped request link', () => {
+  const purchase: PushClaim = {
+    ...claim,
+    kind: 'external_item_purchased',
+    sellerId: null,
+    itemId: null,
+    requestId: id,
+    ownerId: id,
+    offerId: null,
+  }
+  expect(expoPayload(purchase)).toMatchObject({
+    sound: 'sale.wav',
+    channelId: 'komisio-sold-v1',
+    data: {
+      v: 2,
+      kind: 'external_item_purchased',
+      requestId: id,
+      ownerId: id,
+      offerId: null,
+    },
+  })
+  for (const locale of locales) {
+    const copy = renderSellerPush(
+      purchase.kind,
+      locale,
+      'PRIVATE ITEM',
+      'PRIVATE STORE',
+    )
+    expect(copy.title).toContain('Komisio')
+    expect(copy.body).not.toContain('PRIVATE')
+  }
+})
 it('uses original event sounds, bounded TTL and an identity-only navigation payload', () => {
   expect(expoPayload(claim)).toMatchObject({
     sound: 'registeredstore.wav',
@@ -126,6 +158,7 @@ function fixture(
   outcome: 'claim' | 'lost' | 'stale',
   finishError = false,
   event: PushClaim = claim,
+  payoutRegistered?: boolean,
 ) {
   const rpc = vi.fn(async (name: string, args?: Record<string, unknown>) => {
     if (name === 'expire_seller_push_claims') return { data: 0, error: null }
@@ -142,6 +175,7 @@ function fixture(
             ownerId: event.ownerId,
             offerId: event.offerId,
             kind: event.kind,
+            ...(payoutRegistered === undefined ? {} : { payoutRegistered }),
             createdAt: '2026-11-05T12:00:00Z',
             locale: 'sv',
             storeName: 'Test store',
@@ -164,6 +198,35 @@ function fixture(
   })
   return { rpc, client: { rpc } as unknown as SupabaseClient }
 }
+it.each([
+  [true, 'Din utbetalning är registrerad. Du behöver inte göra något.'],
+  [false, 'Öppna appen för att se köpet.'],
+] as const)(
+  'uses the Swedish purchase copy for payoutRegistered=%s',
+  async (payoutRegistered, body) => {
+    const event: PushClaim = {
+      ...claim,
+      kind: 'external_item_purchased',
+      sellerId: null,
+      itemId: null,
+      ownerId: id,
+      requestId: id,
+      offerId: null,
+    }
+    const f = fixture('claim', false, event, payoutRegistered)
+    const send = vi
+      .fn()
+      .mockResolvedValue({ status: 'accepted', ticket: id, error: '' })
+    await runSellerPush(f.client, {}, send)
+    expect(send).toHaveBeenCalledOnce()
+    expect(expoPayload(send.mock.calls[0][0])).toMatchObject({
+      title: 'Komisio har köpt din vara!',
+      body,
+      sound: 'sale.wav',
+      channelId: 'komisio-sold-v1',
+    })
+  },
+)
 it.each(['external_item_offered', 'external_item_declined'] as const)(
   'sends and acknowledges a claimed %s without requiring a seller account',
   async (kind) => {
@@ -187,7 +250,7 @@ it.each(['external_item_offered', 'external_item_declined'] as const)(
     })
     expect(send).toHaveBeenCalledOnce()
     expect(f.rpc).toHaveBeenCalledWith('seller_push_candidates', {
-      p_protocol: 3,
+      p_protocol: 5,
     })
     expect(send.mock.calls[0][0]).toMatchObject({
       kind,

@@ -16,7 +16,7 @@ set local role authenticated;
 set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000002","role":"authenticated"}';
 select reserve_external_item_photo('f7100000-0000-4000-8000-000000000201',repeat('a',64),100);
 insert into storage.objects(bucket_id,name) values('external-item-photos','f7100000-0000-4000-8000-000000000002/f7100000-0000-4000-8000-000000000201.jpg');
-select submit_external_item_request('f7100000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',100000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7100000-0000-4000-8000-000000000301',:'tenant','Jacket','','good','',100000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 select is((select agreement_version_id from external_item_requests where id='f7100000-0000-4000-8000-000000000301'),'f7100000-0000-4000-8000-000000000101'::uuid,'request retains the agreement version for its upload');
 select throws_ok(format($$select issue_external_item_offer(%L,'f7100000-0000-4000-8000-000000000401','f7100000-0000-4000-8000-000000000301',null,40000,100000,'f7100000-0000-4000-8000-000000000101')$$,:'tenant'),'42501',null,'email owner cannot issue a store offer');
 set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000004","role":"authenticated"}';
@@ -48,7 +48,7 @@ select throws_like($$select respond_external_item_offer(gen_random_uuid(),'f7100
 select is(my_external_item_requests()->>'activeCount','1','accepted but not handed-in item still consumes one slot');
 select is(read_external_item_offer('f7100000-0000-4000-8000-000000000401')->>'canAccept','false','completed response cannot render an enabled accept action');
 select is(my_external_item_requests()#>>'{requests,0,status}','waiting','existing mobile list contract remains compatible');
-select submit_external_item_request('f7100000-0000-4000-8000-000000000302',:'tenant','Lamp','','good','',null,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7100000-0000-4000-8000-000000000302',:'tenant','Lamp','','good','',30000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 select is((select agreement_version_id from external_item_requests where id='f7100000-0000-4000-8000-000000000302'),'f7100000-0000-4000-8000-000000000102'::uuid,'later uploads bind the new agreement');
 select throws_ok($$insert into external_item_offer_responses(id,offer_id,owner_id,accepted,agreement_version_id) values(gen_random_uuid(),'f7100000-0000-4000-8000-000000000401','f7100000-0000-4000-8000-000000000002',true,'f7100000-0000-4000-8000-000000000101')$$,'42501',null,'direct response writes are denied');
 set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000001","role":"authenticated"}';
@@ -58,7 +58,7 @@ set local request.jwt.claims='{"sub":"f7100000-0000-4000-8000-000000000002","rol
 select respond_external_item_offer('f7100000-0000-4000-8000-000000000502','f7100000-0000-4000-8000-000000000402',false,null);
 select is(my_external_item_requests()->>'activeCount','1','seller refusal releases exactly one slot');
 select lives_ok($$select respond_external_item_offer('f7100000-0000-4000-8000-000000000502','f7100000-0000-4000-8000-000000000402',false,null)$$,'refusal retries safely');
-select submit_external_item_request('f7100000-0000-4000-8000-000000000303',:'tenant','Expired test','','good','',null,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE');
+select submit_external_item_request('f7100000-0000-4000-8000-000000000303',:'tenant','Expired test','','good','',30000,'SEK',array['f7100000-0000-4000-8000-000000000201']::uuid[],'SE','seller_amount');
 reset role;
 insert into external_item_offers(id,tenant_id,request_id,owner_id,seller_amount_ore,expected_sale_price_ore,agreement_version_id,created_by,created_at,expires_at)
  values('f7100000-0000-4000-8000-000000000403',:'tenant','f7100000-0000-4000-8000-000000000303','f7100000-0000-4000-8000-000000000002',30000,90000,'f7100000-0000-4000-8000-000000000102','f7100000-0000-4000-8000-000000000001',statement_timestamp()-interval '49 hours',statement_timestamp()-interval '1 hour');

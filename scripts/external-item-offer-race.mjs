@@ -99,7 +99,7 @@ export async function raceExternalOffers({ setup, connectionString }) {
     const request = randomUUID()
     const submit = (id) =>
       clients[0].query(
-        "select submit_external_item_request($1,$2,'Synthetic item','','good','',null,'SEK',$3,'SE')",
+        "select submit_external_item_request($1,$2,'Synthetic item','','good','',30000,'SEK',$3,'SE','seller_amount')",
         [id, tenant, [photo]],
       )
     await submit(request)

@@ -33,7 +33,7 @@ export async function raceExternalRequests({ setup, connectionString }) {
     path = `${owner}/${photo}.jpg`
   const submit = (c, id, store = tenant, image = photo) =>
     c.query(
-      "select submit_external_item_request($1,$2,'Jacket','','good','',10000,'SEK',$3,'SE') as id",
+      "select submit_external_item_request($1,$2,'Jacket','','good','',30000,'SEK',$3,'SE','seller_amount') as id",
       [id, store, [image]],
     )
   const outcome = (promise) =>

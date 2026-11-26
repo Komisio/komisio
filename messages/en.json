@@ -1516,6 +1516,10 @@
     }
   },
   "sales": {
+    "cataloguePrice": "Catalogue price",
+    "discount": "Discount",
+    "discountUnit": "Discount unit",
+    "discountInvalid": "Enter a discount with up to two decimal places. The final price must be greater than zero.",
     "title": "Sales",
     "intro": "View store sales and record a sale manually when needed.",
     "notice": "Sales from the POS connection appear here. Do not record the same sale again manually.",

@@ -1516,6 +1516,10 @@
     }
   },
   "sales": {
+    "cataloguePrice": "Luettelohinta",
+    "discount": "Alennus",
+    "discountUnit": "Alennuksen yksikkö",
+    "discountInvalid": "Anna alennus enintään kahden desimaalin tarkkuudella. Lopullisen hinnan on oltava suurempi kuin nolla.",
     "title": "Myynti",
     "intro": "Tarkastele myymälän myyntejä ja kirjaa myynti tarvittaessa manuaalisesti.",
     "notice": "Kassaintegraation myynnit näkyvät täällä. Älä kirjaa samaa myyntiä uudelleen manuaalisesti.",

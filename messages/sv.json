@@ -1516,6 +1516,10 @@
     }
   },
   "sales": {
+    "cataloguePrice": "Katalogpris",
+    "discount": "Rabatt",
+    "discountUnit": "Rabattenhet",
+    "discountInvalid": "Ange en rabatt med högst två decimaler. Slutpriset måste vara större än noll.",
     "title": "Försäljning",
     "intro": "Se butikens försäljningar och registrera vid behov en försäljning manuellt.",
     "notice": "Försäljningar från kassakopplingen visas här. Registrera inte samma försäljning igen manuellt.",

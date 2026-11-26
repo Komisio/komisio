@@ -1516,6 +1516,10 @@
     }
   },
   "sales": {
+    "cataloguePrice": "Katalogpreis",
+    "discount": "Rabatt",
+    "discountUnit": "Rabatteinheit",
+    "discountInvalid": "Gib einen Rabatt mit höchstens zwei Nachkommastellen ein. Der Endpreis muss größer als null sein.",
     "title": "Verkäufe",
     "intro": "Verkäufe ansehen und bei Bedarf einen Verkauf manuell erfassen.",
     "notice": "Verkäufe aus der Kassenanbindung erscheinen hier. Erfassen Sie denselben Verkauf nicht erneut manuell.",

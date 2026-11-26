@@ -4309,6 +4309,16 @@ button.text-link:hover:not(:disabled) {
   display: block;
   font-size: 0.8rem;
 }
+.sale-discount {
+  display: flex;
+  gap: 0.25rem;
+}
+.sale-discount input {
+  width: 5rem;
+}
+.sale-discount select {
+  width: auto;
+}
 .sale-total {
   font-size: 1.2rem;
   text-align: right;

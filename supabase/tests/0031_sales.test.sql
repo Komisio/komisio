@@ -17,7 +17,8 @@ select set_config('test.bag',receive_bag_with_agreement(current_setting('test.te
 select set_config('test.draft',gen_random_uuid()::text,true);
 select pg_temp.prepare_bag_reception(current_setting('test.tenant')::uuid,gen_random_uuid(),current_setting('test.bag')::uuid,current_setting('test.draft')::uuid,0,'Synthetic jacket','Jackets','Good');
 select set_config('test.item1',gen_random_uuid()::text,true);
-select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,25000);
+-- The consignment line sells at 20% off its catalogue price.
+select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item1')::uuid,'reception_review',current_setting('test.draft')::uuid,1,31250);
 select set_config('test.purchase',register_purchase(current_setting('test.tenant')::uuid,gen_random_uuid(),'Flea market',15000,'Receipt 7',true)::text,true);
 select set_config('test.item2',gen_random_uuid()::text,true);
 select accept_item(current_setting('test.tenant')::uuid,current_setting('test.item2')::uuid,'purchase',current_setting('test.purchase')::uuid,null,25000);
@@ -49,6 +50,7 @@ select is((select vat_ore from sale_lines where sale_id=current_setting('test.sa
 select is((select seller_credit_ore from sale_lines where sale_id=current_setting('test.sale')::uuid and line_no=1),10000::bigint,'seller credit frozen');
 select is((select agreement_version_id from sale_lines where sale_id=current_setting('test.sale')::uuid and line_no=1),current_setting('test.agreement')::uuid,'agreement version carried from the item');
 select is((select count(*) from item_events where item_id=current_setting('test.item1')::uuid and kind='sold'),1::bigint,'item marked sold');
+select is((select price_ore from item_prices where item_id=current_setting('test.item1')::uuid order by set_at desc limit 1),31250::bigint,'the discounted sale preserves the catalogue price');
 select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-2',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item1'),'priceOre',20000)))$$,'%ITEM_ALREADY_SOLD%','an item sells once');
 select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-3',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',gen_random_uuid(),'priceOre',20000)))$$,'%ITEM_NOT_FOUND%','unknown item rejected');
 select throws_like($$select record_sale(current_setting('test.tenant')::uuid,gen_random_uuid(),'manual','T-4',now(),'SEK',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item2'),'priceOre',0)))$$,'%INVALID_INPUT%','zero price rejected');

@@ -9,6 +9,11 @@ import {
 import { ReloadAction } from './reload-action'
 import type { Dictionary } from '@/lib/i18n'
 import { exactPrice } from '@/lib/engine/manual-reception'
+import { saleLineInput } from '@/lib/engine/sales'
+import {
+  discountedPriceOre,
+  type DiscountUnit,
+} from '@/lib/intake/sale-discount'
 import { saleSearchRows, type SaleSearchItem } from '@/lib/engine/sale-search'
 import { useIntakeAction } from './use-intake-action'
 import { Button } from '@/components/ui/button'
@@ -16,6 +21,18 @@ import { ScanFocusButton, useScanFocus } from '@/components/platform/scan-focus'
 
 const decimal = (ore: bigint) =>
   `${ore / 100n}.${String(ore % 100n).padStart(2, '0')}`
+const positiveSalePrice = saleLineInput.shape.price.refine((p) => p !== '0.00')
+type CartItem = SaleSearchItem & {
+  price: string
+  discount: string
+  unit: DiscountUnit
+}
+const cartItem = (item: SaleSearchItem): CartItem => ({
+  ...item,
+  price: decimal(BigInt(item.priceOre)),
+  discount: '',
+  unit: 'percent',
+})
 export function SaleForm({
   tenantId,
   currency,
@@ -47,11 +64,8 @@ export function SaleForm({
     [results, setResults] = useState<SaleSearchItem[]>([])
   const [searched, setSearched] = useState(false),
     [searching, setSearching] = useBusyState(false)
-  const [cart, setCart] = useState<(SaleSearchItem & { price: string })[]>(
-    () =>
-      initialItem
-        ? [{ ...initialItem, price: decimal(BigInt(initialItem.priceOre)) }]
-        : [],
+  const [cart, setCart] = useState<CartItem[]>(() =>
+    initialItem ? [cartItem(initialItem)] : [],
   )
   const [invalidPriceId, setInvalidPriceId] = useState<string | null>(null)
   const [error, setError] = useState(''),
@@ -68,7 +82,9 @@ export function SaleForm({
   let total: bigint | null = 0n
   try {
     for (const item of cart)
-      total += BigInt(exactPrice(item.price).replace('.', ''))
+      total += BigInt(
+        exactPrice(item.price, positiveSalePrice).replace('.', ''),
+      )
   } catch {
     total = null
   }
@@ -103,7 +119,7 @@ export function SaleForm({
     setCart((current) =>
       current.some((i) => i.id === item.id) || current.length >= 50
         ? current
-        : [...current, { ...item, price: decimal(BigInt(item.priceOre)) }],
+        : [...current, cartItem(item)],
     )
     setSaved(null)
     if (/^I-?[0-9A-F]{8}$/i.test(query.trim())) {
@@ -115,6 +131,23 @@ export function SaleForm({
     }
     scan.focus(true)
   }
+  function editLine(
+    id: string,
+    changes: Partial<Pick<CartItem, 'discount' | 'unit' | 'price'>>,
+  ) {
+    if (invalidPriceId === id) setInvalidPriceId(null)
+    setCart((items) =>
+      items.map((item) => (item.id === id ? { ...item, ...changes } : item)),
+    )
+  }
+  function editDiscount(item: CartItem, discount: string, unit: DiscountUnit) {
+    const ore = discountedPriceOre(BigInt(item.priceOre), discount, unit)
+    editLine(item.id, {
+      discount,
+      unit,
+      price: ore === null ? '' : decimal(ore),
+    })
+  }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget
@@ -124,10 +157,15 @@ export function SaleForm({
     const lines: { itemId: string; price: string }[] = []
     for (const item of cart) {
       try {
-        lines.push({ itemId: item.id, price: exactPrice(item.price) })
+        lines.push({
+          itemId: item.id,
+          price: exactPrice(item.price, positiveSalePrice),
+        })
       } catch {
         setInvalidPriceId(item.id)
-        document.getElementById(`price-${item.id}`)?.focus()
+        document
+          .getElementById(`${item.discount ? 'discount' : 'price'}-${item.id}`)
+          ?.focus()
         return
       }
     }
@@ -238,7 +276,51 @@ export function SaleForm({
                 <span>
                   <strong>{item.title}</strong>
                   <small>I-{item.id.slice(0, 8).toUpperCase()}</small>
+                  <small>
+                    {d.cataloguePrice} {decimal(BigInt(item.priceOre))}{' '}
+                    {currency}
+                  </small>
                 </span>
+                <div>
+                  <label htmlFor={`discount-${item.id}`}>{d.discount}</label>
+                  <div className="sale-discount">
+                    <input
+                      id={`discount-${item.id}`}
+                      inputMode="decimal"
+                      value={item.discount}
+                      aria-invalid={
+                        (!!item.discount && !item.price) || undefined
+                      }
+                      aria-describedby={
+                        item.discount && !item.price
+                          ? `discount-error-${item.id}`
+                          : undefined
+                      }
+                      onChange={(e) =>
+                        editDiscount(item, e.target.value, item.unit)
+                      }
+                    />
+                    <select
+                      aria-label={d.discountUnit}
+                      value={item.unit}
+                      onChange={(e) => {
+                        const unit =
+                          e.target.value === 'amount' ? 'amount' : 'percent'
+                        if (item.discount)
+                          editDiscount(item, item.discount, unit)
+                        else editLine(item.id, { unit })
+                      }}
+                    >
+                      <option value="percent">%</option>
+                      <option value="amount">{currency}</option>
+                    </select>
+                  </div>
+                  {item.discount && !item.price && (
+                    <small id={`discount-error-${item.id}`} role="alert">
+                      {d.discountInvalid}
+                    </small>
+                  )}
+                </div>
                 <div>
                   <label htmlFor={`price-${item.id}`}>
                     {d.price} ({currency})
@@ -246,26 +328,22 @@ export function SaleForm({
                   <input
                     id={`price-${item.id}`}
                     inputMode="decimal"
-                    required
+                    required={!item.discount}
                     value={item.price}
-                    aria-invalid={invalidPriceId === item.id || undefined}
+                    aria-invalid={
+                      (!item.discount && invalidPriceId === item.id) ||
+                      undefined
+                    }
                     aria-describedby={
-                      invalidPriceId === item.id
+                      !item.discount && invalidPriceId === item.id
                         ? `price-error-${item.id}`
                         : undefined
                     }
-                    onChange={(e) => {
-                      if (invalidPriceId === item.id) setInvalidPriceId(null)
-                      setCart(
-                        cart.map((i) =>
-                          i.id === item.id
-                            ? { ...i, price: e.target.value }
-                            : i,
-                        ),
-                      )
-                    }}
+                    onChange={(e) =>
+                      editLine(item.id, { price: e.target.value, discount: '' })
+                    }
                   />
-                  {invalidPriceId === item.id && (
+                  {!item.discount && invalidPriceId === item.id && (
                     <small id={`price-error-${item.id}`} role="alert">
                       {d.priceInvalid}
                     </small>

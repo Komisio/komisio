@@ -1516,6 +1516,10 @@
     }
   },
   "sales": {
+    "cataloguePrice": "Katalogpris",
+    "discount": "Rabatt",
+    "discountUnit": "Rabattenhet",
+    "discountInvalid": "Angi en rabatt med høyst to desimaler. Sluttprisen må være større enn null.",
     "title": "Salg",
     "intro": "Se butikkens salg og registrer et salg manuelt ved behov.",
     "notice": "Salg fra kassakoblingen vises her. Ikke registrer samme salg på nytt manuelt.",

@@ -1516,6 +1516,10 @@
     }
   },
   "sales": {
+    "cataloguePrice": "Prezzo di catalogo",
+    "discount": "Sconto",
+    "discountUnit": "Unità dello sconto",
+    "discountInvalid": "Inserisci uno sconto con un massimo di due decimali. Il prezzo finale deve essere maggiore di zero.",
     "title": "Vendite",
     "intro": "Consulta le vendite del negozio e registra una vendita manualmente quando necessario.",
     "notice": "Le vendite dalla cassa collegata appaiono qui. Non registrare di nuovo manualmente la stessa vendita.",

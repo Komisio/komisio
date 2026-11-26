@@ -1516,6 +1516,10 @@
     }
   },
   "sales": {
+    "cataloguePrice": "Precio de catálogo",
+    "discount": "Descuento",
+    "discountUnit": "Unidad del descuento",
+    "discountInvalid": "Introduce un descuento con un máximo de dos decimales. El precio final debe ser mayor que cero.",
     "title": "Ventas",
     "intro": "Consulta las ventas de la tienda y registra una venta manualmente cuando sea necesario.",
     "notice": "Las ventas de la conexión con la caja aparecen aquí. No registres la misma venta otra vez manualmente.",

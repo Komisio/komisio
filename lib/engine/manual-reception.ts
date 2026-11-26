@@ -24,17 +24,16 @@ const appraisal = z.strictObject({
   reference: z.string().trim().min(1).max(200),
   rationale: z.string().trim().min(1).max(500),
 })
-export function exactPrice(
-  input: string,
-  amount = suggestedPrice.shape.amount,
-) {
+export function normalizePrice(input: string) {
   const raw = input.trim().replace(',', '.')
-  const normalized = /^\d+$/.test(raw)
+  return /^\d+$/.test(raw)
     ? `${raw}.00`
     : /^\d+\.\d$/.test(raw)
       ? `${raw}0`
       : raw
-  return amount.parse(normalized)
+}
+export function exactPrice(input: string) {
+  return suggestedPrice.shape.amount.parse(normalizePrice(input))
 }
 export const manualReceptionInput = appraisal.extend({
   description: z.string().trim().max(1000),

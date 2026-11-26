@@ -8,7 +8,7 @@ import {
 } from '@/components/platform/navigation-warning'
 import { ReloadAction } from './reload-action'
 import type { Dictionary } from '@/lib/i18n'
-import { exactPrice } from '@/lib/engine/manual-reception'
+import { normalizePrice } from '@/lib/engine/manual-reception'
 import { saleLineInput } from '@/lib/engine/sales'
 import {
   discountedPriceOre,
@@ -22,6 +22,8 @@ import { ScanFocusButton, useScanFocus } from '@/components/platform/scan-focus'
 const decimal = (ore: bigint) =>
   `${ore / 100n}.${String(ore % 100n).padStart(2, '0')}`
 const positiveSalePrice = saleLineInput.shape.price.refine((p) => p !== '0.00')
+const finalPrice = (input: string) =>
+  positiveSalePrice.parse(normalizePrice(input))
 type CartItem = SaleSearchItem & {
   price: string
   discount: string
@@ -82,9 +84,7 @@ export function SaleForm({
   let total: bigint | null = 0n
   try {
     for (const item of cart)
-      total += BigInt(
-        exactPrice(item.price, positiveSalePrice).replace('.', ''),
-      )
+      total += BigInt(finalPrice(item.price).replace('.', ''))
   } catch {
     total = null
   }
@@ -159,7 +159,7 @@ export function SaleForm({
       try {
         lines.push({
           itemId: item.id,
-          price: exactPrice(item.price, positiveSalePrice),
+          price: finalPrice(item.price),
         })
       } catch {
         setInvalidPriceId(item.id)

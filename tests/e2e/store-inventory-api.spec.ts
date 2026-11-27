@@ -64,6 +64,9 @@ test('store staff can issue a scoped key, review a submitted change and revoke a
       who.getByText('API fixture seller', { exact: true }),
     ).toBeVisible()
     await who
+      .getByRole('checkbox', { name: sv.operations.confirm, exact: true })
+      .check()
+    await who
       .getByRole('button', { name: sv.operations.approve, exact: true })
       .click()
     const readStatus = async () =>

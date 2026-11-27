@@ -146,6 +146,7 @@ export default async function Integrations({
       <div className="page-heading">
         <h1>{all.nav.integrations}</h1>
         <p>{all.integrationPage.intro}</p>
+        <Link href="/settings/store-api">{all.storeApi.title}</Link>
       </div>
       {!['owner', 'admin'].includes(a.role) && (
         <p>{all.integrationPage.adminOnly}</p>

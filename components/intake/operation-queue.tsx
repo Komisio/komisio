@@ -264,7 +264,35 @@ export function OperationQueue({
             {d.riskLevel}: {d.risk[o.risk_level]} · {d.validUntil}:{' '}
             {format(o.expires_at)}
           </p>
-          {o.kind === 'useAccountingDraft' ? (
+          {o.kind === 'storeApiChange' ? (
+            <div>
+              <p>{o.payload.action}</p>
+              {reviewContext?.kind === 'engine' && reviewContext.apiReview && (
+                <>
+                  <p>{reviewContext.apiReview.subject}</p>
+                  <dl>
+                    {Object.entries(reviewContext.apiReview.body).map(
+                      ([field, value]) => (
+                        <div key={field}>
+                          <dt>{field}</dt>
+                          <dd
+                            style={{
+                              whiteSpace: 'pre-wrap',
+                              overflowWrap: 'anywhere',
+                            }}
+                          >
+                            {typeof value === 'object'
+                              ? JSON.stringify(value, null, 2)
+                              : String(value)}
+                          </dd>
+                        </div>
+                      ),
+                    )}
+                  </dl>
+                </>
+              )}
+            </div>
+          ) : o.kind === 'useAccountingDraft' ? (
             <Link
               className="text-link"
               href={`/intake/accounting?view=accounts&draft=${o.payload.draftId}${o.payload.destination === 'economic' ? '&destination=economic' : ''}`}
@@ -640,6 +668,8 @@ export function OperationQueue({
           {reviewContext &&
             !o.outcome &&
             canDecide &&
+            (o.kind !== 'storeApiChange' ||
+              (reviewContext.kind === 'engine' && !!reviewContext.apiReview)) &&
             o.kind !== 'useAgreementDraft' &&
             o.kind !== 'useAccountingDraft' && (
               <Decision

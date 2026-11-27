@@ -115,6 +115,7 @@ export async function readOperationReview(
     }
   }
   if (
+    pending.data.kind === 'storeApiChange' ||
     pending.data.kind === 'recordReturn' ||
     pending.data.kind === 'adjustLedger' ||
     pending.data.kind === 'applyMarkdownBatch' ||
@@ -137,61 +138,68 @@ export async function readOperationReview(
         .eq('tenant_id', tenantId)
         .eq('operation_id', operationId)
         .maybeSingle(),
-      kind === 'recordReturn'
-        ? client
-            .from('sale_returns')
-            .select('id')
-            .eq('tenant_id', tenantId)
-            .eq(
-              'sale_line_id',
-              recordReturnPayload.parse(pending.data.payload).saleLineId,
-            )
-            .maybeSingle()
-        : kind === 'updateStoreProfile'
+      kind === 'storeApiChange' && ['owner', 'admin'].includes(role.data)
+        ? client.rpc('review_store_api_request', {
+            p_tenant: tenantId,
+            p_id: operationId,
+          })
+        : kind === 'recordReturn'
           ? client
-              .from('store_profile_versions')
+              .from('sale_returns')
               .select('id')
               .eq('tenant_id', tenantId)
-              .order('version', { ascending: false })
-              .limit(1)
+              .eq(
+                'sale_line_id',
+                recordReturnPayload.parse(pending.data.payload).saleLineId,
+              )
               .maybeSingle()
-          : kind === 'exportDayClose'
+          : kind === 'updateStoreProfile'
             ? client
-                .from('day_closes')
+                .from('store_profile_versions')
                 .select('id')
                 .eq('tenant_id', tenantId)
-                .eq(
-                  'id',
-                  exportDayClosePayload.parse(pending.data.payload).dayCloseId,
-                )
+                .order('version', { ascending: false })
+                .limit(1)
                 .maybeSingle()
-            : kind === 'adjustLedger' || kind === 'sendMessage'
+            : kind === 'exportDayClose'
               ? client
-                  .from('sellers')
-                  .select('id,email')
+                  .from('day_closes')
+                  .select('id')
                   .eq('tenant_id', tenantId)
                   .eq(
                     'id',
-                    adjustLedgerPayload.pick({ sellerId: true }).parse({
-                      sellerId: (pending.data.payload as { sellerId: string })
-                        .sellerId,
-                    }).sellerId,
+                    exportDayClosePayload.parse(pending.data.payload)
+                      .dayCloseId,
                   )
                   .maybeSingle()
-              : kind === 'approvePayout' || kind === 'markPayoutPaid'
+              : kind === 'adjustLedger' || kind === 'sendMessage'
                 ? client
-                    .from('payouts')
-                    .select('id,status')
+                    .from('sellers')
+                    .select('id,email')
                     .eq('tenant_id', tenantId)
                     .eq(
                       'id',
-                      approvePayoutPayload.pick({ payoutId: true }).parse({
-                        payoutId: (pending.data.payload as { payoutId: string })
-                          .payoutId,
-                      }).payoutId,
+                      adjustLedgerPayload.pick({ sellerId: true }).parse({
+                        sellerId: (pending.data.payload as { sellerId: string })
+                          .sellerId,
+                      }).sellerId,
                     )
                     .maybeSingle()
-                : Promise.resolve({ data: null, error: null }),
+                : kind === 'approvePayout' || kind === 'markPayoutPaid'
+                  ? client
+                      .from('payouts')
+                      .select('id,status')
+                      .eq('tenant_id', tenantId)
+                      .eq(
+                        'id',
+                        approvePayoutPayload.pick({ payoutId: true }).parse({
+                          payoutId: (
+                            pending.data.payload as { payoutId: string }
+                          ).payoutId,
+                        }).payoutId,
+                      )
+                      .maybeSingle()
+                  : Promise.resolve({ data: null, error: null }),
     ])
     if (decision.error || subject.error) throw new Error('OPERATION_NOT_FOUND')
     const d = decision.data,
@@ -222,7 +230,20 @@ export async function readOperationReview(
       !d &&
       ((subject.data as { id?: string } | null)?.id ?? null) !==
         updateStoreProfilePayload.parse(pending.data.payload).expectedCurrentId
+    const apiReview =
+      kind === 'storeApiChange'
+        ? z
+            .object({
+              action: z.string(),
+              subject: z.guid().nullable(),
+              body: z.record(z.string(), z.unknown()),
+              canApprove: z.boolean(),
+            })
+            .nullable()
+            .parse(subject.data)
+        : null
     const stale =
+      (kind === 'storeApiChange' && !apiReview?.canApprove) ||
       alreadyDone ||
       profileStale ||
       ((kind === 'useAgreementDraft' || kind === 'useAccountingDraft') &&
@@ -237,6 +258,7 @@ export async function readOperationReview(
       operation,
       context: {
         kind: 'engine' as const,
+        apiReview,
         alreadyDone,
         stale,
         canApprove: !d && !expired && !stale,

@@ -1,4 +1,17 @@
 {
+  "storeApi": {
+    "title": "API de la tienda",
+    "intro": "Elige qué datos puede leer la integración y qué cambios puede enviar para revisión. Las claves caducan a los 90 días.",
+    "reference": "Abrir la referencia de la API (Swagger)",
+    "label": "Nombre de la integración",
+    "create": "Crear clave de API",
+    "copy": "Copia la clave ahora. Solo se muestra una vez.",
+    "expires": "Caduca",
+    "revoke": "Revocar",
+    "limit": "Esta tienda ya tiene diez claves activas.",
+    "error": "La solicitud ha fallado. Recarga la página para comprobar las claves.",
+    "permissions": "Permisos"
+  },
   "sellerPush": {
     "title": "Notificaciones push para vendedores",
     "hint": "El vendedor necesita la app de Komisio y debe permitir las notificaciones. Estas opciones no afectan al correo electrónico.",
@@ -557,6 +570,8 @@
     "readonly": "Solo lectura"
   },
   "events": {
+    "store_api.key_issued": "Clave de API de la tienda creada",
+    "store_api.key_revoked": "Clave de API de la tienda revocada",
     "accounting_map.published": "Plan de cuentas · Publicación",
     "agreement.accepted_by_seller": "Acuerdo del vendedor · Respuesta del vendedor · Aceptación",
     "agreement.evidence_recorded": "Evidencia del acuerdo registrada",
@@ -1091,7 +1106,8 @@
       "updateStoreProfile": "Actualizar el perfil de la tienda",
       "importSellers": "Importar depositantes",
       "useAgreementDraft": "Borrador de acuerdo con IA",
-      "useAccountingDraft": "Propuestas de cuentas para revisar"
+      "useAccountingDraft": "Propuestas de cuentas para revisar",
+      "storeApiChange": "Cambio mediante la API de la tienda"
     },
     "importRows": "filas",
     "openDays": "días abiertos",

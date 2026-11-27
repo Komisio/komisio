@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Komisio Store API",
+    "version": "1.0.0",
+    "description": "Connect your store software to inventory, sellers, sales, returns and payout summaries. Prices and amounts are integer currency minor units. A POS connection is optional.\n\n### Get a key\n1. Sign in as the store owner and select the correct store.\n2. Open **Integrations → Store API** ([manage keys](/settings/store-api)), enter your integration’s name, select its permissions and create a key.\n3. Copy the key into your server’s secret store. It is shown once and expires after 90 days. To rotate, create a second key, switch your integration, then revoke the first key.\n\n### Make your first request\nSet `KOMISIO_URL` to the HTTPS origin of your installation and `KOMISIO_STORE_KEY` to the key in your environment. Send the key in the Authorization header.\n\n```sh\ncurl --fail-with-body \"$KOMISIO_URL/api/public/v1/items?limit=10\" \\\n  -H \"Authorization: Bearer $KOMISIO_STORE_KEY\"\n```\n\nUse **Authorize** to try a request here. [Download the OpenAPI document](/store-api/v1/openapi.json) to import it into your client. Integrations from the earlier Komisio API need a newly issued key and must use the response fields documented below."
+  },
+  "servers": [
+    {
+      "url": "/api/public/v1"
+    }
+  ],
+  "security": [
+    {
+      "StoreKey": []
+    }
+  ],
+  "paths": {
+    "/items": {
+      "get": {
+        "operationId": "listStoreItems",
+        "summary": "List store inventory",
+        "description": "Ordered by ascending item ID. Pass nextCursor as after for the next page. A null cursor means the end. Pages read live inventory. Start a new scan to include new items with IDs before your cursor.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum items per page.",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "description": "ID from the previous page’s nextCursor.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current page of inventory.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or repeated query parameter, cursor or item ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, revoked or expired key, or the issuing user is no longer an owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sixty requests per key per calendar minute. Wait before retrying.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait.",
+                "schema": {
+                  "type": "integer",
+                  "example": 60
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/items/{id}": {
+      "get": {
+        "operationId": "getStoreItem",
+        "summary": "Read one store item",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current inventory record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or repeated query parameter, cursor or item ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, revoked or expired key, or the issuing user is no longer an owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No matching item in this store.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sixty requests per key per calendar minute. Wait before retrying.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait.",
+                "schema": {
+                  "type": "integer",
+                  "example": 60
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "StoreKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Enter the scoped store key beginning with kmi_. The key already identifies the store."
+      }
+    },
+    "schemas": {
+      "Item": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "category",
+          "stage",
+          "priceMinor",
+          "currency"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "example": "Wool jacket"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "example": "Outerwear"
+          },
+          "stage": {
+            "type": "string",
+            "description": "Current inventory lifecycle stage, for example on_sale, markdown_due, period_ending, period_ended, ended or sold.",
+            "example": "on_sale"
+          },
+          "priceMinor": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Current catalogue price in the store currency’s minor units. For SEK, 40000 means 400 kr. Sale receipts can have a different final price.",
+            "example": 40000
+          },
+          "currency": {
+            "type": "string",
+            "example": "SEK"
+          }
+        }
+      },
+      "ItemPage": {
+        "type": "object",
+        "required": ["items", "nextCursor"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "INVALID_INPUT",
+              "INVALID_KEY",
+              "NOT_FOUND",
+              "RATE_LIMIT",
+              "REQUEST_FAILED"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

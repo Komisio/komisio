@@ -1,4 +1,17 @@
 {
+  "storeApi": {
+    "title": "Butiks-API",
+    "intro": "Vælg, hvad integrationen må læse, og hvilke ændringer den må foreslå. Nøglen er gyldig i 90 dage.",
+    "reference": "Åbn API-referencen (Swagger)",
+    "label": "Integrationens navn",
+    "create": "Opret API-nøgle",
+    "copy": "Kopiér nøglen nu. Den vises kun én gang.",
+    "expires": "Udløber",
+    "revoke": "Tilbagekald",
+    "limit": "Butikken har allerede ti aktive nøgler.",
+    "error": "Handlingen mislykkedes. Genindlæs siden for at kontrollere nøglerne.",
+    "permissions": "Tilladelser"
+  },
   "sellerPush": {
     "title": "Pushnotifikationer til sælgere",
     "hint": "Sælgeren skal have Komisio-appen og tillade notifikationer. Disse valg påvirker ikke e-mail.",
@@ -557,6 +570,8 @@
     "readonly": "Skrivebeskyttet"
   },
   "events": {
+    "store_api.key_issued": "API-nøgle oprettet",
+    "store_api.key_revoked": "API-nøgle tilbagekaldt",
     "accounting_map.published": "Kontoplan · Udgivelse",
     "agreement.accepted_by_seller": "Sælgeraftale · Sælgers svar · Godkendelse",
     "agreement.evidence_recorded": "Aftaledokumentation registreret",
@@ -1091,7 +1106,8 @@
       "updateStoreProfile": "Opdater butiksprofilen",
       "importSellers": "Importér indleverere",
       "useAgreementDraft": "AI-aftaleudkast",
-      "useAccountingDraft": "Kontoforslag til gennemgang"
+      "useAccountingDraft": "Kontoforslag til gennemgang",
+      "storeApiChange": "Ændring via butiks-API"
     },
     "importRows": "rækker",
     "openDays": "åbne dage",

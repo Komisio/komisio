@@ -1,4 +1,17 @@
 {
+  "storeApi": {
+    "title": "Shop-API",
+    "intro": "Wählen Sie, welche Daten die Integration lesen und welche Änderungen sie zur Prüfung einreichen darf. Schlüssel sind 90 Tage gültig.",
+    "reference": "API-Referenz öffnen (Swagger)",
+    "label": "Name der Integration",
+    "create": "API-Schlüssel erstellen",
+    "copy": "Kopieren Sie den Schlüssel jetzt. Er wird nur einmal angezeigt.",
+    "expires": "Gültig bis",
+    "revoke": "Widerrufen",
+    "limit": "Dieser Shop hat bereits zehn aktive Schlüssel.",
+    "error": "Die Anfrage ist fehlgeschlagen. Laden Sie die Seite neu, um die Schlüssel zu prüfen.",
+    "permissions": "Berechtigungen"
+  },
   "sellerPush": {
     "title": "Push-Mitteilungen für Verkäufer",
     "hint": "Verkäufer benötigen die Komisio-App und müssen Mitteilungen erlauben. Diese Auswahl wirkt sich nicht auf E-Mails aus.",
@@ -557,6 +570,8 @@
     "readonly": "Nur Lesen"
   },
   "events": {
+    "store_api.key_issued": "Shop-API-Schlüssel erstellt",
+    "store_api.key_revoked": "Shop-API-Schlüssel widerrufen",
     "accounting_map.published": "Kontenzuordnung · Veröffentlichung",
     "agreement.accepted_by_seller": "Verkäufervereinbarung · Verkäuferantwort · Annahme",
     "agreement.evidence_recorded": "Vereinbarungsnachweis erfasst",
@@ -1091,7 +1106,8 @@
       "updateStoreProfile": "Store-Profil aktualisieren",
       "importSellers": "Einlieferer importieren",
       "useAgreementDraft": "KI-Vertragsentwurf",
-      "useAccountingDraft": "Kontenvorschläge prüfen"
+      "useAccountingDraft": "Kontenvorschläge prüfen",
+      "storeApiChange": "Änderung über die Shop-API"
     },
     "importRows": "Zeilen",
     "openDays": "offene Tage",

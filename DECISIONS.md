@@ -13,6 +13,8 @@ business planning and installation-specific procedures do not belong here.
 
 <!-- technical-decisions -->
 
+- 2026-11-27: Store API keys expire after 90 days and carry explicit scopes for one store. Writes are replay-safe proposals. A different owner or admin approves through the existing engine. Sale and return evidence stays immutable. Swagger UI is served locally.
+
 - 2026-11-26: Manual sale discounts apply per item to its current catalogue price, as a percentage or store-currency amount. Round the final price to the nearest minor unit, half up. Record the positive final price through the existing sale engine and apply the item's agreed terms.
 
 - 2026-11-20: New central app requests require a seller amount of at least SEK 300 per item. The floor applies on submission, including legacy endpoints. Exact retries, existing items, staff counteroffers and ordinary store intake keep their existing terms.

@@ -1,4 +1,17 @@
 {
+  "storeApi": {
+    "title": "Kaupan API",
+    "intro": "Valitse, mitä integraatio saa lukea ja mitä muutoksia se voi lähettää tarkistettavaksi. Avain on voimassa 90 päivää.",
+    "reference": "Avaa API-dokumentaatio (Swagger)",
+    "label": "Integraation nimi",
+    "create": "Luo API-avain",
+    "copy": "Kopioi avain nyt. Se näytetään vain kerran.",
+    "expires": "Voimassa asti",
+    "revoke": "Peruuta avain",
+    "limit": "Kaupalla on jo kymmenen aktiivista avainta.",
+    "error": "Pyyntö epäonnistui. Tarkista avaimet lataamalla sivu uudelleen.",
+    "permissions": "Käyttöoikeudet"
+  },
   "sellerPush": {
     "title": "Push-ilmoitukset myyjille",
     "hint": "Myyjä tarvitsee Komisio-sovelluksen ja hänen on sallittava ilmoitukset. Nämä valinnat eivät vaikuta sähköpostiin.",
@@ -557,6 +570,8 @@
     "readonly": "Vain luku"
   },
   "events": {
+    "store_api.key_issued": "Kaupan API-avain luotu",
+    "store_api.key_revoked": "Kaupan API-avain peruttu",
     "accounting_map.published": "Tilikartta · Julkaisu",
     "agreement.accepted_by_seller": "Myyjäsopimus · Myyjän vastaus · Hyväksyntä",
     "agreement.evidence_recorded": "Sopimustodiste kirjattu",
@@ -1091,7 +1106,8 @@
       "updateStoreProfile": "Päivitä kaupan profiili",
       "importSellers": "Tuo tuojat",
       "useAgreementDraft": "Tekoälyn sopimusluonnos",
-      "useAccountingDraft": "Tarkistettavat tiliehdotukset"
+      "useAccountingDraft": "Tarkistettavat tiliehdotukset",
+      "storeApiChange": "Kaupan API-muutospyyntö"
     },
     "importRows": "riviä",
     "openDays": "avointa päivää",

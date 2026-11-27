@@ -107,6 +107,8 @@ begin
  insert into public.pending_operations(id,tenant_id,kind,risk_level,payload,actor_kind,actor_label,proposed_by,expires_at)
  values(op,k.tenant_id,'storeApiChange','high',jsonb_build_object('action',p_action),'agent',k.label,k.issued_by,now()+interval '7 days');
  insert into komisio_private.store_api_requests(id,key_id,replay_id,action,subject,body,body_digest) values(op,k.id,p_replay,p_action,p_subject,p_body,extensions.digest(p_body::text,'sha256'));
+ insert into public.access_events(tenant_id,actor_id,action,target_id,detail) values(k.tenant_id,k.issued_by,'operation.proposed',op,
+  jsonb_build_object('kind','storeApiChange','source','store_api','keyId',k.id,'actor_label',k.label));
  return op;
 end $$;
 

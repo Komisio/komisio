@@ -33,6 +33,7 @@ select set_config('test.replay',gen_random_uuid()::text,true);
 select set_config('test.sop',public.submit_store_api_request(current_setting('test.key'),current_setting('test.replay')::uuid,'createSeller',null,'{"name":"Store Example","phone":"0700000000"}')::text,true);
 select is(public.submit_store_api_request(current_setting('test.key'),current_setting('test.replay')::uuid,'createSeller',null,'{"name":"Store Example","phone":"0700000000"}')::text,current_setting('test.sop'),'exact retry returns the same request');
 select throws_ok($$select public.submit_store_api_request(current_setting('test.key'),current_setting('test.replay')::uuid,'createSeller',null,'{"name":"Changed","phone":"0700000001"}')$$,'REQUEST_CONFLICT','changed retry refuses a second write');
+select is((select count(*) from public.access_events where target_id=current_setting('test.sop')::uuid and action='operation.proposed' and detail->>'source'='store_api'),1::bigint,'audit attributes one proposal to the API key across retries');
 select is(public.store_api_request_status(current_setting('test.otherkey'),current_setting('test.sop')::uuid),null,'request status is private to the issuing key');
 select is(public.store_api_records(current_setting('test.key'),'sellers',10,null,null)->'records','[]'::jsonb,'proposing a change has no committed seller yet');
 select throws_ok($$select pg_temp.approve(current_setting('test.sop')::uuid)$$,'42501','FORBIDDEN','issuer cannot approve its own key request');

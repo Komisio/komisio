@@ -50,6 +50,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "sharp": "0.35.4",
+    "swagger-ui-dist": "5.36.0",
     "tailwind-merge": "^3.0.0",
     "tsx": "4.23.13",
     "ws": "8.22.0",

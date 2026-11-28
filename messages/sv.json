@@ -1,4 +1,17 @@
 {
+  "storeApi": {
+    "title": "Butiks-API",
+    "intro": "Välj vad integrationen får läsa och ändra i din butik. Med skrivbehörighet genomförs ändringar direkt. Nycklar gäller i 90 dagar.",
+    "reference": "Öppna API-referensen (Swagger)",
+    "label": "Integrationens namn",
+    "create": "Skapa API-nyckel",
+    "copy": "Kopiera nyckeln nu. Den visas bara en gång.",
+    "expires": "Giltig till",
+    "revoke": "Återkalla",
+    "limit": "Butiken har redan tio aktiva nycklar.",
+    "error": "Åtgärden misslyckades. Ladda om sidan för att kontrollera nycklarna.",
+    "permissions": "Behörigheter"
+  },
   "sellerPush": {
     "title": "Pushnotiser till säljare",
     "hint": "Säljaren behöver ha Komisio-appen och tillåta notiser. Dessa val påverkar inte e-post.",
@@ -557,6 +570,10 @@
     "readonly": "Läsbehörighet"
   },
   "events": {
+    "store_api.write_executed": "Ändring genomförd via butiks-API",
+    "store_api.write_failed": "Ändring via butiks-API misslyckades",
+    "store_api.key_issued": "API-nyckel skapad",
+    "store_api.key_revoked": "API-nyckel återkallad",
     "accounting_map.published": "Kontoplan · Publicering",
     "agreement.accepted_by_seller": "Säljaravtal · Säljarens svar · Godkännande",
     "agreement.evidence_recorded": "Avtalsunderlag registrerades",
@@ -1091,7 +1108,8 @@
       "updateStoreProfile": "Uppdatera butiksprofilen",
       "importSellers": "Importera inlämnare",
       "useAgreementDraft": "AI-avtalsutkast",
-      "useAccountingDraft": "Kontoförslag att granska"
+      "useAccountingDraft": "Kontoförslag att granska",
+      "storeApiChange": "Ändring via butiks-API"
     },
     "importRows": "rader",
     "openDays": "öppetdagar",

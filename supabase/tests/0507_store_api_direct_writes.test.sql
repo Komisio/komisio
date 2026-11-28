@@ -1,0 +1,64 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select no_plan();
+insert into auth.users(id,email,email_confirmed_at) values
+ ('a0000000-0000-4000-8000-000000000889','direct-owner@example.test',now()),
+ ('a0000000-0000-4000-8000-000000000890','direct-admin@example.test',now());
+set local "request.jwt.claims"='{"sub":"a0000000-0000-4000-8000-000000000889","role":"authenticated"}';
+select set_config('test.shop',public.create_tenant('Direct writes','direct-store-writes',gen_random_uuid())::text,true);
+select set_config('test.other',public.create_tenant('Other store','other-direct-store',gen_random_uuid())::text,true);
+insert into public.tenant_members(tenant_id,user_id,role) values(current_setting('test.shop')::uuid,'a0000000-0000-4000-8000-000000000890','admin');
+select public.publish_store_policy(current_setting('test.shop')::uuid,gen_random_uuid(),null,(public.current_store_policy(current_setting('test.shop')::uuid)->'policy')
+ || '{"vatModeConsignmentPrivate":"consignment_margin","vatModeStoreOwned":"store_full","intakeProfile":"quick"}'::jsonb);
+select set_config('test.foreign_seller',public.register_seller(current_setting('test.other')::uuid,gen_random_uuid(),'Other seller','other-seller@example.test','')::text,true);
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"a0000000-0000-4000-8000-000000000890","role":"authenticated"}';
+select set_config('test.key',public.issue_store_inventory_key(current_setting('test.shop')::uuid,'Store connection',
+ array['sellers:write','items:write','sales:write','returns:write','sales:read']),true);
+select set_config('test.key_id',public.store_inventory_keys(current_setting('test.shop')::uuid)->0->>'id',true);
+select is(public.store_inventory_keys(current_setting('test.shop')::uuid)->0->>'label','Store connection','admin manages their store keys');
+select throws_ok($$select public.issue_store_inventory_key(current_setting('test.other')::uuid,'Wrong store')$$,'42501','FORBIDDEN','admin is restricted to their own store');
+select set_config('test.reader',public.issue_store_inventory_key(current_setting('test.shop')::uuid,'Reading only'),true);
+set local role anon;
+set local "request.jwt.claims"='{}';
+create function pg_temp.write(action text,body jsonb,subject uuid default null,replay uuid default gen_random_uuid()) returns jsonb
+language sql as $$select public.write_store_api_record(current_setting('test.key'),replay,action,subject,body)$$;
+select set_config('test.replay',gen_random_uuid()::text,true);
+select set_config('test.created',pg_temp.write('createSeller','{"name":"API seller","phone":"0700000000"}',null,current_setting('test.replay')::uuid)::text,true);
+select is(current_setting('test.created')::jsonb->>'status','executed','admin-issued key writes immediately');
+select is(auth.uid(),null,'request leaves no delegated identity behind');
+select is(pg_temp.write('createSeller','{"phone":"0700000000","name":"API seller"}',null,current_setting('test.replay')::uuid),current_setting('test.created')::jsonb,'retry returns original result');
+select is(public.store_api_request_status(current_setting('test.key'),(current_setting('test.created')::jsonb->>'id')::uuid),current_setting('test.created')::jsonb,'receipt is readable by its key');
+select is(public.store_api_request_status(current_setting('test.reader'),(current_setting('test.created')::jsonb->>'id')::uuid),null,'receipts are private to issuing key');
+select throws_ok($$select pg_temp.write('createSeller','{"name":"Different","phone":"0700000000"}',null,current_setting('test.replay')::uuid)$$,'REQUEST_CONFLICT','retry cannot change its command');
+select throws_ok($$select public.write_store_api_record(current_setting('test.reader'),gen_random_uuid(),'createSeller',null,'{}')$$,'INSUFFICIENT_SCOPE','read key cannot write');
+reset role;
+select is((select count(*) from public.pending_operations where tenant_id=current_setting('test.shop')::uuid and kind='storeApiChange'),0::bigint,'no human approval is queued');
+select is((select count(*) from public.access_events where tenant_id=current_setting('test.shop')::uuid and actor_id='a0000000-0000-4000-8000-000000000890' and detail->>'keyId'=current_setting('test.key_id') and action='store_api.write_executed'),1::bigint,'one audit event identifies the key and issuer');
+select set_config('test.seller',current_setting('test.created')::jsonb->>'resultId',true);
+select is(pg_temp.write('editSeller',jsonb_build_object('name','Updated name','expectedRevision',(select profile_revision from public.sellers where id=current_setting('test.seller')::uuid)),current_setting('test.seller')::uuid)->>'status','executed','contact correction is immediate');
+select is(pg_temp.write('editSeller','{"name":"Local edit","expectedRevision":0}',current_setting('test.foreign_seller')::uuid)->>'status','failed','a direct write cannot edit another store contact');
+select is((select name from public.sellers where tenant_id=current_setting('test.other')::uuid and id=current_setting('test.foreign_seller')::uuid),'Other seller','other store contact is unchanged');
+select set_config('test.item',pg_temp.write('createItem',jsonb_build_object('sellerId',current_setting('test.seller'),'title','Blue coat','priceMinor',50000))->>'resultId',true);
+select is(pg_temp.write('editItem','{"title":"Wool coat","expectedTitle":"Blue coat","priceMinor":48000,"expectedPriceMinor":50000,"reason":"Reprice"}',current_setting('test.item')::uuid)->>'status','executed','edit uses normal price and title checks');
+select is(pg_temp.write('editItem','{"title":"Stale","expectedTitle":"Blue coat","reason":"Correction"}',current_setting('test.item')::uuid)->>'status','failed','stale change returns a failure receipt');
+select set_config('test.sale',pg_temp.write('recordSale',jsonb_build_object('externalId','direct-sale','currency','SEK','occurredAt',now(),'lines',jsonb_build_array(jsonb_build_object('itemId',current_setting('test.item'),'priceMinor',40000))))->>'resultId',true);
+select is((select total_ore from public.sales where id=current_setting('test.sale')::uuid),40000::bigint,'sale commits its actual price');
+select is(pg_temp.write('recordReturn',jsonb_build_object('saleLineId',(select id from public.sale_lines where sale_id=current_setting('test.sale')::uuid),'refundMinor',40000,'reason','Return','occurredAt',now()))->>'status','executed','return uses original sale line');
+select is(pg_temp.write('endItem','{"endAction":"return","reason":"Collected"}',current_setting('test.item')::uuid)->>'status','executed','closing the sale period uses the lifecycle engine');
+insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at) values(gen_random_uuid(),'a0000000-0000-4000-8000-000000000890','totp','verified',now(),now());
+select throws_ok($$select pg_temp.write('createSeller','{"name":"Restricted","phone":"0700000000"}')$$,'INVALID_KEY','new MFA requirement invalidates a lower-assurance key');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"a0000000-0000-4000-8000-000000000890","role":"authenticated","aal":"aal2"}';
+select set_config('test.key',public.issue_store_inventory_key(current_setting('test.shop')::uuid,'MFA connection',array['sellers:write']),true);
+set local role anon;
+set local "request.jwt.claims"='{}';
+select is(pg_temp.write('createSeller','{"name":"Verified","phone":"0700000000"}')->>'status','executed','key issued after MFA can write');
+set local role authenticated;
+set local "request.jwt.claims"='{"sub":"a0000000-0000-4000-8000-000000000890","role":"authenticated","aal":"aal2"}';
+select public.revoke_store_inventory_key(current_setting('test.shop')::uuid,(select (k->>'id')::uuid from jsonb_array_elements(public.store_inventory_keys(current_setting('test.shop')::uuid)) k where k->>'label'='MFA connection'));
+set local role anon;
+set local "request.jwt.claims"='{}';
+select throws_ok($$select pg_temp.write('createSeller','{"name":"Revoked","phone":"0700000000"}')$$,'INVALID_KEY','admin revocation blocks the next write');
+select * from finish();
+rollback;

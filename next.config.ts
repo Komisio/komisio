@@ -6,6 +6,10 @@ const config: NextConfig = {
   devIndicators: false,
   serverExternalPackages: ['pdfkit'],
   outputFileTracingIncludes: {
+    '/developers/api/assets/*': [
+      './node_modules/swagger-ui-dist/swagger-ui.css',
+      './node_modules/swagger-ui-dist/swagger-ui-bundle.js',
+    ],
     '/api/items/labels': ['./assets/fonts/*'],
     '/api/statements/pdf': ['./assets/fonts/*'],
     '/api/sales/summary': ['./assets/fonts/*'],

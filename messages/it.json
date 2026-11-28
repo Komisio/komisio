@@ -1,4 +1,17 @@
 {
+  "storeApi": {
+    "title": "API del negozio",
+    "intro": "Scegli cosa può leggere e modificare l’integrazione nel tuo negozio. Con i permessi di scrittura, le modifiche vengono applicate subito. Le chiavi scadono dopo 90 giorni.",
+    "reference": "Apri la guida API (Swagger)",
+    "label": "Nome dell’integrazione",
+    "create": "Crea chiave API",
+    "copy": "Copia la chiave ora. Viene mostrata una sola volta.",
+    "expires": "Scadenza",
+    "revoke": "Revoca",
+    "limit": "Il negozio ha già dieci chiavi attive.",
+    "error": "Richiesta non riuscita. Ricarica la pagina per controllare le chiavi.",
+    "permissions": "Permessi"
+  },
   "sellerPush": {
     "title": "Notifiche push ai venditori",
     "hint": "Il venditore deve avere l’app Komisio e consentire le notifiche. Queste scelte non influiscono sulle email.",
@@ -557,6 +570,10 @@
     "readonly": "Sola lettura"
   },
   "events": {
+    "store_api.write_executed": "Modifica applicata tramite API del negozio",
+    "store_api.write_failed": "Modifica tramite API del negozio non riuscita",
+    "store_api.key_issued": "Chiave API del negozio creata",
+    "store_api.key_revoked": "Chiave API del negozio revocata",
     "accounting_map.published": "Piano dei conti · Pubblicazione",
     "agreement.accepted_by_seller": "Accordo del venditore · Risposta del venditore · Accettazione",
     "agreement.evidence_recorded": "Prova dell'accordo registrata",
@@ -1091,7 +1108,8 @@
       "updateStoreProfile": "Aggiorna il profilo del negozio",
       "importSellers": "Importa conferenti",
       "useAgreementDraft": "Bozza di contratto IA",
-      "useAccountingDraft": "Proposte di conti da verificare"
+      "useAccountingDraft": "Proposte di conti da verificare",
+      "storeApiChange": "Modifica tramite API del negozio"
     },
     "importRows": "righe",
     "openDays": "giorni aperti",

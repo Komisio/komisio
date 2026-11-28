@@ -1,4 +1,17 @@
 {
+  "storeApi": {
+    "title": "Store API",
+    "intro": "Choose what this integration may read and change in your store. Write permissions take effect immediately. Keys expire after 90 days.",
+    "reference": "Open API reference (Swagger)",
+    "label": "Integration name",
+    "create": "Create API key",
+    "copy": "Copy this key now. It is shown only once.",
+    "expires": "Expires",
+    "revoke": "Revoke",
+    "limit": "This store already has ten active keys.",
+    "error": "The request failed. Reload the page to check your keys.",
+    "permissions": "Permissions"
+  },
   "sellerPush": {
     "title": "Seller push notifications",
     "hint": "The seller needs the Komisio app and must allow notifications. These choices do not affect email.",
@@ -557,6 +570,10 @@
     "readonly": "Read only"
   },
   "events": {
+    "store_api.write_executed": "Store API change applied",
+    "store_api.write_failed": "Store API change failed",
+    "store_api.key_issued": "Store API key issued",
+    "store_api.key_revoked": "Store API key revoked",
     "accounting_map.published": "Account mapping · Publication",
     "agreement.accepted_by_seller": "Seller agreement · Seller response · Acceptance",
     "agreement.evidence_recorded": "Agreement evidence recorded",
@@ -1091,7 +1108,8 @@
       "updateStoreProfile": "Update the store profile",
       "importSellers": "Import sellers",
       "useAgreementDraft": "AI agreement draft",
-      "useAccountingDraft": "Account suggestions for review"
+      "useAccountingDraft": "Account suggestions for review",
+      "storeApiChange": "Store API change"
     },
     "importRows": "rows",
     "openDays": "open days",

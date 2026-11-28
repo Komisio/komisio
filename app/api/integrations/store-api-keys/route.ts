@@ -21,7 +21,10 @@ export async function POST(request: Request) {
       await boundedJson(request, 2048).catch(() => null),
     )
     if (!input.success) return reply({ error: 'INVALID_INPUT' }, 400)
-    if (ctx.active?.id !== input.data.tenantId || ctx.active.role !== 'owner')
+    if (
+      ctx.active?.id !== input.data.tenantId ||
+      !['owner', 'admin'].includes(ctx.active.role)
+    )
       return reply({ error: 'FORBIDDEN' }, 403)
     return reply(await manageInventoryKey(ctx.client, input.data))
   } catch (e) {

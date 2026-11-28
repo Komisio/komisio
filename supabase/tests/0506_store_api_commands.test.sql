@@ -13,8 +13,10 @@ select public.publish_store_policy(current_setting('test.t')::uuid,gen_random_uu
 do $$ begin
  perform set_config('test.reader',public.issue_store_inventory_key(current_setting('test.t')::uuid,'Reader'),true);
  perform set_config('test.otherkey',public.issue_store_inventory_key(current_setting('test.other')::uuid,'Other',array['sellers:read','sales:read','returns:read','payouts:read']),true);
- perform set_config('test.key',public.issue_store_inventory_key(current_setting('test.t')::uuid,'Reviewed POS',
- array['items:read','items:write','sellers:read','sellers:write','sales:read','sales:write','returns:read','returns:write','payouts:read']),true);
+ -- Fixture issued before the direct-write migration: its original review contract survives.
+ perform set_config('test.key','kmi_'||encode(extensions.gen_random_bytes(32),'hex'),true);
+ insert into komisio_private.store_inventory_keys(tenant_id,issued_by,label,scopes,secret_hash)
+ values(current_setting('test.t')::uuid,auth.uid(),'Reviewed POS',array['items:read','items:write','sellers:read','sellers:write','sales:read','sales:write','returns:read','returns:write','payouts:read'],extensions.digest(current_setting('test.key'),'sha256'));
 end $$;
 create function pg_temp.submit(action text,body jsonb,subject uuid default null) returns uuid language sql as $$
  select public.submit_store_api_request(current_setting('test.key'),gen_random_uuid(),action,subject,body)

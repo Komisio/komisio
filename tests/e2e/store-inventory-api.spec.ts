@@ -4,19 +4,26 @@ import { register } from '../helpers/account'
 import { p2Fixture } from '../helpers/p2-fixture'
 import sv from '../../messages/sv.json' with { type: 'json' }
 
-test('store staff can issue a scoped key, review a submitted change and revoke access', async ({
-  page,
+test('a store admin issues a scoped key, writes directly and revokes access', async ({
+  page: ownerPage,
 }) => {
   const email = `store-api-${randomUUID()}@example.test`
-  await register(page, email, 'K!' + randomUUID())
+  await register(ownerPage, email, 'K!' + randomUUID())
   const f = await p2Fixture(email)
-  const reviewer = await page
+  const adminContext = await ownerPage
     .context()
     .browser()!
-    .newContext({ baseURL: new URL(page.url()).origin })
+    .newContext({ baseURL: new URL(ownerPage.url()).origin })
   try {
     const id = await f.item('Inventory API jacket')
     await f.commit()
+    const page = await adminContext.newPage()
+    const adminEmail = 'api-admin-' + randomUUID() + '@example.test'
+    await register(page, adminEmail, 'K!' + randomUUID())
+    await f.db.query(
+      "insert into tenant_members(tenant_id,user_id,role) select $1,id,'admin' from auth.users where email=$2",
+      [f.tenant, adminEmail],
+    )
     await page.goto('/intake/integrations')
     await page
       .getByRole('link', { name: sv.storeApi.title, exact: true })
@@ -48,36 +55,24 @@ test('store staff can issue a scoped key, review a submitted change and revoke a
         headers: { ...headers, 'Idempotency-Key': replay },
         data: { name: 'API fixture seller', phone: '0700000000' },
       })
-    const receipt = await submit()
-    expect(receipt.status()).toBe(202)
-    const { id: operation, statusUrl } = await receipt.json()
-    expect((await (await submit()).json()).id).toBe(operation)
-    const who = await reviewer.newPage()
-    const adminEmail = 'api-review-' + randomUUID() + '@example.test'
-    await register(who, adminEmail, 'K!' + randomUUID())
-    await f.db.query(
-      "insert into tenant_members(tenant_id,user_id,role) select $1,id,'admin' from auth.users where email=$2",
-      [f.tenant, adminEmail],
-    )
-    await who.goto('/intake/operations/' + operation)
-    await expect(
-      who.getByText('API fixture seller', { exact: true }),
-    ).toBeVisible()
-    await who
-      .getByRole('checkbox', { name: sv.operations.confirm, exact: true })
-      .check()
-    await who
-      .getByRole('button', { name: sv.operations.approve, exact: true })
-      .click()
-    const readStatus = async () =>
-      await (await page.request.get(statusUrl, { headers })).json()
-    await expect.poll(async () => (await readStatus()).status).toBe('executed')
+    const [first, retry] = await Promise.all([submit(), submit()])
+    expect(first.status()).toBe(200)
+    expect(retry.status()).toBe(200)
+    const receipt = await first.json()
+    expect(await retry.json()).toEqual(receipt)
+    expect(receipt.status).toBe('executed')
+    expect(
+      await (await page.request.get(receipt.statusUrl, { headers })).json(),
+    ).toMatchObject({
+      status: 'executed',
+      id: receipt.id,
+      resultId: receipt.resultId,
+    })
     expect(
       await (
-        await page.request.get(
-          '/api/public/v1/sellers/' + (await readStatus()).resultId,
-          { headers },
-        )
+        await page.request.get('/api/public/v1/sellers/' + receipt.resultId, {
+          headers,
+        })
       ).json(),
     ).toMatchObject({ name: 'API fixture seller' })
     expect(
@@ -94,7 +89,7 @@ test('store staff can issue a scoped key, review a submitted change and revoke a
       (await page.request.get('/api/public/v1/items', { headers })).status(),
     ).toBe(401)
   } finally {
-    await reviewer.close()
+    await adminContext.close()
     await f.close()
   }
 })

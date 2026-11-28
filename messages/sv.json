@@ -1,7 +1,7 @@
 {
   "storeApi": {
     "title": "Butiks-API",
-    "intro": "Välj vilka uppgifter integrationen får läsa och vilka ändringar den får föreslå. Nyckeln gäller i 90 dagar.",
+    "intro": "Välj vad integrationen får läsa och ändra i din butik. Med skrivbehörighet genomförs ändringar direkt. Nycklar gäller i 90 dagar.",
     "reference": "Öppna API-referensen (Swagger)",
     "label": "Integrationens namn",
     "create": "Skapa API-nyckel",
@@ -570,6 +570,8 @@
     "readonly": "Läsbehörighet"
   },
   "events": {
+    "store_api.write_executed": "Ändring genomförd via butiks-API",
+    "store_api.write_failed": "Ändring via butiks-API misslyckades",
     "store_api.key_issued": "API-nyckel skapad",
     "store_api.key_revoked": "API-nyckel återkallad",
     "accounting_map.published": "Kontoplan · Publicering",

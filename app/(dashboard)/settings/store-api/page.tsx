@@ -15,7 +15,7 @@ export default async function StoreApiSettings() {
         <p>{d.intro}</p>
         <Link href="/developers/api">{d.reference}</Link>
       </header>
-      {tenant.role === 'owner' && (
+      {['owner', 'admin'].includes(tenant.role) && (
         <StoreApiKeys
           key={tenant.id}
           tenantId={tenant.id}

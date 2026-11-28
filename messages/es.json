@@ -1,7 +1,7 @@
 {
   "storeApi": {
     "title": "API de la tienda",
-    "intro": "Elige qué datos puede leer la integración y qué cambios puede enviar para revisión. Las claves caducan a los 90 días.",
+    "intro": "Elige qué puede leer y modificar la integración en tu tienda. Con permiso de escritura, los cambios se aplican de inmediato. Las claves caducan a los 90 días.",
     "reference": "Abrir la referencia de la API (Swagger)",
     "label": "Nombre de la integración",
     "create": "Crear clave de API",
@@ -570,6 +570,8 @@
     "readonly": "Solo lectura"
   },
   "events": {
+    "store_api.write_executed": "Cambio aplicado mediante la API de la tienda",
+    "store_api.write_failed": "Error al aplicar un cambio mediante la API de la tienda",
     "store_api.key_issued": "Clave de API de la tienda creada",
     "store_api.key_revoked": "Clave de API de la tienda revocada",
     "accounting_map.published": "Plan de cuentas · Publicación",

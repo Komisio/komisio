@@ -1,7 +1,7 @@
 {
   "storeApi": {
     "title": "Kaupan API",
-    "intro": "Valitse, mitä integraatio saa lukea ja mitä muutoksia se voi lähettää tarkistettavaksi. Avain on voimassa 90 päivää.",
+    "intro": "Valitse, mitä tietoja integraatio saa lukea ja muuttaa kaupassasi. Kirjoitusoikeudella muutokset tehdään heti. Avaimet ovat voimassa 90 päivää.",
     "reference": "Avaa API-dokumentaatio (Swagger)",
     "label": "Integraation nimi",
     "create": "Luo API-avain",
@@ -570,6 +570,8 @@
     "readonly": "Vain luku"
   },
   "events": {
+    "store_api.write_executed": "Kaupan API-muutos tehtiin",
+    "store_api.write_failed": "Kaupan API-muutos epäonnistui",
     "store_api.key_issued": "Kaupan API-avain luotu",
     "store_api.key_revoked": "Kaupan API-avain peruttu",
     "accounting_map.published": "Tilikartta · Julkaisu",

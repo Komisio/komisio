@@ -1,7 +1,7 @@
 {
   "storeApi": {
     "title": "API del negozio",
-    "intro": "Scegli quali dati può leggere l’integrazione e quali modifiche può sottoporre a verifica. Le chiavi scadono dopo 90 giorni.",
+    "intro": "Scegli cosa può leggere e modificare l’integrazione nel tuo negozio. Con i permessi di scrittura, le modifiche vengono applicate subito. Le chiavi scadono dopo 90 giorni.",
     "reference": "Apri la guida API (Swagger)",
     "label": "Nome dell’integrazione",
     "create": "Crea chiave API",
@@ -570,6 +570,8 @@
     "readonly": "Sola lettura"
   },
   "events": {
+    "store_api.write_executed": "Modifica applicata tramite API del negozio",
+    "store_api.write_failed": "Modifica tramite API del negozio non riuscita",
     "store_api.key_issued": "Chiave API del negozio creata",
     "store_api.key_revoked": "Chiave API del negozio revocata",
     "accounting_map.published": "Piano dei conti · Pubblicazione",

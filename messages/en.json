@@ -1,7 +1,7 @@
 {
   "storeApi": {
     "title": "Store API",
-    "intro": "Choose what the integration may read and which changes it may submit for review. Keys expire after 90 days.",
+    "intro": "Choose what this integration may read and change in your store. Write permissions take effect immediately. Keys expire after 90 days.",
     "reference": "Open API reference (Swagger)",
     "label": "Integration name",
     "create": "Create API key",
@@ -570,6 +570,8 @@
     "readonly": "Read only"
   },
   "events": {
+    "store_api.write_executed": "Store API change applied",
+    "store_api.write_failed": "Store API change failed",
     "store_api.key_issued": "Store API key issued",
     "store_api.key_revoked": "Store API key revoked",
     "accounting_map.published": "Account mapping · Publication",

@@ -132,10 +132,16 @@ export async function storeApiResponse(request: Request, segments: string[]) {
       id,
       body.data,
     )
-    const location = '/api/public/v1/requests/' + operation
-    return reply({ id: operation, statusUrl: location }, 202, {
-      Location: location,
-    })
+    const location = '/api/public/v1/requests/' + operation.id
+    if (operation.status === 'review')
+      return reply({ id: operation.id, statusUrl: location }, 202, {
+        Location: location,
+      })
+    return reply(
+      { ...operation, statusUrl: location },
+      operation.status === 'executed' ? 200 : 422,
+      { Location: location },
+    )
   } catch (e) {
     const code = e instanceof Error ? e.message : ''
     if (code === 'INVALID_KEY') return unauthorized()

@@ -1,7 +1,7 @@
 {
   "storeApi": {
     "title": "Butikk-API",
-    "intro": "Velg hva integrasjonen kan lese og hvilke endringer den kan foreslå. Nøkkelen er gyldig i 90 dager.",
+    "intro": "Velg hva integrasjonen kan lese og endre i butikken din. Med skrivetilgang trer endringene i kraft med én gang. Nøkler er gyldige i 90 dager.",
     "reference": "Åpne API-referansen (Swagger)",
     "label": "Navn på integrasjonen",
     "create": "Opprett API-nøkkel",
@@ -570,6 +570,8 @@
     "readonly": "Kun lesing"
   },
   "events": {
+    "store_api.write_executed": "Endring via butikkens API gjennomført",
+    "store_api.write_failed": "Endring via butikkens API mislyktes",
     "store_api.key_issued": "API-nøkkel opprettet",
     "store_api.key_revoked": "API-nøkkel tilbakekalt",
     "accounting_map.published": "Kontoplan · Publisering",

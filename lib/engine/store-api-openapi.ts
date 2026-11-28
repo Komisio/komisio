@@ -101,7 +101,7 @@ export function storeOpenApi() {
     const description =
       'Requires ' +
       cmd.resource +
-      ':write. A second person with owner or administrator access reviews the request in Operations. Poll the returned status URL.'
+      ':write. The engine applies the change immediately. A retry with the same idempotency key returns the original result.'
     const entry = (paths[cmd.path] ??= {})
     entry[cmd.method] = {
       operationId: action,
@@ -110,8 +110,16 @@ export function storeOpenApi() {
       parameters,
       requestBody: { required: true, content: json(ref(action)) },
       responses: {
+        200: response(
+          'Executed. resultId identifies the affected resource.',
+          ref('WriteReceipt'),
+        ),
+        422: response(
+          'The engine rejected the change. The receipt includes the error code.',
+          ref('WriteReceipt'),
+        ),
         202: response(
-          'Request received. Approval is pending unless this is a replay.',
+          'Legacy review-only credential. Use the status URL to follow the original approval workflow.',
           {
             type: 'object',
             required: ['id', 'statusUrl'],
@@ -120,7 +128,7 @@ export function storeOpenApi() {
         ),
         ...common,
         409: response(
-          'Changed retry payload or 200 open requests for this key.',
+          'The idempotency key was already used for a different change, or a legacy review queue is full.',
           ref('Error'),
         ),
         415: response('Send application/json.', ref('Error')),
@@ -135,12 +143,18 @@ export function storeOpenApi() {
         'Use the same key that submitted the request. An executed request includes its resulting resource ID. Failed, rejected and expired requests have made no change.',
       parameters: [pathId],
       responses: {
-        200: response('Current review result.', ref('RequestStatus')),
+        200: response('Recorded outcome.', ref('RequestStatus')),
         ...errors,
         404: response('Unknown request for this key.', ref('Error')),
       },
     },
   }
+  schemas.WriteReceipt = schemaFor(
+    requestStatus.extend({
+      status: z.enum(['executed', 'failed']),
+      statusUrl: z.string(),
+    }),
+  )
   schemas.Error = {
     type: 'object',
     required: ['error'],
@@ -152,7 +166,7 @@ export function storeOpenApi() {
       ...base.info,
       description:
         base.info.description +
-        '\n\n### Submit a change\nEnable the matching write permission when issuing the key. To create a seller, set `REQUEST_ID` to a newly generated UUID and run:\n\n```sh\ncurl --fail-with-body -X POST "$KOMISIO_URL/api/public/v1/sellers" -H "Authorization: Bearer $KOMISIO_STORE_KEY" -H "Idempotency-Key: $REQUEST_ID" -H "Content-Type: application/json" -d \'{"name":"Example Seller","email":"seller@example.test"}\'\n```\n\nExpect HTTP 202. Another owner or administrator opens Operations, reviews the values and approves or rejects the request. GET the returned statusUrl with the same key. Requests expire after seven days. To stop selling an item, end its sale period. Correct a completed sale through a return. Seller privacy closure and payout execution use their established store workflows. API keys cannot delete historical records.',
+        '\n\n### Submit a change\nEnable the matching write permission when issuing the key. To create a seller, set `REQUEST_ID` to a newly generated UUID and run:\n\n```sh\ncurl --fail-with-body -X POST "$KOMISIO_URL/api/public/v1/sellers" -H "Authorization: Bearer $KOMISIO_STORE_KEY" -H "Idempotency-Key: $REQUEST_ID" -H "Content-Type: application/json" -d \'{"name":"Example Seller","email":"seller@example.test"}\'\n```\n\nExpect HTTP 200, status executed and resultId for the saved seller. Use the same Idempotency-Key when retrying, or GET the returned statusUrl with the same store key. An HTTP 422 receipt includes the reason the engine rejected the change. Keys issued under the older review-only policy return HTTP 202. Create a new key to enable direct writes. To stop selling an item, end its sale period. Correct a completed sale through a return. Seller privacy closure and payout execution use their established store workflows. API keys cannot delete historical records.',
     },
     components: { ...base.components, schemas },
     paths,

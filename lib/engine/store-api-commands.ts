@@ -14,7 +14,7 @@ export async function submitStoreCommand(
   subject: string | null,
   body: object,
 ) {
-  const r = await client.rpc('submit_store_api_request', {
+  const r = await client.rpc('write_store_api_record', {
     p_secret: secret,
     p_replay: replay,
     p_action: action,
@@ -22,7 +22,12 @@ export async function submitStoreCommand(
     p_body: body,
   })
   if (r.error) throw new Error(r.error.message)
-  return z.uuid().parse(r.data)
+  return z
+    .union([
+      requestStatus.extend({ status: z.enum(['executed', 'failed']) }),
+      z.object({ id: z.uuid(), status: z.literal('review') }),
+    ])
+    .parse(r.data)
 }
 export async function readStoreRequest(
   client: SupabaseClient,

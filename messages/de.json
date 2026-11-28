@@ -1,7 +1,7 @@
 {
   "storeApi": {
     "title": "Shop-API",
-    "intro": "Wählen Sie, welche Daten die Integration lesen und welche Änderungen sie zur Prüfung einreichen darf. Schlüssel sind 90 Tage gültig.",
+    "intro": "Wähle, was die Integration in deinem Geschäft lesen und ändern darf. Mit Schreibrechten werden Änderungen sofort ausgeführt. Schlüssel sind 90 Tage gültig.",
     "reference": "API-Referenz öffnen (Swagger)",
     "label": "Name der Integration",
     "create": "API-Schlüssel erstellen",
@@ -570,6 +570,8 @@
     "readonly": "Nur Lesen"
   },
   "events": {
+    "store_api.write_executed": "Änderung über die Filial-API ausgeführt",
+    "store_api.write_failed": "Änderung über die Filial-API fehlgeschlagen",
     "store_api.key_issued": "Shop-API-Schlüssel erstellt",
     "store_api.key_revoked": "Shop-API-Schlüssel widerrufen",
     "accounting_map.published": "Kontenzuordnung · Veröffentlichung",

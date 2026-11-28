@@ -38,6 +38,41 @@ describe('Store inventory HTTP contract', () => {
       [...spec.components.schemas.Item.required].sort(),
     )
   })
+  it.each([
+    ['executed', 200],
+    ['failed', 422],
+    ['review', 202],
+  ] as const)('reports the %s write outcome', async (status, httpStatus) => {
+    const result =
+      status === 'review'
+        ? { id, status }
+        : {
+            id,
+            action: 'createSeller',
+            status,
+            resultId: status === 'executed' ? id : null,
+            error: status === 'failed' ? 'INVALID_INPUT' : null,
+          }
+    rpc.mockResolvedValueOnce({ data: result })
+    const r = await storeApiResponse(
+      new Request('https://example.test/api/public/v1/sellers', {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + key,
+          'Idempotency-Key': id,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: 'Example seller', phone: '0700000000' }),
+      }),
+      ['sellers'],
+    )
+    expect(r.status).toBe(httpStatus)
+    const statusUrl = '/api/public/v1/requests/' + id
+    expect(await r.json()).toEqual(
+      status === 'review' ? { id, statusUrl } : { ...result, statusUrl },
+    )
+    expect(r.headers.get('location')).toBe(statusUrl)
+  })
   it('requires a key and rejects unsupported parameters', async () => {
     expect(
       (await storeInventoryResponse(new Request('https://example.test')))
